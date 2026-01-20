@@ -231,6 +231,8 @@ cmd.flatlook.success,"Successfully activated flatlook!","Flachansicht wurde erfo
 cmd.flatlook.success2,"Successfully deactivated flatlook!","Flachansicht wurde erfolgreich deaktiviert"
 cmd.flatlook.error,"Flatlook couldn't be toggled!","Der Flachansichtstatus konnte nicht verändert werden!"
 cmd.flatlook.description,"Activates or deactivates flatlook","Aktiviert oder deaktiviert Flachansicht"
+cmd.maxfps.success,"Successfully set maximal fps to $1!","Maximale FPS wurde auf $1 gesetzt!"
+cmd.maxfps.description,"Changes the max fps to an arbitrary value","Verändert die maximale FPS auf irgendeine Zahö"
 cmd.party.success,"Successfully enabled party mode!","Der Partymodus wurde erfolgreich aktiviert!"
 cmd.party.success2,"Successfully disabled party mode!","Der Partymodus wurde erfolgreich deaktiviert!"
 cmd.party.description,"Enables or disables party mode","Aktiviert oder deaktiviert den Partymodus"
