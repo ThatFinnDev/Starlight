@@ -9,12 +9,12 @@ internal class WorldPopulatorErrorPatchPopulateRanch
         if(IgnoreWorldPopulatorErrors.HasFlag())
             __instance.onFail = new System.Action<Il2CppSystem.Exception>((exception) =>
             {
-                MelonLogger.Error($"Coroutine exception in WorldPopulator.PopulateRanch:\n{exception.ToString()}");
+                LogError($"Coroutine exception in WorldPopulator.PopulateRanch:\n{exception.ToString()}");
             });
         else
             __instance.onFail += new System.Action<Il2CppSystem.Exception>((exception) =>
             {
-                MelonLogger.Error($"Coroutine exception in WorldPopulator.PopulateRanch:\n{exception.ToString()}");
+                LogError($"Coroutine exception in WorldPopulator.PopulateRanch:\n{exception.ToString()}");
             });
     }
 }
@@ -27,12 +27,12 @@ internal class WorldPopulatorErrorPatchPopulate
         if(IgnoreWorldPopulatorErrors.HasFlag())
             __instance.onFail = new System.Action<Il2CppSystem.Exception>((exception) =>
             {
-                MelonLogger.Error($"Coroutine exception in WorldPopulator.PopulateRanch:\n{exception.ToString()}");
+                LogError($"Coroutine exception in WorldPopulator.PopulateRanch:\n{exception.ToString()}");
             });
         else
             __instance.onFail += new System.Action<Il2CppSystem.Exception>((exception) =>
             {
-                MelonLogger.Error($"Coroutine exception in WorldPopulator.PopulateRanch:\n{exception.ToString()}");
+                LogError($"Coroutine exception in WorldPopulator.PopulateRanch:\n{exception.ToString()}");
             });
     }
 }
@@ -45,12 +45,12 @@ internal class WorldPopulatorErrorPatchPopulateActors
         if(IgnoreWorldPopulatorErrors.HasFlag())
             __instance.onFail = new System.Action<Il2CppSystem.Exception>((exception) =>
             {
-                MelonLogger.Error($"Coroutine exception in WorldPopulator.PopulateRanch:\n{exception.ToString()}");
+                LogError($"Coroutine exception in WorldPopulator.PopulateRanch:\n{exception.ToString()}");
             });
         else
             __instance.onFail += new System.Action<Il2CppSystem.Exception>((exception) =>
             {
-                MelonLogger.Error($"Coroutine exception in WorldPopulator.PopulateRanch:\n{exception.ToString()}");
+                LogError($"Coroutine exception in WorldPopulator.PopulateRanch:\n{exception.ToString()}");
             });
     }
 }
@@ -63,12 +63,12 @@ internal class WorldPopulatorErrorPatchPopulateDrones
         if(IgnoreWorldPopulatorErrors.HasFlag())
             __instance.onFail = new System.Action<Il2CppSystem.Exception>((exception) =>
             {
-                MelonLogger.Error($"Coroutine exception in WorldPopulator.PopulateRanch:\n{exception.ToString()}");
+                LogError($"Coroutine exception in WorldPopulator.PopulateRanch:\n{exception.ToString()}");
             });
         else
             __instance.onFail += new System.Action<Il2CppSystem.Exception>((exception) =>
             {
-                MelonLogger.Error($"Coroutine exception in WorldPopulator.PopulateRanch:\n{exception.ToString()}");
+                LogError($"Coroutine exception in WorldPopulator.PopulateRanch:\n{exception.ToString()}");
             });
     }
 }
@@ -81,12 +81,12 @@ internal class WorldPopulatorErrorPatchPopulateGadgets
         if(IgnoreWorldPopulatorErrors.HasFlag())
             __instance.onFail = new System.Action<Il2CppSystem.Exception>((exception) =>
             {
-                MelonLogger.Error($"Coroutine exception in WorldPopulator.PopulateRanch:\n{exception.ToString()}");
+                LogError($"Coroutine exception in WorldPopulator.PopulateRanch:\n{exception.ToString()}");
             });
         else
             __instance.onFail += new System.Action<Il2CppSystem.Exception>((exception) =>
             {
-                MelonLogger.Error($"Coroutine exception in WorldPopulator.PopulateRanch:\n{exception.ToString()}");
+                LogError($"Coroutine exception in WorldPopulator.PopulateRanch:\n{exception.ToString()}");
             });
     }
 }

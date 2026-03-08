@@ -14,7 +14,7 @@ internal class CustomOptionsValuesDefinition : ScriptedValuePresetOptionDefiniti
     {
         if(!string.IsNullOrWhiteSpace(button.saveid))
             StarlightOptionsButtonManager.SetValuesButton(button.type,button.saveid, index);
-        try { button.onModify.Invoke(index); }catch (Exception e) { MelonLogger.Error(e); }
+        try { button.onModify.Invoke(index); }catch (Exception e) { LogError(e); }
     }
 
 

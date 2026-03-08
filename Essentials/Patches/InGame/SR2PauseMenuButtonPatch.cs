@@ -71,7 +71,7 @@ internal static class SR2PauseMenuButtonPatch
                 }
                 catch (Exception e)
                 {
-                    MelonLogger.Error(e);
+                    LogError(e);
                 }
                 
             }
@@ -80,7 +80,7 @@ internal static class SR2PauseMenuButtonPatch
             pauseMenuRoot.pauseItemModelList = pauseItemModelList;
             
         }
-        catch (Exception e) { MelonLogger.Error(e);}
+        catch (Exception e) { LogError(e);}
         safeLock = false;
     }
 }

@@ -137,7 +137,7 @@ public class StarlightSaveFileV01
     {
         Error = (sender, args) =>
         {
-            if(DebugLogging.HasFlag()) MelonLogger.Msg($"Error: {args.ErrorContext.Error.Message}");
+            if(DebugLogging.HasFlag()) Log($"Error: {args.ErrorContext.Error.Message}");
             //args.ErrorContext.Handled = false;
         }
     };

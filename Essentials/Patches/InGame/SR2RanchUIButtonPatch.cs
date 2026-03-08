@@ -50,7 +50,7 @@ internal static class SR2RanchUIButtonPatch
                 if (!__instance._menuItems.Contains(button._model))
                     __instance._menuItems.Insert(Math.Clamp(button.insertIndex,0,__instance._menuItems.Count), button._model);
             }
-            catch (Exception e) { MelonLogger.Error(e); }
+            catch (Exception e) { LogError(e); }
 
 
         }

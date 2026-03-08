@@ -8,7 +8,7 @@ using Starlight.Expansion;
 [assembly: AssemblyProduct(Starlight.BuildInfo.Name)]
 [assembly: AssemblyCopyright($"Created by {Starlight.BuildInfo.Author}")]
 [assembly: AssemblyTrademark(null)]
-[assembly: VerifyLoaderVersion(0,7,1, true)]
+[assembly: VerifyLoaderVersion(0,6,3, true)]
 [assembly: AssemblyVersion(Starlight.BuildInfo.CodeVersion)]
 [assembly: MelonPriority(-10000)]
 [assembly: AssemblyFileVersion(Starlight.BuildInfo.CodeVersion)]

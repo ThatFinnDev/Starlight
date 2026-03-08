@@ -12,7 +12,7 @@ internal static class SaveDirectorPatch
     {
         foreach (var expansion in StarlightEntryPoint.ExpansionV01S)
             try { expansion.BeforeSaveDirector(__instance); }
-            catch (Exception e) { MelonLogger.Error(e); }
+            catch (Exception e) { LogError(e); }
         StarlightCallEventManager.ExecuteWithArgs(CallEvent.BeforeSaveDirectorLoad,("saveDirector",__instance));
         
     }
@@ -24,12 +24,12 @@ internal static class SaveDirectorPatch
             {
                 Prism.Patches.SaveDirectorPatch.Postfix(__instance);
             }
-            catch (Exception e) { MelonLogger.Error(e); }
+            catch (Exception e) { LogError(e); }
         
         
         foreach (var expansion in StarlightEntryPoint.ExpansionV01S)
             try { expansion.AfterSaveDirector(__instance);
-            } catch (Exception e) { MelonLogger.Error(e); }
+            } catch (Exception e) { LogError(e); }
         StarlightCallEventManager.ExecuteWithArgs(CallEvent.AfterSaveDirectorLoad,("saveDirector",__instance));
         
     }

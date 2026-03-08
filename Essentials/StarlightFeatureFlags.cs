@@ -21,8 +21,7 @@ public static class StarlightFeatureFlags
     [
         CommandsLoadCommands, CommandsLoadCheat, CommandsLoadBinding, CommandsLoadWarp,
         CommandsLoadCommon, CommandsLoadMenu, CommandsLoadMiscellaneous, CommandsLoadFun,
-        AllowExpansions, AllowExpansionsV1,
-        EnableModMenu, EnableConsole, EnableIl2CppDetourExceptionReporting,
+        AllowExpansions, AllowExpansionsV1, EnableModMenu, EnableConsole, EnableIl2CppDetourExceptionReporting,
         InjectMainMenuButtons, InjectRanchUIButtons, InjectPauseButtons, InjectTranslations,
         AddCheatMenuButton, AddModMenuButton, CheckForUpdates, AllowAutoUpdate, EnableInfHealth,
         EnableInfEnergy, EnableCheatMenu, EnableLocalizedVersionPatch, EnableThemeMenu,

@@ -78,7 +78,7 @@ public static class MenuEUtil
             if (result == null) return null;
             if (result is GameObject gameObject) return gameObject;
         }
-        catch (Exception e) { MelonLogger.Error(e); }
+        catch (Exception e) { LogError(e); }
         return null;
     }
     internal static MenuIdentifier GetMenuIdentifierByType(this Type type)
@@ -93,7 +93,7 @@ public static class MenuEUtil
                 if (result is MenuIdentifier identifier) return identifier;
             }
         }
-        catch (Exception e) { MelonLogger.Error(e); }
+        catch (Exception e) { LogError(e); }
         return new MenuIdentifier();
     }
 
@@ -114,7 +114,7 @@ public static class MenuEUtil
                 if (ident.saveKey == identifier.saveKey) return pair.Key;
             }
         }
-        catch (Exception e) { MelonLogger.Error(e); }
+        catch (Exception e) { LogError(e); }
         return null;
     }
     public static StarlightMenuTheme GetTheme(this StarlightMenu menu)

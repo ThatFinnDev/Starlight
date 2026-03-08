@@ -9,7 +9,7 @@ internal static class LocalizationDirectorLoadTablePatch
     internal static void Postfix(LocalizationDirector __instance)
     {
         if(InjectTranslations.HasFlag())
-            MelonCoroutines.Start(LoadTable(__instance));
+            StartCoroutine(LoadTable(__instance));
     }
     private static IEnumerator LoadTable(LocalizationDirector director)
     {

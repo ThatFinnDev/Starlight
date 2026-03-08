@@ -35,7 +35,7 @@ internal static class MainMenuLandingRootUIInitPatch
     internal static bool postSafeLock;
     internal static void Prefix(MainMenuLandingRootUI __instance)
     {
-        if (InjectOptionsButtons.HasFlag()) try { StarlightOptionsButtonManager.GenerateMissingButtons(); }catch (Exception e) { MelonLogger.Error(e); }
+        if (InjectOptionsButtons.HasFlag()) try { StarlightOptionsButtonManager.GenerateMissingButtons(); }catch (Exception e) { LogError(e); }
         if (!InjectMainMenuButtons.HasFlag()) return;
         foreach (var pair in buttons)
         {
@@ -64,7 +64,7 @@ internal static class MainMenuLandingRootUIInitPatch
                         if(item is LoadGameItemDefinition) if(!(item is CustomMainMenuItemDefinition)) _offset=1;
                     __instance._mainMenuConfig.items.Insert(Math.Clamp(containerButton.insertIndex+_offset,0,__instance._mainMenuConfig.items.Count), containerButton._definition2);
                 }
-                catch (Exception e) { MelonLogger.Error(e); }
+                catch (Exception e) { LogError(e); }
             }
             else
             {
@@ -80,7 +80,7 @@ internal static class MainMenuLandingRootUIInitPatch
                         __instance._mainMenuConfig.items.Insert(Math.Clamp(button.insertIndex+_offset,0,__instance._mainMenuConfig.items.Count), button._definition);
                     }
                 }
-                catch (Exception e) { MelonLogger.Error(e); }
+                catch (Exception e) { LogError(e); }
             }
 
         }

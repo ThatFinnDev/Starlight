@@ -10,7 +10,7 @@ internal static class PatchIl2CppDetourMethodPatcher
     internal static bool Prefix(System.Exception ex)
     {
         if (!EnableIl2CppDetourExceptionReporting.HasFlag()) return true;
-        MelonLogger.Error("During invoking native->managed trampoline", ex);
+        LogError("During invoking native->managed trampoline", ex);
         return false;
     }
     internal static void InstallSecondPart(HarmonyLib.Harmony HarmonyInstance)

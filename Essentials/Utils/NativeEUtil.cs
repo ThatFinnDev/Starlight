@@ -20,7 +20,7 @@ public static class NativeEUtil
                     ui.Close(true);
                 }
             }  
-            catch (Exception e) { MelonLogger.Error(e); }
+            catch (Exception e) { LogError(e); }
         }
 
         if (inGame)

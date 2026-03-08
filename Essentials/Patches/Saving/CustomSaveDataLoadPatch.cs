@@ -20,10 +20,10 @@ internal static class CustomSaveDataLoadPatch
         foreach (var expansion in StarlightEntryPoint.ExpansionV01S)
             if (rootSaves.ContainsKey(expansion))
                 try { expansion.OnCustomSaveDataReceived(rootSaves[expansion].Item1, rootSaves[expansion].Item2); } 
-                catch (Exception e) { MelonLogger.Error(e); }
+                catch (Exception e) { LogError(e); }
             else if(noRootSaves.ContainsKey(expansion))
                 try { expansion.OnNoCustomSaveDataReceived(noRootSaves[expansion]); }
-                catch (Exception e) { MelonLogger.Error(e); }
+                catch (Exception e) { LogError(e); }
         rootSaves = new Dictionary<StarlightExpansionV01, (RootSave, LoadingGameSessionData)>();
         noRootSaves = new Dictionary<StarlightExpansionV01, LoadingGameSessionData>();
     }
@@ -41,14 +41,14 @@ internal static class CustomSaveDataLoadPatch
                     var sessionData = new LoadingGameSessionData(actorIdProvider, saveReferenceTranslation, saveReferenceTranslation.ToNonIVariant(), gameState, gameModel);
                     hasExecutedOwn = true;
                     StarlightOptionsButtonManager.OnInGameLoad(rootSave,sessionData);
-                }catch (Exception e) { MelonLogger.Error(e); }
+                }catch (Exception e) { LogError(e); }
             }
         if(!hasExecutedOwn)
             try
             {
                 var sessionData = new LoadingGameSessionData(actorIdProvider, saveReferenceTranslation, saveReferenceTranslation.ToNonIVariant(), gameState, gameModel);
                 StarlightOptionsButtonManager.OnInGameLoad(null,sessionData);
-            }catch (Exception e) { MelonLogger.Error(e); }
+            }catch (Exception e) { LogError(e); }
         
         
         rootSaves = new Dictionary<StarlightExpansionV01, (RootSave, LoadingGameSessionData)>();
@@ -80,7 +80,7 @@ internal static class CustomSaveDataLoadPatch
                                 }
                                 catch (Exception e)
                                 {
-                                    MelonLogger.Error(
+                                    LogError(
                                         $"Failed to save custom save data for expansion {expansion.info.name}: {e}");
                                 }
                                 if(rootSave!=null)
@@ -88,11 +88,11 @@ internal static class CustomSaveDataLoadPatch
                                     {
                                         expansion.OnEarlyCustomSaveDataReceived(rootSave, sessionData);
                                     }
-                                    catch (Exception e) { MelonLogger.Error(e); }
+                                    catch (Exception e) { LogError(e); }
                             }
                         } catch { }
                 }
-                else MelonLogger.Error("An error occured while loading some custom save data!");
+                else LogError("An error occured while loading some custom save data!");
             }
         foreach (var expansion in StarlightEntryPoint.ExpansionV01S)
             if(!executedExpansions.Contains(expansion))
@@ -103,6 +103,6 @@ internal static class CustomSaveDataLoadPatch
 
                     expansion.OnEarlyNoCustomSaveDataReceived(sessionData);
                 }
-                catch (Exception e) { MelonLogger.Error(e); }
+                catch (Exception e) { LogError(e); }
     }
 }

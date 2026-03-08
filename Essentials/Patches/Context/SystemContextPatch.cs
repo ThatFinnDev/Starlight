@@ -82,7 +82,8 @@ internal class SystemContextPatch
                 if (obj.name == "AllMightyMenus")
                 {
                     var instance = Object.Instantiate(obj).TryCast<GameObject>();
-                    StarlightLogManager.Start();
+                    try { StarlightLogManager.Start(); }
+                    catch (Exception e) { LogError(e); }
                     StarlightSaveManager.Start();
                     StarlightCommandManager.Start();
                     StarlightRepoManager.Start();
@@ -93,9 +94,15 @@ internal class SystemContextPatch
                     
                     ExecuteInTicks(() =>
                     {
+                        var assemblies = StarlightEntryPoint.Expansions.Keys.ToList();
                         foreach (var melonBase in MelonBase.RegisteredMelons)
                         {
-                            var exporters = melonBase.MelonAssembly.Assembly.GetTypes().Where(t => t.IsSubclassOf(typeof(StarlightMenu)) && !t.IsAbstract);
+                            if(!assemblies.Contains(melonBase.MelonAssembly.Assembly))
+                                assemblies.Add(melonBase.MelonAssembly.Assembly);
+                        }
+                        foreach (var assembly in assemblies)
+                        {
+                            var exporters = assembly.GetTypes().Where(t => t.IsSubclassOf(typeof(StarlightMenu)) && !t.IsAbstract);
                             foreach (Type type in exporters)
                                 try
                                 {
@@ -115,7 +122,6 @@ internal class SystemContextPatch
                                         if (rootObject == null)
                                         {
                                             var message = $"The menu under the name {type.Name} couldn't be loaded! It's root object is null!";
-                                            MelonLogger.Error(message);
                                             throw new Exception(message);
                                         }
 
@@ -126,10 +132,10 @@ internal class SystemContextPatch
                                                 new RegisterTypeOptions() { LogSuccess = false });
 
                                     }
-                                    else MelonLogger.Error($"The menu under the name {type.Name} couldn't be loaded! It's MenuIdentifier is broken!");
+                                    else LogError($"The menu under the name {type.Name} couldn't be loaded! It's MenuIdentifier is broken!");
 
                                 }
-                                catch (Exception e) { MelonLogger.Error(e); }
+                                catch (Exception e) { LogError(e); }
                         }
 
                         ExecuteInTicks(() =>
@@ -145,7 +151,7 @@ internal class SystemContextPatch
                                         child.gameObject.SetActive(true);
                                         menusToInit.Remove(pair.Key);
                                     }
-                                    catch (Exception e) { MelonLogger.Error(e); }
+                                    catch (Exception e) { LogError(e); }
                                 }
                             StarlightEntryPoint.MenusFinished = true;
                         }, 1);
@@ -159,7 +165,7 @@ internal class SystemContextPatch
         
         foreach (var expansion in StarlightEntryPoint.ExpansionV01S)
             try { expansion.AfterSystemContext(__instance); } 
-            catch (Exception e) { MelonLogger.Error(e); }
+            catch (Exception e) { LogError(e); }
         StarlightCallEventManager.ExecuteWithArgs(CallEvent.AfterSystemContextLoad, ("systemContext", __instance));
     }
 }

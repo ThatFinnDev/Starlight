@@ -16,7 +16,7 @@ namespace Starlight.Menus;
 public class StarlightRepoMenu : StarlightMenu
 {
     //Check valid themes for all menus EVERYWHERE
-    public new static MenuIdentifier GetMenuIdentifier() => new ("repomenu",StarlightMenuFont.SR2,StarlightMenuTheme.Starlight,"RepoMenu");
+    public new static MenuIdentifier GetMenuIdentifier() => new ("repomenu",StarlightMenuFont.SR2,StarlightMenuTheme.SR2E,"RepoMenu");
     protected override bool createCommands => true;
     protected override bool inGameOnly => false;
     

@@ -15,7 +15,7 @@ public struct StarlightExpansionInfo
     public string nexus = null;
     public string discord = null;
     public bool usePrism = false;
-    public string iconPath = "Assets/icon.png";
+    public string iconPath = "Assets.icon.png";
 
 
     internal string dllName = null;

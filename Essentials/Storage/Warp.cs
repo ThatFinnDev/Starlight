@@ -67,7 +67,7 @@ public class Warp
             }
             catch (Exception e)
             {
-                MelonLogger.Error(e); 
+                LogError(e); 
             }
         }
 

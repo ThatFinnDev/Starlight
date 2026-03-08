@@ -16,7 +16,7 @@ public class StarlightCheatMenuButton
         this.action = action;
 
         foreach (StarlightCheatMenuButton entry in StarlightCheatMenu.cheatButtons)
-            if (entry.label == this.label) { MelonLogger.Error($"There is already a button with the name {this.label}"); return; }
+            if (entry.label == this.label) { LogError($"There is already a button with the name {this.label}"); return; }
 
         StarlightCheatMenu.cheatButtons.Add(this);
     }

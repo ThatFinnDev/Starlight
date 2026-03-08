@@ -23,13 +23,13 @@ internal static class OptionsFixer
                 }
                 catch 
                 {
-                    if(data==null||string.IsNullOrEmpty(data.PersistenceKey)) MelonLogger.Msg("OptionsFixer: Removed invalid entry!");
-                    else MelonLogger.Msg("OptionsFixer: Removed invalid entry: "+data.PersistenceKey+"!");
+                    if(data==null||string.IsNullOrEmpty(data.PersistenceKey)) Log("OptionsFixer: Removed invalid entry!");
+                    else Log("OptionsFixer: Removed invalid entry: "+data.PersistenceKey+"!");
                 }
             }
             optionsData.OptionItems = modifiedList.ToIl2CppList();
         }
-        catch (Exception e) { MelonLogger.Error(e); }
+        catch (Exception e) { LogError(e); }
     }
 
     

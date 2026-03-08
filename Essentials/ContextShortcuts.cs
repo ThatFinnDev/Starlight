@@ -1,3 +1,4 @@
+using System.Collections;
 using Il2CppMonomiPark.SlimeRancher;
 using Il2CppMonomiPark.SlimeRancher.Damage;
 
@@ -14,6 +15,18 @@ public static class ContextShortcuts
     public static Damage killDamage => _killDamage;
     public static AutoSaveDirector autoSaveDirector => gameContext.AutoSaveDirector;
 
+    public static void Log(string txt) => MelonLogger.Msg(txt);
+    public static void Log(object obj) => MelonLogger.Msg(obj);
+    public static void Log(string txt, params object[] args) => MelonLogger.Msg(txt, args);
+    public static void LogError(string txt) => MelonLogger.Error(txt);
+    public static void LogError(string txt,Exception ex) => MelonLogger.Error(txt,ex);
+    public static void LogError(object obj) => MelonLogger.Error(obj);
+    public static void LogError(string txt,params object[] args) => MelonLogger.Error(txt, args);
+    public static void LogBigError(string nameSection,string txt) => MelonLogger.BigError(nameSection,txt);
+
+    public static void StartCoroutine(IEnumerator routine) => MelonCoroutines.Start(routine);
+    public static void StopCoroutine(object coroutineToken) => MelonCoroutines.Stop(coroutineToken);
+    
     public static bool inGame
     {
         get
@@ -83,13 +96,13 @@ public static class ContextShortcuts
                     {
                         // This works on some version even lower than 0.7.1 and is a fallback for a new version
                         //Do this if ML changes MelonLoader.BuildInfo.Version again...
-                        MelonLogger.Error("MelonLoader.BuildInfo.Version changed, if you are using not using the latest ML version, please update," +
+                        LogError("MelonLoader.BuildInfo.Version changed, if you are using not using the latest ML version, please update," +
                                           "otherwise this will be fixed in the next Starlight release!");
                         try
                         {
                             string logFilePath = Application.dataPath + "/../MelonLoader/Latest.log";
-                            using (System.IO.FileStream logFileStream = new System.IO.FileStream(logFilePath, System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.ReadWrite))
-                            using (System.IO.StreamReader logFileReader = new System.IO.StreamReader(logFileStream))
+                            using (var logFileStream = new System.IO.FileStream(logFilePath, System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.ReadWrite))
+                            using (var logFileReader = new System.IO.StreamReader(logFileStream))
                             {
                                 string text = logFileReader.ReadToEnd();
                                 var split = text.Split("\n");
@@ -101,6 +114,10 @@ public static class ContextShortcuts
                         catch { StarlightEntryPoint.MelonVersion = "unknown"; }
                     }
                 }
+
+                var v = StarlightEntryPoint.MelonVersion;
+                if(v=="0.6.0"||v=="0.6.1"||v=="0.6.2"||v=="0.6.3"||v=="0.6.4"||v=="0.6.5"||v=="0.6.6"||v=="0.7.0")
+                    LogBigError("Starlight-WARNING","Your MelonLoader version is lower than 0.7.1! Problems will occur! Do not report issues to Starlight if you face issues! Please update the MelonLoader!");
             }
             return StarlightEntryPoint.MelonVersion;
         }

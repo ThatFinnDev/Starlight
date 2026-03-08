@@ -29,7 +29,7 @@ public static class HttpEUtil
     }
     public static void DownloadTexture2DAsync(string url, Action<Texture2D, string> onComplete)
     {
-        MelonCoroutines.Start(_DownloadTexture2DCoroutine(url, onComplete));
+        StartCoroutine(_DownloadTexture2DCoroutine(url, onComplete));
     }
 
     public static void DownloadTexture2DIntoImageAsync(string url, Image image, bool useCache = false, int resizeX = -1, int resizeY = -1)
@@ -43,7 +43,7 @@ public static class HttpEUtil
                 // ignored
             }
 
-        MelonCoroutines.Start(_DownloadTexture2DCoroutine(url, ((texture, error) =>
+        StartCoroutine(_DownloadTexture2DCoroutine(url, ((texture, error) =>
         {
             if(OnGoingImages.ContainsKey(image))
                 if (OnGoingImages[image] == url)
@@ -69,7 +69,7 @@ public static class HttpEUtil
                 // ignored
             }
 
-        MelonCoroutines.Start(_DownloadTexture2DCoroutine(url, ((texture, error) =>
+        StartCoroutine(_DownloadTexture2DCoroutine(url, ((texture, error) =>
         {
             if(OnGoingRawImages.ContainsKey(image))
                 if (OnGoingRawImages[image] == url)

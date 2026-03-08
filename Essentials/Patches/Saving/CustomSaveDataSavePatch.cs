@@ -25,7 +25,7 @@ internal static class CustomSaveDataSavePatch
                 __result.ZoneIndex.IndexTable = __result.ZoneIndex.IndexTable.AddToNew(finalEntry);
             }
         }
-        catch (Exception e) { MelonLogger.Error(e); }
+        catch (Exception e) { LogError(e); }
         
         
         foreach (var expansion in StarlightEntryPoint.ExpansionV01S)
@@ -42,7 +42,7 @@ internal static class CustomSaveDataSavePatch
             }
             catch (Exception e)
             {
-                MelonLogger.Error($"Failed to save custom save data for expansion {expansion.info.name}: {e}");
+                LogError($"Failed to save custom save data for expansion {expansion.info.name}: {e}");
             }
         }
     }

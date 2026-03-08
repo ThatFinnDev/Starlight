@@ -51,7 +51,7 @@ public abstract class StarlightPopUp : MonoBehaviour
                         if (methodInfo != null)
                             methodInfo.Invoke(null, [child.gameObject, objects]);
                         child.gameObject.SetActive(true);
-                    }catch (Exception e) { MelonLogger.Error(e); }
+                    }catch (Exception e) { LogError(e); }
                 }
             }
             AudioEUtil.PlaySound(MenuSound.OpenPopup);

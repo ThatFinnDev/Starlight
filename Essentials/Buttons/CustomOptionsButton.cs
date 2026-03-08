@@ -25,7 +25,7 @@ internal abstract class CustomOptionsButton
         {
             _definition = GenerateOptionsItemDefinition();
             return _definition;
-        } catch (Exception e) {MelonLogger.Error(e);}
+        } catch (Exception e) {LogError(e);}
 
         return null;
     }

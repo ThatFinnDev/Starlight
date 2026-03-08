@@ -30,7 +30,7 @@ class OptionFileEntrypoint : MelonMod
         yield return new WaitForSeconds(0.1f);
         
         if (SystemContext.Instance.SceneLoader.IsCurrentSceneGroupMainMenu()) ShowIncompatibilityPopup(message);
-        else MelonCoroutines.Start(CheckForMainMenu(message));
+        else StartCoroutine(CheckForMainMenu(message));
     }
     void ShowIncompatibilityPopup(int message)
     {
@@ -244,20 +244,20 @@ class OptionFileEntrypoint : MelonMod
         {
             if (!IsSameOrNewer(OptionFileInfo.MinimumGameVersion, gameVer))
             {
-                MelonLogger.Msg("The game's version too old, aborting!");
-                MelonCoroutines.Start(CheckForMainMenu(2));
+                Log("The game's version too old, aborting!");
+                StartCoroutine(CheckForMainMenu(2));
             }
         }
         else if (!string.IsNullOrWhiteSpace(OptionFileInfo.ExactGameVersion))
         {
             if (OptionFileInfo.ExactGameVersion != gameVer)
             {
-                MelonLogger.Msg($"The game version is not version {OptionFileInfo.ExactGameVersion}!");
-                MelonCoroutines.Start(CheckForMainMenu(3));
+                Log($"The game version is not version {OptionFileInfo.ExactGameVersion}!");
+                StartCoroutine(CheckForMainMenu(3));
             }
         }
         foreach (var melonBase in MelonBase.RegisteredMelons)
-            if (melonBase.Info.Name == "Starlight")
+            if (melonBase.Info.Name == "Starlight"||melonBase.Info.Name == "Starlight Core Essentials")
             {
                 _isCorrectStarlightInstalled = true;
                 _installedSr2Ver = melonBase.Info.Version;
@@ -265,15 +265,15 @@ class OptionFileEntrypoint : MelonMod
 
         if (_isCorrectStarlightInstalled)
         {
-            if (IsSameOrNewer(OptionFileInfo.MinimumStarlightVersion, _installedSr2Ver)) return;
+            if (string.IsNullOrWhiteSpace(OptionFileInfo.MinimumStarlightVersion)||IsSameOrNewer(OptionFileInfo.MinimumStarlightVersion, _installedSr2Ver)) return;
             _isCorrectStarlightInstalled = false;
-            MelonLogger.Msg("Starlight is too old, aborting!");
-            MelonCoroutines.Start(CheckForMainMenu(1));
+            Log("Starlight is too old, aborting!");
+            StartCoroutine(CheckForMainMenu(1));
         }
         else
         {
-            MelonLogger.Msg("Starlight is not installed, aborting!");
-            MelonCoroutines.Start(CheckForMainMenu(0));
+            Log("Starlight is not installed, aborting!");
+            StartCoroutine(CheckForMainMenu(0));
         }
 
         Unregister();

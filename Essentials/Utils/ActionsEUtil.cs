@@ -9,23 +9,23 @@ public static class ActionsEUtil
     {
         if (action == null) return;
         if(ticks<=0)
-            try { action.Invoke(); } catch (Exception e) { MelonLogger.Error(e); }
+            try { action.Invoke(); } catch (Exception e) { LogError(e); }
         else ActionCounter.Add((SystemAction)(() =>
         {
-            try { action.Invoke(); } catch (Exception e) { MelonLogger.Error(e); }
+            try { action.Invoke(); } catch (Exception e) { LogError(e); }
         }),ticks);
     }
     public static void ExecuteInSeconds(SystemAction action, float seconds)
     {
         if(seconds<=0)
-            try { action.Invoke(); } catch (Exception e) { MelonLogger.Error(e); }
-        else MelonCoroutines.Start(Wait(seconds, action));
+            try { action.Invoke(); } catch (Exception e) { LogError(e); }
+        else StartCoroutine(Wait(seconds, action));
     }
 
     private static System.Collections.IEnumerator Wait(float seconds, SystemAction action)
     {
         yield return new WaitForSeconds(seconds);
-        try { action.Invoke(); }catch (Exception e) { MelonLogger.Error(e); }
+        try { action.Invoke(); }catch (Exception e) { LogError(e); }
     }
     public static void InvokeAll(this List<SystemAction> actions) => actions.ForEach(action => action.Invoke());
     public static void InvokeAll(this List<Il2CppSystemAction> actions) => actions.ForEach(action => action.Invoke());

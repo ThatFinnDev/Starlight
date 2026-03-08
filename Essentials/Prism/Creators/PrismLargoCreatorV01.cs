@@ -245,12 +245,12 @@ public class PrismLargoCreatorV01
             {
                 case PrismBFMergeStrategy.KeepSecond:
                     largoDef.Diet = secondSlimeDef.Diet;
-                    MelonLogger.BigError("Largo Error",
+                    LogBigError("Largo Error",
                         "Failed to merge diet, and largo settings are incorrectly set! Defaulting to slime 2's diet.");
                     break;
                 default:
                     largoDef.Diet = firstSlimeDef.Diet;
-                    MelonLogger.BigError("Largo Error",
+                    LogBigError("Largo Error",
                         "Failed to merge diet, and largo settings are incorrectly set! Defaulting to slime 1's diet.");
                     break;
             }

@@ -8,7 +8,7 @@ namespace Starlight.Patches.Saving.Fixer;
 [HarmonyPatch(typeof(GameModelPushHelpers), nameof(GameModelPushHelpers.PushGame))]
 internal static class SaveFixerPushGame
 {
-    static bool needsRemoving(int integer,ILoadReferenceTranslation r)
+    private static bool NeedsRemoving(int integer,ILoadReferenceTranslation r)
     {
         try { if (r.GetIdentifiableType(integer) == null) return true; }
         catch (Exception e) { return true; }
@@ -22,13 +22,13 @@ internal static class SaveFixerPushGame
                 foreach (var id in gameState.Drone.Cloud.IDs.ToArray())
                 {
                     try {
-                        if (needsRemoving(id,loadTranslation))
+                        if (NeedsRemoving(id,loadTranslation))
                             gameState.Drone.Cloud.IDs.Remove(id);
                     }
-                    catch (Exception e) { MelonLogger.Error(e); }
+                    catch (Exception e) { LogError(e); }
                 }
             }
-            catch (Exception e) { MelonLogger.Error(e); }
+            catch (Exception e) { LogError(e); }
     }
 
 }

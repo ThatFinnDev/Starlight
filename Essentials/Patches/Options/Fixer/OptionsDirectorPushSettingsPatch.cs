@@ -19,6 +19,6 @@ internal static class OptionsDirectoryPushSettingsPatch
                             optionsData.OptionItems.Remove(entry);
             }
         }
-        catch (Exception e) { MelonLogger.Error(e); }
+        catch (Exception e) { LogError(e); }
     }
 }

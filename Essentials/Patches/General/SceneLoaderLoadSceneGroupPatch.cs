@@ -67,13 +67,13 @@ internal class SceneLoaderLoadSceneGroupPatch
                         sG._sceneReferences = oldReferences.ToArray();
                     });
                 if (DebugLogging.HasFlag())
-                    MelonLogger.Msg("HadInvalidSceneReferences");
+                    Log("HadInvalidSceneReferences");
             }
             
         }
         catch (Exception e)
         {
-            MelonLogger.Msg(e);
+            Log(e);
         }
         isTeleportingPlayer = false;
     } 

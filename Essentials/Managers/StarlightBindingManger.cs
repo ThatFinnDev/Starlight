@@ -55,6 +55,6 @@ public static class StarlightBindingManger
                 }
             }
         }
-        catch (Exception e) {MelonLogger.Error(e);}
+        catch (Exception e) {LogError(e);}
     }
 }

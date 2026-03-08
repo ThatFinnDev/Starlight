@@ -41,7 +41,7 @@ internal static class SaveDataSerializer
             return finalMs.ToArray();
         }
         catch (Exception e) {
-            MelonLogger.Error($"Failed to serialize save data (Aborting save): {e}");
+            LogError($"Failed to serialize save data (Aborting save): {e}");
             return null;
         }
     }
@@ -73,7 +73,7 @@ internal static class SaveDataSerializer
         
             var payloadBytes = decompressedMs.ToArray();
             if (storedChecksum != CalculateChecksum(payloadBytes)) {
-                MelonLogger.Error("Save data corruption detected! Checksum mismatch.");
+                LogError("Save data corruption detected! Checksum mismatch.");
                 return null;
             }
 
@@ -88,21 +88,21 @@ internal static class SaveDataSerializer
                 try {
                     saveable.OnLoad();
                 } catch (Exception e) {
-                    MelonLogger.Error($"Error in OnLoad for {saveable.GetType().Name}: {e}");
+                    LogError($"Error in OnLoad for {saveable.GetType().Name}: {e}");
                 }
             }
 
             return result;
         }
         catch (Exception e) {
-            MelonLogger.Error($"Failed to deserialize save data (Aborting load): {e}");
+            LogError($"Failed to deserialize save data (Aborting load): {e}");
             return null;
         }
     }
     
     static void WriteObject(BinaryWriter w, object obj, List<string> strings) {
         if (obj == null) { w.Write((byte)DataType.Null); return; }
-        if (obj is StarlightSaveableBase s) try { s.OnSave(); } catch (Exception e) { MelonLogger.Error($"Error in OSave for {s.GetType().Name}: {e}"); }
+        if (obj is StarlightSaveableBase s) try { s.OnSave(); } catch (Exception e) { LogError($"Error in OSave for {s.GetType().Name}: {e}"); }
 
         var t = obj.GetType();
 

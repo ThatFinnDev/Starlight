@@ -19,7 +19,7 @@ public class CustomRanchUIButton
         this.action = action;
 
         foreach (CustomRanchUIButton entry in SR2RanchUIButtonPatch.buttons)
-            if (entry.label == this.label) { MelonLogger.Error($"There is already a button with the name {this.label}"); return; }
+            if (entry.label == this.label) { LogError($"There is already a button with the name {this.label}"); return; }
 
         SR2RanchUIButtonPatch.buttons.Add(this);
     }

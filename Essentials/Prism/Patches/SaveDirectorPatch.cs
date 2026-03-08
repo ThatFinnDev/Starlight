@@ -28,23 +28,23 @@ internal static class SaveDirectorPatch
         
         foreach (var expansion in StarlightEntryPoint.ExpansionV01S)
             try { expansion.OnPrismCreateAdditions(); }
-            catch (Exception e) { MelonLogger.Error(e); }
+            catch (Exception e) { LogError(e); }
         
         
         foreach (var expansion in StarlightEntryPoint.ExpansionV01S)
             try { expansion.AfterPrismCreateAdditions(); }
-            catch (Exception e) { MelonLogger.Error(e); }
+            catch (Exception e) { LogError(e); }
         
         
         // Doing this so it executes after all mods have made their slimes.
         foreach (var largoAction in PrismShortcuts.CreateLargoActions)
             try { largoAction.Invoke(); }
-            catch (Exception e) { MelonLogger.Error(e); }
+            catch (Exception e) { LogError(e); }
         
         
         foreach (var expansion in StarlightEntryPoint.ExpansionV01S)
             try { expansion.AfterPrismLargosCreated(); }
-            catch (Exception e) { MelonLogger.Error(e); }
+            catch (Exception e) { LogError(e); }
         
         
     }

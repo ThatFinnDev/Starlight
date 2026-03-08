@@ -13,7 +13,7 @@ internal class SceneContextPatch
         StarlightEntryPoint.CheckForTime();
         foreach (var expansion in StarlightEntryPoint.ExpansionV01S)
             try { expansion.AfterSceneContext(__instance); } 
-            catch (Exception e) { MelonLogger.Error(e); }
+            catch (Exception e) { LogError(e); }
         StarlightCallEventManager.ExecuteWithArgs(CallEvent.AfterSceneContextLoad, ("sceneContext", __instance));
     }
 }

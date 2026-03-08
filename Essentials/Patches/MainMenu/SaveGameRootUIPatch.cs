@@ -47,7 +47,7 @@ internal static class SaveGameRootUIPatch
                 var error = SaveFileEUtil.ImportSaveV01(savefile, ui._selectedModelIndex + 1, true);
                 if (error != StarlightError.NoError)
                 {
-                    MelonLogger.Msg(translation("messages.save.import.error",error));
+                    Log(translation("messages.save.import.error",error));
                     StarlightConfirmationViewer.Open(translation("messages.save.import.error",error),null,null);
                     return;
                 }
@@ -65,7 +65,7 @@ internal static class SaveGameRootUIPatch
                 var error = SaveFileEUtil.ExportSaveV01(loadGameBehaviorModel.GameDataSummary, out StarlightSaveFileV01 savefile);
                 if (error != StarlightError.NoError)
                 {
-                    MelonLogger.Msg(translation("messages.save.export.error",error));
+                    Log(translation("messages.save.export.error",error));
                     StarlightConfirmationViewer.Open(translation("messages.save.export.error",error),null,null);
                     return;
                 }

@@ -21,7 +21,7 @@ internal static class StarlightSaveManager
         Error = (sender, args) =>
         {
             if (DebugLogging.HasFlag())
-                MelonLogger.Msg($"Error: {args.ErrorContext.Error.Message}");
+                Log($"Error: {args.ErrorContext.Error.Message}");
 
             // Handle broken fonts
             if (args.ErrorContext.Member is string memberName && args.ErrorContext.Path.Contains(nameof(StarlightSaveData.fonts)))
@@ -43,7 +43,7 @@ internal static class StarlightSaveManager
                     {
                         dict.Remove(entry.Key);
                         if (DebugLogging.HasFlag())
-                            MelonLogger.Msg($"Removed broken keybind: {brokenKey}");
+                            Log($"Removed broken keybind: {brokenKey}");
                     }
                 }
             }
@@ -66,8 +66,8 @@ internal static class StarlightSaveManager
             }
             catch (Exception e)
             {
-                MelonLogger.Msg("Starlight save data is broken");
-                MelonLogger.Msg(e);
+                Log("Starlight save data is broken");
+                Log(e);
                 data = new StarlightSaveData();
             }
         if (File.Exists(oldpath2)) File.Delete(oldpath2);

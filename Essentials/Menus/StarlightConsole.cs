@@ -132,7 +132,7 @@ public class StarlightConsole : StarlightMenu
                 string containing = "";
                 if (args != null) containing = args[argIndex];
                 List<string> possibleAutoCompletes = null;
-                try { possibleAutoCompletes = StarlightCommandManager.commands[cmd].GetAutoComplete(argIndex, args); } catch (Exception e) { MelonLogger.Error($"Error in command auto complete!\n{e}"); }
+                try { possibleAutoCompletes = StarlightCommandManager.commands[cmd].GetAutoComplete(argIndex, args); } catch (Exception e) { LogError($"Error in command auto complete!\n{e}"); }
                 if (possibleAutoCompletes != null)
                 {
                     possibleAutoCompletes = possibleAutoCompletes.Where(s => s.ToUpper().Contains(containing.ToUpper()))

@@ -13,10 +13,10 @@ internal static class LoadPatch
         if (__exception == null) return null;
         if (IgnoreSaveErrors.HasFlag())
         {
-            MelonLogger.Error($"Error occured while pushing saved game!\nThe error: {__exception}\n\nContinuing!");
+            LogError($"Error occured while pushing saved game!\nThe error: {__exception}\n\nContinuing!");
             return null;
         }
-        MelonLogger.Error($"Error occured while pushing saved game!\nThe error: {__exception}");
+        LogError($"Error occured while pushing saved game!\nThe error: {__exception}");
         return __exception;
     }
 }
@@ -29,10 +29,10 @@ internal static class SavePatch
         if (__exception == null) return null;
         if (IgnoreSaveErrors.HasFlag())
         {
-            MelonLogger.Error($"Error occured while pulling saved game!\nThe error: {__exception}\n\nContinuing!");
+            LogError($"Error occured while pulling saved game!\nThe error: {__exception}\n\nContinuing!");
             return null;
         }
-        MelonLogger.Error($"Error occured while pulling saved game!\nThe error: {__exception}");
+        LogError($"Error occured while pulling saved game!\nThe error: {__exception}");
         return __exception;
     }
 }

@@ -28,13 +28,13 @@ internal static class StarlightUpdateManager
             var jobject = JObject.Parse(json);
             if (!CheckSignature(jobject))
             {
-                MelonLogger.Msg("Starlight API's signature is invalid, is the date & time set correctly?");
+                Log("Starlight API's signature is invalid, is the date & time set correctly?");
                 throw new Exception();
             }
         }
-        catch { MelonLogger.Msg("Starlight API either changed or is broken."); yield break; }
+        catch { Log("Starlight API either changed or is broken."); yield break; }
         branchJson = json;
-        MelonCoroutines.Start(CheckForNewVersion());
+        StartCoroutine(CheckForNewVersion());
     }
     internal static IEnumerator CheckForNewVersion()
     {
@@ -45,9 +45,9 @@ internal static class StarlightUpdateManager
             string latest = jobject["latest"].ToObject<string>();
             newVersion = latest;
             if (!IsLatestVersion) if (AllowAutoUpdate.HasFlag()) if (StarlightEntryPoint.autoUpdate)
-                MelonCoroutines.Start(UpdateVersion());
+                StartCoroutine(UpdateVersion());
         }
-        catch { MelonLogger.Msg("Starlight API either changed or is broken."); }
+        catch { Log("Starlight API either changed or is broken."); }
     }
     internal static IEnumerator UpdateVersion()
     {
@@ -60,14 +60,14 @@ internal static class StarlightUpdateManager
             var latestVersion = jobject["versions_info"][latest];
             updateLink = latestVersion["download_url"].ToObject<string>();
         }
-        catch { MelonLogger.Msg("Starlight API either changed or is broken."); yield break; }
+        catch { Log("Starlight API either changed or is broken."); yield break; }
         if (string.IsNullOrEmpty(updateLink)) yield break;
         UnityWebRequest uwr = UnityWebRequest.Get(updateLink);
         yield return uwr.SendWebRequest();
         if (!uwr.isNetworkError && !uwr.isHttpError)
             if (uwr.result == UnityWebRequest.Result.Success)
             {
-                MelonLogger.Msg("Downloading Starlight complete");
+                Log("Downloading Starlight complete");
                 string path = StarlightEntryPoint.Instance.MelonAssembly.Assembly.Location;
                 if (File.Exists(path))
                 {
@@ -76,7 +76,7 @@ internal static class StarlightUpdateManager
                 }
                 File.WriteAllBytes(Path.Combine(new FileInfo(path).Directory.FullName, "Starlight.dll"), uwr.downloadHandler.data);
                 updatedStarlight = true;
-                MelonLogger.Msg("Restart needed for applying Starlight update");
+                Log("Restart needed for applying Starlight update");
             }
     }
     
@@ -110,7 +110,7 @@ internal static class StarlightUpdateManager
         }
         catch (Exception e)
         {
-            MelonLogger.Error("Signature verification error: " + e.Message);
+            LogError("Signature verification error: " + e.Message);
             return false;
         }
     }

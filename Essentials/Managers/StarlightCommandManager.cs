@@ -21,48 +21,54 @@ public static class StarlightCommandManager
     {
         switch (sceneName)
         {
-            case "StandaloneEngagementPrompt": foreach (var pair in commands) try { pair.Value.OnStandaloneEngagementPromptLoad(); } catch (Exception e) { MelonLogger.Error(e); } break;
-            case "PlayerCore": foreach (var pair in commands) try { pair.Value.OnPlayerCoreLoad(); } catch (Exception e) { MelonLogger.Error(e); } break;
+            case "StandaloneEngagementPrompt": foreach (var pair in commands) try { pair.Value.OnStandaloneEngagementPromptLoad(); } catch (Exception e) { LogError(e); } break;
+            case "PlayerCore": foreach (var pair in commands) try { pair.Value.OnPlayerCoreLoad(); } catch (Exception e) { LogError(e); } break;
             case "UICore": 
-                foreach (var pair in commands) try { pair.Value.OnUICoreLoad(); } catch (Exception e) { MelonLogger.Error(e); } 
+                foreach (var pair in commands) try { pair.Value.OnUICoreLoad(); } catch (Exception e) { LogError(e); } 
                 if (!string.IsNullOrEmpty(StarlightEntryPoint.onSaveLoadCommand)) 
                     ExecuteByString(StarlightEntryPoint.onSaveLoadCommand);
                 break;
             case "MainMenuUI":
-                foreach (var pair in commands) try { pair.Value.OnMainMenuUILoad(); } catch (Exception e) { MelonLogger.Error(e); }
+                foreach (var pair in commands) try { pair.Value.OnMainMenuUILoad(); } catch (Exception e) { LogError(e); }
                 if (!string.IsNullOrEmpty(StarlightEntryPoint.onMainMenuLoadCommand)) 
                     ExecuteByString(StarlightEntryPoint.onMainMenuLoadCommand);
                 break; break;
-            case "LoadScene": foreach (var pair in commands) try { pair.Value.OnLoadSceneLoad(); } catch (Exception e) { MelonLogger.Error(e); } break;
+            case "LoadScene": foreach (var pair in commands) try { pair.Value.OnLoadSceneLoad(); } catch (Exception e) { LogError(e); } break;
         }
     }
     internal static void OnSceneWasUnloaded(int buildIndex, string sceneName)
     {
         switch (sceneName)
         {
-            case "StandaloneEngagementPrompt": foreach (var pair in commands) try { pair.Value.OnStandaloneEngagementPromptUnload(); } catch (Exception e) { MelonLogger.Error(e); } break;
-            case "PlayerCore": foreach (var pair in commands) try { pair.Value.OnPlayerCoreUnload(); } catch (Exception e) { MelonLogger.Error(e); } break;
-            case "UICore": foreach (var pair in commands) try { pair.Value.OnUICoreUnload(); } catch (Exception e) { MelonLogger.Error(e); } break;
-            case "MainMenuUI": foreach (var pair in commands) try { pair.Value.OnMainMenuUIUnload(); } catch (Exception e) { MelonLogger.Error(e); } break;
-            case "LoadScene": foreach (var pair in commands) try { pair.Value.OnLoadSceneUnload(); } catch (Exception e) { MelonLogger.Error(e); } break;
+            case "StandaloneEngagementPrompt": foreach (var pair in commands) try { pair.Value.OnStandaloneEngagementPromptUnload(); } catch (Exception e) { LogError(e); } break;
+            case "PlayerCore": foreach (var pair in commands) try { pair.Value.OnPlayerCoreUnload(); } catch (Exception e) { LogError(e); } break;
+            case "UICore": foreach (var pair in commands) try { pair.Value.OnUICoreUnload(); } catch (Exception e) { LogError(e); } break;
+            case "MainMenuUI": foreach (var pair in commands) try { pair.Value.OnMainMenuUIUnload(); } catch (Exception e) { LogError(e); } break;
+            case "LoadScene": foreach (var pair in commands) try { pair.Value.OnLoadSceneUnload(); } catch (Exception e) { LogError(e); } break;
         }
     }
     internal static void OnSceneWasInitialized(int buildIndex, string sceneName)
     {
         switch (sceneName)
         {
-            case "StandaloneEngagementPrompt": foreach (var pair in commands) try { pair.Value.OnStandaloneEngagementPromptInitialize(); } catch (Exception e) { MelonLogger.Error(e); } break;
-            case "PlayerCore": foreach (var pair in commands) try { pair.Value.OnPlayerCoreInitialize(); } catch (Exception e) { MelonLogger.Error(e); } break;
-            case "UICore": foreach (var pair in commands) try { pair.Value.OnUICoreInitialize(); } catch (Exception e) { MelonLogger.Error(e); } break;
-            case "MainMenuUI": foreach (var pair in commands) try { pair.Value.OnMainMenuUIInitialize(); } catch (Exception e) { MelonLogger.Error(e); } break;
-            case "LoadScene": foreach (var pair in commands) try { pair.Value.OnLoadSceneInitialize(); } catch (Exception e) { MelonLogger.Error(e); } break;
+            case "StandaloneEngagementPrompt": foreach (var pair in commands) try { pair.Value.OnStandaloneEngagementPromptInitialize(); } catch (Exception e) { LogError(e); } break;
+            case "PlayerCore": foreach (var pair in commands) try { pair.Value.OnPlayerCoreInitialize(); } catch (Exception e) { LogError(e); } break;
+            case "UICore": foreach (var pair in commands) try { pair.Value.OnUICoreInitialize(); } catch (Exception e) { LogError(e); } break;
+            case "MainMenuUI": foreach (var pair in commands) try { pair.Value.OnMainMenuUIInitialize(); } catch (Exception e) { LogError(e); } break;
+            case "LoadScene": foreach (var pair in commands) try { pair.Value.OnLoadSceneInitialize(); } catch (Exception e) { LogError(e); } break;
         }
     }
     static void SetupCommands()
     {
-        foreach (MelonBase melonBase in MelonBase.RegisteredMelons)
+        var assemblies = StarlightEntryPoint.Expansions.Keys.ToList();
+        foreach (var melonBase in MelonBase.RegisteredMelons)
         {
-            var exporters = melonBase.MelonAssembly.Assembly.GetTypes()
+            if(!assemblies.Contains(melonBase.MelonAssembly.Assembly))
+                assemblies.Add(melonBase.MelonAssembly.Assembly);
+        }
+        foreach (var assembly in assemblies)
+        {
+            var exporters = assembly.GetTypes()
                 .Where(t => t.IsSubclassOf(typeof(StarlightCommand)) && !t.IsAbstract);
             foreach (Type type in exporters)
                 try
@@ -77,14 +83,14 @@ public static class StarlightCommandManager
                         if (sr2Command is InfiniteEnergyCommand && !EnableInfEnergy.HasFlag()) continue;
                         if (sr2Command.type.HasFlag(CommandType.DontLoad)) continue;
                         try { RegisterCommand(sr2Command); }
-                        catch (Exception e) { MelonLogger.Error(e); }
+                        catch (Exception e) { LogError(e); }
                     }
                 }
-                catch (Exception e) { MelonLogger.Error(e); }
+                catch (Exception e) { LogError(e); }
         }
         foreach (var expansion in StarlightEntryPoint.ExpansionV01S)
             try { expansion.OnLoadCommands(); }
-            catch (Exception e) { MelonLogger.Error(e); }
+            catch (Exception e) { LogError(e); }
         StarlightCallEventManager.ExecuteStandard(CallEvent.OnLoadCommands);
                 
     }
@@ -260,12 +266,12 @@ public static class StarlightCommandManager
                             var command = commands[cmd];
                             if (command.type.HasFlag(CommandType.Cheat) && StarlightCounterGateManager.disableCheats)
                             {
-                                try { command.SendCheatsDisabled(); } catch (Exception e) { MelonLogger.Error($"Error in command SendCheatsDisabled!\n{e}"); }
+                                try { command.SendCheatsDisabled(); } catch (Exception e) { LogError($"Error in command SendCheatsDisabled!\n{e}"); }
                             }
                             else
                             {
                                 command.silent = silent;
-                                try { successful = command.Execute(args); } catch (Exception e) { MelonLogger.Error($"Error in command execution!\n{e}"); }
+                                try { successful = command.Execute(args); } catch (Exception e) { LogError($"Error in command execution!\n{e}"); }
 
                                 try
                                 {
@@ -273,7 +279,7 @@ public static class StarlightCommandManager
                                         foreach (var action in list)
                                             action(args);
                                 }
-                                catch (Exception e) { MelonLogger.Error($"Error in command extension execution!\n{e}"); }
+                                catch (Exception e) { LogError($"Error in command extension execution!\n{e}"); }
                             
                                 command.silent = false;
                             }
@@ -284,12 +290,12 @@ public static class StarlightCommandManager
                         StarlightCommand command = commands[cmd];
                         if (command.type.HasFlag(CommandType.Cheat) && StarlightCounterGateManager.disableCheats)
                         {
-                            try { command.SendCheatsDisabled(); } catch (Exception e) { MelonLogger.Error($"Error in command SendCheatsDisabled!\n{e}"); }
+                            try { command.SendCheatsDisabled(); } catch (Exception e) { LogError($"Error in command SendCheatsDisabled!\n{e}"); }
                         }
                         else
                         {
                             command.silent = silent;
-                            try { successful = command.Execute(null); } catch (Exception e) { MelonLogger.Error($"Error in command execution!\n{e}"); }
+                            try { successful = command.Execute(null); } catch (Exception e) { LogError($"Error in command execution!\n{e}"); }
 
                             try
                             {
@@ -297,13 +303,13 @@ public static class StarlightCommandManager
                                     foreach (var action in list)
                                         action(null);
                             }
-                            catch (Exception e) { MelonLogger.Error($"Error in command extension execution!\n{e}"); }
+                            catch (Exception e) { LogError($"Error in command extension execution!\n{e}"); }
                             
                             command.silent = false;
                         }
                     }
 
-                    if (DebugLogging.HasFlag()) MelonLogger.Msg($"Command success: {successful}");
+                    if (DebugLogging.HasFlag()) Log($"Command success: {successful}");
                 }
                 else if (!silent)
                     if (MenuEUtil.isAnyMenuOpen)

@@ -120,7 +120,7 @@ public class StarlightEntryPoint : MelonMod
         Instance = this;
         if (!IsDisplayVersionValid())
         {
-            MelonLogger.Msg("Version Code is broken!");
+            Log("Version Code is broken!");
             Unregister();
             return;
         }
@@ -162,7 +162,7 @@ public class StarlightEntryPoint : MelonMod
                 try
                 {
                     if (!dllPath.EndsWith(".dll")) continue;
-                    if (HasAttribute(dllPath)) continue;
+                    if (!HasAttribute(dllPath)) continue;
                     var assembly = Assembly.LoadFrom(dllPath);
                     var hInstance = new HarmonyLib.Harmony(dllPath);
                     var att = assembly.GetCustomAttribute<StarlightExpansionAttribute>();
@@ -192,8 +192,8 @@ public class StarlightEntryPoint : MelonMod
                                 catch (Exception e)
                                 {
                                     success = false;
-                                    MelonLogger.Error(e);
-                                    MelonLogger.Error(
+                                    LogError(e);
+                                    LogError(
                                         $"Couldn't load the expansion \"{type.FullName}\" in the dll at \"{dllPath}\" due to an unknown error!");
                                     errorMessage = e.Message;
                                 }
@@ -201,19 +201,19 @@ public class StarlightEntryPoint : MelonMod
                                 if (!string.IsNullOrWhiteSpace(message))
                                 {
                                     success = false;
-                                    MelonLogger.Error(
+                                    LogError(
                                         $"Couldn't load the expansion \"{type.FullName}\" in the dll at \"{dllPath}\"!");
-                                    MelonLogger.Error("The expansion info is invalid!");
-                                    MelonLogger.Error(message);
+                                    LogError("The expansion info is invalid!");
+                                    LogError(message);
                                 }
 
                                 try
                                 {
-                                    info.icon = EmbeddedResourceEUtil.LoadSprite("icon.png",assembly).CopyWithoutMipmaps();
+                                    info.icon = EmbeddedResourceEUtil.LoadSprite(info.iconPath,assembly).CopyWithoutMipmaps();
                                 }
                                 catch (Exception e)
                                 {
-                                    MelonLogger.Error($"Couldn't load the icon of expansion \"{type.FullName}\" in the dll at \"{dllPath}\"!");
+                                    LogError($"Couldn't load the icon of expansion \"{type.FullName}\" in the dll at \"{dllPath}\"!");
                                 }
                                 if (instance is StarlightExpansionV01)
                                 {
@@ -264,7 +264,7 @@ public class StarlightEntryPoint : MelonMod
                 }
                 catch (Exception e)
                 {
-                    MelonLogger.Error(e);
+                    LogError(e);
                 }
             }
         }
@@ -272,7 +272,6 @@ public class StarlightEntryPoint : MelonMod
         PatchIl2CppDetourMethodPatcher.InstallSecondPart(HarmonyInstance);
     }
 
-    
     public override void OnInitializeMelon()
     {
         _prefs = MelonPreferences.CreateCategory("Starlight", "Starlight");
@@ -297,11 +296,11 @@ public class StarlightEntryPoint : MelonMod
 
         Application.add_logMessageReceived(new Action<string, string, LogType>(AppLogUnity));
         try { AddLanguages(EmbeddedResourceEUtil.LoadString("translations.csv")); }
-        catch (Exception e) { MelonLogger.Error(e); }
+        catch (Exception e) { LogError(e); }
 
         foreach (var expansion in ExpansionV01S)
             try { expansion.OnInitialize(); }
-            catch (Exception e) { MelonLogger.Error(e); }
+            catch (Exception e) { LogError(e); }
     }
     
     
@@ -331,11 +330,11 @@ public class StarlightEntryPoint : MelonMod
             Object.DontDestroyOnLoad(ia);
         }
 
-        if (CheckForUpdates.HasFlag()) MelonCoroutines.Start(StarlightUpdateManager.GetBranchJson());
+        if (CheckForUpdates.HasFlag()) StartCoroutine(StarlightUpdateManager.GetBranchJson());
 
         foreach (var expansion in ExpansionV01S)
             try { expansion.OnLateInitializeMelon(); }
-            catch (Exception e) { MelonLogger.Error(e); }
+            catch (Exception e) { LogError(e); }
     }
     
     
@@ -477,8 +476,8 @@ public class StarlightEntryPoint : MelonMod
             }
             catch (Exception e)
             {
-                MelonLogger.Error(e);
-                MelonLogger.Error($"Failed to inject {type.FullName}: {e.Message}");
+                LogError(e);
+                LogError($"Failed to inject {type.FullName}: {e.Message}");
             }
         }
     }
@@ -504,8 +503,8 @@ public class StarlightEntryPoint : MelonMod
             }
             catch (Exception e)
             {
-                MelonLogger.Error(e);
-                MelonLogger.Error($"Failed to patch {type.FullName}: {e.Message}");
+                LogError(e);
+                LogError($"Failed to patch {type.FullName}: {e.Message}");
             }
         }
     }
@@ -524,7 +523,7 @@ public class StarlightEntryPoint : MelonMod
 
         foreach (var expansion in ExpansionV01S)
             try { expansion.OnApplicationQuit(); }
-            catch (Exception e) { MelonLogger.Error(e); }
+            catch (Exception e) { LogError(e); }
     }
 
     internal static void CheckFallBackFont()
@@ -559,10 +558,10 @@ public class StarlightEntryPoint : MelonMod
     public override void OnSceneWasLoaded(int buildIndex, string sceneName)
     {
         CheckFallBackFont();
-        if (DebugLogging.HasFlag()) MelonLogger.Msg("OnLoaded Scene: " + sceneName);
+        if (DebugLogging.HasFlag()) Log("OnLoaded Scene: " + sceneName);
 
         try { StarlightWarpManager.OnSceneLoaded(); }
-        catch (Exception e) { MelonLogger.Error(e); }
+        catch (Exception e) { LogError(e); }
 
         if (sceneName is "StandaloneStart" or "CompanyLogo" or "LoadScene")
             try
@@ -600,7 +599,7 @@ public class StarlightEntryPoint : MelonMod
                 }
                 catch (Exception e)
                 {
-                    MelonLogger.Error(e);
+                    LogError(e);
                 }
 
                 /*try
@@ -616,54 +615,54 @@ public class StarlightEntryPoint : MelonMod
                 }
                 catch (Exception e)
                 {
-                    MelonLogger.Error(e);
-                    MelonLogger.Error("There was a problem applying styles to the save slider!");
+                    LogError(e);
+                    LogError("There was a problem applying styles to the save slider!");
                 }*/
                 break;
         }
 
         if (isPrismInUse)
             try { PrismShortcuts.OnSceneWasLoaded(buildIndex, sceneName); }
-            catch (Exception e) { MelonLogger.Error(e); }
+            catch (Exception e) { LogError(e); }
         
         switch (sceneName)
         {
             case "StandaloneEngagementPrompt":
                 foreach (var expansion in ExpansionV01S)
                     try { expansion.OnStandaloneEngagementPromptLoad(); }
-                    catch (Exception e) { MelonLogger.Error(e); }
+                    catch (Exception e) { LogError(e); }
                 break;
             case "PlayerCore":
                 foreach (var expansion in ExpansionV01S)
                     try { expansion.OnPlayerCoreLoad(); }
-                    catch (Exception e) { MelonLogger.Error(e); }
+                    catch (Exception e) { LogError(e); }
                 break;
             case "UICore":
                 foreach (var expansion in ExpansionV01S)
                     try { expansion.OnUICoreInitialize(); }
-                    catch (Exception e) { MelonLogger.Error(e); }
+                    catch (Exception e) { LogError(e); }
                 break;
             case "MainMenuUI":
                 foreach (var expansion in ExpansionV01S)
                     try { expansion.OnMainMenuUIInitialize(); }
-                    catch (Exception e) { MelonLogger.Error(e); }
+                    catch (Exception e) { LogError(e); }
                 break;
             case "LoadScene":
                 foreach (var expansion in ExpansionV01S)
                     try { expansion.OnLoadSceneInitialize(); }
-                    catch (Exception e) { MelonLogger.Error(e); }
+                    catch (Exception e) { LogError(e); }
                 break;
             case "ZoneCore":
                 foreach (var expansion in ExpansionV01S)
                     try { expansion.OnZoneCoreInitialized(); }
-                    catch (Exception e) { MelonLogger.Error(e); }
+                    catch (Exception e) { LogError(e); }
 
                 break;
         }
 
         foreach (var expansion in ExpansionV01S)
             try { expansion.OnSceneWasLoaded(buildIndex, sceneName); }
-            catch (Exception e) { MelonLogger.Error(e); }
+            catch (Exception e) { LogError(e); }
 
         switch (sceneName)
         {
@@ -699,7 +698,7 @@ public class StarlightEntryPoint : MelonMod
 
     internal static void SendFontError(string name)
     {
-        MelonLogger.Error($"The font '{name}' couldn't be loaded!");
+        LogError($"The font '{name}' couldn't be loaded!");
     }
 
     internal static void SetupFonts()
@@ -715,10 +714,10 @@ public class StarlightEntryPoint : MelonMod
 
     public override void OnSceneWasInitialized(int buildIndex, string sceneName)
     {
-        if (DebugLogging.HasFlag()) MelonLogger.Msg("WasInitialized Scene: " + sceneName);
+        if (DebugLogging.HasFlag()) Log("WasInitialized Scene: " + sceneName);
         if (isPrismInUse)
             try { PrismShortcuts.OnSceneWasInitialized(buildIndex, sceneName); }
-            catch (Exception e) { MelonLogger.Error(e); }
+            catch (Exception e) { LogError(e); }
 
         if (sceneName == "MainMenuUI")
         {
@@ -731,38 +730,38 @@ public class StarlightEntryPoint : MelonMod
             case "StandaloneEngagementPrompt":
                 foreach (var expansion in ExpansionV01S)
                     try { expansion.OnStandaloneEngagementPromptInitialize(); }
-                    catch (Exception e) { MelonLogger.Error(e); }
+                    catch (Exception e) { LogError(e); }
                 break;
             case "PlayerCore":
                 foreach (var expansion in ExpansionV01S)
                     try { expansion.OnPlayerCoreInitialize(); }
-                    catch (Exception e) { MelonLogger.Error(e); }
+                    catch (Exception e) { LogError(e); }
                 break;
             case "UICore":
                 foreach (var expansion in ExpansionV01S)
                     try { expansion.OnUICoreInitialize(); }
-                    catch (Exception e) { MelonLogger.Error(e); }
+                    catch (Exception e) { LogError(e); }
                 break;
             case "MainMenuUI":
                 foreach (var expansion in ExpansionV01S)
                     try { expansion.OnMainMenuUIInitialize(); }
-                    catch (Exception e) { MelonLogger.Error(e); }
+                    catch (Exception e) { LogError(e); }
                 break;
             case "LoadScene":
                 foreach (var expansion in ExpansionV01S)
                     try { expansion.OnLoadSceneInitialize(); }
-                    catch (Exception e) { MelonLogger.Error(e); }
+                    catch (Exception e) { LogError(e); }
                 break;
             case "ZoneCore":
                 foreach (var expansion in ExpansionV01S)
                     try { expansion.OnZoneCoreInitialized(); }
-                    catch (Exception e) { MelonLogger.Error(e); }
+                    catch (Exception e) { LogError(e); }
                 break;
         }
 
         foreach (var expansion in ExpansionV01S)
             try { expansion.OnSceneWasInitialized(buildIndex, sceneName); }
-            catch (Exception e) { MelonLogger.Error(e); }
+            catch (Exception e) { LogError(e); }
 
         switch (sceneName)
         {
@@ -779,7 +778,7 @@ public class StarlightEntryPoint : MelonMod
 
     public override void OnSceneWasUnloaded(int buildIndex, string sceneName)
     {
-        if (DebugLogging.HasFlag()) MelonLogger.Msg("OnUnloaded Scene: " + sceneName);
+        if (DebugLogging.HasFlag()) Log("OnUnloaded Scene: " + sceneName);
         if (sceneName == "MainMenuUI") MainMenuLoaded = false;
 
         switch (sceneName)
@@ -787,38 +786,38 @@ public class StarlightEntryPoint : MelonMod
             case "StandaloneEngagementPrompt":
                 foreach (var expansion in ExpansionV01S)
                     try { expansion.OnStandaloneEngagementPromptUnload(); }
-                    catch (Exception e) { MelonLogger.Error(e); }
+                    catch (Exception e) { LogError(e); }
                 break;
             case "PlayerCore":
                 foreach (var expansion in ExpansionV01S)
                     try { expansion.OnPlayerCoreUnload(); }
-                    catch (Exception e) { MelonLogger.Error(e); }
+                    catch (Exception e) { LogError(e); }
                 break;
             case "UICore":
                 foreach (var expansion in ExpansionV01S)
                     try { expansion.OnUICoreUnload(); }
-                    catch (Exception e) { MelonLogger.Error(e); }
+                    catch (Exception e) { LogError(e); }
                 break;
             case "MainMenuUI":
                 foreach (var expansion in ExpansionV01S)
                     try { expansion.OnMainMenuUIUnload(); }
-                    catch (Exception e) { MelonLogger.Error(e); }
+                    catch (Exception e) { LogError(e); }
                 break;
             case "LoadScene":
                 foreach (var expansion in ExpansionV01S)
                     try { expansion.OnLoadSceneUnload(); }
-                    catch (Exception e) { MelonLogger.Error(e); }
+                    catch (Exception e) { LogError(e); }
                 break;
             case "ZoneCore":
                 foreach (var expansion in ExpansionV01S)
                     try { expansion.OnZoneCoreUnloaded(); }
-                    catch (Exception e) { MelonLogger.Error(e); }
+                    catch (Exception e) { LogError(e); }
                 break;
         }
 
         foreach (var expansion in ExpansionV01S)
             try { expansion.OnSceneWasUnloaded(buildIndex, sceneName); }
-            catch (Exception e) { MelonLogger.Error(e); }
+            catch (Exception e) { LogError(e); }
 
         switch (sceneName)
         {
@@ -862,62 +861,62 @@ public class StarlightEntryPoint : MelonMod
                     if (StarlightConsole.openKey.OnKeyDown() || StarlightConsole.openKey2.OnKeyDown())
                         MenuEUtil.GetMenu<StarlightConsole>().Toggle();
                 }
-                catch (Exception e) { MelonLogger.Error(e); }
+                catch (Exception e) { LogError(e); }
 
                 try { StarlightCommandManager.Update(); }
-                catch (Exception e) { MelonLogger.Error(e); }
+                catch (Exception e) { LogError(e); }
 
                 try { StarlightBindingManger.Update(); }
-                catch (Exception e) { MelonLogger.Error(e); }
+                catch (Exception e) { LogError(e); }
 
                 if (DevMode.HasFlag()) 
                     try {StarlightDebugUI.DebugStatsManager.Update(); }
-                    catch (Exception e) { MelonLogger.Error(e); }
+                    catch (Exception e) { LogError(e); }
                 
                 if (RestoreDebugDebugUI.HasFlag())
                     try { if (StarlightNativeDebugUI.openKey.OnKeyDown()) MenuEUtil.GetMenu<StarlightNativeDebugUI>().Toggle(); }
-                    catch (Exception e) { MelonLogger.Error(e); }
+                    catch (Exception e) { LogError(e); }
 
                 foreach (var pair in Menus)
                     try { pair.Key.AlwaysUpdate(); }
-                    catch (Exception e) { MelonLogger.Error(e); }
+                    catch (Exception e) { LogError(e); }
             }
             if (ActionCounter.Count > 0)
                 foreach (var pair in new Dictionary<Action, int>(ActionCounter))
                     if (pair.Value < 1)
                     {
                         try { pair.Key.Invoke(); }
-                        catch (Exception e) { MelonLogger.Error(e); }
+                        catch (Exception e) { LogError(e); }
 
                         ActionCounter.Remove(pair.Key);
                     }
                     else ActionCounter[pair.Key]--;
         }
-        catch (Exception e) { MelonLogger.Error(e); }
+        catch (Exception e) { LogError(e); }
 
         foreach (var expansion in ExpansionV01S)
             try { expansion.OnUpdate(); }
-            catch (Exception e) { MelonLogger.Error(e); }
+            catch (Exception e) { LogError(e); }
     }
     
     public override void OnFixedUpdate()
     {
         foreach (var expansion in ExpansionV01S)
             try { expansion.OnFixedUpdate(); }
-            catch (Exception e) { MelonLogger.Error(e); }
+            catch (Exception e) { LogError(e); }
     }
 
     public override void OnGUI()
     {
         foreach (var expansion in ExpansionV01S)
             try { expansion.OnGUI(); }
-            catch (Exception e) { MelonLogger.Error(e); }
+            catch (Exception e) { LogError(e); }
     }
 
     public override void OnLateUpdate()
     {
         foreach (var expansion in ExpansionV01S)
             try { expansion.OnLateUpdate(); }
-            catch (Exception e) { MelonLogger.Error(e); }
+            catch (Exception e) { LogError(e); }
     }
 }

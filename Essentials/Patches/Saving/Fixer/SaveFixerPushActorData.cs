@@ -9,7 +9,7 @@ namespace Starlight.Patches.Saving.Fixer;
 [HarmonyPatch(typeof(GameModelPushHelpers), nameof(GameModelPushHelpers.PushActorData))]
 internal static class SaveFixerPushActorData
 {
-    static bool needsRemoving(int integer,ILoadReferenceTranslation r)
+    private static bool NeedsRemoving(int integer,ILoadReferenceTranslation r)
     {
         try { if (r.GetIdentifiableType(integer) == null) return true; }
         catch (Exception e) { return true; }
@@ -21,11 +21,11 @@ internal static class SaveFixerPushActorData
         if (!StarlightEntryPoint.disableFixSaves)
             try
             { 
-                if(needsRemoving(actorData.TypeId,loadReferenceTranslation)) return false;
+                if(NeedsRemoving(actorData.TypeId,loadReferenceTranslation)) return false;
             }
             catch (Exception e)
             {
-                if(actorData!=null) MelonLogger.Error(e);
+                if(actorData!=null) LogError(e);
                 return false;
             }
         return true;

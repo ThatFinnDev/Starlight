@@ -219,8 +219,8 @@ public class PrismBaseSlimeCreatorV01
                     }
                     catch (Exception e)
                     {
-                        MelonLogger.Error(e);
-                        MelonLogger.Error("Error creating largo with "+slime.ReferenceId);
+                        LogError(e);
+                        LogError("Error creating largo with "+slime.ReferenceId);
                     }
                 }
             });

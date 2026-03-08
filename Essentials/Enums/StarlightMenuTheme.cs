@@ -9,6 +9,6 @@ namespace Starlight.Enums;
 public enum StarlightMenuTheme
 {
     Default=0, 
-    Starlight=1, 
+    SR2E=1, 
     Black=2
 }

@@ -13,6 +13,6 @@ internal class ResourceSpawnPatch
             {
                 action.Invoke(__instance);
             }
-            catch (Exception e) { MelonLogger.Error(e); }
+            catch (Exception e) { LogError(e); }
     }
 }*/

@@ -30,7 +30,7 @@ public static class PrismLibLandPlots
         if(!foundACell)
         {
             var anyDir = GetAnyInScene<CellDirector>();
-            if(anyDir==null) MelonLogger.Msg("Oh oh... A landplot is outside a CellDirector. Things are about to get sideways");
+            if(anyDir==null) Log("Oh oh... A landplot is outside a CellDirector. Things are about to get sideways");
             else gameObj.transform.SetParent(anyDir.transform);
         }
         rootObjects[sceneName] = gameObj;
@@ -54,7 +54,7 @@ public static class PrismLibLandPlots
                     {
                         SpawnLandPlot(plot.Key, plot.Value);
                     }
-                    catch (Exception e) { MelonLogger.Error(e); }
+                    catch (Exception e) { LogError(e); }
                 }
             }
         }),2);

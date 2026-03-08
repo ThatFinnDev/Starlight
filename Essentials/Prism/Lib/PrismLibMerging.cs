@@ -199,7 +199,7 @@ public static class PrismLibMerging
                         ApplyColors(mat, palettes, colorMergeStrategies);
                         ApplySpecialEffects(mat, useBoomShader, boomMat, useHyperShader, useTwinShader, useSloomberShader, sloomberMat, palettes, colorMergeStrategies);
                     }
-                    catch (Exception e) { if (logCombineErrors) MelonLogger.Error(e); }
+                    catch (Exception e) { if (logCombineErrors) LogError(e); }
                 }
             }
         }

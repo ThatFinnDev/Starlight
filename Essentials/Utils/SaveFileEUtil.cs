@@ -22,7 +22,7 @@ public static class SaveFileEUtil
         var error = ExportSaveV01(gameName, latestSaveName, out StarlightSaveFileV01 data);
         if (error == NoError)
             return data;
-        if(sendErrorLogs) MelonLogger.Msg("Error when exporting save: "+error);
+        if(sendErrorLogs) Log("Error when exporting save: "+error);
         return null;
     }
     
@@ -81,8 +81,8 @@ public static class SaveFileEUtil
             {
                 if(DebugLogging.HasFlag())
                 {
-                    MelonLogger.Error(e);
-                    MelonLogger.Error("Error exporting save saveId: " + saveID);
+                    LogError(e);
+                    LogError("Error exporting save saveId: " + saveID);
                 }
             }
             if (gameBytes == null || gameBytes.Length == 0) continue;
@@ -216,8 +216,8 @@ public static class SaveFileEUtil
                         }
                         catch (Exception e)
                         {
-                            MelonLogger.Error(e);
-                            MelonLogger.Error("Error applying modifier: "+modifier.Key);
+                            LogError(e);
+                            LogError("Error applying modifier: "+modifier.Key);
                         }
                     }
                 var newGameName = sr2ESaveFile.stamp + "_" + newDisplayName;
@@ -239,8 +239,8 @@ public static class SaveFileEUtil
                 failedSome = true;
                 if(isMain||DebugLogging.HasFlag())
                 {
-                    MelonLogger.Error(e);
-                    MelonLogger.Error("Error loading saveId: " + pair.Key);
+                    LogError(e);
+                    LogError("Error loading saveId: " + pair.Key);
                 }
                 if (isMain)
                 {

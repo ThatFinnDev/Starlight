@@ -21,7 +21,7 @@ internal static class ScreenshotPatch
         if (StarlightCheatMenu.betterScreenshot)
         {
             sceneContext.PlayerState.VacuumItem.gameObject.SetActive(false);
-            MelonCoroutines.Start(WaitForUnpause());
+            StartCoroutine(WaitForUnpause());
         }
     }
 }

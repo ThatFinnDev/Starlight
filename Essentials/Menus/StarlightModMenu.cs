@@ -117,7 +117,7 @@ public class StarlightModMenu : StarlightMenu
         b.onClick.AddListener((SystemAction)(() =>
         {
             AudioEUtil.PlaySound(MenuSound.Click);
-            themeButton.gameObject.SetActive(info.name=="Starlight");
+            themeButton.gameObject.SetActive(info.name=="Starlight Core Essentials");
             if (isRotten)
             {
                 modInfoText.text = translation("modmenu.modinfo.brokenmod", info.name);
@@ -130,7 +130,7 @@ public class StarlightModMenu : StarlightMenu
             }
             if(!string.IsNullOrWhiteSpace(info.ID)) 
                 modInfoText.text += "\n" + translation("modmenu.modinfo.id", info.ID);
-            modInfoText.text += "\n" + translation("modmenu.modinfo.author", info.author);
+            modInfoText.text += "\n" + translation("modmenu.modinfo.author", string.IsNullOrEmpty(info.author)?"Anonymous":info.author);
 
             if(isExpansion)
                 modInfoText.text += "\n" + translation("modmenu.modinfo.useprism", info.usePrism);
@@ -142,13 +142,13 @@ public class StarlightModMenu : StarlightMenu
             
             
             if(!string.IsNullOrWhiteSpace(info.sourceCode)) 
-                modInfoText.text += "\n" + translation("modmenu.modinfo.sourcecode", info.sourceCode);
+                modInfoText.text += "\n" + translation("modmenu.modinfo.sourcecode", FormatLink(info.sourceCode));
             
             if(!string.IsNullOrWhiteSpace(info.nexus)) 
-                modInfoText.text += "\n" + translation("modmenu.modinfo.nexus", info.nexus);
+                modInfoText.text += "\n" + translation("modmenu.modinfo.nexus", FormatLink(info.nexus));
             
             if(!string.IsNullOrWhiteSpace(info.discord)) 
-                modInfoText.text += "\n" + translation("modmenu.modinfo.discord", info.discord);
+                modInfoText.text += "\n" + translation("modmenu.modinfo.discord", FormatLink(info.discord));
 
 
             if (!string.IsNullOrWhiteSpace(downloadLink))
@@ -204,7 +204,7 @@ public class StarlightModMenu : StarlightMenu
                 ProcessMelon(new StarlightExpansionInfo(){name = melonName,assembly = assembly, dllName = new FileInfo(assembly.Location).Name},null,false,true,buttonPrefab,new List<object>() { assembly.Location, exception, errorMessage });
 
             }
-            catch (Exception e) { MelonLogger.Error(e); }
+            catch (Exception e) { LogError(e); }
         }
         //Load Melons
         foreach (var melonBase in MelonBase.RegisteredMelons)
@@ -254,7 +254,7 @@ public class StarlightModMenu : StarlightMenu
                 }
                 ProcessMelon(info, melonBase.Info.DownloadLink, false, false, buttonPrefab, null);
             }
-            catch (Exception e) { MelonLogger.Error(e); }
+            catch (Exception e) { LogError(e); }
         }
 
         //Load Expansions
@@ -268,10 +268,10 @@ public class StarlightModMenu : StarlightMenu
                     { 
                         ProcessMelon(pair2.Value,null, true,false, buttonPrefab, null);
                     }
-                    catch (Exception e) { MelonLogger.Error(e); }
+                    catch (Exception e) { LogError(e); }
                 }
             }
-            catch (Exception e) { MelonLogger.Error(e); }
+            catch (Exception e) { LogError(e); }
         }
         //Load broken Expansions
         foreach (var group in StarlightEntryPoint.BrokenExpansions)
@@ -281,7 +281,7 @@ public class StarlightModMenu : StarlightMenu
                 ProcessMelon(new StarlightExpansionInfo(){name = group.Item1,assembly = group.Item2, dllName = new FileInfo(group.Item2.Location).Name},null, true,true,
                     buttonPrefab, new List<object>() { group.Item2.Location, group.Item3,  group.Item4 });
             }
-            catch (Exception e) { MelonLogger.Error(e); }
+            catch (Exception e) { LogError(e); }
         }
         
         
@@ -290,7 +290,7 @@ public class StarlightModMenu : StarlightMenu
         var sortedButtons = modButtons.Keys.ToList().OrderBy(obj =>
         {
             var text = modButtons[obj];
-            if (text == "Starlight") return " ";
+            if (text == "Starlight Core Essentials") return " ";
             return text;
         }).ToList();
 

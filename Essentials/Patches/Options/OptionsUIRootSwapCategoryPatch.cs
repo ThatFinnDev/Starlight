@@ -31,12 +31,12 @@ internal static class OptionsUIRootSwapCategoryPatch
                     {
                         dynamic modelTMP = customDef.CreateOptionItemModel();
                         if(modelTMP!=null) model=modelTMP.TryCast<IOptionsItemModel>();
-                    }catch (Exception e) { MelonLogger.Error(e); }
+                    }catch (Exception e) { LogError(e); }
                     
                     if (!string.IsNullOrWhiteSpace(customDef.button.saveid))
                     {
                         var value = StarlightOptionsButtonManager.GetValuesButton(customDef.button.type,customDef.button.saveid, customDef.button.defaultValueIndex);
-                        MelonLogger.Msg(value);
+                        Log(value);
                         try
                         {
                             customDef.SetTempPresetIndex(value);

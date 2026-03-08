@@ -16,7 +16,7 @@ internal class SpawnerPatch
             {
                 action.Invoke(__instance);
             }
-            catch (Exception e) { MelonLogger.Error(e); }
+            catch (Exception e) { LogError(e); }
     }
     
 }

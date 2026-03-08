@@ -13,7 +13,7 @@ public static class StaticClass
     [CallOn(CallEvent.AfterGameContextLoad)]
     public static void CustomTest(GameContext gameContext)
     {
-        MelonLogger.Msg("GameContext has been loaded!");
-        MelonLogger.Msg(gameContext.name);
+        Log("GameContext has been loaded!");
+        Log(gameContext.name);
     }
 }

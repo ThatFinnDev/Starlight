@@ -20,13 +20,13 @@ internal static class StarlightCallEventManager
 
                 if (!method.IsStatic)
                 {
-                    MelonLogger.Error($"{method.Name} in {type.Name} has [CallOn], but is not static.");
+                    LogError($"{method.Name} in {type.Name} has [CallOn], but is not static.");
                     continue;
                 }
 
                 if (method.ReturnType != typeof(void))
                 {
-                    MelonLogger.Error($"{method.Name} in {type.Name} has [CallOn], but does not return void.");
+                    LogError($"{method.Name} in {type.Name} has [CallOn], but does not return void.");
                     continue;
                 }
 
@@ -34,7 +34,7 @@ internal static class StarlightCallEventManager
 
                 if (enumVal > 0 && method.GetParameters().Length > 0)
                 {
-                    MelonLogger.Error($"{method.Name} uses event {attr.callEvent} without parameters.");
+                    LogError($"{method.Name} uses event {attr.callEvent} without parameters.");
                     continue;
                 }
 
@@ -58,7 +58,7 @@ internal static class StarlightCallEventManager
             {
                 method.Invoke(null, null);
             }
-            catch (Exception ex) { MelonLogger.Error($"Exception in {method.Name}: {ex.InnerException?.Message ?? ex.Message}"); }
+            catch (Exception ex) { LogError($"Exception in {method.Name}: {ex.InnerException?.Message ?? ex.Message}"); }
         }
     }
 
@@ -87,7 +87,7 @@ internal static class StarlightCallEventManager
                     { callArgs[i] = val; }
                     else
                     {
-                        MelonLogger.Error($"Unsupported or missing argument: '{p.Name}' of type {p.ParameterType.Name} in method {method.Name}");
+                        LogError($"Unsupported or missing argument: '{p.Name}' of type {p.ParameterType.Name} in method {method.Name}");
                         canCall = false;
                         break;
                     }
@@ -95,7 +95,7 @@ internal static class StarlightCallEventManager
 
                 if (canCall) method.Invoke(null, callArgs);
             }
-            catch (Exception ex) { MelonLogger.Error($"Exception in {method.Name}: {ex.InnerException?.Message ?? ex.Message}"); }
+            catch (Exception ex) { LogError($"Exception in {method.Name}: {ex.InnerException?.Message ?? ex.Message}"); }
         }
     }
 }

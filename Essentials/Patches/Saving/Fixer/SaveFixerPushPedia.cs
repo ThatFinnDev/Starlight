@@ -17,7 +17,7 @@ internal static class SaveFixerPushPedia
                     if(loadReferenceTranslation.IsUnknownPediaEntryId(unlockedID)||loadReferenceTranslation.GetPediaEntry(unlockedID)==null)
                         pedia.UnlockedIds.Remove(unlockedID);
         }
-        catch (Exception e) { MelonLogger.Error(e); }
+        catch (Exception e) { LogError(e); }
     }
 
     

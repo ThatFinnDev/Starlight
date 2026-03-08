@@ -72,14 +72,14 @@ public class ClickableTextLink : MonoBehaviour
                 {
                     actions[key].Invoke();
                 }
-                catch (Exception e) { MelonLogger.Error(e); }
+                catch (Exception e) { LogError(e); }
             }
         }
         /*if (id.StartsWith("callstatic:"))
         {
             string full = id.Substring(11);
-            MelonLogger.Msg("Try calling");
-            MelonLogger.Msg(full);
+            Log("Try calling");
+            Log(full);
             try
             {
                 full = full.Replace("()", "");
@@ -91,16 +91,16 @@ public class ClickableTextLink : MonoBehaviour
                 var assemblies = AppDomain.CurrentDomain.GetAssemblies().ToList();;
                 foreach (var asm in assemblies)
                     if ((t = asm.GetType(typeName)) != null) break;
-                MelonLogger.Msg(t.FullName);
-                MelonLogger.Msg(methodName);
+                Log(t.FullName);
+                Log(methodName);
                 var info = t.GetMethod(methodName, BindingFlags.Public | BindingFlags.Static);
                 if(info==null)
-                    MelonLogger.Msg("Couldn't run click action! Method wasn't found");
+                    Log("Couldn't run click action! Method wasn't found");
                 else info.Invoke(null,null);
             }
             catch (Exception e)
             {
-                MelonLogger.Error(e);
+                LogError(e);
                 
             }
 

@@ -32,7 +32,7 @@ internal static class SaveFixerPushRanch
                 }
             }
         }
-        catch (Exception e) { MelonLogger.Error(e); }
+        catch (Exception e) { LogError(e); }
     }
 
 }

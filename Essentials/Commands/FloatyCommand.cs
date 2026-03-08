@@ -29,7 +29,7 @@ internal class FloatyCommand : StarlightCommand
             if (hit.rigidbody == null) return SendNotLookingAtValidObject();
             if (duration > 0)
             {
-                MelonCoroutines.Start(TimeGravity(hit, duration));
+                StartCoroutine(TimeGravity(hit, duration));
                 SendMessage(translation("cmd.floaty.successduration",duration));
                 return true;
             }

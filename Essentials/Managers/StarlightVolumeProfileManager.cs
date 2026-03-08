@@ -77,7 +77,7 @@ public static class StarlightVolumeProfileManager
             presets[preset]=newProfile;
             return true;
         }
-        catch (Exception e) { MelonLogger.Error("Error loading preset "+preset+"\n"+e); }
+        catch (Exception e) { LogError("Error loading preset "+preset+"\n"+e); }
         return false;
     }
     /// <summary>
@@ -182,8 +182,8 @@ public static class StarlightVolumeProfileManager
                 }
                 catch (Exception e)
                 {
-                    MelonLogger.Error(e);
-                    MelonLogger.Error("Error loading volume profile: "+path);
+                    LogError(e);
+                    LogError("Error loading volume profile: "+path);
                 }
             }
         } catch (Exception e) { }

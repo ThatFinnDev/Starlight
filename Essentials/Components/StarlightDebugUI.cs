@@ -80,16 +80,16 @@ internal class StarlightDebugUI : MonoBehaviour
 		internal static RegionMember.MembershipChanged OnRegionsChanged = 
 			(RegionMember.MembershipChanged)((sender, args) =>
 			{
-				MelonLogger.Msg("On Change");
+				Log("On Change");
 				Il2CppSystem.Collections.Generic.List<Region> regions = sender;
 				foreach (var re in regions)
 				{
-					MelonLogger.Msg("sender: "+re.name);
+					Log("sender: "+re.name);
 				}
 				Il2CppSystem.Collections.Generic.List<Region> regions2 = args;
 				foreach (var re in regions2)
 				{
-					MelonLogger.Msg("args"+re.name);
+					Log("args"+re.name);
 				}
 				if(!playerDebugUIEnabled) return;
 				playerDebugHudUI._cell.SetText("Cell: ");

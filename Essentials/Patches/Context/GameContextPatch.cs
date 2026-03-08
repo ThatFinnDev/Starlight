@@ -83,7 +83,7 @@ internal class GameContextPatch
                 (AddTranslation("GlobalTest"),AddTranslation("This is an example description"),
                     "sr2e.mock.global1",1,true,false,false, ((value) =>
                     { 
-                        MelonLogger.Msg("It has been changed to "+value);
+                        Log("It has been changed to "+value);
                     }), OptionsButtonType.OptionsUI,
                     AddTranslation("Value0"),AddTranslation("Value1"),AddTranslation("Value2"),AddTranslation("Value3")
                     ));
@@ -91,7 +91,7 @@ internal class GameContextPatch
                 (AddTranslation("MainMenuOnlyTest"),AddTranslation("This wraps around!"),
                     "sr2e.mock.mainmenuonly1",1,true,true,false, ((value) =>
                     { 
-                        MelonLogger.Msg("It has been changed to "+value);
+                        Log("It has been changed to "+value);
                     }), OptionsButtonType.OptionsUI,
                     AddTranslation("G0"),AddTranslation("G1"),AddTranslation("G2"),AddTranslation("G3")
                 ));
@@ -99,7 +99,7 @@ internal class GameContextPatch
                 (AddTranslation("InGameOnlyTest"),AddTranslation("This doesn't apply immediately!"),
                     "sr2e.mock.ingameonly1",1,false,false,false, ((value) =>
                     { 
-                        MelonLogger.Msg("It has been changed to "+value);
+                        Log("It has been changed to "+value);
                     }), OptionsButtonType.InGameOptionsUIOnly,
                     AddTranslation("Value0"),AddTranslation("Value1"),AddTranslation("Value2"),AddTranslation("Value3")
                 ));
@@ -107,7 +107,7 @@ internal class GameContextPatch
                 (AddTranslation("MultiCategoryTest"), AddTranslation("This is in multiple categories! And shouldnt be 2 times in MainMenuOnly!"),
                     "sr2e.mock.multitest", 1, true, false, false, ((value) =>
                     {
-                        MelonLogger.Msg("It has been changed to " + value);
+                        Log("It has been changed to " + value);
                     }), OptionsButtonType.OptionsUI,
                     AddTranslation("Value0"), AddTranslation("Value1"), AddTranslation("Value2"),
                     AddTranslation("Value3")
@@ -144,8 +144,8 @@ internal class GameContextPatch
         }
         catch (Exception e)
         {
-            MelonLogger.Error(e);
-            MelonLogger.Error("There was a problem loading SR2 action maps!");
+            LogError(e);
+            LogError("There was a problem loading SR2 action maps!");
         }
 
         try
@@ -165,8 +165,8 @@ internal class GameContextPatch
         }
         catch (Exception e)
         {
-            MelonLogger.Error(e);
-            MelonLogger.Error("There was a problem loading sounds!");
+            LogError(e);
+            LogError("There was a problem loading sounds!");
         }
 
         if(RestoreDebugFPSViewer.HasFlag()) foreach (var display in GetAllInScene<FPSDisplay>())
@@ -174,14 +174,14 @@ internal class GameContextPatch
         if (RestoreDebugDebugUI.HasFlag()) __instance.AddComponent<DebugDirectorFixer>();
         foreach (var expansion in StarlightEntryPoint.ExpansionV01S)
             try { expansion.AfterGameContext(__instance); }
-            catch (Exception e) { MelonLogger.Error(e); }
+            catch (Exception e) { LogError(e); }
         StarlightCallEventManager.ExecuteWithArgs(CallEvent.AfterGameContextLoad, ("gameContext", __instance));
         foreach (var pair in StarlightEntryPoint.Menus)
             try { pair.Key.AfterGameContext(__instance); }
-            catch (Exception e) { MelonLogger.Error(e); }
+            catch (Exception e) { LogError(e); }
         foreach (var pair in StarlightCommandManager.commands)
             try { pair.Value.AfterGameContext(__instance); }
-            catch (Exception e) { MelonLogger.Error(e); }
+            catch (Exception e) { LogError(e); }
     }
 
 

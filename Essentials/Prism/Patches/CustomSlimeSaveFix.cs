@@ -44,7 +44,7 @@ public class AppearancesSaveFix
             __result.Selections = selections;
             return false;
         }
-        catch (Exception e){MelonLogger.Error(e);}
+        catch (Exception e){LogError(e);}
 
         return true;
     }

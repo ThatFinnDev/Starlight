@@ -75,7 +75,7 @@ public abstract class StarlightMenu : MonoBehaviour
     public void Awake()
     {
         try {OnAwake();}
-        catch (Exception e) { MelonLogger.Error(e); }
+        catch (Exception e) { LogError(e); }
         StarlightEntryPoint.Menus.TryAdd(this, new Dictionary<string, object>()
         {
             { "requiredFeatures", new List<FeatureFlag>() },
@@ -91,20 +91,20 @@ public abstract class StarlightMenu : MonoBehaviour
                 if (!string.IsNullOrEmpty(identifier.saveKey))
                 {
                     try { StarlightCommandManager.RegisterCommand(new MenuVisibilityCommands.OpenCommand(identifier, this, inGameOnly)); }
-                    catch (Exception e) { error=true; MelonLogger.Error(e); }
+                    catch (Exception e) { error=true; LogError(e); }
 
                     try { StarlightCommandManager.RegisterCommand(new MenuVisibilityCommands.ToggleCommand(identifier, this, inGameOnly)); }
-                    catch (Exception e) { error=true; MelonLogger.Error(e); }
+                    catch (Exception e) { error=true; LogError(e); }
 
                     try { StarlightCommandManager.RegisterCommand(new MenuVisibilityCommands.CloseCommand(identifier, this, inGameOnly)); } 
-                    catch (Exception e) { error=true; MelonLogger.Error(e); }
+                    catch (Exception e) { error=true; LogError(e); }
                 }
             }
             catch
             {
                 error = true;
             }
-            if(error) MelonLogger.Error("There was an error creating menu commands");
+            if(error) LogError("There was an error creating menu commands");
         }
 
         if (MenuEUtil.MenuBlock == null)
@@ -112,7 +112,7 @@ public abstract class StarlightMenu : MonoBehaviour
         if (MenuEUtil.PopUpBlock == null)
             MenuEUtil.PopUpBlock = transform.parent.GetObjectRecursively<Transform>("blockPopUpRec");
         try {OnLateAwake();}
-        catch (Exception e) { MelonLogger.Error(e); }
+        catch (Exception e) { LogError(e); }
     }
 
     protected virtual void OnAwake()
@@ -130,7 +130,7 @@ public abstract class StarlightMenu : MonoBehaviour
     protected void Start()
     {
         try {OnStart();}
-        catch (Exception e) { MelonLogger.Error(e); }
+        catch (Exception e) { LogError(e); }
         gameObject.SetActive(false);
     }
 
@@ -138,7 +138,7 @@ public abstract class StarlightMenu : MonoBehaviour
     {
         _changedOpenState = false;
         try {OnAlwaysUpdate();}
-        catch (Exception e) { MelonLogger.Error(e); }
+        catch (Exception e) { LogError(e); }
     }
 
     protected virtual void OnAlwaysUpdate()
@@ -149,7 +149,7 @@ public abstract class StarlightMenu : MonoBehaviour
     {
         _changedOpenState = false;
         try {OnUpdate();}
-        catch (Exception e) { MelonLogger.Error(e); }
+        catch (Exception e) { LogError(e); }
     }
 
     protected virtual void OnUpdate()
@@ -176,7 +176,7 @@ public abstract class StarlightMenu : MonoBehaviour
         }
         catch (Exception e)
         {
-            MelonLogger.Error(e);
+            LogError(e);
         }
 
         _closing = false;
@@ -231,7 +231,7 @@ public abstract class StarlightMenu : MonoBehaviour
         _changedOpenState = true;
         ExecuteInTicks((() => { gameObject.SetActive(true);}), 1);
         (StarlightEntryPoint.Menus[this]["openActions"] as List<MenuActions>).DoMenuActions();
-        try { OnOpen(); }catch (Exception e) { MelonLogger.Error(e); }
+        try { OnOpen(); }catch (Exception e) { LogError(e); }
         foreach (var pair in toTranslate) pair.Key.SetText(translation(pair.Value));
         AudioEUtil.PlaySound(MenuSound.OpenMenu);
     }

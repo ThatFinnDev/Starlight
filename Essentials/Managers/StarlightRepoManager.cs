@@ -32,7 +32,7 @@ internal static class StarlightRepoManager
     {
         Error = (sender, args) =>
         {
-            if(DebugLogging.HasFlag()) MelonLogger.Msg($"Error: {args.ErrorContext.Error.Message}");
+            if(DebugLogging.HasFlag()) Log($"Error: {args.ErrorContext.Error.Message}");
             //if (args.ErrorContext.Member is string memberName && args.ErrorContext.Path.Contains(nameof(StarlightSaveData.fonts))) 
             //    ((Dictionary<string, StarlightMenuFont>)args.ErrorContext.OriginalObject)[memberName] = StarlightMenuFont.Default;
             //if (args.ErrorContext.Member is string memberName2 && args.ErrorContext.Path.Contains(nameof(StarlightSaveData.themes))) 
@@ -53,7 +53,7 @@ internal static class StarlightRepoManager
                     var repo = JsonConvert.DeserializeObject<Repo>(response, jsonSerializerSettings);
                     if (repo.identifier != repoSave.identifier)
                     {
-                        MelonLogger.Msg("StarlightRepo identifier changed"); 
+                        Log("StarlightRepo identifier changed"); 
                         return null;
                     }
                     return repo;
@@ -61,17 +61,17 @@ internal static class StarlightRepoManager
                 }
                 catch (Exception e) 
                 { 
-                    MelonLogger.Error("Error fetching repo: "+repoSave.url);
-                    MelonLogger.Msg("The json file is broken! Please contact the repo maintainer!"); 
-                    MelonLogger.Msg(e);
+                    LogError("Error fetching repo: "+repoSave.url);
+                    Log("The json file is broken! Please contact the repo maintainer!"); 
+                    Log(e);
                 }
             }
         }
         catch (System.Exception e)
         {
-                MelonLogger.Error("Error fetching repo: "+repoSave.url);
-                MelonLogger.Error(e.Message);
-                MelonLogger.Error("This is normal if you are not connected to the internet!");
+                LogError("Error fetching repo: "+repoSave.url);
+                LogError(e.Message);
+                LogError("This is normal if you are not connected to the internet!");
         }
 
         return null;
