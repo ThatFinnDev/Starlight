@@ -4,8 +4,6 @@ namespace Starlight.Enums.Features;
 
 public enum FeatureFlag
 {
-    //Off limits: 70
-    
     None=0,
     //Dev
     /// <summary>
@@ -27,195 +25,187 @@ public enum FeatureFlag
     /// <summary>
     /// Shows world populator errors
     /// </summary>
-    ShowWorldPopulatorErrors=41,
+    ShowWorldPopulatorErrors=50,
     /// <summary>
     /// Tries to ignore world populator errors
     /// </summary>
-    IgnoreWorldPopulatorErrors=42,
+    IgnoreWorldPopulatorErrors=60,
     /// <summary>
     /// Enable experimental features
     /// </summary>
-    Experiments=50,
+    Experiments=70,
     /// <summary>
     /// Allow prism
     /// </summary>
-    AllowPrism=60,
+    AllowPrism=80,
     /// <summary>
     /// Enable the enable dev key codes
     /// </summary>
-    ExperimentalKeyCodes=80,
+    ExperimentalKeyCodes=90,
     /// <summary>
     /// Add test repo
     /// </summary>
-    UseMockRepo=81,
+    UseMockRepo=100,
     
     //Commands+Dev
     /// <summary>
     /// Load dev-only commands
     /// </summary>
-    CommandsLoadDevOnly=90, 
+    CommandsLoadDevOnly=110, 
     /// <summary>
     /// Enable experimental commands
     /// </summary>
-    CommandsLoadExperimental=100, 
+    CommandsLoadExperimental=120, 
     
     //Commands
     /// <summary>
     /// Load commands
     /// </summary>
-    CommandsLoadCommands=110, //
+    CommandsLoadCommands=130, //
     /// <summary>
     /// Load cheating commands
     /// </summary>
-    CommandsLoadCheat=120, //
+    CommandsLoadCheat=140, //
     /// <summary>
     /// Load binding commands
     /// </summary>
-    CommandsLoadBinding=130, //
+    CommandsLoadBinding=150, //
     /// <summary>
     /// Load warping commands
     /// </summary>
-    CommandsLoadWarp=140, //
+    CommandsLoadWarp=160, //
     /// <summary>
     /// Load common commands
     /// </summary>
-    CommandsLoadCommon=150, //
+    CommandsLoadCommon=170, //
     /// <summary>
     /// Load menu commands
     /// </summary>
-    CommandsLoadMenu=160, //
+    CommandsLoadMenu=180, //
     /// <summary>
     /// Load miscellaneous commands
     /// </summary>
-    CommandsLoadMiscellaneous=170, //
+    CommandsLoadMiscellaneous=190, //
     /// <summary>
     /// Load fun commands
     /// </summary>
-    CommandsLoadFun=180, //
+    CommandsLoadFun=200, //
 
     //Cheats and Mods
     /// <summary>
     /// Disable everything related to cheats
     /// </summary>
-    DisableCheats=190,
+    DisableCheats=210,
     /// <summary>
     /// Allow adding the cheat menu button to the pause menu
     /// </summary>
-    AddCheatMenuButton=200, //
+    AddCheatMenuButton=220, //
     /// <summary>
     /// Enable infhealth command and its cheat menu equivalent
     /// </summary>
-    EnableInfHealth=210, //
+    EnableInfHealth=230, //
     /// <summary>
     /// Enable infenergy command and its cheat menu equivalent
     /// </summary>
-    EnableInfEnergy=220, //
+    EnableInfEnergy=240, //
     
     //Misc
     /// <summary>
     /// Allow adding the mod menu button to the pause menu and main menu
     /// </summary>
-    AddModMenuButton=230, //
+    AddModMenuButton=250, //
     /// <summary>
     /// Allow loading and integrating Starlight expansions
     /// </summary>
-    AllowExpansions=240, //
-    /// <summary>
-    /// Allow loading and integrating Starlight expansions
-    /// </summary>
-    AllowExpansionsV1=241, //
+    AllowExpansions=260, //
     /// <summary>
     /// Allow loading and integrating Starlight expansions of V1
     /// </summary>
-    AllowExpansionsV2=242, //
+    AllowExpansionsV1=270, //
     /// <summary>
-    /// Allow loading and integrating Starlight expansions of V2
+    /// Modify the version text in the main menu
     /// </summary>
-    AllowExpansionsV3=243, //
-    /// <summary>
-    /// Modify the version text in the main menu of V3
-    /// </summary>
-    EnableLocalizedVersionPatch=250, //
+    EnableLocalizedVersionPatch=280, //
     /// <summary>
     /// Inject Translations into unity's localization system
     /// </summary>
-    InjectTranslations=260, //
+    InjectTranslations=290, //
     /// <summary>
     /// Use the patch for il2cpp exceptions
     /// </summary>
-    EnableIl2CppDetourExceptionReporting=270, //
+    EnableIl2CppDetourExceptionReporting=300, //
     /// <summary>
     /// Enable the save export feature
     /// </summary>
-    AllowSaveExport=70, //
+    AllowSaveExport=310, //
     
     //Menus
     /// <summary>
     /// Enable the mod menu
     /// </summary>
-    EnableModMenu=280, //
+    EnableModMenu=320, //
     /// <summary>
     /// Enable the cheat menu
     /// </summary>
-    EnableCheatMenu=290, //
+    EnableCheatMenu=330, //
     /// <summary>
     /// Enable the console menu
     /// </summary>
-    EnableConsole=300, //
+    EnableConsole=340, //
     /// <summary>
     /// Enable the theme menu
     /// </summary>
-    EnableThemeMenu=310, //
+    EnableThemeMenu=350, //
     /// <summary>
     /// Enable the repo menu
     /// </summary>
-    EnableRepoMenu=320, //
+    EnableRepoMenu=360, //
     
     //UI
     /// <summary>
     /// Inject buttons in the main menu
     /// </summary>
-    InjectMainMenuButtons=330, //
+    InjectMainMenuButtons=370, //
     /// <summary>
     /// Inject test buttons in the main menu
     /// </summary>
-    AddMockMainMenuButtons=331, //
+    AddMockMainMenuButtons=371, //
     /// <summary>
     /// Inject buttons in the ranch house ui
     /// </summary>
-    InjectRanchUIButtons=340, //
+    InjectRanchUIButtons=380, //
     /// <summary>
     /// Inject buttons in the pause menu
     /// </summary>
-    InjectPauseButtons=350, //
+    InjectPauseButtons=390, //
     /// <summary>
     /// Inject buttons in the options ui
     /// </summary>
-    InjectOptionsButtons=355,
+    InjectOptionsButtons=400,
     /// <summary>
     /// Inject test buttons in the OptionsUI
     /// </summary>
-    AddMockOptionsUIButtons=356, //
+    AddMockOptionsUIButtons=401, //
 
     //Updates and Patches
     /// <summary>
     /// Allow checking for new Starlight updates
     /// </summary>
-    CheckForUpdates=360, //
+    CheckForUpdates=410, //
     /// <summary>
     /// Allow auto updating if an update has been found
     /// </summary>
-    AllowAutoUpdate=370, //
+    AllowAutoUpdate=420, //
     /// <summary>
     /// Make SystemContext.isModded true
     /// </summary>
-    ChangeSystemContextIsModded=380, //
+    ChangeSystemContextIsModded=430, //
     /// <summary>
     /// Redirects the StorageProvider to a FileStorgeProvider
     /// As a result the save path will be changed
     /// It will be redirected to the Starlight folder
     /// </summary>
-    RedirectSaveFiles=390, //
+    RedirectSaveFiles=440, //
     /// <summary>
     /// Tries to restore Debug Abilities.<br/>
     /// This isn't a faithful recreation of the true SR2 Debug tools.<br/>
@@ -223,32 +213,32 @@ public enum FeatureFlag
     /// help to make sense of the missing code and try to implement it as best as possible.<br/>
     /// You need to enable the individual abilities
     /// </summary>
-    RestoreDebugAbilities=400, //
+    RestoreDebugAbilities=500, //
     /// <summary>
     /// Tries to restore Debug Ability.<br/>
     /// This restore the FPS counter
     /// </summary>
-    RestoreDebugFPSViewer=401, //
+    RestoreDebugFPSViewer=501, //
     /// <summary>
     /// Tries to restore Debug Ability.<br/>
     /// This restore the PlayerDebug ui
     /// </summary>
-    RestoreDebugPlayerDebug=402, //
+    RestoreDebugPlayerDebug=502, //
     /// <summary>
     /// Tries to restore Debug Ability.<br/>
     /// This restore the unity dev console
     /// </summary>
-    RestoreDebugDevConsole=403, //
+    RestoreDebugDevConsole=503, //
     /// <summary>
     /// Tries to restore Debug Ability.<br/>
     /// This restore the DebugUI
     /// </summary>
-    RestoreDebugDebugUI=404, //
+    RestoreDebugDebugUI=504, //
     /// <summary>
     /// This fixes loading SceneGroups with invalid scene references<br/>
     /// If it stumbles across an invalid scene, it will be skipped
     /// </summary>
-    TryFixingInvalidSceneGroups=410, //
+    TryFixingInvalidSceneGroups=530, //
     
     
 

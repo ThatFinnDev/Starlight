@@ -1,6 +1,7 @@
 using Il2CppMonomiPark.SlimeRancher.Pedia;
 using Starlight.Prism.Data;
 using Starlight.Prism.Lib;
+using Starlight.Prism.Wrappers;
 using UnityEngine.Localization;
 
 namespace Starlight.Prism.Creators;
@@ -53,7 +54,7 @@ public class PrismIdentifiablePediaEntryCreatorV01
         var prismEntry = new PrismIdentifiablePediaEntry(entry, false);
 
         _createdPediaEntry = prismEntry;
-        PrismShortcuts._prismIdentifiablePediaEntries.Add(entry,prismEntry);
+        PrismShortcuts.PrismIdentifiablePediaEntries.Add(entry,prismEntry);
         
         if(additionalFacts!=null)
             foreach (var additionalFact in additionalFacts)

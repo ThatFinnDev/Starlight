@@ -34,7 +34,7 @@ public static class BuildInfo
     public const string Author = "ThatFinn";
     public const string CoAuthors = "YLohkuhl";
     public const string Contributors = "PinkTarr, shizophrenicgopher, Atmudia";
-    public const string CodeVersion = "4.0.0-dev";
+    public const string CodeVersion = "4.0.0";
     public const string DownloadLink = "https://sr2e.sr2.dev/";
     public const string SourceCode = "https://github.com/ThatFinnDev/Starlight";
     public const string Nexus = "https://www.nexusmods.com/slimerancher2/mods/60";
@@ -63,7 +63,7 @@ public class StarlightEntryPoint : MelonMod
 {
     private static string _starlightFolderName = "Starlight";
 
-    internal static readonly Dictionary<Assembly, List<StarlightExpansionVXX>> Expansions = new();
+    internal static readonly Dictionary<Assembly, (Dictionary<StarlightExpansionVXX,StarlightExpansionInfo>, HarmonyLib.Harmony)> Expansions = new();
     internal static readonly List<StarlightExpansionV01> ExpansionV01S = new();
     
     
@@ -84,12 +84,12 @@ public class StarlightEntryPoint : MelonMod
     internal static Dictionary<StarlightMenu, Dictionary<string, object>> Menus = new();
     private static MelonPreferences_Category _prefs;
     
-        internal static bool MainMenuLoaded;
-        internal static GameObject StarlightStuff;
-        internal static ScriptedBool SaveSkipIntro;
-        internal static bool AddedButtons = false;
+    internal static bool MainMenuLoaded;
+    internal static GameObject StarlightStuff;
+    internal static ScriptedBool SaveSkipIntro;
+    internal static bool AddedButtons = false;
     
-        internal static string dataPath => Path.Combine(MelonEnvironment.UserDataDirectory, _starlightFolderName);
+    internal static string dataPath => Path.Combine(MelonEnvironment.UserDataDirectory, _starlightFolderName);
     internal static string tmpDataPath => Path.Combine(dataPath, ".tmp");
     internal static string flagDataPath => Path.Combine(dataPath, "flags");
     internal static string customVolumeProfilesPath => Path.Combine(dataPath, "customVolumeProfiles");
@@ -154,57 +154,119 @@ public class StarlightEntryPoint : MelonMod
         
         InitFlagManager();
         
-        var baseType = typeof(StarlightExpansionVXX);
-        foreach (var dllPath in Directory.GetFiles(MelonEnvironment.ModsDirectory))
+        if(AllowExpansions.HasFlag())
         {
-            if (HasAttribute(dllPath)) continue;
-            var assembly = Assembly.LoadFrom(dllPath);
-            var att = assembly.GetCustomAttribute<StarlightExpansionAttribute>();
-            var instances = new List<StarlightExpansionVXX>();
-            if(att is { types.Length: > 0 })
-                foreach (var type in att.types)
-                    if (baseType.IsAssignableFrom(type) && type != baseType)
-                    {
-                        var instance = (StarlightExpansionVXX)Activator.CreateInstance(type);
-                        bool success = true;
-                        var message = "";
-                        string errorMessage = null;
-                        try
-                        {
-                            if(string.IsNullOrWhiteSpace(instance.info.ID)&&(!string.IsNullOrEmpty(instance.info.ID) && instance.info.ID.All(char.IsLetterOrDigit))) 
-                                message += "\nThe expansion's ID is invalid! It needs to be a non-empty alphanumeric string! For example: \"com.devname.expansionanme\"";
-                            if(string.IsNullOrWhiteSpace(instance.info.name)) 
-                                message += "\nThe expansion's name is invalid! It needs to be a non-empty string! For example: \"Blue Slimes\"";
-                        }
-                        catch (Exception e)
-                        {
-                            success = false;
-                            MelonLogger.Error(e);
-                            MelonLogger.Error($"Couldn't load the expansion \"{type.FullName}\" in the dll at \"{dllPath}\" due to an unknown error!");
-                            errorMessage = e.Message;
-                        }
+            var baseType = typeof(StarlightExpansionVXX);
+            foreach (var dllPath in Directory.GetFiles(MelonEnvironment.ModsDirectory))
+            {
+                try
+                {
+                    if (!dllPath.EndsWith(".dll")) continue;
+                    if (HasAttribute(dllPath)) continue;
+                    var assembly = Assembly.LoadFrom(dllPath);
+                    var hInstance = new HarmonyLib.Harmony(dllPath);
+                    var att = assembly.GetCustomAttribute<StarlightExpansionAttribute>();
+                    var instances = new Dictionary<StarlightExpansionVXX,StarlightExpansionInfo>();
+                    if (att is { types.Length: > 0 })
+                        foreach (var type in att.types)
+                            if (baseType.IsAssignableFrom(type) && type != baseType)
+                            {
+                                var instance = (StarlightExpansionVXX)Activator.CreateInstance(type);
+                                bool success = true;
+                                var message = "";
+                                string errorMessage = null;
+                                var info = instance.info;
+                                info.assembly = assembly;
+                                info.dllName = new FileInfo(assembly.Location).Name;
+                                try
+                                {
+                                    if (string.IsNullOrWhiteSpace(info.ID) &&
+                                        (!string.IsNullOrEmpty(info.ID) &&
+                                         info.ID.All(char.IsLetterOrDigit)))
+                                        message +=
+                                            "\nThe expansion's ID is invalid! It needs to be a non-empty alphanumeric string! For example: \"com.devname.expansionanme\"";
+                                    if (string.IsNullOrWhiteSpace(info.name))
+                                        message +=
+                                            "\nThe expansion's name is invalid! It needs to be a non-empty string! For example: \"Blue Slimes\"";
+                                }
+                                catch (Exception e)
+                                {
+                                    success = false;
+                                    MelonLogger.Error(e);
+                                    MelonLogger.Error(
+                                        $"Couldn't load the expansion \"{type.FullName}\" in the dll at \"{dllPath}\" due to an unknown error!");
+                                    errorMessage = e.Message;
+                                }
 
-                        if (!string.IsNullOrWhiteSpace(message))
-                        {
-                            success = false;
-                            MelonLogger.Error($"Couldn't load the expansion \"{type.FullName}\" in the dll at \"{dllPath}\"!");
-                            MelonLogger.Error("The expansion info is invalid!");
-                            MelonLogger.Error(message);
-                        }
-                        if(success)
-                        {
-                            if (AllowPrism.HasFlag() && instance.info.usePrism)
-                                isPrismInUse = true;
-                            if(instance is StarlightExpansionV01 v01) ExpansionV01S.Add(v01);
-                            baseType.GetField("_assembly", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(instance, assembly);
-                            instances.Add(instance);
-                        }
-                        else
-                        {
-                            BrokenExpansions.Add((type.FullName, assembly, message, errorMessage));
-                        }
-                    }
-            Expansions.Add(assembly,instances);
+                                if (!string.IsNullOrWhiteSpace(message))
+                                {
+                                    success = false;
+                                    MelonLogger.Error(
+                                        $"Couldn't load the expansion \"{type.FullName}\" in the dll at \"{dllPath}\"!");
+                                    MelonLogger.Error("The expansion info is invalid!");
+                                    MelonLogger.Error(message);
+                                }
+
+                                try
+                                {
+                                    info.icon = EmbeddedResourceEUtil.LoadSprite("icon.png",assembly).CopyWithoutMipmaps();
+                                }
+                                catch (Exception e)
+                                {
+                                    MelonLogger.Error($"Couldn't load the icon of expansion \"{type.FullName}\" in the dll at \"{dllPath}\"!");
+                                }
+                                if (instance is StarlightExpansionV01)
+                                {
+                                    if (!AllowExpansionsV1.HasFlag())
+                                    {
+                                        success = false;
+                                        message += "\nExpansionV1s are disbled!";
+                                    }
+                                    info.expansionVersion = 1;
+                                }
+                                /*else if (instance is StarlightExpansionV02)
+                                {
+                                    if (!AllowExpansionsV2.HasFlag())
+                                    {
+                                        success = false;
+                                        message += "\nExpansionV2s are disbled!";
+                                    }
+                                    info.expansionVersion = 2;
+                                }*/
+                                else
+                                {
+                                    success = false;
+                                    message += "\nInvalid expansion version!";
+                                }
+                                
+                                
+                                
+                                
+                                if (success)
+                                {
+                                    if (AllowPrism.HasFlag() && info.usePrism)
+                                        isPrismInUse = true;
+                                    if (instance is StarlightExpansionV01 v01) ExpansionV01S.Add(v01);
+                                    baseType.GetField("_assembly", BindingFlags.Instance | BindingFlags.NonPublic)
+                                        .SetValue(instance, assembly);
+                                    baseType.GetField("_harmonyInstance", BindingFlags.Instance | BindingFlags.NonPublic)
+                                        .SetValue(instance, hInstance);
+                                    instances.Add(instance,info);
+                                }
+                                else
+                                {
+                                    BrokenExpansions.Add((type.FullName, assembly, message, errorMessage));
+                                }
+                            }
+
+                    if(instances.Count>0)
+                        Expansions.Add(assembly, (instances, hInstance));
+                }
+                catch (Exception e)
+                {
+                    MelonLogger.Error(e);
+                }
+            }
         }
         StarlightCallEventManager.LoadAssemblies(Expansions.Keys.ToList());
         PatchIl2CppDetourMethodPatcher.InstallSecondPart(HarmonyInstance);
@@ -228,9 +290,9 @@ public class StarlightEntryPoint : MelonMod
                 // ignored
             }
         if (!AllowPrism.HasFlag()) isPrismInUse = false;
-        PatchGame(MelonAssembly.Assembly);
-        foreach (var assembly in Expansions.Keys.ToList())
-            PatchGame(assembly);
+        PatchGame(HarmonyInstance,MelonAssembly.Assembly);
+        foreach (var pair in Expansions)
+            PatchGame(pair.Value.Item2,pair.Key);
         
 
         Application.add_logMessageReceived(new Action<string, string, LogType>(AppLogUnity));
@@ -421,7 +483,7 @@ public class StarlightEntryPoint : MelonMod
         }
     }
 
-    private void PatchGame(Assembly assembly)
+    private void PatchGame(HarmonyLib.Harmony harmony,Assembly assembly)
     {
         var types = AccessTools.GetTypesFromAssembly(assembly);
         var devPatches = DevMode.HasFlag();
@@ -436,7 +498,7 @@ public class StarlightEntryPoint : MelonMod
                 var classPatches = HarmonyMethodExtensions.GetFromType(type);
                 if (classPatches.Count > 0)
                 {
-                    var processor = HarmonyInstance.CreateClassProcessor(type);
+                    var processor = harmony.CreateClassProcessor(type);
                     processor.Patch();
                 }
             }

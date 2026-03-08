@@ -12,7 +12,7 @@ namespace Starlight.Popups;
 [InjectClass]
 public class StarlightGridMenuList : StarlightPopUp
 {
-    private TripleDictionary<string,string, Sprite> _entries;
+    private Dictionary<string,(string, Sprite)> _entries;
     private Action<string> _onSelect;
     public void OnPress(string key)
     {
@@ -22,7 +22,7 @@ public class StarlightGridMenuList : StarlightPopUp
     public new static void PreAwake(GameObject obj, List<object> objects)
     {
         var comp = obj.AddComponent<StarlightGridMenuList>();
-        comp._entries = (TripleDictionary<string,string, Sprite>) objects[0];
+        comp._entries = (Dictionary<string,(string, Sprite)>) objects[0];
         comp._onSelect = (Action<string>) objects[1];
         comp.ReloadFont();
     }
@@ -45,7 +45,7 @@ public class StarlightGridMenuList : StarlightPopUp
         }
 
     }
-    public static void Open(TripleDictionary<string,string,Sprite> entries,Action<string> onSelect)
+    public static void Open(Dictionary<string, (string, Sprite)> entries,Action<string> onSelect)
     {
         if (!MenuEUtil.isAnyMenuOpen)
         {
@@ -54,7 +54,7 @@ public class StarlightGridMenuList : StarlightPopUp
         }
         _Open("GridMenuList",typeof(StarlightGridMenuList),MenuEUtil.GetOpenMenu().GetTheme(),new List<object>(){entries,onSelect});
     }
-    public static void Open(TripleDictionary<string,string,Sprite> entries,Action<string> onSelect, StarlightMenuTheme theme)
+    public static void Open(Dictionary<string, (string, Sprite)> entries,Action<string> onSelect, StarlightMenuTheme theme)
     {
         _Open("GridMenuList",typeof(StarlightGridMenuList),theme,new List<object>(){entries,onSelect});
     }

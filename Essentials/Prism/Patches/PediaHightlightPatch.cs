@@ -19,9 +19,9 @@ internal class PediaHightlightPatch
         foreach (var additionalFact in PrismLibPedia._additionalFactsMap[__instance])
         {
             var native = additionalFact.ConvertToNativeType();
-            if (native.Label == null) native.Label = PrismShortcuts.emptyTranslation;
-            if (native.Description == null) native.Description = PrismShortcuts.emptyTranslation;
-            if (native.Icon == null) native.Icon = PrismShortcuts.unavailableIcon;
+            if (native.Label == null) native.Label = PrismShortcuts.EmptyTranslation;
+            if (native.Description == null) native.Description = PrismShortcuts.EmptyTranslation;
+            if (native.Icon == null) native.Icon = PrismShortcuts.UnavailableIcon;
             modifiedResult.Add(native);
         }
         __result=modifiedResult.ToArray();

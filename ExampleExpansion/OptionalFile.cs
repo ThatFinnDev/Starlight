@@ -1,8 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Linq;
-using Il2CppTMPro;
-using UnityEngine.UI;
+﻿using System.Diagnostics.CodeAnalysis; using System.IO; using System.Linq; using Il2CppTMPro; using UnityEngine.UI; [assembly: HarmonyDontPatchAll()]
 
 // This is an optional file you can add into your expansion
 // This will show an error message to the user, if Starlight isn't installed!
@@ -10,7 +6,7 @@ using UnityEngine.UI;
 [assembly: MelonInfo(typeof(OptionFileEntrypoint), 
     "Example Expansion", //Put in the Expansions name
     "1.0.0",  //Put in the version
-    "Authorname" //Put in your name
+    "YourName" //Put in your name
     )]
 [SuppressMessage("ReSharper", "CheckNamespace")]
 static class OptionFileInfo
@@ -288,7 +284,7 @@ class OptionFileEntrypoint : MelonMod
     {
         bool TryParse(string s, out int[] parts)
         {
-            parts = null!;
+            parts = null;
             var split = s.Split('.');
             if (split.Length != 3) return false;
             parts = new int[3];

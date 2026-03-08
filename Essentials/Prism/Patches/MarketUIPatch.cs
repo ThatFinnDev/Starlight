@@ -17,7 +17,7 @@ internal static class MarketUIPatch
     {
         List<PlortEntry> plortEntries = new List<PlortEntry>(__instance._config._plorts);
         foreach (var entry in __instance._config._plorts)
-            foreach (var type in PrismShortcuts.removeMarketPlortEntries)
+            foreach (var type in PrismShortcuts.RemoveMarketPlortEntries)
             {
                 if (entry.IdentType.ReferenceId == type.ReferenceId)
                 {
@@ -25,7 +25,7 @@ internal static class MarketUIPatch
                     break;
                 }
             }
-        foreach (var pair in PrismShortcuts.marketPlortEntries)
+        foreach (var pair in PrismShortcuts.MarketPlortEntries)
             if (!pair.Value)
                 plortEntries.Add(pair.Key);
         

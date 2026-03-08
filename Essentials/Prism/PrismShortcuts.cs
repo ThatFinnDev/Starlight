@@ -1,36 +1,38 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Il2CppMonomiPark.SlimeRancher.Pedia;
 using Il2CppMonomiPark.SlimeRancher.UI;
-using Il2CppSystem.Linq;
-using Starlight.Prism.Creators;
 using Starlight.Prism.Data;
 using Starlight.Prism.Lib;
-using Starlight.Storage;
+using Starlight.Prism.Wrappers;
 using UnityEngine.Localization;
 
 namespace Starlight.Prism;
 
+[SuppressMessage("ReSharper", "CollectionNeverUpdated.Global")]
+[SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+[SuppressMessage("ReSharper", "CollectionNeverQueried.Global")]
 public static class PrismShortcuts
 {
-    internal static Dictionary<IdentifiableType, PrismMarketData> marketData = new (0);
-    internal static Dictionary<PlortEntry, bool> marketPlortEntries = new ();
-    internal static List<IdentifiableType> removeMarketPlortEntries = new ();
-    internal static List<SystemAction> createLargoActions = new ();
+    internal static readonly Dictionary<IdentifiableType, PrismMarketData> MarketData = new (0);
+    internal static readonly Dictionary<PlortEntry, bool> MarketPlortEntries = new ();
+    internal static readonly List<IdentifiableType> RemoveMarketPlortEntries = new ();
+    internal static readonly List<SystemAction> CreateLargoActions = new ();
     
     
-    internal static Dictionary<IdentifiableTypeGroup, PrismIdentifiableTypeGroup> _prismIdentifiableTypeGroups = new Dictionary<IdentifiableTypeGroup, PrismIdentifiableTypeGroup>();
-    internal static Dictionary<string, PrismBaseSlime> _prismBaseSlimes = new Dictionary<string, PrismBaseSlime>();
-    internal static Dictionary<string, PrismGordo> _prismGordos = new Dictionary<string, PrismGordo>();
-    internal static Dictionary<string, PrismLargo> _prismLargos = new Dictionary<string, PrismLargo>();
+    internal static readonly Dictionary<IdentifiableTypeGroup, PrismIdentifiableTypeGroup> PrismIdentifiableTypeGroups = new Dictionary<IdentifiableTypeGroup, PrismIdentifiableTypeGroup>();
+    internal static readonly Dictionary<string, PrismBaseSlime> PrismBaseSlimes = new Dictionary<string, PrismBaseSlime>();
+    internal static readonly Dictionary<string, PrismGordo> PrismGordos = new Dictionary<string, PrismGordo>();
+    internal static readonly Dictionary<string, PrismLargo> PrismLargos = new Dictionary<string, PrismLargo>();
 
-    internal static TripleDictionary<PrismLargo, PrismBaseSlime, PrismBaseSlime> _prismLargoBases = new TripleDictionary<PrismLargo, PrismBaseSlime, PrismBaseSlime>();
-    internal static Dictionary<string, PrismPlort> _prismPlorts = new Dictionary<string, PrismPlort>();
-    internal static Dictionary<FixedPediaEntry, PrismFixedPediaEntry> _prismFixedPediaEntries = new Dictionary<FixedPediaEntry, PrismFixedPediaEntry>();
-    internal static Dictionary<IdentifiablePediaEntry, PrismIdentifiablePediaEntry> _prismIdentifiablePediaEntries = new Dictionary<IdentifiablePediaEntry, PrismIdentifiablePediaEntry>();
-    internal static Dictionary<PediaEntry, PrismPediaEntry> _prismUnknownPediaEntries = new Dictionary<PediaEntry, PrismPediaEntry>();
-    internal static LocalizedString emptyTranslation;
-    internal static Sprite unavailableIcon;
+    internal static readonly Dictionary<PrismLargo, (PrismBaseSlime, PrismBaseSlime)> PrismLargoBases = new ();
+    internal static readonly Dictionary<string, PrismPlort> PrismPlorts = new ();
+    internal static readonly Dictionary<FixedPediaEntry, PrismFixedPediaEntry> PrismFixedPediaEntries = new();
+    internal static readonly Dictionary<IdentifiablePediaEntry, PrismIdentifiablePediaEntry> PrismIdentifiablePediaEntries = new ();
+    internal static readonly Dictionary<PediaEntry, PrismPediaEntry> PrismUnknownPediaEntries = new ();
+    internal static LocalizedString EmptyTranslation;
+    internal static Sprite UnavailableIcon;
     
     
     private static SlimeAppearanceDirector _mainAppearanceDirector;
@@ -44,12 +46,12 @@ public static class PrismShortcuts
                 _mainAppearanceDirector = Get<SlimeAppearanceDirector>("MainSlimeAppearanceDirector");
             return _mainAppearanceDirector;
         }
-        set { _mainAppearanceDirector = value; }
+        set => _mainAppearanceDirector = value;
     }
-    internal static Dictionary<string, List<Action>> onSceneLoaded = new Dictionary<string, List<Action>>();
+    internal static readonly Dictionary<string, List<Action>> OnSceneLoaded = new ();
     internal static void OnSceneWasLoaded(int buildIndex, string sceneName)
     {
-        var pair = onSceneLoaded.FirstOrDefault(x => sceneName.Contains(x.Key));
+        var pair = OnSceneLoaded.FirstOrDefault(x => sceneName.Contains(x.Key));
 
         if (pair.Value != null)
             foreach (var action in pair.Value)
@@ -63,27 +65,31 @@ public static class PrismShortcuts
     
     public static PrismBaseSlime GetPrismBaseSlime(this PrismNativeBaseSlime nativeBaseSlime)
     {
-        try
+        try { return LookupEUtil.baseSlimeTypes.GetEntryByRefID(nativeBaseSlime.GetReferenceID()).GetPrismBaseSlime(); }
+        catch
         {
-            return LookupEUtil.baseSlimeTypes.GetEntryByRefID(nativeBaseSlime.GetReferenceID()).GetPrismBaseSlime();
-        } catch { }
+            // ignored
+        }
+
         return null;
     }
     public static PrismPlort GetPrismPlort(this PrismNativePlort nativePlort)
     {
-        try
+        try { return LookupEUtil.plortTypes.GetEntryByRefID(nativePlort.GetReferenceID()).GetPrismPlort(); }
+        catch
         {
-            return LookupEUtil.plortTypes.GetEntryByRefID(nativePlort.GetReferenceID()).GetPrismPlort();
-        } catch { }
+            // ignored
+        }
+
         return null;
     }
     public static PrismBaseSlime GetPrismBaseSlime(this SlimeDefinition customOrNativeSlime)
     {
         if (customOrNativeSlime == null) return null;
         if (customOrNativeSlime.IsLargo) return null;
-        if (_prismBaseSlimes.ContainsKey(customOrNativeSlime.ReferenceId)) return _prismBaseSlimes[customOrNativeSlime.ReferenceId];
+        if (PrismBaseSlimes.TryGetValue(customOrNativeSlime.ReferenceId, out var slime)) return slime;
         var newSlime = new PrismBaseSlime(customOrNativeSlime, true);
-        _prismBaseSlimes.Add(customOrNativeSlime.ReferenceId, newSlime);
+        PrismBaseSlimes.Add(customOrNativeSlime.ReferenceId, newSlime);
         return newSlime;
     }
     public static PrismGordo GetPrismGordo(this IdentifiableType customOrNativeGordo)
@@ -91,18 +97,18 @@ public static class PrismShortcuts
         if (customOrNativeGordo == null) return null;
         if (customOrNativeGordo.prefab==null) return null;
         if (!customOrNativeGordo.prefab.HasComponent<GordoIdentifiable>()) return null;
-        if (_prismGordos.ContainsKey(customOrNativeGordo.ReferenceId)) return _prismGordos[customOrNativeGordo.ReferenceId];
+        if (PrismGordos.TryGetValue(customOrNativeGordo.ReferenceId, out var gordo)) return gordo;
         var newGordo = new PrismGordo(customOrNativeGordo, true);
-        _prismGordos.Add(customOrNativeGordo.ReferenceId, newGordo);
+        PrismGordos.Add(customOrNativeGordo.ReferenceId, newGordo);
         return newGordo;
     }
     public static PrismLargo GetPrismLargo(this SlimeDefinition customOrNativeSlime)
     {
         if (customOrNativeSlime == null) return null;
         if (!customOrNativeSlime.IsLargo) return null;
-        if (_prismLargos.ContainsKey(customOrNativeSlime.ReferenceId)) return _prismLargos[customOrNativeSlime.ReferenceId];
+        if (PrismLargos.TryGetValue(customOrNativeSlime.ReferenceId, out var largo)) return largo;
         var newSlime = new PrismLargo(customOrNativeSlime, true);
-        _prismLargos.Add(customOrNativeSlime.ReferenceId, newSlime);
+        PrismLargos.Add(customOrNativeSlime.ReferenceId, newSlime);
         return newSlime;
     }
     
@@ -111,14 +117,14 @@ public static class PrismShortcuts
         if (customOrNativeSlime == null) return null;
         if (customOrNativeSlime.IsLargo)
         {
-            if (_prismLargos.ContainsKey(customOrNativeSlime.ReferenceId)) return _prismLargos[customOrNativeSlime.ReferenceId];
+            if (PrismLargos.TryGetValue(customOrNativeSlime.ReferenceId, out var slime)) return slime;
             var newLargo = new PrismLargo(customOrNativeSlime, true);
-            _prismLargos.Add(customOrNativeSlime.ReferenceId, newLargo);
+            PrismLargos.Add(customOrNativeSlime.ReferenceId, newLargo);
             return newLargo;
         }
-        if (_prismBaseSlimes.ContainsKey(customOrNativeSlime.ReferenceId)) return _prismBaseSlimes[customOrNativeSlime.ReferenceId];
+        if (PrismBaseSlimes.TryGetValue(customOrNativeSlime.ReferenceId, out var prismSlime)) return prismSlime;
         var newBaseSlime = new PrismBaseSlime(customOrNativeSlime, true);
-        _prismBaseSlimes.Add(customOrNativeSlime.ReferenceId, newBaseSlime);
+        PrismBaseSlimes.Add(customOrNativeSlime.ReferenceId, newBaseSlime);
         return newBaseSlime;
         
     }
@@ -127,18 +133,18 @@ public static class PrismShortcuts
     {
         if (customOrNativePlort == null) return null;
         if (!customOrNativePlort.IsPlort) return null;
-        if (_prismPlorts.ContainsKey(customOrNativePlort.ReferenceId)) return _prismPlorts[customOrNativePlort.ReferenceId];
+        if (PrismPlorts.TryGetValue(customOrNativePlort.ReferenceId, out var plort)) return plort;
         var newPlort = new PrismPlort(customOrNativePlort, true);
-        _prismPlorts.Add(customOrNativePlort.ReferenceId, newPlort);
+        PrismPlorts.Add(customOrNativePlort.ReferenceId, newPlort);
         return newPlort;
     }
 
     public static PrismIdentifiableTypeGroup GetPrismIdentifiableGroup(this IdentifiableTypeGroup group)
     {
         if (group == null) return null;
-        if (_prismIdentifiableTypeGroups.ContainsKey(group)) return _prismIdentifiableTypeGroups[group];
+        if (PrismIdentifiableTypeGroups.TryGetValue(group, out var identifiableGroup)) return identifiableGroup;
         var newPlort = new PrismIdentifiableTypeGroup(group, true);
-        _prismIdentifiableTypeGroups.Add(group, newPlort);
+        PrismIdentifiableTypeGroups.Add(group, newPlort);
         return newPlort;
     }
 
@@ -150,42 +156,42 @@ public static class PrismShortcuts
         if (customOrNativePedia == null) return null;
         if (customOrNativePedia.TryCast<FixedPediaEntry>()!=null)
         {
-            var pedia = customOrNativePedia.TryCast<FixedPediaEntry>();
-            if (_prismFixedPediaEntries.ContainsKey(pedia)) return _prismFixedPediaEntries[pedia];
+            var pedia = customOrNativePedia.Cast<FixedPediaEntry>();
+            if (PrismFixedPediaEntries.TryGetValue(pedia, out var entry)) return entry;
             var newEntry = new PrismFixedPediaEntry(pedia, true);
-            _prismFixedPediaEntries.Add(pedia, newEntry);
+            PrismFixedPediaEntries.Add(pedia, newEntry);
             return newEntry;
         }
         else if (customOrNativePedia.TryCast<IdentifiablePediaEntry>()!=null)
         {
-            var pedia = customOrNativePedia.TryCast<IdentifiablePediaEntry>();
-            if (_prismIdentifiablePediaEntries.ContainsKey(pedia)) return _prismIdentifiablePediaEntries[pedia];
+            var pedia = customOrNativePedia.Cast<IdentifiablePediaEntry>();
+            if (PrismIdentifiablePediaEntries.TryGetValue(pedia, out var entry)) return entry;
             var newEntry = new PrismIdentifiablePediaEntry(pedia, true);
-            _prismIdentifiablePediaEntries.Add(pedia, newEntry);
+            PrismIdentifiablePediaEntries.Add(pedia, newEntry);
             return newEntry;
         }
         else
         {
-            if (_prismUnknownPediaEntries.ContainsKey(customOrNativePedia)) return _prismUnknownPediaEntries[customOrNativePedia];
+            if (PrismUnknownPediaEntries.TryGetValue(customOrNativePedia, out var entry)) return entry;
             var newEntry = new PrismPediaEntry(customOrNativePedia, true);
-            _prismUnknownPediaEntries.Add(customOrNativePedia, newEntry);
+            PrismUnknownPediaEntries.Add(customOrNativePedia, newEntry);
             return newEntry;
         }
     }
     public static PrismFixedPediaEntry GetPrismFixedPediaEntry(this FixedPediaEntry customOrNativePedia)
     {
         if (customOrNativePedia == null) return null;
-        if (_prismFixedPediaEntries.ContainsKey(customOrNativePedia)) return _prismFixedPediaEntries[customOrNativePedia];
+        if (PrismFixedPediaEntries.TryGetValue(customOrNativePedia, out var entry)) return entry;
         var newPedia = new PrismFixedPediaEntry(customOrNativePedia, true);
-        _prismFixedPediaEntries.Add(customOrNativePedia, newPedia);
+        PrismFixedPediaEntries.Add(customOrNativePedia, newPedia);
         return newPedia;
     }
     public static PrismIdentifiablePediaEntry GetPrismIdentifiablePediaEntry(this IdentifiablePediaEntry customOrNativePedia)
     {
         if (customOrNativePedia == null) return null;
-        if (_prismIdentifiablePediaEntries.ContainsKey(customOrNativePedia)) return _prismIdentifiablePediaEntries[customOrNativePedia];
+        if (PrismIdentifiablePediaEntries.TryGetValue(customOrNativePedia, out var entry)) return entry;
         var newPedia = new PrismIdentifiablePediaEntry(customOrNativePedia, true);
-        _prismIdentifiablePediaEntries.Add(customOrNativePedia, newPedia);
+        PrismIdentifiablePediaEntries.Add(customOrNativePedia, newPedia);
         return newPedia;
     }
 }

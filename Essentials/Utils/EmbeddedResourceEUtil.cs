@@ -32,7 +32,7 @@ public static class EmbeddedResourceEUtil
         var realFilename = filename.Replace("/",".");
         if (!(realFilename.EndsWith(".png") || realFilename.EndsWith(".jpg") || realFilename.EndsWith(".exr"))) return null;
         
-        var stream = assembly.GetManifestResourceStream(assembly.GetName().Name + "." + filename);
+        var stream = assembly.GetManifestResourceStream(GetPrefix(assembly) + "." + filename);
         if (stream != null)
         {
             byte[] array = new byte[stream.Length];
@@ -58,7 +58,7 @@ public static class EmbeddedResourceEUtil
         if (method != null&&method.ReflectedType!=null)
         {
             var assembly = method.ReflectedType.Assembly;
-            var baseNamespace = assembly.GetName().Name + "." + folderNamespace;
+            var baseNamespace = GetPrefix(assembly) + (string.IsNullOrEmpty(folderNamespace) ? "":"." + folderNamespace);
 
             var resourceNames = assembly.GetManifestResourceNames().Where(r =>
                     recursive
@@ -101,7 +101,7 @@ public static class EmbeddedResourceEUtil
     {
         if(assembly == null) return null;
         filename=filename.Replace("/",".");
-        var stream = assembly.GetManifestResourceStream(assembly.GetName().Name + "." + filename);
+        var stream = assembly.GetManifestResourceStream(GetPrefix(assembly) + "." + filename);
         if (stream != null)
         {
             byte[] array = new byte[stream.Length];
@@ -128,7 +128,7 @@ public static class EmbeddedResourceEUtil
     {
         if(assembly == null) return null;
         filename=filename.Replace("/",".");
-        var stream = assembly.GetManifestResourceStream(assembly.GetName().Name + "." + filename);
+        var stream = assembly.GetManifestResourceStream(GetPrefix(assembly) + "." + filename);
         if (stream != null)
         {
             byte[] array = new byte[stream.Length];
@@ -154,7 +154,7 @@ public static class EmbeddedResourceEUtil
     {
         if(assembly == null) return null;
         filename=filename.Replace("/",".");
-        var stream = assembly.GetManifestResourceStream(assembly.GetName().Name + "." + filename);
+        var stream = assembly.GetManifestResourceStream(GetPrefix(assembly) + "." + filename);
         if (stream != null)
         {
             byte[] array = new byte[stream.Length];
@@ -176,11 +176,14 @@ public static class EmbeddedResourceEUtil
 
         return null;
     }
+
+    static string GetPrefix(Assembly assembly) => assembly.GetManifestResourceNames().FirstOrDefault()?.Split('.')[0];
+    
     public static AssetBundle LoadBundle(string filename, Assembly assembly)
     {
         if(assembly == null) return null;
         filename=filename.Replace("/",".");
-        var stream = assembly.GetManifestResourceStream(assembly.GetName().Name + "." + filename);
+        var stream = assembly.GetManifestResourceStream(GetPrefix(assembly) + "." + filename);
         if (stream != null)
         {
             byte[] array = new byte[stream.Length];

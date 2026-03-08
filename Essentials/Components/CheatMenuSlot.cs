@@ -50,7 +50,7 @@ internal class CheatMenuSlot : MonoBehaviour
     private void Select()
     {
         AudioEUtil.PlaySound(MenuSound.Click);
-        var dict = new TripleDictionary<string, string, Sprite>();
+        var dict = new Dictionary<string, (string, Sprite)>();
         foreach (IdentifiableType identType in LookupEUtil.vaccableTypes)
         {
             if (identType.IsGadget()) continue;

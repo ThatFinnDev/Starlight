@@ -31,6 +31,7 @@ modmenu.category.modmenu,"Mods","Modifikationen"
 modmenu.category.modconfig,"Mod Config","Einstellungen"
 modmenu.category.repo,Repositories,Repos
 modmenu.modinfo.expansion,"Expansion: $1","Erweiterung: $1"
+modmenu.modinfo.id,"ID: $1","ID: $1"
 modmenu.modinfo.brokenexpansion,"Broken expansion: $1","Kaputte Erweiterung: $1"
 modmenu.modinfo.mod,"Mod: $1",Modifikation: $1
 modmenu.modinfo.brokenmod,"Broken mod","Kaputte Modifikation: $1"
@@ -47,7 +48,6 @@ modmenu.modinfo.sourcecode,"Source code: $1",Quellcode: $1
 modmenu.modinfo.nexus,"Nexus: $1",Nexus: $1
 modmenu.modinfo.discord,"Discord: $1",Discord: $1
 modmenu.modinfo.unknown,"Unknown",Unbekannt
-modmenu.modinfo.isuniversal,"Is Universal Mod: $1",Universalmodifikation: $1
 modmenu.modinfo.description,"Description: $1",Beschreibung: $1
 modmenu.modinfo.useprism,"Uses Prism: $1","Benutzt Prism: $1"
 modmenu.modconfig.enterint,Please enter a non decimal number,Gib bitte eine nicht-dezimale Zahl ein!

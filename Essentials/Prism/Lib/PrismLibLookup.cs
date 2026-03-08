@@ -1,4 +1,5 @@
 using Starlight.Prism.Data;
+using Starlight.Prism.Wrappers;
 
 namespace Starlight.Prism.Lib;
 /// <summary>
@@ -101,10 +102,10 @@ public static class PrismLibLookup
     public static void AddToGroup(this PrismIdentifiableTypeGroup group, string groupName)
     {
         var group2 = LookupEUtil.allIdentifiableTypeGroups[groupName];
-        if (group2._memberGroups.Contains(group._group)) return;
-        group2._memberGroups.Add(group._group);
-        if (group2.GetRuntimeObject()._memberGroups.Contains(group._group)) return;
-        group2.GetRuntimeObject()._memberGroups.Add(group._group);
+        if (group2._memberGroups.Contains(group.group)) return;
+        group2._memberGroups.Add(group.group);
+        if (group2.GetRuntimeObject()._memberGroups.Contains(group.group)) return;
+        group2.GetRuntimeObject()._memberGroups.Add(group.group);
     }
     /// <summary>
     /// Checks if an IdentifiableType is in a group
@@ -128,7 +129,7 @@ public static class PrismLibLookup
     {
         var group = LookupEUtil.allIdentifiableTypeGroups[groupName];
         if (group == null) return false;
-        return group._memberTypes.Contains(prismSlime._slimeDefinition);
+        return group._memberTypes.Contains(prismSlime.slimeDefinition);
     }
     /// <summary>
     /// Checks if a PrismPlort is in a group
@@ -140,7 +141,7 @@ public static class PrismLibLookup
     {
         var group = LookupEUtil.allIdentifiableTypeGroups[groupName];
         if (group == null) return false;
-        return group._memberTypes.Contains(prismPlort._identifiableType);
+        return group._memberTypes.Contains(prismPlort.identifiableType);
     }
     /// <summary>
     /// Checks if a largo combination exists

@@ -2,6 +2,7 @@ using System.Linq;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using Starlight.Prism.Data;
 using Starlight.Prism.Lib;
+using Starlight.Prism.Wrappers;
 using UnityEngine.Localization;
 
 namespace Starlight.Prism.Creators;
@@ -198,7 +199,7 @@ public class PrismBaseSlimeCreatorV01
         
         if (canLargofy&&createAllLargos)
         {
-            PrismShortcuts.createLargoActions.Add(() =>
+            PrismShortcuts.CreateLargoActions.Add(() =>
             {
                 foreach (var slime in LookupEUtil.baseSlimeTypes)
                 {
@@ -207,7 +208,7 @@ public class PrismBaseSlimeCreatorV01
                         var otherSlimeDef = slime.TryCast<SlimeDefinition>();
                         if(otherSlimeDef.ReferenceId==slimeDef.ReferenceId) continue;
                         var otherPrism = otherSlimeDef.GetPrismBaseSlime();
-                        if (otherPrism._allowLargos&& !(disableAutoModdedLargos && !otherPrism.GetIsNative()))
+                        if (otherPrism.allowLargos&& !(disableAutoModdedLargos && !otherPrism.GetIsNative()))
                         {
                             var largoCreator = new PrismLargoCreatorV01(prismSlime, otherPrism);
                             if (customAutoLargoMergeSettings != null)
@@ -231,7 +232,7 @@ public class PrismBaseSlimeCreatorV01
             PrismLibDiet.AddEatProduction(prismSlime, plort);
         
         _createdSlime = prismSlime;
-        PrismShortcuts._prismBaseSlimes.Add(slimeDef.ReferenceId,_createdSlime);
+        PrismShortcuts.PrismBaseSlimes.Add(slimeDef.ReferenceId,_createdSlime);
         return _createdSlime;
     }
 

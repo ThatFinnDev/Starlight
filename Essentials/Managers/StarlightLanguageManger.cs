@@ -44,6 +44,7 @@ public static class StarlightLanguageManger
         var newLanguages = new Dictionary<string, Dictionary<string, string>>();
         var codeIndexes = new List<string>(){};
         MemoryStream stream = new MemoryStream();
+        MelonLogger.Msg(CVSText==null);
         var cvsBytes = System.Text.Encoding.Default.GetBytes(CVSText);
         stream.Write(cvsBytes,0,cvsBytes.Length);
         stream.Seek(0, SeekOrigin.Begin);

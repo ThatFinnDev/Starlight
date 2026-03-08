@@ -1,6 +1,7 @@
 using Il2CppMonomiPark.SlimeRancher.Pedia;
+// ReSharper disable MemberCanBePrivate.Global
 
-namespace Starlight.Prism.Data;
+namespace Starlight.Prism.Wrappers;
 
 public class PrismFixedPediaEntry : PrismPediaEntry
 {
@@ -12,12 +13,12 @@ public class PrismFixedPediaEntry : PrismPediaEntry
     {
         return fixedPediaEntry.GetPrismFixedPediaEntry();
     }
-    public FixedPediaEntry GetFixedPediaEntry() => _pediaEntry.TryCast<FixedPediaEntry>();
+    public FixedPediaEntry GetFixedPediaEntry() => pediaEntry.TryCast<FixedPediaEntry>();
     
     internal PrismFixedPediaEntry(PediaEntry pediaEntry, bool isNative): base(pediaEntry, isNative)
     {
-        this._pediaEntry = pediaEntry;
-        this._isNative = isNative;
+        this.pediaEntry = pediaEntry;
+        this.isNative = isNative;
     }
     
     public void SetIcon(Sprite newIcon)

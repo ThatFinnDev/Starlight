@@ -21,7 +21,7 @@ public static class StarlightFeatureFlags
     [
         CommandsLoadCommands, CommandsLoadCheat, CommandsLoadBinding, CommandsLoadWarp,
         CommandsLoadCommon, CommandsLoadMenu, CommandsLoadMiscellaneous, CommandsLoadFun,
-        AllowExpansions, AllowExpansionsV1, AllowExpansionsV2, AllowExpansionsV3,
+        AllowExpansions, AllowExpansionsV1,
         EnableModMenu, EnableConsole, EnableIl2CppDetourExceptionReporting,
         InjectMainMenuButtons, InjectRanchUIButtons, InjectPauseButtons, InjectTranslations,
         AddCheatMenuButton, AddModMenuButton, CheckForUpdates, AllowAutoUpdate, EnableInfHealth,
@@ -320,8 +320,6 @@ public static class StarlightFeatureFlags
         {AddModMenuButton, [new FFRActivated(InjectMainMenuButtons), new FFRActivated(InjectPauseButtons)] },
         {AllowPrism, [new FFRActivated(InjectTranslations)] },
         {AllowExpansionsV1, [new FFRActivated(AllowExpansions)] },
-        {AllowExpansionsV2, [new FFRActivated(AllowExpansions)] },
-        {AllowExpansionsV3, [new FFRActivated(AllowExpansions)] },
         {AddMockMainMenuButtons, [new FFRActivated(InjectMainMenuButtons)] },
         {RestoreDebugFPSViewer, [new FFRActivated(RestoreDebugAbilities)] },
         {RestoreDebugPlayerDebug, [new FFRActivated(RestoreDebugAbilities)] },

@@ -1,6 +1,7 @@
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using Starlight.Prism.Data;
 using Starlight.Prism.Lib;
+using Starlight.Prism.Wrappers;
 using UnityEngine.Localization;
 
 namespace Starlight.Prism.Creators;
@@ -12,7 +13,7 @@ public class PrismGordoCreatorV01
     public Sprite icon;
     public LocalizedString localized;
     public PrismBaseSlime baseSlime = null;
-    public string referenceID => "IdentifiableType.Modded" + baseSlime._slimeDefinition.name +"Gordo";
+    public string referenceID => "IdentifiableType.Modded" + baseSlime.slimeDefinition.name +"Gordo";
 
     public int customMaxEatCount = 0;
     public Material customEyesBlink;
@@ -49,11 +50,11 @@ public class PrismGordoCreatorV01
         if (baseType == null) baseType = Get<IdentifiableType>("PinkGordo");
         if (baseType == null) return null;
         var gordoType = Object.Instantiate(baseType);
-        gordoType.name = baseSlime._slimeDefinition.name.ToLower() + "ModdedGordo";
+        gordoType.name = baseSlime.slimeDefinition.name.ToLower() + "ModdedGordo";
         gordoType.icon = icon;
         gordoType.localizedName = localized;
         gordoType.referenceId = referenceID;
-        gordoType._pediaPersistenceSuffix=baseSlime._slimeDefinition.name.ToLower()+"_gordo";
+        gordoType._pediaPersistenceSuffix=baseSlime.slimeDefinition.name.ToLower()+"_gordo";
         
         gordoType.Prism_AddToGroup("GordoGroup");
         
@@ -98,7 +99,7 @@ public class PrismGordoCreatorV01
         
         
         _createdGordo = gordoSlime;
-        PrismShortcuts._prismGordos.Add(gordoType.ReferenceId,gordoSlime);
+        PrismShortcuts.PrismGordos.Add(gordoType.ReferenceId,gordoSlime);
         return gordoSlime;
     }
 }

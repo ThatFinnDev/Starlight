@@ -2,20 +2,17 @@ using Starlight.Enums;
 
 namespace Starlight.Storage;
 
-public struct MenuIdentifier
+public struct MenuIdentifier(
+    string translationKey,
+    StarlightMenuFont defaultFont,
+    StarlightMenuTheme defaultTheme,
+    string saveKey)
 {
-    public string translationKey { get; }
-    public StarlightMenuTheme defaultTheme { get; }
-    public string saveKey { get; }
-    public StarlightMenuFont defaultFont { get; }
+    public string translationKey { get; } = translationKey;
+    public StarlightMenuTheme defaultTheme { get; } = defaultTheme;
+    public string saveKey { get; } = saveKey;
+    public StarlightMenuFont defaultFont { get; } = defaultFont;
 
-    public MenuIdentifier(string translationKey, StarlightMenuFont defaultFont, StarlightMenuTheme defaultTheme, string saveKey)
-    {
-        this.translationKey = translationKey;
-        this.defaultFont = defaultFont;
-        this.defaultTheme = defaultTheme;
-        this.saveKey = saveKey;
-    }
     public override string ToString() => $"MenuIdentifier {{ TranslationKey: \"{translationKey}\", DefaultFont: {defaultFont}, DefaultTheme: {defaultTheme}, SaveKey: \"{saveKey}\" }}";
     
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using Il2CppInterop.Runtime.Attributes;
@@ -81,26 +82,14 @@ public class StarlightModMenu : StarlightMenu
     }
 
     private Dictionary<GameObject, string> modButtons = new ();
-    [HideFromIl2Cpp] void ProcessMelon(string melonName, string author, string version,string downloadLink,Assembly assembly,bool isRotten,GameObject buttonPrefab, List<object> rottenInfo)
+    [HideFromIl2Cpp] void ProcessMelon(StarlightExpansionInfo info,string downloadLink,bool isExpansion,bool isRotten,GameObject buttonPrefab, List<object> rottenInfo)
     {
-        bool isStarlightExpansion = false;
-        bool usePrism = false;
-        foreach (var meta in assembly.GetCustomAttributes<AssemblyMetadataAttribute>())
-        {
-            if (meta == null) continue;
-            if (meta.Key == StarlightExpansionAttributes.IsExpansion) isStarlightExpansion = meta.Value.ToLower() == "true";
-            if (meta.Key == StarlightExpansionAttributes.UsePrism) usePrism = meta.Value.ToLower() == "true";
-        }
-        if (usePrism && !isStarlightExpansion)
-            usePrism = true;
-        
-
         var obj = Instantiate(buttonPrefab, modContent);
-        modButtons.Add(obj,melonName);
-        Button b = obj.GetComponent<Button>();
-        b.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = melonName;
+        modButtons.Add(obj,info.name);
+        var b = obj.GetComponent<Button>();
+        b.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = info.name;
         obj.SetActive(true);
-        if (isStarlightExpansion)
+        if (isExpansion)
         {
             var colorBlock = b.colors;
             colorBlock.normalColor = new Color(0.149f, 0.7176f, 0.3961f, 1);
@@ -118,99 +107,55 @@ public class StarlightModMenu : StarlightMenu
             colorBlock.selectedColor = new Color(0.6f, 0.6f, 0.6f, 1); 
             b.colors = colorBlock;
         }
-        bool useIcon = false;
-        try
-        {
-            var sprite = EmbeddedResourceEUtil.LoadSprite("icon.png",assembly).CopyWithoutMipmaps();
-            if (sprite == null) throw new Exception();
-            b.transform.GetChild(1).GetComponent<Image>().sprite = sprite;
-            b.transform.GetChild(1).gameObject.SetActive(true);
-            useIcon = true;
-        }
-        catch
-        {
-        }
 
-        if (!useIcon)
+        if (info.icon != null)
         {
-            try
-            {
-                var sprite = EmbeddedResourceEUtil.LoadSprite("Assets.icon.png", assembly).CopyWithoutMipmaps();
-                if (sprite == null) throw new Exception();
-                b.transform.GetChild(1).GetComponent<Image>().sprite = sprite;
-                b.transform.GetChild(1).gameObject.SetActive(true);
-                useIcon = true;
-            }
-            catch
-            {
-            }
+            b.transform.GetChild(1).GetComponent<Image>().sprite = info.icon;
+            b.transform.GetChild(1).gameObject.SetActive(true);
         }
 
         b.onClick.AddListener((SystemAction)(() =>
         {
             AudioEUtil.PlaySound(MenuSound.Click);
-            themeButton.gameObject.SetActive(melonName=="Starlight");
+            themeButton.gameObject.SetActive(info.name=="Starlight");
             if (isRotten)
             {
-                modInfoText.text = translation("modmenu.modinfo.brokenmod", melonName);
-                if (isStarlightExpansion)
-                    modInfoText.text = translation("modmenu.modinfo.brokenexpansion", melonName);
+                modInfoText.text = translation("modmenu.modinfo.brokenmod", info.name);
+                if (isExpansion) modInfoText.text = translation("modmenu.modinfo.brokenexpansion", info.name);
             }
             else
             {
-                modInfoText.text = translation("modmenu.modinfo.mod", melonName);
-                if (isStarlightExpansion)
-                    modInfoText.text = translation("modmenu.modinfo.expansion", melonName);
+                modInfoText.text = translation("modmenu.modinfo.mod", info.name);
+                if (isExpansion) modInfoText.text = translation("modmenu.modinfo.expansion", info.name);
             }
-            modInfoText.text += "\n" + translation("modmenu.modinfo.author", author);
+            if(!string.IsNullOrWhiteSpace(info.ID)) 
+                modInfoText.text += "\n" + translation("modmenu.modinfo.id", info.ID);
+            modInfoText.text += "\n" + translation("modmenu.modinfo.author", info.author);
 
-            if(isStarlightExpansion)
-                modInfoText.text += "\n" + translation("modmenu.modinfo.useprism", usePrism);
-            string versionText = "\n" + translation("modmenu.modinfo.version", version);
+            if(isExpansion)
+                modInfoText.text += "\n" + translation("modmenu.modinfo.useprism", info.usePrism);
+
+            if (info.coAuthors is { Length: > 0 }) modInfoText.text += "\n" + translation("modmenu.modinfo.coauthor", string.Join(", ",info.coAuthors));
+            if (info.contributors is { Length: > 0 }) modInfoText.text += "\n" + translation("modmenu.modinfo.contributors", string.Join(", ",info.contributors));
             
+            modInfoText.text += "\n" + translation("modmenu.modinfo.version", info.version) + "\n";
+            
+            
+            if(!string.IsNullOrWhiteSpace(info.sourceCode)) 
+                modInfoText.text += "\n" + translation("modmenu.modinfo.sourcecode", info.sourceCode);
+            
+            if(!string.IsNullOrWhiteSpace(info.nexus)) 
+                modInfoText.text += "\n" + translation("modmenu.modinfo.nexus", info.nexus);
+            
+            if(!string.IsNullOrWhiteSpace(info.discord)) 
+                modInfoText.text += "\n" + translation("modmenu.modinfo.discord", info.discord);
 
-            foreach (var meta in assembly.GetCustomAttributes<AssemblyMetadataAttribute>())
-            {
-                if (meta == null) continue;
-                if (string.IsNullOrWhiteSpace(meta.Key)) continue;
-                if (string.IsNullOrWhiteSpace(meta.Value)) continue;
-                if (meta.Key == null) continue;
-                if (meta.Value == null) continue;
-                switch (meta.Key)
-                {
-                    case StarlightExpansionAttributes.DisplayVersion: try { versionText = "\n" + translation("modmenu.modinfo.version", meta.Value); }catch { } break;
-                    case StarlightExpansionAttributes.CoAuthors: try { modInfoText.text += "\n" + translation("modmenu.modinfo.coauthor", meta.Value); }catch { } break;
-                    case StarlightExpansionAttributes.Contributors: try { modInfoText.text += "\n" + translation("modmenu.modinfo.contributors", meta.Value); }catch { } break;
-                    case StarlightExpansionAttributes.IconB64: if (useIcon) break; try { b.transform.GetChild(1).gameObject.SetActive(true); b.transform.GetChild(1).GetComponent<Image>().sprite = ConvertEUtil.Base64ToTexture2D(meta.Value).Texture2DToSprite(); }catch { } break;
-                }
-            }
-
-            modInfoText.text += versionText+"\n";
-            foreach (var meta in assembly.GetCustomAttributes<AssemblyMetadataAttribute>())
-            {
-                if (meta == null) continue;
-                if (string.IsNullOrWhiteSpace(meta.Key)) continue;
-                if (string.IsNullOrWhiteSpace(meta.Value)) continue;
-                switch (meta.Key)
-                {
-                    case StarlightExpansionAttributes.SourceCode: try { modInfoText.text += "\n" + translation("modmenu.modinfo.sourcecode", FormatLink(meta.Value)); }catch { } break;
-                    case StarlightExpansionAttributes.Nexus: try { modInfoText.text += "\n" + translation("modmenu.modinfo.nexus", FormatLink(meta.Value)); }catch { } break;
-                    case StarlightExpansionAttributes.Discord: try { modInfoText.text += "\n" + translation("modmenu.modinfo.discord", FormatLink(meta.Value)); }catch { } break;
-                }
-            }
 
             if (!string.IsNullOrWhiteSpace(downloadLink))
                 modInfoText.text += "\n" + translation("modmenu.modinfo.link", FormatLink(downloadLink));
 
-            string universalModName = translation("modmenu.modinfo.unknown");
-            var universalMod = assembly.GetCustomAttribute<MelonGameAttribute>();
-            if (universalMod != null) universalModName = universalMod.Universal.ToString();
-            modInfoText.text += "\n" + translation("modmenu.modinfo.isuniversal", universalModName);
-
-            var desc = assembly.GetCustomAttribute<AssemblyDescriptionAttribute>();
-            if (desc != null)
-                if (!string.IsNullOrWhiteSpace(desc.Description))
-                    modInfoText.text += "\n" + translation("modmenu.modinfo.description", desc.Description + "\n");
+            if(!string.IsNullOrWhiteSpace(info.description)) 
+                modInfoText.text += "\n" + translation("modmenu.modinfo.description", info.description + "\n");
 
             if (isRotten&&rottenInfo!=null&rottenInfo.Count>=3)
             {
@@ -226,6 +171,7 @@ public class StarlightModMenu : StarlightMenu
         GameObject buttonPrefab = transform.GetObjectRecursively<GameObject>("ModMenuModMenuTemplateButtonRec");
         buttonPrefab.SetActive(false);
         modButtons = new();
+        //Load broken Melons
         foreach (var loadedAssembly in MelonAssembly.LoadedAssemblies) foreach (dynamic rotten in loadedAssembly.RottenMelons)
         {
             // Do it this way to support ML 0.7.1 and newer versions
@@ -255,32 +201,91 @@ public class StarlightModMenu : StarlightMenu
                 string melonName = "";
                 try {melonName = assembly.FullName; } catch {}
                 if (string.IsNullOrEmpty(melonName)) melonName = translation("modmenu.modinfo.brokentitle");
-                ProcessMelon(melonName,"<unknown>","<unknown>",null,
-                    assembly, true, buttonPrefab, 
-                    new List<object>() { assembly.Location, exception, errorMessage });
+                ProcessMelon(new StarlightExpansionInfo(){name = melonName,assembly = assembly, dllName = new FileInfo(assembly.Location).Name},null,false,true,buttonPrefab,new List<object>() { assembly.Location, exception, errorMessage });
 
             }
             catch (Exception e) { MelonLogger.Error(e); }
         }
-        foreach (MelonBase melonBase in MelonBase.RegisteredMelons)
+        //Load Melons
+        foreach (var melonBase in MelonBase.RegisteredMelons)
         {
             try
             {
-                ProcessMelon(melonBase.Info.Name,melonBase.Info.Author,melonBase.Info.Version,melonBase.Info.DownloadLink,
-                    melonBase.MelonAssembly.Assembly,false,buttonPrefab,null);
+                var assembly = melonBase.MelonAssembly.Assembly;
+                if (StarlightEntryPoint.Expansions.Keys.ToList().Contains(assembly))
+                    continue;
+                var info = new StarlightExpansionInfo()
+                {
+                    name = melonBase.Info.Name,
+                    author = melonBase.Info.Author,
+                    version = melonBase.Info.Version,
+                    dllName = new FileInfo(assembly.Location).Name
+                };
+            
+                var desc = assembly.GetCustomAttribute<AssemblyDescriptionAttribute>();
+                if (desc != null)
+                    info.description = desc.Description;
+                foreach (var meta in assembly.GetCustomAttributes<AssemblyMetadataAttribute>())
+                {
+                    if (meta == null) continue;
+                    if (string.IsNullOrWhiteSpace(meta.Key)) continue;
+                    if (string.IsNullOrWhiteSpace(meta.Value)) continue;
+                    switch (meta.Key)
+                    {
+                        case StarlightModInfoAttributes.SourceCode: info.sourceCode = meta.Value; break;
+                        case StarlightModInfoAttributes.Nexus: info.nexus = meta.Value; break;
+                        case StarlightModInfoAttributes.Discord: info.discord = meta.Value; break;
+                        case StarlightModInfoAttributes.DisplayVersion: info.version = meta.Value; break;
+                        case StarlightModInfoAttributes.CoAuthors: info.coAuthors = meta.Value.Split(", "); break;
+                        case StarlightModInfoAttributes.Contributors: info.contributors = meta.Value.Split(", "); break;
+                        case StarlightModInfoAttributes.IconB64: try { info.icon = ConvertEUtil.Base64ToTexture2D(meta.Value).Texture2DToSprite(); } catch { } break;
+                    }
+                }
+
+                if (info.icon != null)
+                {
+                    try { info.icon = EmbeddedResourceEUtil.LoadSprite("icon.png",assembly).CopyWithoutMipmaps(); }
+                    catch { }
+                    if (info.icon != null)
+                    {
+                        try { info.icon = EmbeddedResourceEUtil.LoadSprite("Assets.icon.png", assembly).CopyWithoutMipmaps(); }
+                        catch { }
+                    }
+                }
+                ProcessMelon(info, melonBase.Info.DownloadLink, false, false, buttonPrefab, null);
             }
             catch (Exception e) { MelonLogger.Error(e); }
         }
 
+        //Load Expansions
+        foreach (var pair in StarlightEntryPoint.Expansions.Values.ToList())
+        {
+            try
+            {
+                foreach (var pair2 in pair.Item1)
+                {
+                    try
+                    { 
+                        ProcessMelon(pair2.Value,null, true,false, buttonPrefab, null);
+                    }
+                    catch (Exception e) { MelonLogger.Error(e); }
+                }
+            }
+            catch (Exception e) { MelonLogger.Error(e); }
+        }
+        //Load broken Expansions
         foreach (var group in StarlightEntryPoint.BrokenExpansions)
         {
             try
             {
-                ProcessMelon(group.Item1,"<unknown>","<unknown>",null, group.Item2,true,buttonPrefab,
-                    new List<object>() { group.Item2.Location, group.Item3,  group.Item4 });
+                ProcessMelon(new StarlightExpansionInfo(){name = group.Item1,assembly = group.Item2, dllName = new FileInfo(group.Item2.Location).Name},null, true,true,
+                    buttonPrefab, new List<object>() { group.Item2.Location, group.Item3,  group.Item4 });
             }
             catch (Exception e) { MelonLogger.Error(e); }
         }
+        
+        
+        
         
         var sortedButtons = modButtons.Keys.ToList().OrderBy(obj =>
         {

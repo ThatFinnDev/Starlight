@@ -1,4 +1,5 @@
 using Starlight.Prism.Data;
+using Starlight.Prism.Wrappers;
 using UnityEngine.Localization;
 
 namespace Starlight.Prism.Creators;
@@ -49,7 +50,7 @@ public class PrismIdentifiableTypeGroupCreatorV01
         group._isFood = isFood;
         
         if (localized != null) group._localizedName = localized;
-        else group._localizedName = PrismShortcuts.emptyTranslation;
+        else group._localizedName = PrismShortcuts.EmptyTranslation;
         group.name = name;
 
         group.AllowedCategories = new Il2CppSystem.Collections.Generic.List<IdentifiableCategory>();
@@ -65,7 +66,7 @@ public class PrismIdentifiableTypeGroupCreatorV01
 
         var prismGroup = new PrismIdentifiableTypeGroup(group, false);
             
-        PrismShortcuts._prismIdentifiableTypeGroups.Add(group,prismGroup);
+        PrismShortcuts.PrismIdentifiableTypeGroups.Add(group,prismGroup);
 
         _createdGroup = prismGroup;
         return _createdGroup;

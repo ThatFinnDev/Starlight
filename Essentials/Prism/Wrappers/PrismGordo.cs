@@ -1,6 +1,7 @@
 using UnityEngine.Localization;
+// ReSharper disable MemberCanBePrivate.Global
 
-namespace Starlight.Prism.Data;
+namespace Starlight.Prism.Wrappers;
 
 public class PrismGordo
 {
@@ -14,8 +15,9 @@ public class PrismGordo
         this._identifiableType = identifiableType;
         this._isNative = isNative;
     }
-    internal IdentifiableType _identifiableType;
-    protected bool _isNative;
+
+    private readonly IdentifiableType _identifiableType;
+    private readonly bool _isNative;
     
     public IdentifiableType GetIdentifiableType() => _identifiableType;
     public string GetReferenceID() => _identifiableType.ReferenceId;

@@ -1,7 +1,7 @@
 using Il2CppSystem.Linq;
 using UnityEngine.Localization;
 
-namespace Starlight.Prism.Data;
+namespace Starlight.Prism.Wrappers;
 
 public class PrismSlime
 {
@@ -12,33 +12,33 @@ public class PrismSlime
     
     internal PrismSlime(SlimeDefinition slimeDefinition, bool isNative)
     {
-        this._slimeDefinition = slimeDefinition;
-        this._isNative = isNative;
+        this.slimeDefinition = slimeDefinition;
+        this.isNative = isNative;
     }
-    internal SlimeDefinition _slimeDefinition;
-    protected bool _isNative;
+    internal SlimeDefinition slimeDefinition;
+    protected bool isNative;
     
-    public SlimeDefinition GetSlimeDefinition() => _slimeDefinition;
-    public string GetReferenceID() => _slimeDefinition.ReferenceId;
-    public string GetName() => _slimeDefinition.name;
-    public Sprite GetIcon() => _slimeDefinition.icon;
-    public LocalizedString GetLocalized() => _slimeDefinition.LocalizedName;
-    public Color32 GetVacColor() => _slimeDefinition.color;
-    public GameObject GetPrefab() => _slimeDefinition.prefab;
-    public SlimeAppearance GetSlimeAppearance() => _slimeDefinition.AppearancesDefault[0];
-    public SlimeDiet GetSlimeDiet() => _slimeDefinition.Diet;
-    public bool GetIsNative() => _isNative;
+    public SlimeDefinition GetSlimeDefinition() => slimeDefinition;
+    public string GetReferenceID() => slimeDefinition.ReferenceId;
+    public string GetName() => slimeDefinition.name;
+    public Sprite GetIcon() => slimeDefinition.icon;
+    public LocalizedString GetLocalized() => slimeDefinition.LocalizedName;
+    public Color32 GetVacColor() => slimeDefinition.color;
+    public GameObject GetPrefab() => slimeDefinition.prefab;
+    public SlimeAppearance GetSlimeAppearance() => slimeDefinition.AppearancesDefault[0];
+    public SlimeDiet GetSlimeDiet() => slimeDefinition.Diet;
+    public bool GetIsNative() => isNative;
     
     public void SetIcon(Sprite newIcon)
     {
-        _slimeDefinition.icon = newIcon;
-        foreach (var appearance in _slimeDefinition.Appearances.ToList())
+        slimeDefinition.icon = newIcon;
+        foreach (var appearance in slimeDefinition.Appearances.ToList())
             appearance._icon=newIcon;
     }
     public void SetVacColor(Color32 newColor)
     {
-        _slimeDefinition.color = newColor;
-        foreach (var appearance in _slimeDefinition.Appearances.ToList())
+        slimeDefinition.color = newColor;
+        foreach (var appearance in slimeDefinition.Appearances.ToList())
         {
             appearance._splatColor=newColor;
             appearance._colorPalette = new SlimeAppearance.Palette
@@ -46,7 +46,7 @@ public class PrismSlime
                 Ammo = newColor, Bottom = appearance._colorPalette.Bottom, Middle = appearance._colorPalette.Middle,
                 Top = appearance._colorPalette.Top
             };
-            ;
+            
         }
     }
     

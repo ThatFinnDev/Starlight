@@ -1,6 +1,8 @@
+using Starlight.Prism.Data;
 using UnityEngine.Localization;
+// ReSharper disable MemberCanBePrivate.Global
 
-namespace Starlight.Prism.Data;
+namespace Starlight.Prism.Wrappers;
 
 public class PrismPlort
 {
@@ -13,30 +15,31 @@ public class PrismPlort
     {
         return nativePlort.GetPrismPlort();
     }
-    internal IdentifiableType _identifiableType;
-    private bool _isNative;
-    public IdentifiableType GetIdentifiableType() => _identifiableType;
-    public string GetReferenceID() => _identifiableType.ReferenceId;
-    public string GetName() => _identifiableType.name;
-    public Sprite GetIcon() => _identifiableType.icon;
-    public LocalizedString GetLocalized() => _identifiableType.LocalizedName;
-    public Color32 GetVacColor() => _identifiableType.color;
-    public GameObject GetPrefab() => _identifiableType.prefab;
+
+    internal readonly IdentifiableType identifiableType;
+    private readonly bool _isNative;
+    public IdentifiableType GetIdentifiableType() => identifiableType;
+    public string GetReferenceID() => identifiableType.ReferenceId;
+    public string GetName() => identifiableType.name;
+    public Sprite GetIcon() => identifiableType.icon;
+    public LocalizedString GetLocalized() => identifiableType.LocalizedName;
+    public Color32 GetVacColor() => identifiableType.color;
+    public GameObject GetPrefab() => identifiableType.prefab;
     public bool GetIsNative() => _isNative;
     
     
     public void SetIcon(Sprite newIcon)
     {
-        _identifiableType.icon = newIcon;
+        identifiableType.icon = newIcon;
     }
     public void SetVacColor(Color32 newColor)
     {
-        _identifiableType.color = newColor;
+        identifiableType.color = newColor;
     }
     
     internal PrismPlort(IdentifiableType identifiableType, bool isNative)
     {
-        this._identifiableType = identifiableType;
+        this.identifiableType = identifiableType;
         this._isNative = isNative;
     }
 }

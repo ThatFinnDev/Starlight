@@ -1,5 +1,6 @@
 using Starlight.Prism.Data;
 using Starlight.Prism.Lib;
+using Starlight.Prism.Wrappers;
 using UnityEngine.Localization;
 
 namespace Starlight.Prism.Creators;
@@ -75,7 +76,7 @@ public class PrismPlortCreatorV01
         
         
         _createdPlort = prismPlort;
-        PrismShortcuts._prismPlorts.Add(plort.ReferenceId,prismPlort);
+        PrismShortcuts.PrismPlorts.Add(plort.ReferenceId,prismPlort);
         return _createdPlort;
     }
 }

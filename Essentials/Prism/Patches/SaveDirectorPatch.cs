@@ -9,12 +9,13 @@ namespace Starlight.Prism.Patches;
 
 //[PrismPatch()]
 //[HarmonyPatch(typeof(AutoSaveDirector), nameof(AutoSaveDirector.Awake))]
+// Starlight's patch loads it
 internal static class SaveDirectorPatch
 {
     internal static void Postfix(AutoSaveDirector __instance)
     {
-        PrismShortcuts.emptyTranslation = AddTranslation("");
-        PrismShortcuts.unavailableIcon = Get<Sprite>("unavailableIcon");
+        PrismShortcuts.EmptyTranslation = AddTranslation("");
+        PrismShortcuts.UnavailableIcon = Get<Sprite>("unavailableIcon");
         PrismLibPedia.PediaDetailTypesInitialize();
         
         foreach (var category in GetAll<PediaCategory>())
@@ -36,7 +37,7 @@ internal static class SaveDirectorPatch
         
         
         // Doing this so it executes after all mods have made their slimes.
-        foreach (var largoAction in PrismShortcuts.createLargoActions)
+        foreach (var largoAction in PrismShortcuts.CreateLargoActions)
             try { largoAction.Invoke(); }
             catch (Exception e) { MelonLogger.Error(e); }
         

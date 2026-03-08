@@ -1,11 +1,11 @@
-namespace Starlight.Prism.Data;
+namespace Starlight.Prism.Wrappers;
 
 public class PrismLargo : PrismSlime
 {
 
     internal PrismLargo(SlimeDefinition slimeDefinition, bool isNative): base(slimeDefinition, isNative)
     {
-        this._slimeDefinition = slimeDefinition;
-        this._isNative = isNative;
+        this.slimeDefinition = slimeDefinition;
+        this.isNative = isNative;
     }
 }

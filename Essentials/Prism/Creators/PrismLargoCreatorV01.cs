@@ -3,6 +3,7 @@ using Il2CppMonomiPark.SlimeRancher.Damage;
 using Il2CppMonomiPark.SlimeRancher.Slime;
 using Starlight.Prism.Data;
 using Starlight.Prism.Lib;
+using Starlight.Prism.Wrappers;
 using UnityEngine.Localization;
 
 
@@ -16,7 +17,7 @@ public class PrismLargoCreatorV01
     public PrismBaseSlime secondSlime;
     
     public PrismLargoMergeSettings largoMergeSettings = new PrismLargoMergeSettings();
-    public string name => firstSlime._slimeDefinition.Name + secondSlime._slimeDefinition.Name;
+    public string name => firstSlime.slimeDefinition.Name + secondSlime.slimeDefinition.Name;
     public string referenceID => "SlimeDefinition.Modded" + name;
 
     
@@ -295,7 +296,7 @@ public class PrismLargoCreatorV01
                 largoDef.Prism_AddToGroup(firstSlimeDef.Name + "ModdedLargoGroup");
             else
             {
-                var creator = new PrismIdentifiableTypeGroupCreatorV01(firstSlimeDef.Name + "ModdedLargoGroup", PrismShortcuts.emptyTranslation);
+                var creator = new PrismIdentifiableTypeGroupCreatorV01(firstSlimeDef.Name + "ModdedLargoGroup", PrismShortcuts.EmptyTranslation);
                 creator.memberTypes = new List<IdentifiableType>() { largoDef };
                 var group = creator.CreateIdentifiableTypeGroup();
                 group.AddToGroup("EdibleSlimeGroup");
@@ -313,7 +314,7 @@ public class PrismLargoCreatorV01
                 largoDef.Prism_AddToGroup(secondSlimeDef.Name + "ModdedLargoGroup");
             else
             {
-                var creator = new PrismIdentifiableTypeGroupCreatorV01(secondSlimeDef.Name + "ModdedLargoGroup", PrismShortcuts.emptyTranslation);
+                var creator = new PrismIdentifiableTypeGroupCreatorV01(secondSlimeDef.Name + "ModdedLargoGroup", PrismShortcuts.EmptyTranslation);
                 creator.memberTypes = new List<IdentifiableType>() { largoDef };
                 var group = creator.CreateIdentifiableTypeGroup();
                 group.AddToGroup("EdibleSlimeGroup");
@@ -331,8 +332,8 @@ public class PrismLargoCreatorV01
           //  PrismLibDiet.AddEatProduction(prismLargo, plort);
         
         _createdLargo = prismLargo;
-        PrismShortcuts._prismLargoBases.Add(_createdLargo,(firstSlime,secondSlime));
-        PrismShortcuts._prismLargos.Add(largoDef.ReferenceId,_createdLargo);
+        PrismShortcuts.PrismLargoBases.Add(_createdLargo,(firstSlime,secondSlime));
+        PrismShortcuts.PrismLargos.Add(largoDef.ReferenceId,_createdLargo);
         return _createdLargo;
     }   
 }

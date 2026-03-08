@@ -4,6 +4,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
+// ReSharper disable AssignNullToNotNullAttribute
 
 namespace Starlight.Saving;
 
@@ -138,7 +139,7 @@ internal static class SaveDataSerializer
             w.Write((byte)DataType.Array);
             var arr = (Array)obj;
             w.Write(arr.Length);
-            w.Write(t.GetElementType().AssemblyQualifiedName);
+            w.Write(t.GetElementType()?.AssemblyQualifiedName);
             foreach (var item in arr) WriteObject(w, item, strings);
         }
         else if (IsGenericType(t, typeof(List<>))) {
@@ -390,7 +391,7 @@ internal static class SaveDataSerializer
                     var fName = table[r.ReadUInt16()];
                     var val = ReadObject(r, table, onLoadList);
                     
-                    if (instance != null && fieldDict != null && fieldDict.TryGetValue(fName, out var f)) {
+                    if (instance != null && fieldDict.TryGetValue(fName, out var f)) {
                         if (val != null) {
                             if (!f.FieldType.IsAssignableFrom(val.GetType())) {
                                 try {

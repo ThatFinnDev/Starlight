@@ -1,6 +1,7 @@
 using Il2CppMonomiPark.SlimeRancher.Pedia;
 using Starlight.Prism.Data;
 using Starlight.Prism.Lib;
+using Starlight.Prism.Wrappers;
 using UnityEngine.Localization;
 
 namespace Starlight.Prism.Creators;
@@ -50,7 +51,7 @@ public class PrismFixedPediaEntryCreatorV01
         var entry = Object.Instantiate(PrismLibPedia._fixedPediaEntryPrefab);
         entry.hideFlags = HideFlags.DontUnloadUnusedAsset;
         entry._title = titleLocalized;
-        entry._icon = icon!=null?icon:PrismShortcuts.unavailableIcon;
+        entry._icon = icon!=null?icon:PrismShortcuts.UnavailableIcon;
         entry._description = descriptionLocalized;
         entry.name = name;
         entry._highlightSet = factSet.GetPediaHighlightSet();
@@ -67,7 +68,7 @@ public class PrismFixedPediaEntryCreatorV01
         var prismEntry = new PrismFixedPediaEntry(entry, false);
 
         _createdPediaEntry = prismEntry;
-        PrismShortcuts._prismFixedPediaEntries.Add(entry,prismEntry);
+        PrismShortcuts.PrismFixedPediaEntries.Add(entry,prismEntry);
         
         if(additionalFacts!=null)
             foreach (var additionalFact in additionalFacts)

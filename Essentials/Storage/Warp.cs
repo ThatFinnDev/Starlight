@@ -1,11 +1,7 @@
-using System;
 using System.Globalization;
-using Il2CppMonomiPark.SlimeRancher.DebugTool;
 using Il2CppMonomiPark.SlimeRancher.Player.CharacterController;
 using Il2CppMonomiPark.SlimeRancher.SceneManagement;
-using Il2CppMonomiPark.SlimeRancher.World.Teleportation;
 using Newtonsoft.Json;
-using Starlight.Components;
 using Starlight.Enums;
 using Starlight.Managers;
 using Starlight.Patches.General;
@@ -94,10 +90,12 @@ public class Warp
 
     internal LocationBookmarksUtil.LocationBookmark ToNative()
     {
-        var mark = new LocationBookmarksUtil.LocationBookmark();
-        mark.position = position;
-        mark.rotationEuler = rotation.eulerAngles;
-        mark.sceneGroupName = sceneGroup;
+        var mark = new LocationBookmarksUtil.LocationBookmark
+        {
+            position = position,
+            rotationEuler = rotation.eulerAngles,
+            sceneGroupName = sceneGroup
+        };
         if (mark.sceneGroupName.StartsWith("SceneGroup."))
             mark.sceneGroupName = sceneGroup.Substring("SceneGroup.".Length);
         return mark;
@@ -115,8 +113,11 @@ public class Warp
         {
             return FromNative(LocationBookmarksUtil.GetNewPlayerLocationBookmark());
         }
-        catch 
-        { }
+        catch
+        {
+            // ignored
+        }
+
         return new Warp();
     }
     public static Warp FromString(string stringed)
@@ -156,8 +157,8 @@ public class Warp
         this.sceneGroup = sceneGroup;
         x = position.x; y = position.y; z = position.z;
 
-        var rotation = Quaternion.Euler(rotationEuler);
-        rotX = rotation.x; rotY = rotation.y; rotZ = rotation.z; rotW = rotation.w;
+        var rotationXYZ = Quaternion.Euler(rotationEuler);
+        rotX = rotationXYZ.x; rotY = rotationXYZ.y; rotZ = rotationXYZ.z; rotW = rotationXYZ.w;
     }
     public Warp(SceneGroup sceneGroup, Vector3 position, Quaternion rotation)
     {
@@ -173,7 +174,7 @@ public class Warp
         this.sceneGroup = sceneGroup.ReferenceId;
         x = position.x; y = position.y; z = position.z;
 
-        var rotation = Quaternion.Euler(rotationEuler);
-        rotX = rotation.x; rotY = rotation.y; rotZ = rotation.z; rotW = rotation.w;
+        var rotationXYZ = Quaternion.Euler(rotationEuler);
+        rotX = rotationXYZ.x; rotY = rotationXYZ.y; rotZ = rotation.z; rotW = rotationXYZ.w;
     }
 }

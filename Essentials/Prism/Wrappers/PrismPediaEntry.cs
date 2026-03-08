@@ -1,9 +1,11 @@
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using Il2CppMonomiPark.SlimeRancher.Pedia;
+using Starlight.Prism.Data;
 using Starlight.Prism.Lib;
 using UnityEngine.Localization;
+// ReSharper disable MemberCanBePrivate.Global
 
-namespace Starlight.Prism.Data;
+namespace Starlight.Prism.Wrappers;
 
 public class PrismPediaEntry
 {
@@ -14,78 +16,78 @@ public class PrismPediaEntry
     
     internal PrismPediaEntry(PediaEntry pediaEntry, bool isNative)
     {
-        this._pediaEntry = pediaEntry;
-        this._isNative = isNative;
+        this.pediaEntry = pediaEntry;
+        this.isNative = isNative;
     }
-    internal PediaEntry _pediaEntry;
-    protected bool _isNative;
+    internal PediaEntry pediaEntry;
+    protected bool isNative;
     
-    public PediaEntry GetPediaEntry() => _pediaEntry;
-    public string GetPersistenceID() => _pediaEntry.PersistenceId;
-    public bool GetIsUnlockedInitially() => _pediaEntry._isUnlockedInitially;
-    public string GetName() => _pediaEntry.name;
-    public Sprite GetIcon() => _pediaEntry.Icon;
-    public LocalizedString GetTitle() => _pediaEntry.Title;
-    public LocalizedString GetDescription() => _pediaEntry.Description;
-    public int GetDetailCount() => _pediaEntry._details.Count;
-    public bool GetIsNative() => _isNative;
+    public PediaEntry GetPediaEntry() => pediaEntry;
+    public string GetPersistenceID() => pediaEntry.PersistenceId;
+    public bool GetIsUnlockedInitially() => pediaEntry._isUnlockedInitially;
+    public string GetName() => pediaEntry.name;
+    public Sprite GetIcon() => pediaEntry.Icon;
+    public LocalizedString GetTitle() => pediaEntry.Title;
+    public LocalizedString GetDescription() => pediaEntry.Description;
+    public int GetDetailCount() => pediaEntry._details.Count;
+    public bool GetIsNative() => isNative;
 
     public void AddDetail(PrismPediaDetail? detail)
     {
         if(detail!=null)
-            _pediaEntry._details = _pediaEntry._details.AddToNew(detail.ConvertToNativeType());
+            pediaEntry._details = pediaEntry._details.AddToNew(detail.ConvertToNativeType());
     }
     public void RemoveAtDetail(int index)
     {
         if (index < 0) return;
-        if (index >= _pediaEntry._details.Count) return;
-        _pediaEntry._details = _pediaEntry._details.RemoveAtToNew(index);
+        if (index >= pediaEntry._details.Count) return;
+        pediaEntry._details = pediaEntry._details.RemoveAtToNew(index);
     }    
     public void ReplaceDetail(int index,PrismPediaDetail? detail)
     {
         if (index < 0) return;
-        if (index >= _pediaEntry._details.Count) return;
+        if (index >= pediaEntry._details.Count) return;
         if (detail == null) return;
-        _pediaEntry._details = _pediaEntry._details.ReplaceToNew(detail.ConvertToNativeType(),index);
+        pediaEntry._details = pediaEntry._details.ReplaceToNew(detail.ConvertToNativeType(),index);
     }    
     public void InsertDetail(int index,PrismPediaDetail? detail)
     {
         if (index < 0) return;
-        if (index >= _pediaEntry._details.Count) return;
+        if (index >= pediaEntry._details.Count) return;
         if (detail == null) return;
-        _pediaEntry._details = _pediaEntry._details.InsertToNew(detail.ConvertToNativeType(),index);
+        pediaEntry._details = pediaEntry._details.InsertToNew(detail.ConvertToNativeType(),index);
     }
 
     public void ClearDetails()
     {
-        _pediaEntry._details = new Il2CppReferenceArray<PediaEntryDetail>(0);
+        pediaEntry._details = new Il2CppReferenceArray<PediaEntryDetail>(0);
     }
     
     public void AddAdditionalFact(PrismPediaAdditionalFact? fact)
     {
         if (fact == null) return;
-        if (!PrismLibPedia._additionalFactsMap.ContainsKey(_pediaEntry))
-            PrismLibPedia._additionalFactsMap[_pediaEntry] = new List<PrismPediaAdditionalFact>();
-        PrismLibPedia._additionalFactsMap[_pediaEntry].Add(fact.Value);
+        if (!PrismLibPedia._additionalFactsMap.ContainsKey(pediaEntry))
+            PrismLibPedia._additionalFactsMap[pediaEntry] = new List<PrismPediaAdditionalFact>();
+        PrismLibPedia._additionalFactsMap[pediaEntry].Add(fact.Value);
     }
     public void RemoveAdditionalFact(PrismPediaAdditionalFact? fact)
     {
         if (fact == null) return;
-        if (!PrismLibPedia._additionalFactsMap.ContainsKey(_pediaEntry)) return;
-        if (PrismLibPedia._additionalFactsMap[_pediaEntry].Contains(fact.Value))
-            PrismLibPedia._additionalFactsMap[_pediaEntry].Remove(fact.Value);
+        if (!PrismLibPedia._additionalFactsMap.ContainsKey(pediaEntry)) return;
+        if (PrismLibPedia._additionalFactsMap[pediaEntry].Contains(fact.Value))
+            PrismLibPedia._additionalFactsMap[pediaEntry].Remove(fact.Value);
     }
     public void RemoveAtAdditionalFact(int index)
     {
         if (index < 0) return;
-        if (!PrismLibPedia._additionalFactsMap.ContainsKey(_pediaEntry)) return;
-        if (PrismLibPedia._additionalFactsMap[_pediaEntry].Count>index)
-            PrismLibPedia._additionalFactsMap[_pediaEntry].RemoveAt(index);
+        if (!PrismLibPedia._additionalFactsMap.ContainsKey(pediaEntry)) return;
+        if (PrismLibPedia._additionalFactsMap[pediaEntry].Count>index)
+            PrismLibPedia._additionalFactsMap[pediaEntry].RemoveAt(index);
     }
 
     public void ClearAdditionalFacts()
     {
-        if (PrismLibPedia._additionalFactsMap.ContainsKey(_pediaEntry)) return;
-            PrismLibPedia._additionalFactsMap.Remove(_pediaEntry);
+        if (PrismLibPedia._additionalFactsMap.ContainsKey(pediaEntry)) return;
+            PrismLibPedia._additionalFactsMap.Remove(pediaEntry);
     }
 }

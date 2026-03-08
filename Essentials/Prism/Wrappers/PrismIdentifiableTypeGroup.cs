@@ -1,6 +1,7 @@
 using UnityEngine.Localization;
+// ReSharper disable MemberCanBePrivate.Global
 
-namespace Starlight.Prism.Data;
+namespace Starlight.Prism.Wrappers;
 
 public class PrismIdentifiableTypeGroup
 {
@@ -16,22 +17,23 @@ public class PrismIdentifiableTypeGroup
 
     internal PrismIdentifiableTypeGroup(IdentifiableTypeGroup group, bool isNative)
     {
-        this._group = group;
+        this.group = group;
         this._isNative = isNative;
     }
-    internal IdentifiableTypeGroup _group;
-    protected bool _isNative;
+
+    internal readonly IdentifiableTypeGroup group;
+    private readonly bool _isNative;
     
-    public IdentifiableTypeGroup GetIdentifiableTypeGroup() => _group;
-    public string GetReferenceID() => _group.ReferenceId;
-    public string GetName() => _group.name;
-    public bool GetIsFood() => _group._isFood;
-    public LocalizedString GetLocalized() => _group.LocalizedName;
+    public IdentifiableTypeGroup GetIdentifiableTypeGroup() => group;
+    public string GetReferenceID() => group.ReferenceId;
+    public string GetName() => group.name;
+    public bool GetIsFood() => group._isFood;
+    public LocalizedString GetLocalized() => group.LocalizedName;
     public bool GetIsNative() => _isNative;
     
     public void SetIsFood(bool isFood)
     {
-        _group._isFood=isFood;
+        group._isFood=isFood;
     }
 
 }

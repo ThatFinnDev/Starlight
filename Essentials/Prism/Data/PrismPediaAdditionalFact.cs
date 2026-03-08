@@ -2,7 +2,7 @@ using UnityEngine.Localization;
 
 namespace Starlight.Prism.Data;
 
-public struct PrismPediaAdditionalFact
+public record struct PrismPediaAdditionalFact
 {
     public LocalizedString title;
     public LocalizedString description;

@@ -1,9 +1,12 @@
-namespace Starlight.Prism.Data;
+using Starlight.Prism.Data;
+// ReSharper disable NotAccessedField.Global
+
+namespace Starlight.Prism.Wrappers;
 
 public class PrismBaseSlime : PrismSlime
 {
-    internal bool _allowLargos = false;
-    internal bool _disableAutoModdedLargos = false;
+    internal readonly bool allowLargos;
+    internal bool disableAutoModdedLargos;
     public static implicit operator PrismBaseSlime(PrismNativeBaseSlime nativeBaseSlime)
     {
         return nativeBaseSlime.GetPrismBaseSlime();
@@ -20,24 +23,33 @@ public class PrismBaseSlime : PrismSlime
                     {
                         return structure.DefaultMaterials[0];
                     }
-                } catch {}
-        } catch { }
+                }
+                catch
+                {
+                    // ignored
+                }
+        }
+        catch
+        {
+            // ignored
+        }
+
         return null;
     }
     internal PrismBaseSlime(SlimeDefinition slimeDefinition, bool isNative): base(slimeDefinition, isNative)
     {
-        this._slimeDefinition = slimeDefinition;
-        this._isNative = isNative;
-        if (_slimeDefinition.CanLargofy)
-            _allowLargos = true;
+        this.slimeDefinition = slimeDefinition;
+        this.isNative = isNative;
+        if (base.slimeDefinition.CanLargofy)
+            allowLargos = true;
         if (!isNative)
-            _disableAutoModdedLargos = true;
+            disableAutoModdedLargos = true;
     }
     internal PrismBaseSlime(SlimeDefinition slimeDefinition, bool isNative, bool allowLargos, bool disableAutoModdedLargos): base(slimeDefinition, isNative)
     {
-        this._slimeDefinition = slimeDefinition;
-        this._isNative = isNative;
-        this._allowLargos = allowLargos;
-        this._disableAutoModdedLargos = disableAutoModdedLargos;
+        this.slimeDefinition = slimeDefinition;
+        this.isNative = isNative;
+        this.allowLargos = allowLargos;
+        this.disableAutoModdedLargos = disableAutoModdedLargos;
     }
 }
