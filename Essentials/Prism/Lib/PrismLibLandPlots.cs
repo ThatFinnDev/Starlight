@@ -1,9 +1,9 @@
 using System.Collections;
 using Il2CppMonomiPark.SlimeRancher.Regions;
-using SR2E.Prism.Data.LandPlots;
+using Starlight.Prism.Data.LandPlots;
 using UnityEngine.SceneManagement;
 
-namespace SR2E.Prism.Lib;
+namespace Starlight.Prism.Lib;
 
 public static class PrismLibLandPlots
 {

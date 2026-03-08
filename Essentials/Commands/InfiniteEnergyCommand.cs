@@ -2,9 +2,9 @@
 using Il2CppMonomiPark.SlimeRancher.UI;
 using Il2CppMonomiPark.UnitPropertySystem;
 
-namespace SR2E.Commands;
+namespace Starlight.Commands;
 
-internal class InfiniteEnergyCommand : SR2ECommand
+internal class InfiniteEnergyCommand : StarlightCommand
 {
     public override string ID => "infenergy";
     public override string Usage => "infenergy [should disable height limit(true/false)]";

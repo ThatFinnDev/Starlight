@@ -1,10 +1,10 @@
 using System.Linq;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
-using SR2E.Prism.Data;
-using SR2E.Prism.Lib;
+using Starlight.Prism.Data;
+using Starlight.Prism.Lib;
 using UnityEngine.Localization;
 
-namespace SR2E.Prism.Creators;
+namespace Starlight.Prism.Creators;
 
 public class PrismBaseSlimeCreatorV01
 {

@@ -5,7 +5,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
 
-namespace SR2E.Saving;
+namespace Starlight.Saving;
 
 internal static class SaveDataSerializer 
 {
@@ -50,7 +50,7 @@ internal static class SaveDataSerializer
     }
     
     internal static RootSave Deserialize(byte[] data, Type rootType) {
-        var loadableObjects = new List<SR2ESaveableBase>();
+        var loadableObjects = new List<StarlightSaveableBase>();
 
         try {
             using var ms = new MemoryStream(data);
@@ -101,7 +101,7 @@ internal static class SaveDataSerializer
     
     static void WriteObject(BinaryWriter w, object obj, List<string> strings) {
         if (obj == null) { w.Write((byte)DataType.Null); return; }
-        if (obj is SR2ESaveableBase s) try { s.OnSave(); } catch (Exception e) { MelonLogger.Error($"Error in OSave for {s.GetType().Name}: {e}"); }
+        if (obj is StarlightSaveableBase s) try { s.OnSave(); } catch (Exception e) { MelonLogger.Error($"Error in OSave for {s.GetType().Name}: {e}"); }
 
         var t = obj.GetType();
 
@@ -222,7 +222,7 @@ internal static class SaveDataSerializer
         }
     }
 
-    static object ReadObject(BinaryReader r, string[] table, List<SR2ESaveableBase> onLoadList) {
+    static object ReadObject(BinaryReader r, string[] table, List<StarlightSaveableBase> onLoadList) {
         var type = (DataType)r.ReadByte();
         
         switch (type) {
@@ -404,7 +404,7 @@ internal static class SaveDataSerializer
                     }
                 }
                 
-                if (instance is SR2ESaveableBase s) {
+                if (instance is StarlightSaveableBase s) {
                     onLoadList.Add(s);
                 }
                 return instance;

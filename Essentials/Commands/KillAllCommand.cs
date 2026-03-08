@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace SR2E.Commands;
+namespace Starlight.Commands;
 
-internal class KillAllCommand : SR2ECommand
+internal class KillAllCommand : StarlightCommand
 {
     public override string ID => "killall";
     public override string Usage => "killall [id]";
@@ -43,7 +43,7 @@ internal class KillAllCommand : SR2ECommand
             string identifierTypeName = args[0];
             IdentifiableType type = LookupEUtil.GetIdentifiableTypeByName(identifierTypeName);
             if (type == null) return SendNotValidIdentType(identifierTypeName);
-            if (type.isGadget()) return SendIsGadgetNotItem(type.GetName());
+            if (type.IsGadget()) return SendIsGadgetNotItem(type.GetName());
                 
             foreach (var ident in Resources.FindObjectsOfTypeAll<IdentifiableActor>())
                 if (ident.hasStarted)

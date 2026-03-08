@@ -1,10 +1,10 @@
 using Il2CppMonomiPark.SlimeRancher.DataModel;
 using Il2CppMonomiPark.SlimeRancher.Options;
 using Il2CppMonomiPark.SlimeRancher.UI.Pause;
-using SR2E.Enums;
-using SR2E.Storage;
+using Starlight.Enums;
+using Starlight.Storage;
 
-namespace SR2E.Buttons.OptionsUI;
+namespace Starlight.Buttons.OptionsUI;
 
 [InjectClass]
 internal class CustomOptionsValuesDefinition : ScriptedValuePresetOptionDefinition
@@ -13,7 +13,7 @@ internal class CustomOptionsValuesDefinition : ScriptedValuePresetOptionDefiniti
     public override void ApplyPresetSelection(int index)
     {
         if(!string.IsNullOrWhiteSpace(button.saveid))
-            SR2EOptionsButtonManager.SetValuesButton(button.type,button.saveid, index);
+            StarlightOptionsButtonManager.SetValuesButton(button.type,button.saveid, index);
         try { button.onModify.Invoke(index); }catch (Exception e) { MelonLogger.Error(e); }
     }
 
@@ -22,7 +22,7 @@ internal class CustomOptionsValuesDefinition : ScriptedValuePresetOptionDefiniti
     public override int GetDefaultPresetIndex()
     {
         if (!string.IsNullOrWhiteSpace(button.saveid))
-            return SR2EOptionsButtonManager.GetValuesButton(button.type,button.saveid, _defaultValueIndex);
+            return StarlightOptionsButtonManager.GetValuesButton(button.type,button.saveid, _defaultValueIndex);
         return _defaultValueIndex;
     }
 

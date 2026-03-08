@@ -1,4 +1,4 @@
-namespace SR2E.Repos;
+namespace Starlight.Repos;
 
 public enum RepoModType
 {

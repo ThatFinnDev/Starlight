@@ -1,9 +1,9 @@
 using System.Collections;
-using SR2E.Patches.Options;
+using Starlight.Patches.Options;
 
-namespace SR2E.Commands;
+namespace Starlight.Commands;
 
-internal class MaxFpsCommand : SR2ECommand
+internal class MaxFpsCommand : StarlightCommand
 {
     public override string ID => "maxfps";
     public override string Usage => "maxfps <target>";

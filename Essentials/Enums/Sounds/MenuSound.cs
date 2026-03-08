@@ -1,4 +1,4 @@
-namespace SR2E.Enums.Sounds;
+namespace Starlight.Enums.Sounds;
 
 public enum MenuSound
 {

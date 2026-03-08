@@ -1,7 +1,7 @@
 using System;
-using SR2E.Enums;
+using Starlight.Enums;
 
-namespace SR2E.Storage;
+namespace Starlight.Storage;
 
 
 [AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = false)]

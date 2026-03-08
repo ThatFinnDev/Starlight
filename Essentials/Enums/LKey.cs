@@ -1,7 +1,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace SR2E.Enums;
+namespace Starlight.Enums;
 
 [System.Serializable]
 [JsonConverter(typeof(StringEnumConverter))]

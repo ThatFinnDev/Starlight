@@ -1,14 +1,15 @@
 using Il2CppMonomiPark.SlimeRancher;
 using Il2CppMonomiPark.SlimeRancher.Damage;
 
-namespace SR2E;
+namespace Starlight;
 
 public static class ContextShortcuts
 {
-    internal static GameObject prefabHolder;
+    internal static GameObject PrefabHolder;
     public static SystemContext systemContext => SystemContext.Instance;
     public static GameContext gameContext => GameContext.Instance;
     public static SceneContext sceneContext => SceneContext.Instance;
+    // ReSharper disable once InconsistentNaming
     internal static Damage _killDamage;
     public static Damage killDamage => _killDamage;
     public static AutoSaveDirector autoSaveDirector => gameContext.AutoSaveDirector;
@@ -48,23 +49,26 @@ public static class ContextShortcuts
     {
         get
         {
-            if (SR2EEntryPoint._mlVersion == "undefined")
+            if (StarlightEntryPoint.MelonVersion == "undefined")
             {
-                var tmp = mlVersion;
+                // This is to execute the getter
+                var unused = mlVersion;
             }
             return _ml072OrNewer;
         }
     }
 
+    // ReSharper disable PossibleNullReferenceException
     public static string mlVersion
-    { get {
-            if(SR2EEntryPoint._mlVersion=="undefined")
+    {
+        get {
+            if(StarlightEntryPoint.MelonVersion=="undefined")
             {
                 try
                 {
                     // This works on ML 0.7.2 and later
                     var propertiesBuildInfo = System.Type.GetType("MelonLoader.Properties.BuildInfo, MelonLoader");
-                    SR2EEntryPoint._mlVersion = (string)propertiesBuildInfo.GetProperty("Version").GetValue(null, null);
+                    StarlightEntryPoint.MelonVersion = (string)propertiesBuildInfo.GetProperty("Version").GetValue(null, null);
                 }
                 catch
                 {
@@ -73,14 +77,14 @@ public static class ContextShortcuts
                     {
                         // This works on ML 0.7.1 and older
                         var buildInfo = System.Type.GetType("MelonLoader.BuildInfo, MelonLoader");
-                        SR2EEntryPoint._mlVersion = (string)buildInfo.GetProperty("Version").GetValue(null, null);
+                        StarlightEntryPoint.MelonVersion = (string)buildInfo.GetProperty("Version").GetValue(null, null);
                     }
                     catch
                     {
                         // This works on some version even lower than 0.7.1 and is a fallback for a new version
                         //Do this if ML changes MelonLoader.BuildInfo.Version again...
                         MelonLogger.Error("MelonLoader.BuildInfo.Version changed, if you are using not using the latest ML version, please update," +
-                                          "otherwise this will be fixed in the next SR2E release!");
+                                          "otherwise this will be fixed in the next Starlight release!");
                         try
                         {
                             string logFilePath = Application.dataPath + "/../MelonLoader/Latest.log";
@@ -89,16 +93,16 @@ public static class ContextShortcuts
                             {
                                 string text = logFileReader.ReadToEnd();
                                 var split = text.Split("\n");
-                                if (string.IsNullOrWhiteSpace(split[0])) SR2EEntryPoint._mlVersion = split[2].Split("v")[1].Split(" ")[0];
-                                else SR2EEntryPoint._mlVersion = split[1].Split("v")[1].Split(" ")[0];
+                                if (string.IsNullOrWhiteSpace(split[0])) StarlightEntryPoint.MelonVersion = split[2].Split("v")[1].Split(" ")[0];
+                                else StarlightEntryPoint.MelonVersion = split[1].Split("v")[1].Split(" ")[0];
                             }
                             
                         }
-                        catch { SR2EEntryPoint._mlVersion = "unknown"; }
+                        catch { StarlightEntryPoint.MelonVersion = "unknown"; }
                     }
                 }
             }
-            return SR2EEntryPoint._mlVersion;
+            return StarlightEntryPoint.MelonVersion;
         }
     }
 }

@@ -1,9 +1,9 @@
 ﻿using Il2CppMonomiPark.KFC;
 using Il2CppMonomiPark.SlimeRancher.Player.CharacterController;
 
-namespace SR2E.Commands;
+namespace Starlight.Commands;
 
-internal class SpeedCommand : SR2ECommand
+internal class SpeedCommand : StarlightCommand
 {
     public override string ID { get; } = "speed";
     public override string Usage { get; } = "speed <speed>";
@@ -38,7 +38,7 @@ internal class SpeedCommand : SR2ECommand
             parameters._maxAirMoveSpeed = speedValue * baseMaxAirSpeed;
             parameters._airAccelerationSpeed = speedValue * baseAccAirSpeed;
 
-            //SR2ESavableDataV2.Instance.playerSavedData.speed = speedValue;
+            //StarlightSavableDataV2.Instance.playerSavedData.speed = speedValue;
 
             SendMessage(translation("cmd.speed.success",args[0]));
             return true;

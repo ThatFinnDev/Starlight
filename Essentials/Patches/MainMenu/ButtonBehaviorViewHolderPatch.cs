@@ -2,7 +2,7 @@ using Il2CppMonomiPark.SlimeRancher.UI.ButtonBehavior;
 using Il2CppTMPro;
 using UnityEngine.UI;
 
-namespace SR2E.Patches.MainMenu;
+namespace Starlight.Patches.MainMenu;
 
 [HarmonyPatch(typeof(ButtonBehaviorViewHolder), nameof(ButtonBehaviorViewHolder.OnEnable))]
 internal class ButtonBehaviorViewHolderPatch

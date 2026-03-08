@@ -2,9 +2,9 @@ using System;
 using Il2CppMonomiPark.SlimeRancher;
 using Il2CppMonomiPark.SlimeRancher.DataModel;
 using Il2CppMonomiPark.SlimeRancher.Persist;
-using SR2E.Commands;
+using Starlight.Commands;
 
-namespace SR2E.Patches.Saving.Fixer;
+namespace Starlight.Patches.Saving.Fixer;
 
 [HarmonyPriority(-99999999)]
 [HarmonyPatch(typeof(GameModelPushHelpers), nameof(GameModelPushHelpers.PushRanch))]
@@ -15,7 +15,7 @@ internal static class SaveFixerPushRanch
         try
         {
             RanchCommand.LoadAutoComplete(ranch);
-            if (!SR2EEntryPoint.disableFixSaves)
+            if (!StarlightEntryPoint.disableFixSaves)
             {
                 foreach (var plot in ranch.Plots.ToArray())
                 {

@@ -2,7 +2,7 @@ using Il2CppMonomiPark.SlimeRancher;
 using Il2CppMonomiPark.SlimeRancher.DataModel;
 using Il2CppMonomiPark.SlimeRancher.Persist;
 
-namespace SR2E.Patches.Saving.Fixer;
+namespace Starlight.Patches.Saving.Fixer;
 
 [HarmonyPriority(-99999999)]
 [HarmonyPatch(typeof(GameModelPushHelpers), nameof(GameModelPushHelpers.PushGame))]
@@ -16,9 +16,9 @@ internal static class SaveFixerPushGame
     }
     internal static void Prefix(ActorIdProvider actorIdProvider, ISaveReferenceTranslation saveReferenceTranslation, GameV09 gameState, GameModel gameModel)
     {
-        if (!SR2EEntryPoint.disableFixSaves)
+        if (!StarlightEntryPoint.disableFixSaves)
             try {
-                var loadTranslation = saveReferenceTranslation.toNonIVariant().CreateLoadReferenceTranslation(gameState);
+                var loadTranslation = saveReferenceTranslation.ToNonIVariant().CreateLoadReferenceTranslation(gameState);
                 foreach (var id in gameState.Drone.Cloud.IDs.ToArray())
                 {
                     try {

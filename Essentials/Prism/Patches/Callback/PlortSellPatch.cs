@@ -1,7 +1,7 @@
 ﻿using Il2CppMonomiPark.SlimeRancher.Economy;
-using SR2E.Storage;
+using Starlight.Storage;
 
-namespace SR2E.Prism.Patches.Callback;
+namespace Starlight.Prism.Patches.Callback;
 
 [PrismPatch()]
 [HarmonyPatch(typeof(PlortEconomyDirector), nameof(PlortEconomyDirector.RegisterSold))]

@@ -1,8 +1,8 @@
 using System.Collections;
 
-namespace SR2E.Commands;
+namespace Starlight.Commands;
 
-internal class FloatyCommand : SR2ECommand
+internal class FloatyCommand : StarlightCommand
 {
     public override string ID => "floaty";
     public override string Usage => "floaty [duration]";

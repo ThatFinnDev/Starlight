@@ -1,7 +1,7 @@
 using Il2CppMonomiPark.SlimeRancher;
 using Il2CppMonomiPark.SlimeRancher.DataModel;
 
-namespace SR2E.Patches.Saving;
+namespace Starlight.Patches.Saving;
 
 
 [HarmonyPatch(typeof(GameModelPushHelpers), nameof(GameModelPushHelpers.PushGame))]

@@ -1,6 +1,6 @@
 using System;
 
-namespace SR2E.Enums;
+namespace Starlight.Enums;
 
 internal class DebugUIEntry
 {

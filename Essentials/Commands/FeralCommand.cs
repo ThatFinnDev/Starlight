@@ -1,8 +1,8 @@
 /*using Il2CppMonomiPark.SlimeRancher;
 
-namespace SR2E.Commands;
+namespace Starlight.Commands;
 
-internal class FeralCommand : SR2ECommand
+internal class FeralCommand : StarlightCommand
 {
     public override string ID => "feral";
     public override string Usage => "feral";

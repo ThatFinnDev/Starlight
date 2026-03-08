@@ -1,8 +1,8 @@
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using Il2CppMonomiPark.SlimeRancher.Slime;
-using SR2E.Prism.Data;
+using Starlight.Prism.Data;
 
-namespace SR2E.Prism.Lib;
+namespace Starlight.Prism.Lib;
 /// <summary>
 /// A library of helper functions for dealing with slime diets
 /// </summary>

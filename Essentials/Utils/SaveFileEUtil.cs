@@ -1,31 +1,32 @@
 using System.Linq;
-using Il2CppMonomiPark.SlimeRancher;
 using Il2CppMonomiPark.SlimeRancher.Persist;
 using Il2CppSystem.Linq;
-using SR2E.Enums;
-using SR2E.Storage;
-using static SR2E.Enums.SR2EError;
-namespace SR2E.Utils;
+using Starlight.Enums;
+using Starlight.Storage;
+using static Starlight.Enums.StarlightError;
+// ReSharper disable MemberCanBePrivate.Global
+
+namespace Starlight.Utils;
 
 public static class SaveFileEUtil
 {
-    private static Exception noBoolException = new Exception("The value has to be a bool!");
-    private static Exception noIntException = new Exception("The value has to be an inte!");
-    private static Exception noFloatException = new Exception("The value has to be a float!");
-    private static Exception noDoubleException = new Exception("The value has to be a double!");
-    public static SR2ESaveFileV01 ExportSaveV01(Summary summary, bool sendErrorLogs = false) => ExportSaveV01(summary.Name, summary.SaveName,sendErrorLogs);
-    public static SR2EError ExportSaveV01(Summary summary, out SR2ESaveFileV01 data) => ExportSaveV01(summary.Name, summary.SaveName,out data);
+    private static readonly Exception NoBoolException = new Exception("The value has to be a bool!");
+    //private static readonly Exception NoIntException = new Exception("The value has to be an int!");
+    //private static readonly Exception NoFloatException = new Exception("The value has to be a float!");
+    //private static readonly Exception NoDoubleException = new Exception("The value has to be a double!");
+    public static StarlightSaveFileV01 ExportSaveV01(Summary summary, bool sendErrorLogs = false) => ExportSaveV01(summary.Name, summary.SaveName,sendErrorLogs);
+    public static StarlightError ExportSaveV01(Summary summary, out StarlightSaveFileV01 data) => ExportSaveV01(summary.Name, summary.SaveName,out data);
 
-    public static SR2ESaveFileV01 ExportSaveV01(string gameName, string latestSaveName, bool sendErrorLogs = false)
+    public static StarlightSaveFileV01 ExportSaveV01(string gameName, string latestSaveName, bool sendErrorLogs = false)
     {
-        var error = ExportSaveV01(gameName, latestSaveName, out SR2ESaveFileV01 data);
+        var error = ExportSaveV01(gameName, latestSaveName, out StarlightSaveFileV01 data);
         if (error == NoError)
             return data;
         if(sendErrorLogs) MelonLogger.Msg("Error when exporting save: "+error);
         return null;
     }
     
-    public static SR2EError ExportSaveV01(string gameName, string latestSaveName, out SR2ESaveFileV01 data)
+    public static StarlightError ExportSaveV01(string gameName, string latestSaveName, out StarlightSaveFileV01 data)
     {
         data = null;
         if (!AllowSaveExport.HasFlag()) return NeedFlag;
@@ -39,10 +40,10 @@ public static class SaveFileEUtil
         if(summaries.Count==0) return NoValidSummaries;
         var storageProvider = autoSaveDirector._storageProvider;
         
-        var sr2ESaveFile = new SR2ESaveFileV01(savesData,gameName.Split("_")[0], 0);
+        var sr2ESaveFile = new StarlightSaveFileV01(savesData,gameName.Split("_")[0], 0);
         sr2ESaveFile.stamp = stamp;
-        sr2ESaveFile.SR2ECodeVersion = BuildInfo.CodeVersion;
-        sr2ESaveFile.SR2EDisplayVersion = BuildInfo.DisplayVersion;
+        sr2ESaveFile.StarlightCodeVersion = BuildInfo.CodeVersion;
+        sr2ESaveFile.StarlightDisplayVersion = BuildInfo.DisplayVersion;
         var hasLatest = false;
         foreach (var summary in summaries)
         {
@@ -51,10 +52,12 @@ public static class SaveFileEUtil
             var split = gameWithSaveIDName.Split("_");
             if (split.Length != 3) continue;
             var saveID = -1;
-            try
+            try { saveID = int.Parse(split[2]); }
+            catch
             {
-                saveID = int.Parse(split[2]);
-            } catch { }
+                // ignored
+            }
+
             if (saveID < 0) continue;
             //If save file names are messed up, prefer current one if the case:
             bool removeBefore = false;
@@ -71,7 +74,7 @@ public static class SaveFileEUtil
                 var stream = new Il2CppSystem.IO.MemoryStream();
                 storageProvider.GetGameData(gameWithSaveIDName, stream);
                 gameBytes = stream.ToArray();
-                if (stream != null && stream.CanRead) stream.Close();
+                if (stream.CanRead) stream.Close();
 
             }
             catch (Exception e)
@@ -108,7 +111,7 @@ public static class SaveFileEUtil
         return NoError;
     }
     
-    public static SR2EError ImportSaveV01(SR2ESaveFileV01 sr2ESaveFile, int slotThatStartWithOne, bool loadMenuMenuOnSuccess)
+    public static StarlightError ImportSaveV01(StarlightSaveFileV01 sr2ESaveFile, int slotThatStartWithOne, bool loadMenuMenuOnSuccess)
     {
         if (!AllowSaveExport.HasFlag()) return NeedFlag;
         if(sr2ESaveFile==null) return SaveInvalidGeneral;
@@ -127,9 +130,18 @@ public static class SaveFileEUtil
                 {
                     autoSaveDirector.DeleteGame(summary.Name);
                     autoSaveDirector._storageProvider.DeleteGameData(summary.SaveName);
-                } catch { }
+                }
+                catch
+                {
+                    // ignored
+                }
             }
-        } catch { }
+        }
+        catch
+        {
+            // ignored
+        }
+
         bool failedSome = false;
         foreach (var pair in sr2ESaveFile.savesData)
         {
@@ -139,7 +151,7 @@ public static class SaveFileEUtil
                 var stream = new Il2CppSystem.IO.MemoryStream(pair.Value);
                 var gameState = new GameV09();
                 gameState.Load(stream);
-                if (stream != null && stream.CanRead) stream.Close();
+                if (stream is { CanRead: true }) stream.Close();
 
                 stream = new Il2CppSystem.IO.MemoryStream();
 
@@ -153,7 +165,7 @@ public static class SaveFileEUtil
                             switch (modifier.Key)
                             {
                                 case "feralEnabled":
-                                    if (!(modifier.Value is bool)) throw noBoolException;
+                                    if (!(modifier.Value is bool)) throw NoBoolException;
                                     var newFeralEnabled = modifier.Value.ToString()=="true";
                                     gameState.Summary.FeralEnabled = false;
                                     foreach (var option in gameState.GameSettings.OptionItems)
@@ -164,7 +176,7 @@ public static class SaveFileEUtil
                                         }
                                     break;
                                 case "tarrEnabled":
-                                    if (!(modifier.Value is bool)) throw noBoolException;
+                                    if (!(modifier.Value is bool)) throw NoBoolException;
                                     var newTarrEnabled = modifier.Value.ToString()=="true";
                                     gameState.Summary.TarrEnabled = false;
                                     foreach (var option in gameState.GameSettings.OptionItems)
@@ -240,7 +252,10 @@ public static class SaveFileEUtil
                             var newGameName = sr2ESaveFile.stamp + "_" + newDisplayName;
                             storageProvider.DeleteGameData(newGameName + "_" + pair2.Key);
                         }
-                        catch{ }
+                        catch
+                        {
+                            // ignored
+                        }
                     }
                     return MainSaveIDFailed;
                 }

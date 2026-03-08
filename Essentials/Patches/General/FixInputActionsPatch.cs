@@ -1,5 +1,5 @@
 using Il2CppMonomiPark.SlimeRancher.UI;
-namespace SR2E.Patches.General
+namespace Starlight.Patches.General
 {
     [HarmonyPatch(typeof(BaseUI), "Awake")]
     internal class FixInputActionsPatch

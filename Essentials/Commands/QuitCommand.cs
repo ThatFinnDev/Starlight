@@ -1,6 +1,6 @@
-namespace SR2E.Commands;
+namespace Starlight.Commands;
 
-internal class QuitCommand : SR2ECommand
+internal class QuitCommand : StarlightCommand
 {
     public override string ID => "quit";
     public override string Usage => "quit";

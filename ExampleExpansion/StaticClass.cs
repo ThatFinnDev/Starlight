@@ -1,7 +1,7 @@
-using SR2E.Enums;
-using SR2E.Storage;
+using Starlight.Enums;
+using Starlight.Storage;
 
-namespace SR2EExampleExpansion;
+namespace StarlightExampleExpansion;
 
 public static class StaticClass
 {
@@ -13,7 +13,6 @@ public static class StaticClass
     [CallOn(CallEvent.AfterGameContextLoad)]
     public static void CustomTest(GameContext gameContext)
     {
-        
         MelonLogger.Msg("GameContext has been loaded!");
         MelonLogger.Msg(gameContext.name);
     }

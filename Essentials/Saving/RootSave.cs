@@ -1,6 +1,6 @@
-namespace SR2E.Saving;
+namespace Starlight.Saving;
 
-public abstract class RootSave : SR2ESaveableBase {
+public abstract class RootSave : StarlightSaveableBase {
     public byte[] ToBytes() => SaveDataSerializer.Serialize(this);
     
     public static T FromBytes<T>(byte[] data) where T : RootSave {

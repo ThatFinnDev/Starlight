@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Loader;
 using System.Text.RegularExpressions;
 using Il2CppInterop.Runtime.Injection;
 using Il2CppMonomiPark.SlimeRancher.UI;
@@ -11,42 +12,33 @@ using Il2CppMonomiPark.ScriptedValue;
 using Il2CppMonomiPark.SlimeRancher;
 using Il2CppMonomiPark.SlimeRancher.UI.ButtonBehavior;
 using MelonLoader.Utils;
-using SR2E.Commands;
-using SR2E.Expansion;
-using SR2E.Components;
-using SR2E.Enums;
-using SR2E.Managers;
-using SR2E.Menus;
-using SR2E.Menus.Debug;
-using SR2E.Patches.Context;
-using SR2E.Patches.General;
-using SR2E.Prism;
-using SR2E.Prism.Lib;
-using SR2E.Storage;
+using Starlight.Expansion;
+using Starlight.Components;
+using Starlight.Enums;
+using Starlight.Managers;
+using Starlight.Menus;
+using Starlight.Menus.Debug;
+using Starlight.Patches.General;
+using Starlight.Prism;
+using Starlight.Prism.Lib;
+using Starlight.Storage;
 
 namespace Starlight;
 
-public enum Branch
-{
-    Release,
-    Beta,
-    Alpha,
-    Developer
-}
 
-// SR2E Build information. Please do not edit anything other than version numbers.
+// Starlight Build information. Please do not edit anything other than version numbers.
 public static class BuildInfo
 {
-    public const string NAME = "Starlight Core Essentials";
-    public const string DESCRIPTION = "Essential stuff for Slime Rancher 2";
-    public const string AUTHOR = "ThatFinn";
-    public const string CO_AUTHOR = "YLohkuhl";
-    public const string CONTRIBUTORS = "PinkTarr, shizophrenicgopher, Atmudia";
-    public const string CODE_VERSION = "4.0.0-dev";
-    public const string DOWNLOAD_LINK = "https://sr2e.sr2.dev/";
-    public const string SOURCE_CODE = "https://github.com/ThatFinnDev/SR2E";
-    public const string NEXUS = "https://www.nexusmods.com/slimerancher2/mods/60";
-    public const string DISCORD = "https://discord.gg/a7wfBw5feU";
+    public const string Name = "Starlight Core Essentials";
+    public const string Description = "Essential stuff for Slime Rancher 2";
+    public const string Author = "ThatFinn";
+    public const string CoAuthors = "YLohkuhl";
+    public const string Contributors = "PinkTarr, shizophrenicgopher, Atmudia";
+    public const string CodeVersion = "4.0.0-dev";
+    public const string DownloadLink = "https://sr2e.sr2.dev/";
+    public const string SourceCode = "https://github.com/ThatFinnDev/Starlight";
+    public const string Nexus = "https://www.nexusmods.com/slimerancher2/mods/60";
+    public const string Discord = "https://discord.gg/a7wfBw5feU";
 
     /// <summary>
     /// Should be the same as CodeVersion unless this is non release build.<br />
@@ -55,11 +47,10 @@ public static class BuildInfo
     /// For dev versions, use "-dev". Do not add a build number!<br />
     /// Add "+metadata" only in dev builds!
     /// </summary>
-    public const string DISPLAY_VERSION = "4.0.0-dev";
+    public const string DisplayVersion = "4.0.0-dev";
 
     // Allow Metadata, Check Update Link
-    
-    internal static readonly Dictionary<string, (bool, string)> preInfo = new()
+    internal static readonly Dictionary<string, (bool, string)> PreInfo = new()
     {
         { "release", (false, "https://api.sr2e.sr2.dev/branch/release") },
         { "alpha", (false, "https://api.sr2e.sr2.dev/branch/alpha") },
@@ -70,72 +61,249 @@ public static class BuildInfo
 
 public class StarlightEntryPoint : MelonMod
 {
-    private const string STARLIGHT_FOLDER_NAME = "SCE";
-    
-    // TODO Will require revisions later.
-    
-    private static List<SR2EExpansionV1> expansionsV1V2 = new();
-    private static List<SR2EExpansionV2> expansionsV2 = new();
-    private static List<SR2EExpansionV3> expansionsV3 = new();
-    
-    // TODO Move into a more centralized area later. A file for font assets, and/or other kinds of assets.
-    
-    internal static TMP_FontAsset _sr2FontAsset;
-    internal static TMP_FontAsset normalFont;
-    internal static TMP_FontAsset regularFont;
-    internal static TMP_FontAsset boldFont;
-    internal static TMP_FontAsset notoSansFont;
-    
-    internal static string UpdateBranch = MiscEUtil.BRANCHES[Branch.Release];
-    
-    private static bool menusFinished = false;
+    private static string _starlightFolderName = "Starlight";
 
-    private static List<BaseUI> baseUIAddSliders = new();
-    private static Dictionary<SR2EMenu, Dictionary<string, object>> menus = new();
-    private static MelonPreferences_Category prefs;
+    internal static readonly Dictionary<Assembly, List<StarlightExpansionVXX>> Expansions = new();
+    internal static readonly List<StarlightExpansionV01> ExpansionV01S = new();
     
-        internal static bool mainMenuLoaded = false;
-        internal static GameObject SR2EStuff;
-        internal static ScriptedBool saveSkipIntro;
-        internal static bool addedButtons = false;
     
-    private static string DataPath => Path.Combine(MelonEnvironment.UserDataDirectory, starlightFolderName);
-    private static string TmpDataPath => Path.Combine(DataPath, ".tmp");
-    private static string FlagDataPath => Path.Combine(DataPath, "flags");
-    private static string CustomVolumeProfilesPath => Path.Combine(DataPath, "customVolumeProfiles");
+    internal static readonly List<(string, Assembly, string, string)> BrokenExpansions = new();
+    
+    
+    internal static TMP_FontAsset Sr2FontAsset;
+    internal static TMP_FontAsset NormalFont;
+    internal static TMP_FontAsset RegularFont;
+    internal static TMP_FontAsset BoldFont;
+    internal static TMP_FontAsset NotoSansFont;
+    
+    internal static string UpdateBranch = "release";
+    
+    internal static bool MenusFinished = false;
 
-    private static bool _earlyRegistered = false;
+    internal static readonly List<BaseUI> BaseUIAddSliders = new();
+    internal static Dictionary<StarlightMenu, Dictionary<string, object>> Menus = new();
+    private static MelonPreferences_Category _prefs;
+    
+        internal static bool MainMenuLoaded;
+        internal static GameObject StarlightStuff;
+        internal static ScriptedBool SaveSkipIntro;
+        internal static bool AddedButtons = false;
+    
+        internal static string dataPath => Path.Combine(MelonEnvironment.UserDataDirectory, _starlightFolderName);
+    internal static string tmpDataPath => Path.Combine(dataPath, ".tmp");
+    internal static string flagDataPath => Path.Combine(dataPath, "flags");
+    internal static string customVolumeProfilesPath => Path.Combine(dataPath, "customVolumeProfiles");
 
-    public static bool IsPrismInUse { get; private set; } = false;
+    internal static bool EarlyRegistered = false;
 
-    private static MelonLogger.Instance _unityLog = new("Unity");
+    public static bool isPrismInUse { get; private set; }
+
+    private static readonly MelonLogger.Instance UnityLog = new("Unity");
     
     internal static string MelonVersion = "undefined";
-    internal static MelonAssembly MelonAssembly;
     
-    private static StarlightEntryPoint _instance;
+    internal static StarlightEntryPoint Instance;
 
-    // TODO Move into more centralized area later. A file made for Melon Preferences.
-
-    internal static string onSaveLoadCommand => prefs.GetEntry<string>("onSaveLoadCommand").Value;
-    internal static string onMainMenuLoadCommand => prefs.GetEntry<string>("onMainMenuLoadCommand").Value;
-    internal static bool SR2ELogToMLLog => prefs.GetEntry<bool>("SR2ELogToMLLog").Value;
-    internal static bool mLLogToSR2ELog => prefs.GetEntry<bool>("mLLogToSR2ELog").Value;
-    internal static bool autoUpdate => prefs.GetEntry<bool>("autoUpdate").Value;
-    internal static bool disableFixSaves => prefs.GetEntry<bool>("disableFixSaves").Value;
-    internal static float consoleMaxSpeed => prefs.GetEntry<float>("consoleMaxSpeed").Value;
-    internal static float noclipAdjustSpeed => prefs.GetEntry<float>("noclipAdjustSpeed").Value;
-    internal static float noclipSpeedMultiplier => prefs.GetEntry<float>("noclipSpeedMultiplier").Value;
-    
-    internal static bool enableDebugDirector => prefs.GetEntry<bool>("enableDebugDirector").Value;
+    internal static string onSaveLoadCommand => _prefs.GetEntry<string>("onSaveLoadCommand").Value;
+    internal static string onMainMenuLoadCommand => _prefs.GetEntry<string>("onMainMenuLoadCommand").Value;
+    internal static bool starlightLogToMlLog => _prefs.GetEntry<bool>("StarlightLogToMLLog").Value;
+    internal static bool mLLogToStarlightLog => _prefs.GetEntry<bool>("mLLogToStarlightLog").Value;
+    internal static bool autoUpdate => _prefs.GetEntry<bool>("autoUpdate").Value;
+    internal static bool disableFixSaves => _prefs.GetEntry<bool>("disableFixSaves").Value;
+    internal static float consoleMaxSpeed => _prefs.GetEntry<float>("consoleMaxSpeed").Value;
+    internal static float noclipAdjustSpeed => _prefs.GetEntry<float>("noclipAdjustSpeed").Value;
+    internal static float noclipSpeedMultiplier => _prefs.GetEntry<float>("noclipSpeedMultiplier").Value;
+    internal static bool enableDebugDirector => _prefs.GetEntry<bool>("enableDebugDirector").Value;
  
+    public override void OnEarlyInitializeMelon()
+    {
+        Instance = this;
+        if (!IsDisplayVersionValid())
+        {
+            MelonLogger.Msg("Version Code is broken!");
+            Unregister();
+            return;
+        }
+        string[] launchArgs = Environment.GetCommandLineArgs();
+        var usedArgs = new List<string>();
+        foreach (var arg in launchArgs)
+            if (arg.StartsWith("-sr2e.") && arg.Contains("="))
+            {
+                var split = arg.Split("=");
+                if (split.Length != 2) continue;
+                if (usedArgs.Contains(split[0])) continue;
+                usedArgs.Add(split[0]);
+                switch (split[0])
+                {
+                    case "-sr2e.id":
+                        var id = 0;
+                        try { id = int.Parse(split[1]); }
+                        catch
+                        {
+                            // ignored
+                        }
+                        if (id != 0) _starlightFolderName += id;
+                        break;
+                }
+            }
+
+        if (!Directory.Exists(dataPath)) Directory.CreateDirectory(dataPath);
+        if (!Directory.Exists(tmpDataPath)) Directory.CreateDirectory(tmpDataPath);
+        if (!Directory.Exists(flagDataPath)) Directory.CreateDirectory(flagDataPath);
+        if (!Directory.Exists(customVolumeProfilesPath)) Directory.CreateDirectory(customVolumeProfilesPath);
+        
+        InitFlagManager();
+        
+        var baseType = typeof(StarlightExpansionVXX);
+        foreach (var dllPath in Directory.GetFiles(MelonEnvironment.ModsDirectory))
+        {
+            if (HasAttribute(dllPath)) continue;
+            var assembly = Assembly.LoadFrom(dllPath);
+            var att = assembly.GetCustomAttribute<StarlightExpansionAttribute>();
+            var instances = new List<StarlightExpansionVXX>();
+            if(att is { types.Length: > 0 })
+                foreach (var type in att.types)
+                    if (baseType.IsAssignableFrom(type) && type != baseType)
+                    {
+                        var instance = (StarlightExpansionVXX)Activator.CreateInstance(type);
+                        bool success = true;
+                        var message = "";
+                        string errorMessage = null;
+                        try
+                        {
+                            if(string.IsNullOrWhiteSpace(instance.info.ID)&&(!string.IsNullOrEmpty(instance.info.ID) && instance.info.ID.All(char.IsLetterOrDigit))) 
+                                message += "\nThe expansion's ID is invalid! It needs to be a non-empty alphanumeric string! For example: \"com.devname.expansionanme\"";
+                            if(string.IsNullOrWhiteSpace(instance.info.name)) 
+                                message += "\nThe expansion's name is invalid! It needs to be a non-empty string! For example: \"Blue Slimes\"";
+                        }
+                        catch (Exception e)
+                        {
+                            success = false;
+                            MelonLogger.Error(e);
+                            MelonLogger.Error($"Couldn't load the expansion \"{type.FullName}\" in the dll at \"{dllPath}\" due to an unknown error!");
+                            errorMessage = e.Message;
+                        }
+
+                        if (!string.IsNullOrWhiteSpace(message))
+                        {
+                            success = false;
+                            MelonLogger.Error($"Couldn't load the expansion \"{type.FullName}\" in the dll at \"{dllPath}\"!");
+                            MelonLogger.Error("The expansion info is invalid!");
+                            MelonLogger.Error(message);
+                        }
+                        if(success)
+                        {
+                            if (AllowPrism.HasFlag() && instance.info.usePrism)
+                                isPrismInUse = true;
+                            if(instance is StarlightExpansionV01 v01) ExpansionV01S.Add(v01);
+                            baseType.GetField("_assembly", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(instance, assembly);
+                            instances.Add(instance);
+                        }
+                        else
+                        {
+                            BrokenExpansions.Add((type.FullName, assembly, message, errorMessage));
+                        }
+                    }
+            Expansions.Add(assembly,instances);
+        }
+        StarlightCallEventManager.LoadAssemblies(Expansions.Keys.ToList());
+        PatchIl2CppDetourMethodPatcher.InstallSecondPart(HarmonyInstance);
+    }
+
+    
+    public override void OnInitializeMelon()
+    {
+        _prefs = MelonPreferences.CreateCategory("Starlight", "Starlight");
+        var path = MelonAssembly.Assembly.Location + ".old";
+        if (File.Exists(path)) File.Delete(path);
+        RefreshPrefs();
+
+        InjectIl2CppComponents();
+        
+        
+        if (!isPrismInUse)
+            try { isPrismInUse = _prefs.GetEntry<bool>("forceUsePrism").Value; }
+            catch
+            {
+                // ignored
+            }
+        if (!AllowPrism.HasFlag()) isPrismInUse = false;
+        PatchGame(MelonAssembly.Assembly);
+        foreach (var assembly in Expansions.Keys.ToList())
+            PatchGame(assembly);
+        
+
+        Application.add_logMessageReceived(new Action<string, string, LogType>(AppLogUnity));
+        try { AddLanguages(EmbeddedResourceEUtil.LoadString("translations.csv")); }
+        catch (Exception e) { MelonLogger.Error(e); }
+
+        foreach (var expansion in ExpansionV01S)
+            try { expansion.OnInitialize(); }
+            catch (Exception e) { MelonLogger.Error(e); }
+    }
+    
+    
+    
+    public override void OnLateInitializeMelon()
+    {
+        if (Get<GameObject>("StarlightPrefabHolder"))
+        {
+            PrefabHolder = Get<GameObject>("StarlightPrefabHolder");
+        }
+        else
+        {
+            PrefabHolder = new GameObject();
+            PrefabHolder.SetActive(false);
+            PrefabHolder.name = "StarlightPrefabHolder";
+            Object.DontDestroyOnLoad(PrefabHolder);
+        }
+
+        if (LKeyInputAcquirer.Instance == null)
+        {
+            var ia = new GameObject();
+            ia.AddComponent<LKeyInputAcquirer>();
+            ia.AddComponent<KeyCodeInputAcquirer>();
+            if (RestoreDebugAbilities.HasFlag()) ia.AddComponent<DevelopmentBuildText>();
+            if (RestoreDebugDevConsole.HasFlag()) ia.AddComponent<DevConsoleFixer>();
+            ia.name = "StarlightInputAcquirer";
+            Object.DontDestroyOnLoad(ia);
+        }
+
+        if (CheckForUpdates.HasFlag()) MelonCoroutines.Start(StarlightUpdateManager.GetBranchJson());
+
+        foreach (var expansion in ExpansionV01S)
+            try { expansion.OnLateInitializeMelon(); }
+            catch (Exception e) { MelonLogger.Error(e); }
+    }
+    
+    
+    
+    static bool HasAttribute(string path)
+    {
+        var context = new AssemblyLoadContext("StarlightUnloadableContext", isCollectible: true);
+        bool isExpansion;
+        try 
+        {
+            var assembly = context.LoadFromAssemblyPath(path);
+            isExpansion = assembly.GetCustomAttribute<StarlightExpansionAttribute>()!=null;
+        }
+        finally 
+        {
+            context.Unload();
+        }
+        for (int i = 0; i < 10 && GC.GetTotalMemory(false) > 0; i++)
+        {
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+        }
+
+        return isExpansion;
+    }
     private static bool IsDisplayVersionValid()
     {
         if (!BuildInfo.DisplayVersion.Contains(BuildInfo.CodeVersion)) return false;
         /*Semver2 Regex*/
-        var semVerRegex =
-            new Regex(
-                @"^(?<major>0|[1-9]\d*)\.(?<minor>0|[1-9]\d*)\.(?<patch>0|[1-9]\d*)(?:-(?<prerelease>[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+(?<build>[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?$");
+        var semVerRegex = new Regex(@"^(?<major>0|[1-9]\d*)\.(?<minor>0|[1-9]\d*)\.(?<patch>0|[1-9]\d*)(?:-(?<prerelease>[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+(?<build>[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?$");
         var match = semVerRegex.Match(BuildInfo.DisplayVersion);
         /*Not Semver2*/
         if (!match.Success) return false;
@@ -152,12 +320,12 @@ public class StarlightEntryPoint : MelonMod
         var preRelease = preReleaseAndBuild != "dev" ? preReleaseAndBuild.Substring(0, dotIndex) : "dev";
         /*Check pre and meta*/
         var valid = false;
-        foreach (var triple in BuildInfo.PRE_INFO)
+        foreach (var triple in BuildInfo.PreInfo)
             if (preRelease == triple.Key && triple.Key != "release")
             {
                 if (!triple.Value.Item1 && hasMetadata) return false; //Has meta even though it's not allowed
                 valid = true;
-                updateBranch = triple.Key;
+                UpdateBranch = triple.Key;
                 break;
             }
 
@@ -165,99 +333,48 @@ public class StarlightEntryPoint : MelonMod
         if (preRelease == "dev") return true;
         /*Check buildnumber*/
         var buildnumber = preReleaseAndBuild.Substring(dotIndex + 1);
-        if (int.TryParse(buildnumber, out var value)) return true;
+        if (int.TryParse(buildnumber, out _)) return true;
         return false; /*buildnumber is no int*/
     }
     
-    // TODO Move into more centralized area later. A file made for Melon Preferences.
-
     private static void RefreshPrefs()
     {
-        var old_entries = new string[]
-        {
-            "noclipFlySpeed", "noclipFlySprintSpeed", "experimentalStuff", "skipEngagementPrompt", "devMode",
-            "showUnityErrors",
-            "debugLogging", "consoleUsesSR2Font", "consoleUsesSR2Style", "doesConsoleSync", "mLLogToConsole",
-            "SR2ELogToMLLog", "fixSaves",
-            "quickStart", "enableCheatMenuButton", "useExperimentalLibrary"
-        };
-        foreach (var entry in old_entries)
-            prefs.DeleteEntry(entry);
-
         if (AllowAutoUpdate.HasFlag())
-            if (!prefs.HasEntry("autoUpdate"))
-                prefs.CreateEntry("autoUpdate", (bool)false, "Update SR2E automatically");
+            if (!_prefs.HasEntry("autoUpdate"))
+                _prefs.CreateEntry("autoUpdate", false, "Update Starlight automatically");
         if (DevMode.HasFlag())
             if (AllowPrism.HasFlag())
-                if (!prefs.HasEntry("forceUsePrism"))
-                    prefs.CreateEntry("forceUsePrism", (bool)false, "Force enable prism",
-                        "It's automatically enabled if expansions need it. This will just force it.", false);
-        if (!prefs.HasEntry("disableFixSaves"))
-            prefs.CreateEntry("disableFixSaves", (bool)false, "Disable save fixing", false).AddNullAction();
-        if (!prefs.HasEntry("enableDebugDirector"))
-            prefs.CreateEntry("enableDebugDirector", (bool)false, "Enable debug menu", false).AddAction(() =>
+                if (!_prefs.HasEntry("forceUsePrism"))
+                    _prefs.CreateEntry("forceUsePrism", false, "Force enable prism",
+                        "It's automatically enabled if expansions need it. This will just force it.");
+        if (!_prefs.HasEntry("disableFixSaves"))
+            _prefs.CreateEntry("disableFixSaves", false, "Disable save fixing", false).AddNullAction();
+        if (!_prefs.HasEntry("enableDebugDirector"))
+            _prefs.CreateEntry("enableDebugDirector", false, "Enable debug menu", false).AddAction(() =>
             {
-                SR2EDebugUI.isEnabled = enableDebugDirector;
+                StarlightDebugUI.isEnabled = enableDebugDirector;
             });
-        if (!prefs.HasEntry("mLLogToSR2ELog"))
-            prefs.CreateEntry("mLLogToSR2ELog", (bool)false, "Send MLLogs to console", false).AddNullAction();
-        if (!prefs.HasEntry("SR2ELogToMLLog"))
-            prefs.CreateEntry("SR2ELogToMLLog", (bool)false, "Send console messages to MLLogs", false).AddNullAction();
-        if (!prefs.HasEntry("onSaveLoadCommand"))
-            prefs.CreateEntry("onSaveLoadCommand", (string)"", "Command to execute, when save is loaded", false)
+        if (!_prefs.HasEntry("mLLogToStarlightLog"))
+            _prefs.CreateEntry("mLLogToStarlightLog", false, "Send MLLogs to console", false).AddNullAction();
+        if (!_prefs.HasEntry("StarlightLogToMLLog"))
+            _prefs.CreateEntry("StarlightLogToMLLog", false, "Send console messages to MLLogs", false).AddNullAction();
+        if (!_prefs.HasEntry("onSaveLoadCommand"))
+            _prefs.CreateEntry("onSaveLoadCommand", "", "Command to execute, when save is loaded", false)
                 .AddNullAction();
-        if (!prefs.HasEntry("onMainMenuLoadCommand"))
-            prefs.CreateEntry("onMainMenuLoadCommand", (string)"", "Command to execute, when main menu is loaded",
+        if (!_prefs.HasEntry("onMainMenuLoadCommand"))
+            _prefs.CreateEntry("onMainMenuLoadCommand", "", "Command to execute, when main menu is loaded",
                 false).AddNullAction();
-        if (!prefs.HasEntry("noclipSpeedMultiplier"))
-            prefs.CreateEntry("noclipSpeedMultiplier", 2f, "NoClip sprint speed multiplier", false).AddNullAction();
-        if (!prefs.HasEntry("noclipAdjustSpeed"))
-            prefs.CreateEntry("noclipAdjustSpeed", (float)235f, "NoClip scroll speed", false).AddNullAction();
-        if (!prefs.HasEntry("consoleMaxSpeed"))
-            prefs.CreateEntry("consoleMaxSpeed", (float)0.75f, "Console scroll speed", false).AddNullAction();
+        if (!_prefs.HasEntry("noclipSpeedMultiplier"))
+            _prefs.CreateEntry("noclipSpeedMultiplier", 2f, "NoClip sprint speed multiplier", false).AddNullAction();
+        if (!_prefs.HasEntry("noclipAdjustSpeed"))
+            _prefs.CreateEntry("noclipAdjustSpeed", 235f, "NoClip scroll speed", false).AddNullAction();
+        if (!_prefs.HasEntry("consoleMaxSpeed"))
+            _prefs.CreateEntry("consoleMaxSpeed", 0.75f, "Console scroll speed", false).AddNullAction();
         //if(DevMode.HasFlag()) if (!prefs.HasEntry("testLKey")) prefs.CreateEntry("testLKey", LKey.None, "Test LKey", false).AddNullAction();
     }
 
 
-    public override void OnLateInitializeMelon()
-    {
-        if (Get<GameObject>("SR2EPrefabHolder"))
-        {
-            prefabHolder = Get<GameObject>("SR2EPrefabHolder");
-        }
-        else
-        {
-            prefabHolder = new GameObject();
-            prefabHolder.SetActive(false);
-            prefabHolder.name = "SR2EPrefabHolder";
-            Object.DontDestroyOnLoad(prefabHolder);
-        }
-
-        if (LKeyInputAcquirer.Instance == null)
-        {
-            var ia = new GameObject();
-            ia.AddComponent<LKeyInputAcquirer>();
-            ia.AddComponent<KeyCodeInputAcquirer>();
-            if (RestoreDebugAbilities.HasFlag()) ia.AddComponent<DevelopmentBuildText>();
-            if (RestoreDebugDevConsole.HasFlag()) ia.AddComponent<DevConsoleFixer>();
-            ia.name = "SR2EInputAcquirer";
-            Object.DontDestroyOnLoad(ia);
-        }
-
-        if (CheckForUpdates.HasFlag()) MelonCoroutines.Start(SR2EUpdateManager.GetBranchJson());
-
-        foreach (var expansion in expansionsV3)
-            try
-            {
-                expansion.OnLateInitializeMelon();
-            }
-            catch (Exception e)
-            {
-                MelonLogger.Error(e);
-            }
-    }
-
-    //Logging code from Atmudia and adapted
+    // Original logging code from Atmudia, heavily adapted
     private static void AppLogUnity(string message, string trace, LogType type)
     {
         if (!ShowUnityErrors.HasFlag()) return;
@@ -276,85 +393,17 @@ public class StarlightEntryPoint : MelonMod
         toDisplay = Regex.Replace(toDisplay, @"\[INFO]\s|\[ERROR]\s|\[WARNING]\s", "");
         switch (type)
         {
-            case LogType.Assert: unityLog.Error(toDisplay); break;
-            case LogType.Exception: unityLog.Error(toDisplay); break;
-            case LogType.Log: unityLog.Msg(toDisplay); break;
-            case LogType.Error: unityLog.Error(toDisplay); break;
-            case LogType.Warning: unityLog.Warning(toDisplay); break;
+            case LogType.Assert: UnityLog.Error(toDisplay); break;
+            case LogType.Exception: UnityLog.Error(toDisplay); break;
+            case LogType.Log: UnityLog.Msg(toDisplay); break;
+            case LogType.Error: UnityLog.Error(toDisplay); break;
+            case LogType.Warning: UnityLog.Warning(toDisplay); break;
         }
-    }
-
-    public override void OnEarlyInitializeMelon()
-    {
-        if (!IsDisplayVersionValid())
-        {
-            MelonLogger.Msg("Version Code is broken!");
-            Unregister();
-            return;
-        }
-
-        instance = this;
-        StaticOnEarlyInitializeMelon();
-        PatchIl2CppDetourMethodPatcher.InstallSecondPart(HarmonyInstance);
-        MLAssembly = MelonAssembly;
-    }
-
-    private static void StaticOnEarlyInitializeMelon()
-    {
-        if (earlyRegistered) return;
-        earlyRegistered = true;
-        string[] launchArgs = Environment.GetCommandLineArgs();
-        var usedArgs = new List<string>();
-        foreach (var arg in launchArgs)
-            if (arg.StartsWith("-sr2e.") && arg.Contains("="))
-            {
-                var split = arg.Split("=");
-                if (split.Length != 2) continue;
-                if (usedArgs.Contains(split[0])) continue;
-                usedArgs.Add(split[0]);
-                switch (split[0])
-                {
-                    case "-sr2e.id":
-                        var id = 0;
-                        try
-                        {
-                            id = int.Parse(split[1]);
-                        }
-                        catch
-                        {
-                        }
-
-                        if (id != 0) SR2EFolderName += id;
-                        break;
-                }
-            }
-
-        if (!Directory.Exists(DataPath)) Directory.CreateDirectory(DataPath);
-        if (!Directory.Exists(TmpDataPath)) Directory.CreateDirectory(TmpDataPath);
-        if (!Directory.Exists(FlagDataPath)) Directory.CreateDirectory(FlagDataPath);
-        if (!Directory.Exists(CustomVolumeProfilesPath)) Directory.CreateDirectory(CustomVolumeProfilesPath);
-        InitFlagManager();
-        var assemblies = new List<Assembly>();
-        foreach (var melonBase in MelonBase.RegisteredMelons)
-            if (!assemblies.Contains(melonBase.MelonAssembly.Assembly))
-            {
-                var shouldDiscord = false;
-                var attributes = melonBase.MelonAssembly.Assembly.GetCustomAttributes<AssemblyMetadataAttribute>();
-                var metadata = new Dictionary<string, string>();
-                foreach (var _attribute in attributes) metadata.Add(_attribute.Key, _attribute.Value);
-                if (metadata.ContainsKey(SR2EExpansionAttributes.IsExpansion) &&
-                    metadata[SR2EExpansionAttributes.IsExpansion].ToLower() == "true") shouldDiscord = true;
-
-                if (!shouldDiscord) assemblies.Add(melonBase.MelonAssembly.Assembly);
-            }
-
-        SR2ECallEventManager.LoadAssemblies(assemblies);
     }
 
     private void InjectIl2CppComponents()
     {
         var types = AccessTools.GetTypesFromAssembly(MelonAssembly.Assembly);
-        var devPatches = DevMode.HasFlag();
         foreach (var type in types)
         {
             if (type == null) continue;
@@ -372,38 +421,23 @@ public class StarlightEntryPoint : MelonMod
         }
     }
 
-    private bool patchedPrism = false;
-
-    private void PatchGame(bool justPrism = false)
+    private void PatchGame(Assembly assembly)
     {
-        if (!IsPrismInUse)
-            try
-            {
-                IsPrismInUse = prefs.GetEntry<bool>("forceUsePrism").Value;
-            }
-            catch
-            {
-            }
-
-        if (!AllowPrism.HasFlag()) IsPrismInUse = false;
-        var types = AccessTools.GetTypesFromAssembly(MelonAssembly.Assembly);
+        var types = AccessTools.GetTypesFromAssembly(assembly);
         var devPatches = DevMode.HasFlag();
-        if (IsPrismInUse) patchedPrism = true;
         foreach (var type in types)
         {
             if (type == null) continue;
             try
             {
                 var isPrismPatch = type.GetCustomAttribute<PrismPatch>() != null;
-                if (!IsPrismInUse && isPrismPatch) continue;
-                if (justPrism && !isPrismPatch) continue;
+                if (!isPrismInUse && isPrismPatch) continue;
                 if (!devPatches && type.GetCustomAttribute<DevPatch>() != null) continue;
                 var classPatches = HarmonyMethodExtensions.GetFromType(type);
                 if (classPatches.Count > 0)
                 {
                     var processor = HarmonyInstance.CreateClassProcessor(type);
                     processor.Patch();
-                    //MelonLogger.Msg($"Patched class: {type.FullName}");
                 }
             }
             catch (Exception e)
@@ -414,189 +448,49 @@ public class StarlightEntryPoint : MelonMod
         }
     }
 
-    internal static List<(string, string, string, string, Assembly, string)> brokenExpansions = new();
+    
 
-    // Dont change name, it is called via reflection in order to hide it. 
-    private static void AddBrokenExpansion(string name, string author, string version, string downloadlink,
-        Assembly assembly, string errorMessage)
-    {
-        brokenExpansions.Add((name, author, version, downloadlink, assembly, errorMessage));
-    }
 
-    /// <summary>
-    /// Loads an expansion, don't call manually, please use the standard .cs file
-    /// </summary>
-    /// <param name="expansionV3"></param>
-    /// <returns></returns>
-    public static bool LoadExpansion(SR2EExpansionV3 expansionV3)
-    {
-        StaticOnEarlyInitializeMelon();
-        if (AllowExpansionsV3.HasFlag() && !SystemContextPatch.didStart)
-        {
-            var shouldUnregister = false;
-            var attributes =
-                expansionV3.MelonBase.MelonAssembly.Assembly.GetCustomAttributes<AssemblyMetadataAttribute>();
-            var metadata = new Dictionary<string, string>();
-            foreach (var _attribute in attributes) metadata.Add(_attribute.Key, _attribute.Value);
-            if (!metadata.ContainsKey(SR2EExpansionAttributes.IsExpansion) ||
-                metadata[SR2EExpansionAttributes.IsExpansion].ToLower() != "true")
-            {
-                shouldUnregister = true;
-            }
-            else
-            {
-                var attributeUsePrism = !metadata.ContainsKey(SR2EExpansionAttributes.UsePrism)
-                    ? false
-                    : metadata[SR2EExpansionAttributes.UsePrism].ToLower() == "true";
-                if (attributeUsePrism && !AllowPrism.HasFlag())
-                {
-                    shouldUnregister = true;
-                }
-                else
-                {
-                    if (attributeUsePrism) IsPrismInUse = true;
-                }
-            }
-
-            if (!shouldUnregister)
-            {
-                expansionsV3.Add(expansionV3);
-                SR2ECallEventManager.LoadAssemblies(new List<Assembly>()
-                    { expansionV3.MelonBase.MelonAssembly.Assembly });
-                if (IsPrismInUse && !instance.patchedPrism) instance.PatchGame(true);
-                if (hasInitialized) expansionV3.OnInitializeMelon();
-                return true;
-            }
-        }
-
-        if (!AllowExpansionsV3.HasFlag() && SystemContextPatch.didStart)
-            MelonLogger.Error("Expansion is being registered too late!");
-        expansionV3.MelonBase.Unregister();
-        return false;
-    }
-
-    private static bool hasInitialized = false;
-
-    public override void OnInitializeMelon()
-    {
-        hasInitialized = true;
-        prefs = MelonPreferences.CreateCategory("SR2E", "SR2E");
-        var path = MelonAssembly.Assembly.Location + ".old";
-        if (File.Exists(path)) File.Delete(path);
-        RefreshPrefs();
-        foreach (var melonBase in new List<MelonBase>(MelonBase.RegisteredMelons))
-        {
-            if (melonBase is SR2EExpansionV2)
-                if (AllowExpansionsV2.HasFlag())
-                {
-                    var attribute = melonBase.MelonAssembly.Assembly.GetCustomAttribute<SR2EExpansionAttribute>();
-                    if (attribute == null)
-                    {
-                        melonBase.Unregister();
-                    }
-                    else
-                    {
-                        if (attribute.usePrism && !AllowPrism.HasFlag())
-                        {
-                            melonBase.Unregister();
-                        }
-                        else
-                        {
-                            if (attribute.usePrism) IsPrismInUse = true;
-                            expansionsV2.Add(melonBase as SR2EExpansionV2);
-                        }
-                    }
-                }
-                else
-                {
-                    melonBase.Unregister();
-                }
-
-            if (melonBase is SR2EExpansionV1)
-                if (AllowExpansionsV1.HasFlag()) expansionsV1V2.Add(melonBase as SR2EExpansionV1);
-                else melonBase.Unregister();
-        }
-
-        InjectIl2CppComponents();
-        PatchGame();
-
-        Application.add_logMessageReceived(new Action<string, string, LogType>(AppLogUnity));
-        try
-        {
-            AddLanguages(EmbeddedResourceEUtil.LoadString("translations.csv"));
-        }
-        catch (Exception e)
-        {
-            MelonLogger.Error(e);
-        }
-
-        foreach (var expansion in expansionsV1V2)
-            try
-            {
-                expansion.OnNormalInitializeMelon();
-            }
-            catch (Exception e)
-            {
-                MelonLogger.Error(e);
-            }
-
-        foreach (var expansion in expansionsV3)
-            try
-            {
-                expansion.OnInitializeMelon();
-            }
-            catch (Exception e)
-            {
-                MelonLogger.Error(e);
-            }
-    }
 
     public override void OnApplicationQuit()
     {
-        try
-        {
-            if (systemContext.SceneLoader.IsCurrentSceneGroupGameplay()) autoSaveDirector.SaveGame();
-        }
+        try { if (systemContext.SceneLoader.IsCurrentSceneGroupGameplay()) autoSaveDirector.SaveGame(); }
         catch
         {
+            // ignored
         }
 
-        foreach (var expansion in expansionsV3)
-            try
-            {
-                expansion.OnApplicationQuit();
-            }
-            catch (Exception e)
-            {
-                MelonLogger.Error(e);
-            }
+        foreach (var expansion in ExpansionV01S)
+            try { expansion.OnApplicationQuit(); }
+            catch (Exception e) { MelonLogger.Error(e); }
     }
 
     internal static void CheckFallBackFont()
     {
         try
         {
-            if (notoSansFont == null)
+            if (!NotoSansFont)
             {
                 var settings = Get<TMP_Settings>("TMP Settings");
-                if (settings == null) return;
-                var tempPath = Path.Combine(TmpDataPath, "tmpFallbackFont.ttf");
+                if (!settings) return;
+                var tempPath = Path.Combine(tmpDataPath, "tmpFallbackFont.ttf");
                 File.WriteAllBytes(tempPath, EmbeddedResourceEUtil.LoadResource("Assets.NotoSans.ttf"));
                 var tempFont = new Font(tempPath);
-                notoSansFont = TMP_FontAsset.CreateFontAsset(tempFont);
+                NotoSansFont = TMP_FontAsset.CreateFontAsset(tempFont);
                 //settings.m_fallbackFontAssets.Add(fallBackFont);, creates issues for some reason :(
                 settings.m_warningsDisabled = true;
             }
 
             foreach (var fontAsset in GetAll<TMP_FontAsset>())
             {
-                if (fontAsset == notoSansFont) continue;
-                if (!fontAsset.fallbackFontAssetTable.Contains(notoSansFont))
-                    fontAsset.fallbackFontAssetTable.Add(notoSansFont);
+                if (fontAsset == NotoSansFont) continue;
+                if (!fontAsset.fallbackFontAssetTable.Contains(NotoSansFont))
+                    fontAsset.fallbackFontAssetTable.Add(NotoSansFont);
             }
         }
         catch
         {
+            //ignored
         }
     }
 
@@ -605,16 +499,10 @@ public class StarlightEntryPoint : MelonMod
         CheckFallBackFont();
         if (DebugLogging.HasFlag()) MelonLogger.Msg("OnLoaded Scene: " + sceneName);
 
-        try
-        {
-            SR2EWarpManager.OnSceneLoaded();
-        }
-        catch (Exception e)
-        {
-            MelonLogger.Error(e);
-        }
+        try { StarlightWarpManager.OnSceneLoaded(); }
+        catch (Exception e) { MelonLogger.Error(e); }
 
-        if (sceneName == "StandaloneStart" || sceneName == "CompanyLogo" || sceneName == "LoadScene")
+        if (sceneName is "StandaloneStart" or "CompanyLogo" or "LoadScene")
             try
             {
                 if (MenuEUtil.isAnyMenuOpen) MenuEUtil.CloseOpenMenu();
@@ -623,12 +511,13 @@ public class StarlightEntryPoint : MelonMod
             }
             catch
             {
+                // ignored
             }
 
         switch (sceneName)
         {
             case "MainMenuUI":
-                SR2EVolumeProfileManager.OnMainMenuUILoad();
+                StarlightVolumeProfileManager.OnMainMenuUILoad();
                 //For some reason there are 2 configurations? And due to Il2CPP, just patching the Getter via Harmony isn't sufficient
                 foreach (var configuration in GetAll<AutoSaveDirectorConfiguration>())
                     configuration._saveSlotCount = SAVESLOT_COUNT.Get();
@@ -640,8 +529,11 @@ public class StarlightEntryPoint : MelonMod
                     var b = Get<ButtonBehaviorViewHolder>("SaveGameSlotButton");
                     ExecuteInTicks(() =>
                     {
-                        var l = b.gameObject.GetObjectRecursively<LayoutElement>("Icon");
-                        l.minWidth = l.preferredWidth;
+                        if (b != null)
+                        {
+                            var l = b.gameObject.GetObjectRecursively<LayoutElement>("Icon");
+                            l.minWidth = l.preferredWidth;
+                        }
                     }, 3);
                 }
                 catch (Exception e)
@@ -651,7 +543,7 @@ public class StarlightEntryPoint : MelonMod
 
                 /*try
                 {
-                    var scroll = SR2EStuff.GetObjectRecursively<Scrollbar>("saveFilesSliderRec");
+                    var scroll = StarlightStuff.GetObjectRecursively<Scrollbar>("saveFilesSliderRec");
                     var styler = scroll.AddComponent<ScrollbarStyler>();
                     foreach (var sstyler in GetAll<ScrollbarStyler>())
                     {
@@ -666,195 +558,64 @@ public class StarlightEntryPoint : MelonMod
                     MelonLogger.Error("There was a problem applying styles to the save slider!");
                 }*/
                 break;
-            case "ZoneCore":
-                foreach (var expansion in expansionsV2)
-                    try
-                    {
-                        expansion.OnZoneCoreLoaded();
-                    }
-                    catch (Exception e)
-                    {
-                        MelonLogger.Error(e);
-                    }
-
-                break;
         }
 
-
-        if (usePrism)
-            try
-            {
-                PrismShortcuts.OnSceneWasLoaded(buildIndex, sceneName);
-            }
-            catch (Exception e)
-            {
-                MelonLogger.Error(e);
-            }
-
+        if (isPrismInUse)
+            try { PrismShortcuts.OnSceneWasLoaded(buildIndex, sceneName); }
+            catch (Exception e) { MelonLogger.Error(e); }
+        
         switch (sceneName)
         {
             case "StandaloneEngagementPrompt":
-                foreach (var expansion in expansionsV1V2)
-                    try
-                    {
-                        expansion.OnStandaloneEngagementPromptLoad();
-                    }
-                    catch (Exception e)
-                    {
-                        MelonLogger.Error(e);
-                    }
-
+                foreach (var expansion in ExpansionV01S)
+                    try { expansion.OnStandaloneEngagementPromptLoad(); }
+                    catch (Exception e) { MelonLogger.Error(e); }
                 break;
             case "PlayerCore":
-                foreach (var expansion in expansionsV1V2)
-                    try
-                    {
-                        expansion.OnPlayerCoreLoad();
-                    }
-                    catch (Exception e)
-                    {
-                        MelonLogger.Error(e);
-                    }
-
+                foreach (var expansion in ExpansionV01S)
+                    try { expansion.OnPlayerCoreLoad(); }
+                    catch (Exception e) { MelonLogger.Error(e); }
                 break;
             case "UICore":
-                foreach (var expansion in expansionsV1V2)
-                    try
-                    {
-                        expansion.OnUICoreLoad();
-                    }
-                    catch (Exception e)
-                    {
-                        MelonLogger.Error(e);
-                    }
-
+                foreach (var expansion in ExpansionV01S)
+                    try { expansion.OnUICoreInitialize(); }
+                    catch (Exception e) { MelonLogger.Error(e); }
                 break;
             case "MainMenuUI":
-                foreach (var expansion in expansionsV1V2)
-                    try
-                    {
-                        expansion.OnMainMenuUILoad();
-                    }
-                    catch (Exception e)
-                    {
-                        MelonLogger.Error(e);
-                    }
-
+                foreach (var expansion in ExpansionV01S)
+                    try { expansion.OnMainMenuUIInitialize(); }
+                    catch (Exception e) { MelonLogger.Error(e); }
                 break;
             case "LoadScene":
-                foreach (var expansion in expansionsV1V2)
-                    try
-                    {
-                        expansion.OnLoadSceneLoad();
-                    }
-                    catch (Exception e)
-                    {
-                        MelonLogger.Error(e);
-                    }
-
-                break;
-        }
-
-        switch (sceneName)
-        {
-            case "StandaloneEngagementPrompt":
-                foreach (var expansion in expansionsV3)
-                    try
-                    {
-                        expansion.OnStandaloneEngagementPromptLoad();
-                    }
-                    catch (Exception e)
-                    {
-                        MelonLogger.Error(e);
-                    }
-
-                break;
-            case "PlayerCore":
-                foreach (var expansion in expansionsV3)
-                    try
-                    {
-                        expansion.OnPlayerCoreLoad();
-                    }
-                    catch (Exception e)
-                    {
-                        MelonLogger.Error(e);
-                    }
-
-                break;
-            case "UICore":
-                foreach (var expansion in expansionsV3)
-                    try
-                    {
-                        expansion.OnUICoreInitialize();
-                    }
-                    catch (Exception e)
-                    {
-                        MelonLogger.Error(e);
-                    }
-
-                break;
-            case "MainMenuUI":
-                foreach (var expansion in expansionsV3)
-                    try
-                    {
-                        expansion.OnMainMenuUIInitialize();
-                    }
-                    catch (Exception e)
-                    {
-                        MelonLogger.Error(e);
-                    }
-
-                break;
-            case "LoadScene":
-                foreach (var expansion in expansionsV3)
-                    try
-                    {
-                        expansion.OnLoadSceneInitialize();
-                    }
-                    catch (Exception e)
-                    {
-                        MelonLogger.Error(e);
-                    }
-
+                foreach (var expansion in ExpansionV01S)
+                    try { expansion.OnLoadSceneInitialize(); }
+                    catch (Exception e) { MelonLogger.Error(e); }
                 break;
             case "ZoneCore":
-                foreach (var expansion in expansionsV3)
-                    try
-                    {
-                        expansion.OnZoneCoreInitialized();
-                    }
-                    catch (Exception e)
-                    {
-                        MelonLogger.Error(e);
-                    }
+                foreach (var expansion in ExpansionV01S)
+                    try { expansion.OnZoneCoreInitialized(); }
+                    catch (Exception e) { MelonLogger.Error(e); }
 
                 break;
         }
 
-        foreach (var expansion in expansionsV3)
-            try
-            {
-                expansion.OnSceneWasLoaded(buildIndex, sceneName);
-            }
-            catch (Exception e)
-            {
-                MelonLogger.Error(e);
-            }
+        foreach (var expansion in ExpansionV01S)
+            try { expansion.OnSceneWasLoaded(buildIndex, sceneName); }
+            catch (Exception e) { MelonLogger.Error(e); }
 
         switch (sceneName)
         {
-            case "StandaloneEngagementPrompt":
-                SR2ECallEventManager.ExecuteStandard(CallEvent.OnSceneStandaloneEngagementPromptLoad); break;
-            case "PlayerCore": SR2ECallEventManager.ExecuteStandard(CallEvent.OnScenePlayerCoreLoad); break;
-            case "UICore": SR2ECallEventManager.ExecuteStandard(CallEvent.OnSceneUICoreLoad); break;
-            case "MainMenuUI": SR2ECallEventManager.ExecuteStandard(CallEvent.OnSceneMainMenuUILoad); break;
-            case "LoadScene": SR2ECallEventManager.ExecuteStandard(CallEvent.OnSceneLoadSceneLoad); break;
-            case "ZoneCore": SR2ECallEventManager.ExecuteStandard(CallEvent.OnSceneZoneCoreLoad); break;
+            case "StandaloneEngagementPrompt": StarlightCallEventManager.ExecuteStandard(CallEvent.OnSceneStandaloneEngagementPromptLoad); break;
+            case "PlayerCore": StarlightCallEventManager.ExecuteStandard(CallEvent.OnScenePlayerCoreLoad); break;
+            case "UICore": StarlightCallEventManager.ExecuteStandard(CallEvent.OnSceneUICoreLoad); break;
+            case "MainMenuUI": StarlightCallEventManager.ExecuteStandard(CallEvent.OnSceneMainMenuUILoad); break;
+            case "LoadScene": StarlightCallEventManager.ExecuteStandard(CallEvent.OnSceneLoadSceneLoad); break;
+            case "ZoneCore": StarlightCallEventManager.ExecuteStandard(CallEvent.OnSceneZoneCoreLoad); break;
         }
 
-        SR2ECommandManager.OnSceneWasLoaded(buildIndex, sceneName);
-        SR2ECounterGateManager.OnSceneWasLoaded(buildIndex, sceneName);
-        if (usePrism)
+        StarlightCommandManager.OnSceneWasLoaded(buildIndex, sceneName);
+        StarlightCounterGateManager.OnSceneWasLoaded(buildIndex, sceneName);
+        if (isPrismInUse)
             PrismLibLandPlots.OnSceneWasLoaded(buildIndex, sceneName);
     }
 
@@ -863,14 +624,15 @@ public class StarlightEntryPoint : MelonMod
         if (!inGame) return;
         try
         {
-            if (Time.timeScale != 0 && Time.timeScale != NativeEUtil.CustomTimeScale)
+            if (Time.timeScale != 0 && !Mathf.Approximately(Time.timeScale, NativeEUtil.CustomTimeScale))
                 Time.timeScale = NativeEUtil.CustomTimeScale;
         }
         catch
         {
+            // ignored
         }
 
-        ExecuteInSeconds(() => { CheckForTime(); }, 1);
+        ExecuteInSeconds(CheckForTime, 1);
     }
 
     internal static void SendFontError(string name)
@@ -880,621 +642,220 @@ public class StarlightEntryPoint : MelonMod
 
     internal static void SetupFonts()
     {
-        if (SR2Font == null) SR2Font = FontEUtil.FontFromGame("Runsell Type - HemispheresCaps2");
-        if (regularFont == null) regularFont = FontEUtil.FontFromGame("Lexend-Regular (Latin)");
-        if (boldFont == null) boldFont = FontEUtil.FontFromGame("Lexend-Bold (Latin)");
-        if (normalFont == null) normalFont = FontEUtil.FontFromOS("Tahoma");
-        foreach (var expansion in expansionsV1V2)
-            try
-            {
-                expansion.OnSR2FontLoad();
-            }
-            catch (Exception e)
-            {
-                MelonLogger.Error(e);
-            }
+        if (Sr2FontAsset == null) Sr2FontAsset = FontEUtil.FontFromGame("Runsell Type - HemispheresCaps2");
+        if (RegularFont == null) RegularFont = FontEUtil.FontFromGame("Lexend-Regular (Latin)");
+        if (BoldFont == null) BoldFont = FontEUtil.FontFromGame("Lexend-Bold (Latin)");
+        if (NormalFont == null) NormalFont = FontEUtil.FontFromOS("Tahoma");
 
-        foreach (var pair in menus) pair.Key.ReloadFont();
+        foreach (var pair in Menus) pair.Key.ReloadFont();
     }
 
 
     public override void OnSceneWasInitialized(int buildIndex, string sceneName)
     {
         if (DebugLogging.HasFlag()) MelonLogger.Msg("WasInitialized Scene: " + sceneName);
-        if (usePrism)
-            try
-            {
-                PrismShortcuts.OnSceneWasInitialized(buildIndex, sceneName);
-            }
-            catch (Exception e)
-            {
-                MelonLogger.Error(e);
-            }
+        if (isPrismInUse)
+            try { PrismShortcuts.OnSceneWasInitialized(buildIndex, sceneName); }
+            catch (Exception e) { MelonLogger.Error(e); }
 
         if (sceneName == "MainMenuUI")
         {
-            SR2EOptionsButtonManager.inGameSave = null;
-            mainMenuLoaded = true;
+            StarlightOptionsButtonManager.inGameSave = null;
+            MainMenuLoaded = true;
         }
 
         switch (sceneName)
         {
             case "StandaloneEngagementPrompt":
-                foreach (var expansion in expansionsV1V2)
-                    try
-                    {
-                        expansion.OnStandaloneEngagementPromptInitialize();
-                    }
-                    catch (Exception e)
-                    {
-                        MelonLogger.Error(e);
-                    }
-
+                foreach (var expansion in ExpansionV01S)
+                    try { expansion.OnStandaloneEngagementPromptInitialize(); }
+                    catch (Exception e) { MelonLogger.Error(e); }
                 break;
             case "PlayerCore":
-                foreach (var expansion in expansionsV1V2)
-                    try
-                    {
-                        expansion.OnPlayerCoreInitialize();
-                    }
-                    catch (Exception e)
-                    {
-                        MelonLogger.Error(e);
-                    }
-
+                foreach (var expansion in ExpansionV01S)
+                    try { expansion.OnPlayerCoreInitialize(); }
+                    catch (Exception e) { MelonLogger.Error(e); }
                 break;
             case "UICore":
-                foreach (var expansion in expansionsV1V2)
-                    try
-                    {
-                        expansion.OnUICoreInitialize();
-                    }
-                    catch (Exception e)
-                    {
-                        MelonLogger.Error(e);
-                    }
-
+                foreach (var expansion in ExpansionV01S)
+                    try { expansion.OnUICoreInitialize(); }
+                    catch (Exception e) { MelonLogger.Error(e); }
                 break;
             case "MainMenuUI":
-                foreach (var expansion in expansionsV1V2)
-                    try
-                    {
-                        expansion.OnMainMenuUIInitialize();
-                    }
-                    catch (Exception e)
-                    {
-                        MelonLogger.Error(e);
-                    }
-
+                foreach (var expansion in ExpansionV01S)
+                    try { expansion.OnMainMenuUIInitialize(); }
+                    catch (Exception e) { MelonLogger.Error(e); }
                 break;
             case "LoadScene":
-                foreach (var expansion in expansionsV1V2)
-                    try
-                    {
-                        expansion.OnLoadSceneInitialize();
-                    }
-                    catch (Exception e)
-                    {
-                        MelonLogger.Error(e);
-                    }
-
+                foreach (var expansion in ExpansionV01S)
+                    try { expansion.OnLoadSceneInitialize(); }
+                    catch (Exception e) { MelonLogger.Error(e); }
                 break;
             case "ZoneCore":
-                foreach (var expansion in expansionsV1V2)
-                    try
-                    {
-                        expansion.OnZoneCoreInitialized();
-                    }
-                    catch (Exception e)
-                    {
-                        MelonLogger.Error(e);
-                    }
-
+                foreach (var expansion in ExpansionV01S)
+                    try { expansion.OnZoneCoreInitialized(); }
+                    catch (Exception e) { MelonLogger.Error(e); }
                 break;
         }
+
+        foreach (var expansion in ExpansionV01S)
+            try { expansion.OnSceneWasInitialized(buildIndex, sceneName); }
+            catch (Exception e) { MelonLogger.Error(e); }
 
         switch (sceneName)
         {
-            case "StandaloneEngagementPrompt":
-                foreach (var expansion in expansionsV3)
-                    try
-                    {
-                        expansion.OnStandaloneEngagementPromptInitialize();
-                    }
-                    catch (Exception e)
-                    {
-                        MelonLogger.Error(e);
-                    }
-
-                break;
-            case "PlayerCore":
-                foreach (var expansion in expansionsV3)
-                    try
-                    {
-                        expansion.OnPlayerCoreInitialize();
-                    }
-                    catch (Exception e)
-                    {
-                        MelonLogger.Error(e);
-                    }
-
-                break;
-            case "UICore":
-                foreach (var expansion in expansionsV3)
-                    try
-                    {
-                        expansion.OnUICoreInitialize();
-                    }
-                    catch (Exception e)
-                    {
-                        MelonLogger.Error(e);
-                    }
-
-                break;
-            case "MainMenuUI":
-                foreach (var expansion in expansionsV3)
-                    try
-                    {
-                        expansion.OnMainMenuUIInitialize();
-                    }
-                    catch (Exception e)
-                    {
-                        MelonLogger.Error(e);
-                    }
-
-                break;
-            case "LoadScene":
-                foreach (var expansion in expansionsV3)
-                    try
-                    {
-                        expansion.OnLoadSceneInitialize();
-                    }
-                    catch (Exception e)
-                    {
-                        MelonLogger.Error(e);
-                    }
-
-                break;
-            case "ZoneCore":
-                foreach (var expansion in expansionsV3)
-                    try
-                    {
-                        expansion.OnZoneCoreInitialized();
-                    }
-                    catch (Exception e)
-                    {
-                        MelonLogger.Error(e);
-                    }
-
-                break;
+            case "StandaloneEngagementPrompt": StarlightCallEventManager.ExecuteStandard(CallEvent.OnSceneStandaloneEngagementPromptInitialize); break;
+            case "PlayerCore": StarlightCallEventManager.ExecuteStandard(CallEvent.OnScenePlayerCoreInitialize); break;
+            case "UICore": StarlightCallEventManager.ExecuteStandard(CallEvent.OnSceneUICoreInitialize); break;
+            case "MainMenuUI": StarlightCallEventManager.ExecuteStandard(CallEvent.OnSceneMainMenuUIInitialize); break;
+            case "LoadScene": StarlightCallEventManager.ExecuteStandard(CallEvent.OnSceneLoadSceneInitialize); break;
+            case "ZoneCore": StarlightCallEventManager.ExecuteStandard(CallEvent.OnSceneZoneCoreInitialize); break;
         }
 
-        foreach (var expansion in expansionsV3)
-            try
-            {
-                expansion.OnSceneWasInitialized(buildIndex, sceneName);
-            }
-            catch (Exception e)
-            {
-                MelonLogger.Error(e);
-            }
-
-        switch (sceneName)
-        {
-            case "StandaloneEngagementPrompt":
-                SR2ECallEventManager.ExecuteStandard(CallEvent.OnSceneStandaloneEngagementPromptInitialize); break;
-            case "PlayerCore": SR2ECallEventManager.ExecuteStandard(CallEvent.OnScenePlayerCoreInitialize); break;
-            case "UICore": SR2ECallEventManager.ExecuteStandard(CallEvent.OnSceneUICoreInitialize); break;
-            case "MainMenuUI": SR2ECallEventManager.ExecuteStandard(CallEvent.OnSceneMainMenuUIInitialize); break;
-            case "LoadScene": SR2ECallEventManager.ExecuteStandard(CallEvent.OnSceneLoadSceneInitialize); break;
-            case "ZoneCore": SR2ECallEventManager.ExecuteStandard(CallEvent.OnSceneZoneCoreInitialize); break;
-        }
-
-        SR2ECommandManager.OnSceneWasInitialized(buildIndex, sceneName);
+        StarlightCommandManager.OnSceneWasInitialized(buildIndex, sceneName);
     }
 
     public override void OnSceneWasUnloaded(int buildIndex, string sceneName)
     {
         if (DebugLogging.HasFlag()) MelonLogger.Msg("OnUnloaded Scene: " + sceneName);
-        if (sceneName == "MainMenuUI") mainMenuLoaded = false;
+        if (sceneName == "MainMenuUI") MainMenuLoaded = false;
 
         switch (sceneName)
         {
             case "StandaloneEngagementPrompt":
-                foreach (var expansion in expansionsV1V2)
-                    try
-                    {
-                        expansion.OnStandaloneEngagementPromptUnload();
-                    }
-                    catch (Exception e)
-                    {
-                        MelonLogger.Error(e);
-                    }
-
+                foreach (var expansion in ExpansionV01S)
+                    try { expansion.OnStandaloneEngagementPromptUnload(); }
+                    catch (Exception e) { MelonLogger.Error(e); }
                 break;
             case "PlayerCore":
-                foreach (var expansion in expansionsV1V2)
-                    try
-                    {
-                        expansion.OnPlayerCoreUnload();
-                    }
-                    catch (Exception e)
-                    {
-                        MelonLogger.Error(e);
-                    }
-
+                foreach (var expansion in ExpansionV01S)
+                    try { expansion.OnPlayerCoreUnload(); }
+                    catch (Exception e) { MelonLogger.Error(e); }
                 break;
             case "UICore":
-                foreach (var expansion in expansionsV1V2)
-                    try
-                    {
-                        expansion.OnUICoreUnload();
-                    }
-                    catch (Exception e)
-                    {
-                        MelonLogger.Error(e);
-                    }
-
+                foreach (var expansion in ExpansionV01S)
+                    try { expansion.OnUICoreUnload(); }
+                    catch (Exception e) { MelonLogger.Error(e); }
                 break;
             case "MainMenuUI":
-                foreach (var expansion in expansionsV1V2)
-                    try
-                    {
-                        expansion.OnMainMenuUIUnload();
-                    }
-                    catch (Exception e)
-                    {
-                        MelonLogger.Error(e);
-                    }
-
+                foreach (var expansion in ExpansionV01S)
+                    try { expansion.OnMainMenuUIUnload(); }
+                    catch (Exception e) { MelonLogger.Error(e); }
                 break;
             case "LoadScene":
-                foreach (var expansion in expansionsV1V2)
-                    try
-                    {
-                        expansion.OnLoadSceneUnload();
-                    }
-                    catch (Exception e)
-                    {
-                        MelonLogger.Error(e);
-                    }
-
+                foreach (var expansion in ExpansionV01S)
+                    try { expansion.OnLoadSceneUnload(); }
+                    catch (Exception e) { MelonLogger.Error(e); }
                 break;
             case "ZoneCore":
-                foreach (var expansion in expansionsV1V2)
-                    try
-                    {
-                        expansion.OnZoneCoreUnloaded();
-                    }
-                    catch (Exception e)
-                    {
-                        MelonLogger.Error(e);
-                    }
-
+                foreach (var expansion in ExpansionV01S)
+                    try { expansion.OnZoneCoreUnloaded(); }
+                    catch (Exception e) { MelonLogger.Error(e); }
                 break;
         }
+
+        foreach (var expansion in ExpansionV01S)
+            try { expansion.OnSceneWasUnloaded(buildIndex, sceneName); }
+            catch (Exception e) { MelonLogger.Error(e); }
 
         switch (sceneName)
         {
-            case "StandaloneEngagementPrompt":
-                foreach (var expansion in expansionsV3)
-                    try
-                    {
-                        expansion.OnStandaloneEngagementPromptUnload();
-                    }
-                    catch (Exception e)
-                    {
-                        MelonLogger.Error(e);
-                    }
-
-                break;
-            case "PlayerCore":
-                foreach (var expansion in expansionsV3)
-                    try
-                    {
-                        expansion.OnPlayerCoreUnload();
-                    }
-                    catch (Exception e)
-                    {
-                        MelonLogger.Error(e);
-                    }
-
-                break;
-            case "UICore":
-                foreach (var expansion in expansionsV3)
-                    try
-                    {
-                        expansion.OnUICoreUnload();
-                    }
-                    catch (Exception e)
-                    {
-                        MelonLogger.Error(e);
-                    }
-
-                break;
-            case "MainMenuUI":
-                foreach (var expansion in expansionsV3)
-                    try
-                    {
-                        expansion.OnMainMenuUIUnload();
-                    }
-                    catch (Exception e)
-                    {
-                        MelonLogger.Error(e);
-                    }
-
-                break;
-            case "LoadScene":
-                foreach (var expansion in expansionsV3)
-                    try
-                    {
-                        expansion.OnLoadSceneUnload();
-                    }
-                    catch (Exception e)
-                    {
-                        MelonLogger.Error(e);
-                    }
-
-                break;
-            case "ZoneCore":
-                foreach (var expansion in expansionsV3)
-                    try
-                    {
-                        expansion.OnZoneCoreUnloaded();
-                    }
-                    catch (Exception e)
-                    {
-                        MelonLogger.Error(e);
-                    }
-
-                break;
+            case "StandaloneEngagementPrompt": StarlightCallEventManager.ExecuteStandard(CallEvent.OnSceneStandaloneEngagementPromptUnload); break;
+            case "PlayerCore": StarlightCallEventManager.ExecuteStandard(CallEvent.OnScenePlayerCoreUnload); break;
+            case "UICore": StarlightCallEventManager.ExecuteStandard(CallEvent.OnSceneUICoreUnload); break;
+            case "MainMenuUI": StarlightCallEventManager.ExecuteStandard(CallEvent.OnSceneMainMenuUIUnload); break;
+            case "LoadScene": StarlightCallEventManager.ExecuteStandard(CallEvent.OnSceneLoadSceneUnload); break;
+            case "ZoneCore": StarlightCallEventManager.ExecuteStandard(CallEvent.OnSceneZoneCoreUnload); break;
         }
 
-        foreach (var expansion in expansionsV3)
-            try
-            {
-                expansion.OnSceneWasUnloaded(buildIndex, sceneName);
-            }
-            catch (Exception e)
-            {
-                MelonLogger.Error(e);
-            }
-
-        switch (sceneName)
-        {
-            case "StandaloneEngagementPrompt":
-                SR2ECallEventManager.ExecuteStandard(CallEvent.OnSceneStandaloneEngagementPromptUnload); break;
-            case "PlayerCore": SR2ECallEventManager.ExecuteStandard(CallEvent.OnScenePlayerCoreUnload); break;
-            case "UICore": SR2ECallEventManager.ExecuteStandard(CallEvent.OnSceneUICoreUnload); break;
-            case "MainMenuUI": SR2ECallEventManager.ExecuteStandard(CallEvent.OnSceneMainMenuUIUnload); break;
-            case "LoadScene": SR2ECallEventManager.ExecuteStandard(CallEvent.OnSceneLoadSceneUnload); break;
-            case "ZoneCore": SR2ECallEventManager.ExecuteStandard(CallEvent.OnSceneZoneCoreUnload); break;
-        }
-
-        SR2ECommandManager.OnSceneWasUnloaded(buildIndex, sceneName);
+        StarlightCommandManager.OnSceneWasUnloaded(buildIndex, sceneName);
     }
-
-
+    
     public override void OnUpdate()
     {
         try
         {
-            foreach (var ui in new List<BaseUI>(baseUIAddSliders))
+            foreach (var ui in new List<BaseUI>(BaseUIAddSliders))
             {
-                if (ui)
+                if (!ui) continue;
+                
+                var scrollView = ui.gameObject.GetObjectRecursively<GameObject>("ButtonsScrollView");
+                if (scrollView == null) continue;
+                var rect = scrollView.GetComponent<ScrollRect>();
+                if (rect.verticalScrollbar == null)
                 {
-                    var scrollView = ui.gameObject.GetObjectRecursively<GameObject>("ButtonsScrollView");
-                    if (scrollView != null)
-                    {
-                        var rect = scrollView.GetComponent<ScrollRect>();
-                        if (rect.verticalScrollbar == null)
-                        {
-                            rect.vertical = true;
-                            var scrollBar = GameObject.Instantiate(
-                                SR2EStuff.GetObjectRecursively<Scrollbar>("saveFilesSliderRec"),
-                                rect.transform);
-                            rect.verticalScrollbar = scrollBar;
-                            rect.verticalScrollbarVisibility = ScrollRect.ScrollbarVisibility.Permanent;
-                            scrollBar.GetComponent<RectTransform>().localPosition +=
-                                new Vector3(Screen.width / 250f, 0, 0);
-                        }
-                    }
+                    rect.vertical = true;
+                    var scrollBar = Object.Instantiate(StarlightStuff.GetObjectRecursively<Scrollbar>("saveFilesSliderRec"), rect.transform);
+                    rect.verticalScrollbar = scrollBar;
+                    rect.verticalScrollbarVisibility = ScrollRect.ScrollbarVisibility.Permanent;
+                    scrollBar.GetComponent<RectTransform>().localPosition += new Vector3(Screen.width / 250f, 0, 0);
                 }
-
-                baseUIAddSliders.Remove(ui);
+                BaseUIAddSliders.Remove(ui);
             }
 
-            if (menusFinished)
+            if (MenusFinished)
             {
                 try
                 {
-                    if (SR2EConsole.openKey.OnKeyDown() || SR2EConsole.openKey2.OnKeyDown())
-                        MenuEUtil.GetMenu<SR2EConsole>().Toggle();
+                    if (StarlightConsole.openKey.OnKeyDown() || StarlightConsole.openKey2.OnKeyDown())
+                        MenuEUtil.GetMenu<StarlightConsole>().Toggle();
                 }
-                catch (Exception e)
-                {
-                    MelonLogger.Error(e);
-                }
+                catch (Exception e) { MelonLogger.Error(e); }
 
-                try
-                {
-                    SR2ECommandManager.Update();
-                }
-                catch (Exception e)
-                {
-                    MelonLogger.Error(e);
-                }
+                try { StarlightCommandManager.Update(); }
+                catch (Exception e) { MelonLogger.Error(e); }
 
-                try
-                {
-                    SR2EBindingManger.Update();
-                }
-                catch (Exception e)
-                {
-                    MelonLogger.Error(e);
-                }
+                try { StarlightBindingManger.Update(); }
+                catch (Exception e) { MelonLogger.Error(e); }
 
-                if (DevMode.HasFlag()) SR2EDebugUI.DebugStatsManager.Update();
+                if (DevMode.HasFlag()) 
+                    try {StarlightDebugUI.DebugStatsManager.Update(); }
+                    catch (Exception e) { MelonLogger.Error(e); }
+                
                 if (RestoreDebugDebugUI.HasFlag())
-                    try
-                    {
-                        if (SR2ENativeDebugUI.openKey.OnKeyDown()) MenuEUtil.GetMenu<SR2ENativeDebugUI>().Toggle();
-                    }
-                    catch (Exception e)
-                    {
-                        MelonLogger.Error(e);
-                    }
+                    try { if (StarlightNativeDebugUI.openKey.OnKeyDown()) MenuEUtil.GetMenu<StarlightNativeDebugUI>().Toggle(); }
+                    catch (Exception e) { MelonLogger.Error(e); }
 
-                foreach (var pair in menus)
-                    try
-                    {
-                        pair.Key.AlwaysUpdate();
-                    }
-                    catch (Exception e)
-                    {
-                        MelonLogger.Error(e);
-                    }
+                foreach (var pair in Menus)
+                    try { pair.Key.AlwaysUpdate(); }
+                    catch (Exception e) { MelonLogger.Error(e); }
             }
-
-            if (actionCounter.Count > 0)
-                foreach (var pair in new Dictionary<Action, int>(actionCounter))
+            if (ActionCounter.Count > 0)
+                foreach (var pair in new Dictionary<Action, int>(ActionCounter))
                     if (pair.Value < 1)
                     {
-                        try
-                        {
-                            pair.Key.Invoke();
-                        }
-                        catch (Exception e)
-                        {
-                            MelonLogger.Error(e);
-                        }
+                        try { pair.Key.Invoke(); }
+                        catch (Exception e) { MelonLogger.Error(e); }
 
-                        actionCounter.Remove(pair.Key);
+                        ActionCounter.Remove(pair.Key);
                     }
-                    else
-                    {
-                        actionCounter[pair.Key]--;
-                    }
+                    else ActionCounter[pair.Key]--;
         }
-        catch (Exception e)
-        {
-            MelonLogger.Error(e);
-        }
+        catch (Exception e) { MelonLogger.Error(e); }
 
-        foreach (var expansion in expansionsV3)
-            try
-            {
-                expansion.OnUpdate();
-            }
-            catch (Exception e)
-            {
-                MelonLogger.Error(e);
-            }
+        foreach (var expansion in ExpansionV01S)
+            try { expansion.OnUpdate(); }
+            catch (Exception e) { MelonLogger.Error(e); }
     }
-
-
-    //Forwarder for V3 Expansions
-    public override void OnPreSupportModule()
-    {
-        foreach (var expansion in expansionsV3)
-            try
-            {
-                expansion.OnPreSupportModule();
-            }
-            catch (Exception e)
-            {
-                MelonLogger.Error(e);
-            }
-    }
-
+    
     public override void OnFixedUpdate()
     {
-        foreach (var expansion in expansionsV3)
-            try
-            {
-                expansion.OnFixedUpdate();
-            }
-            catch (Exception e)
-            {
-                MelonLogger.Error(e);
-            }
+        foreach (var expansion in ExpansionV01S)
+            try { expansion.OnFixedUpdate(); }
+            catch (Exception e) { MelonLogger.Error(e); }
     }
 
     public override void OnGUI()
     {
-        foreach (var expansion in expansionsV3)
-            try
-            {
-                expansion.OnGUI();
-            }
-            catch (Exception e)
-            {
-                MelonLogger.Error(e);
-            }
+        foreach (var expansion in ExpansionV01S)
+            try { expansion.OnGUI(); }
+            catch (Exception e) { MelonLogger.Error(e); }
     }
 
     public override void OnLateUpdate()
     {
-        foreach (var expansion in expansionsV3)
-            try
-            {
-                expansion.OnLateUpdate();
-            }
-            catch (Exception e)
-            {
-                MelonLogger.Error(e);
-            }
-    }
-
-    public override void OnPreferencesLoaded()
-    {
-        foreach (var expansion in expansionsV3)
-            try
-            {
-                expansion.OnPreferencesLoaded();
-            }
-            catch (Exception e)
-            {
-                MelonLogger.Error(e);
-            }
-    }
-
-    public override void OnPreferencesLoaded(string filepath)
-    {
-        foreach (var expansion in expansionsV3)
-            try
-            {
-                expansion.OnPreferencesLoaded(filepath);
-            }
-            catch (Exception e)
-            {
-                MelonLogger.Error(e);
-            }
-    }
-
-    public override void OnPreferencesSaved()
-    {
-        foreach (var expansion in expansionsV3)
-            try
-            {
-                expansion.OnPreferencesSaved();
-            }
-            catch (Exception e)
-            {
-                MelonLogger.Error(e);
-            }
-    }
-
-    public override void OnPreferencesSaved(string filepath)
-    {
-        foreach (var expansion in expansionsV3)
-            try
-            {
-                expansion.OnPreferencesSaved(filepath);
-            }
-            catch (Exception e)
-            {
-                MelonLogger.Error(e);
-            }
+        foreach (var expansion in ExpansionV01S)
+            try { expansion.OnLateUpdate(); }
+            catch (Exception e) { MelonLogger.Error(e); }
     }
 }

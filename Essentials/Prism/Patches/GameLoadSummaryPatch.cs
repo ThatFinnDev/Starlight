@@ -1,8 +1,8 @@
 using Il2CppMonomiPark.SlimeRancher.Persist;
-using SR2E.Prism.Lib;
-using SR2E.Storage;
+using Starlight.Prism.Lib;
+using Starlight.Storage;
 
-namespace SR2E.Prism.Patches;
+namespace Starlight.Prism.Patches;
 
 [PrismPatch()]
 [HarmonyPatch(typeof(GameV09), nameof(GameV09.LoadSummaryData))]

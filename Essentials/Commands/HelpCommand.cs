@@ -1,8 +1,8 @@
-﻿using SR2E.Managers;
+﻿using Starlight.Managers;
 
-namespace SR2E.Commands;
+namespace Starlight.Commands;
 
-internal class HelpCommand : SR2ECommand
+internal class HelpCommand : StarlightCommand
 {
     public override string ID => "help";
     public override string Usage => "help [cmdName]";
@@ -10,8 +10,8 @@ internal class HelpCommand : SR2ECommand
 
     public string GetCommandDescription(string command)
     {
-        if (SR2ECommandManager.commands.ContainsKey(command))
-            return SR2ECommandManager.commands[command].ExtendedDescription;
+        if (StarlightCommandManager.commands.ContainsKey(command))
+            return StarlightCommandManager.commands[command].ExtendedDescription;
         return string.Empty;
     }
 
@@ -20,7 +20,7 @@ internal class HelpCommand : SR2ECommand
         if (argIndex == 0)
         {
             List<string> list = new List<string>();
-            foreach (KeyValuePair<string, SR2ECommand> entry in SR2ECommandManager.commands)
+            foreach (KeyValuePair<string, StarlightCommand> entry in StarlightCommandManager.commands)
                 if (!entry.Value.Hidden) list.Add(entry.Key);
             return list;
         }
@@ -35,16 +35,16 @@ internal class HelpCommand : SR2ECommand
             string currText = translation("cmd.help.success")+"\n";
 
 
-            foreach (KeyValuePair<string, SR2ECommand> entry in SR2ECommandManager.commands)
+            foreach (KeyValuePair<string, StarlightCommand> entry in StarlightCommandManager.commands)
                 if (!entry.Value.Hidden)
                     currText = $"{currText}\n{entry.Value.Usage} - {GetCommandDescription(entry.Key)}";
             SendMessage(currText);
             return true;
         }
         var desc = GetCommandDescription(args[0]);
-        if (SR2ECommandManager.commands.ContainsKey(args[0]))
+        if (StarlightCommandManager.commands.ContainsKey(args[0]))
         {
-            SendMessage(translation("cmd.help.successspecific",SR2ECommandManager.commands[args[0]].Usage,desc));
+            SendMessage(translation("cmd.help.successspecific",StarlightCommandManager.commands[args[0]].Usage,desc));
             return true;
         }
         return SendError(translation("cmd.help.notvalidcommand",args[0]));

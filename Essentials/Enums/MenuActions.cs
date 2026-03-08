@@ -1,4 +1,4 @@
-namespace SR2E.Enums;
+namespace Starlight.Enums;
 
 public enum MenuActions
 {

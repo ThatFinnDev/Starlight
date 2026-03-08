@@ -3,8 +3,8 @@ using Il2CppMonomiPark.SlimeRancher.UI.MainMenu;
 using Il2CppMonomiPark.SlimeRancher.UI.MainMenu.Definition;
 using Il2CppMonomiPark.SlimeRancher.UI.MainMenu.Definition.ButtonBehavior;
 using UnityEngine.Localization;
-using SR2E.Patches.MainMenu;
-namespace SR2E.Buttons;
+using Starlight.Patches.MainMenu;
+namespace Starlight.Buttons;
 
 public class CustomMainMenuButton
 {
@@ -13,13 +13,13 @@ public class CustomMainMenuButton
     public int insertIndex;
     internal CustomMainMenuItemDefinition _definition;
     internal CustomMainMenuSubItemDefinition _definition2;
-    public System.Action action;
+    public SystemAction action;
 
     internal CustomMainMenuButton(int THIS_IS_A_STUB)
     {
         
     }
-    public CustomMainMenuButton(LocalizedString label, Sprite icon, int insertIndex, System.Action action)
+    public CustomMainMenuButton(LocalizedString label, Sprite icon, int insertIndex, SystemAction action)
     {
         this.label = label;
         this.icon = icon;
@@ -47,7 +47,7 @@ public class CustomMainMenuButton
             _definition.hideFlags |= HideFlags.HideAndDontSave;
             _definition.customAction = action;
         }
-        if (SR2EEntryPoint.mainMenuLoaded)
+        if (StarlightEntryPoint.MainMenuLoaded)
         {
             MainMenuLandingRootUI mainMenu = Object.FindObjectOfType<MainMenuLandingRootUI>();
             if (mainMenu != null)

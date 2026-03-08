@@ -1,8 +1,8 @@
 using Il2CppMonomiPark.SlimeRancher.World;
 
-namespace SR2E.Commands;
+namespace Starlight.Commands;
 
-internal class ScaleCommand: SR2ECommand
+internal class ScaleCommand: StarlightCommand
 {
     public override string ID => "scale";
     public override string Usage => "scale <x> <y> <z>";

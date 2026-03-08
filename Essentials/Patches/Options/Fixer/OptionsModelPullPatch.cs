@@ -2,7 +2,7 @@ using Il2CppMonomiPark.SlimeRancher.DataModel;
 using Il2CppMonomiPark.SlimeRancher.Options;
 using Il2CppMonomiPark.SlimeRancher.Persist;
 
-namespace SR2E.Patches.Options.Fixer;
+namespace Starlight.Patches.Options.Fixer;
 
 [HarmonyPatch(typeof(OptionsModel), nameof(OptionsModel.Pull))]
 internal static class OptionsModelPullPatch

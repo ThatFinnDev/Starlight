@@ -1,4 +1,4 @@
-namespace SR2E.Enums.Features;
+namespace Starlight.Enums.Features;
 
 public enum FeatureIntegerValue
 {

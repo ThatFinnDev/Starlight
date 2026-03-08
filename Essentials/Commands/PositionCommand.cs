@@ -1,8 +1,8 @@
 ﻿using Il2CppMonomiPark.SlimeRancher.World;
 
-namespace SR2E.Commands;
+namespace Starlight.Commands;
 
-internal class PositionCommand: SR2ECommand
+internal class PositionCommand: StarlightCommand
 {
     public override string ID => "position";
     public override string Usage => "position <x> <y> <z>";

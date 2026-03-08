@@ -1,6 +1,6 @@
-﻿namespace SR2E.Commands;
+﻿namespace Starlight.Commands;
 
-internal class NewBucksCommand : SR2ECommand
+internal class NewBucksCommand : StarlightCommand
 {
     public override string ID => "newbucks";
     public override string Usage => "newbucks <amount>";

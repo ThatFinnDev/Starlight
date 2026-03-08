@@ -1,19 +1,17 @@
 using Il2CppTMPro;
-using SR2E.Enums;
-using SR2E.Managers;
 using UnityEngine.TextCore;
 using UnityEngine.TextCore.LowLevel;
 
-namespace SR2E.Utils;
+namespace Starlight.Utils;
 
 public static class FontEUtil
 {
-    internal static void ReloadFont(SR2EPopUp popUp) => MenuEUtil.ReloadFont(popUp);
-    internal static void ReloadFont(SR2EMenu menu) => MenuEUtil.ReloadFont(menu);
+    internal static void ReloadFont(StarlightPopUp popUp) => MenuEUtil.ReloadFont(popUp);
+    internal static void ReloadFont(StarlightMenu menu) => MenuEUtil.ReloadFont(menu);
     public static TMP_FontAsset FontFromGame(string name)
     {
         try { return Get<TMP_FontAsset>(name); }
-        catch { SR2EEntryPoint.SendFontError(name); }
+        catch { StarlightEntryPoint.SendFontError(name); }
         return null;
     }
     public static TMP_FontAsset FontFromOS(string name)
@@ -51,7 +49,7 @@ public static class FontEUtil
             fontAsset.ReadFontAssetDefinition();
             return fontAsset;
         }
-        catch { SR2EEntryPoint.SendFontError(name); }
+        catch { StarlightEntryPoint.SendFontError(name); }
         return null;
     }
 

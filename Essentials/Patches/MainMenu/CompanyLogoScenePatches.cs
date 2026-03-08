@@ -1,8 +1,8 @@
 using Il2CppMonomiPark.SlimeRancher.UI;
 using Il2CppMonomiPark.SlimeRancher.UI.MainMenu;
-using SR2E.Prism;
+using Starlight.Prism;
 
-namespace SR2E.Patches.MainMenu;
+namespace Starlight.Patches.MainMenu;
 
 internal static class CompanyLogoScenePatches
 {

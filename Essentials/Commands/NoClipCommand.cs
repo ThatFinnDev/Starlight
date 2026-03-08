@@ -1,9 +1,9 @@
-﻿using SR2E.Components;
+﻿using Starlight.Components;
 using UnityEngine.InputSystem;
 
-namespace SR2E.Commands;
+namespace Starlight.Commands;
 
-internal class NoClipCommand : SR2ECommand
+internal class NoClipCommand : StarlightCommand
 {
     public override string ID => "noclip";
     public override string Usage => "noclip";
@@ -17,12 +17,12 @@ internal class NoClipCommand : SR2ECommand
             if (!sceneContext.Camera.RemoveComponent<NoClipComponent>())
             {
                 sceneContext.Camera.AddComponent<NoClipComponent>();
-                //SR2ESavableDataV2.Instance.playerSavedData.noclipState = true;
+                //StarlightSavableDataV2.Instance.playerSavedData.noclipState = true;
                 SendMessage(translation("cmd.noclip.success"));
             }
             else
             {
-                //SR2ESavableDataV2.Instance.playerSavedData.noclipState = false;
+                //StarlightSavableDataV2.Instance.playerSavedData.noclipState = false;
                 SendMessage(translation("cmd.noclip.success2"));
             }
             return true;

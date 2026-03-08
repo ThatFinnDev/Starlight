@@ -2,7 +2,7 @@
 using System;
 using System.Reflection;
 
-namespace SR2E.Patches.General;
+namespace Starlight.Patches.General;
 
 [HarmonyPatch("Il2CppInterop.HarmonySupport.Il2CppDetourMethodPatcher", "ReportException")]
 internal static class PatchIl2CppDetourMethodPatcher

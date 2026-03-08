@@ -1,18 +1,18 @@
 ﻿using Il2CppMonomiPark.SlimeRancher.UI.RanchHouse;
-using SR2E.Patches.InGame;
+using Starlight.Patches.InGame;
 using UnityEngine.Localization;
 
-namespace SR2E.Buttons;
+namespace Starlight.Buttons;
 
 public class CustomRanchUIButton
 {
     public LocalizedString label;
     public int insertIndex;
     internal RanchHouseMenuItemModel _model;
-    public System.Action action;
+    public SystemAction action;
     public bool enabled = true;
 
-    public CustomRanchUIButton(LocalizedString label, int insertIndex, System.Action action)
+    public CustomRanchUIButton(LocalizedString label, int insertIndex, SystemAction action)
     {
         this.label = label; ;
         this.insertIndex = insertIndex;

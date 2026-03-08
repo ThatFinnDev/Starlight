@@ -1,6 +1,6 @@
-﻿namespace SR2E.Commands;
+﻿namespace Starlight.Commands;
 
-internal class GadgetCommand : SR2ECommand
+internal class GadgetCommand : StarlightCommand
 {
     public override string ID => "gadget";
     public override string Usage => "gadget <add/set/remove/unlock/get> <gadget> [amount/show popup(true/false)]";

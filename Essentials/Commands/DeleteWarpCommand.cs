@@ -1,10 +1,10 @@
-﻿using SR2E.Enums;
-using SR2E.Managers;
-using SR2E.Storage;
+﻿using Starlight.Enums;
+using Starlight.Managers;
+using Starlight.Storage;
 
-namespace SR2E.Commands;
+namespace Starlight.Commands;
 
-internal class DeleteWarpCommand : SR2ECommand
+internal class DeleteWarpCommand : StarlightCommand
 {
     public override string ID => "delwarp";
     public override string Usage => "delwarp <name>";
@@ -15,7 +15,7 @@ internal class DeleteWarpCommand : SR2ECommand
         if (argIndex == 0)
         {
             List<string> warps = new List<string>();
-            foreach (KeyValuePair<string, Warp> pair in SR2ESaveManager.data.warps) warps.Add(pair.Key);
+            foreach (KeyValuePair<string, Warp> pair in StarlightSaveManager.data.warps) warps.Add(pair.Key);
             return warps;
         }
 
@@ -26,9 +26,9 @@ internal class DeleteWarpCommand : SR2ECommand
     {
         if (!args.IsBetween(1,1)) return SendUsage();
 
-        switch (SR2EWarpManager.RemoveWarp(args[0]))
+        switch (StarlightWarpManager.RemoveWarp(args[0]))
         {
-            case SR2EError.DoesntExist: return SendError(translation("cmd.warpstuff.nowarpwithname",args[0]));
+            case StarlightError.DoesntExist: return SendError(translation("cmd.warpstuff.nowarpwithname",args[0]));
             default: SendMessage(translation("cmd.delwarp.success",args[0])); return true;
         }
     }

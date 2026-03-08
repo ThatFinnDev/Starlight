@@ -5,7 +5,7 @@ using Il2CppMonomiPark.SlimeRancher.Options;
 using Il2CppMonomiPark.SlimeRancher.UI.ButtonBehavior;
 using Il2CppMonomiPark.SlimeRancher.UI.MainMenu;
 using UnityEngine.Localization;
-using SR2E.Patches.MainMenu;
+using Starlight.Patches.MainMenu;
 using System;
 using System.Linq;
 using Il2CppAssets.Script.Util.Extensions;
@@ -16,7 +16,7 @@ using Il2CppMonomiPark.SlimeRancher.UI.Options;
 using Il2CppMonomiPark.SlimeRancher.Util;
 using QualityLevel = Il2CppMonomiPark.ScriptedValue.QualityLevel;
 
-namespace SR2E.Buttons;
+namespace Starlight.Buttons;
 
 public static class CustomSettingsCreator
 {
@@ -228,7 +228,7 @@ public static class CustomSettingsCreator
     /// <param name="applyImmediately">Whether or not to apply as soon as the value is changed</param> // please fact check this
     /// <param name="confirm">Whether or not to use a confirmation prompt for this option</param> // and this too
     /// <param name="modifyCallback">The action you want to run when the value is changed or the category containing the option is opened</param>
-    /// <param name="values">params Array of SR2E option value structs</param>
+    /// <param name="values">params Array of Starlight option value structs</param>
     /// <returns>A custom settings option</returns>
     public static ScriptedValuePresetOptionDefinition Create(
         BuiltinSettingsCategory category, 
@@ -396,7 +396,7 @@ public static class CustomSettingsCreator
     ///
     /// // Category
     /// CustomSettingsCreator.CreateCategory(
-    ///     AddTranslationFromSR2E("setting.categoryname", "l.sr2ecategory", "UI"), SR2EUtils.ConvertToSprite(SR2EUtils.LoadImage("category")),
+    ///     AddTranslationFromStarlight("setting.categoryname", "l.sr2ecategory", "UI"), StarlightUtils.ConvertToSprite(StarlightUtils.LoadImage("category")),
     /// options.ToArray());
     /// </code>
     /// </param>

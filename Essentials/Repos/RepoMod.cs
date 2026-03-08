@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SR2E.Repos;
+namespace Starlight.Repos;
 
 [System.Serializable]
 public class RepoMod

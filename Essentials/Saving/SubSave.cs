@@ -1,6 +1,6 @@
-namespace SR2E.Saving;
+namespace Starlight.Saving;
 
-public abstract class SubSave : SR2ESaveableBase 
+public abstract class SubSave : StarlightSaveableBase 
 {
     
 }

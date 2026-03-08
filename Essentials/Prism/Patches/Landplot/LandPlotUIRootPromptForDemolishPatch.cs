@@ -1,9 +1,9 @@
 using Il2CppMonomiPark.SlimeRancher.Economy;
 using Il2CppMonomiPark.SlimeRancher.UI;
 using Il2CppMonomiPark.SlimeRancher.UI.Plot;
-using SR2E.Storage;
+using Starlight.Storage;
 
-namespace SR2E.Prism.Patches.Landplot;
+namespace Starlight.Prism.Patches.Landplot;
 
 [PrismPatch()]
 [HarmonyPatch(typeof(LandPlotUIRoot),nameof(LandPlotUIRoot.BuyPlot))]

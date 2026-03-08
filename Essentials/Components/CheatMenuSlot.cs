@@ -1,12 +1,12 @@
 using System;
 using Il2CppMonomiPark.SlimeRancher.Player;
 using Il2CppTMPro;
-using SR2E.Enums.Sounds;
-using SR2E.Popups;
-using SR2E.Storage;
+using Starlight.Enums.Sounds;
+using Starlight.Popups;
+using Starlight.Storage;
 using UnityEngine.UI;
 
-namespace SR2E.Components;
+namespace Starlight.Components;
 
 [InjectClass]
 internal class CheatMenuSlot : MonoBehaviour
@@ -53,7 +53,7 @@ internal class CheatMenuSlot : MonoBehaviour
         var dict = new TripleDictionary<string, string, Sprite>();
         foreach (IdentifiableType identType in LookupEUtil.vaccableTypes)
         {
-            if (identType.isGadget()) continue;
+            if (identType.IsGadget()) continue;
             if (identType.ReferenceId.ToLower() == "none" || identType.ReferenceId.ToLower() == "player") continue;
             try
             {if (identType.LocalizedName != null)
@@ -64,7 +64,7 @@ internal class CheatMenuSlot : MonoBehaviour
                 }
             }catch { }
         }
-        SR2EGridMenuList.Open(dict, (Action<string>)((value) =>
+        StarlightGridMenuList.Open(dict, (Action<string>)((value) =>
         {
             if (amountSlider.value == 0)
                 amountSlider.value = 1;

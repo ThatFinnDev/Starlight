@@ -1,7 +1,7 @@
-using SR2E.Prism.Lib;
-using SR2E.Storage;
+using Starlight.Prism.Lib;
+using Starlight.Storage;
 
-namespace SR2E.Prism.Patches.Landplot;
+namespace Starlight.Prism.Patches.Landplot;
 
 [PrismPatch()]
 [HarmonyPatch(typeof(LandPlot),nameof(LandPlot.OnDestroy))]

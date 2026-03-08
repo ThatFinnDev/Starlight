@@ -1,8 +1,8 @@
 using System.Linq;
 using Il2CppMonomiPark.SlimeRancher.Pedia;
-namespace SR2E.Commands;
+namespace Starlight.Commands;
 
-internal class PediaCommand : SR2ECommand
+internal class PediaCommand : StarlightCommand
 {
     public override string ID => "pedia";
     public override string Usage => "pedia <lock/unlock> <gadget> [show popup(true/false)]";

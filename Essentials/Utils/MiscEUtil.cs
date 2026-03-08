@@ -1,17 +1,14 @@
 using System;
-using System.Collections;
 using System.Linq;
-using Il2CppAssets.Script.Util.Extensions;
 using Il2CppInterop.Runtime;
 using Il2CppInterop.Runtime.InteropTypes;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using Il2CppSystem.Linq;
-using SR2E.Menus;
-using SR2E.Patches.MainMenu;
-using Starlight;
+using Starlight.Menus;
+using Starlight.Patches.MainMenu;
 using Unity.Mathematics;
 
-namespace SR2E.Utils;
+namespace Starlight.Utils;
 
 public static class MiscEUtil
 {
@@ -50,7 +47,7 @@ public static class MiscEUtil
         if(!CompanyLogoScenePatches.customBouncySprites.Contains(sprite))
             CompanyLogoScenePatches.customBouncySprites.Add(sprite);
     }
-    public static float4 changeValue(this float4 float4, int index, float value)
+    public static float4 ChangeValue(this float4 float4, int index, float value)
     {
         return new float4(index == 0 ? value : float4[0],
             index == 1 ? value : float4[1],
@@ -67,13 +64,7 @@ public static class MiscEUtil
             return mask;
         }
     }
-    public static readonly Dictionary<Branch, string> BRANCHES = new()
-    {
-        { Branch.Release, "release" },
-        { Branch.Beta, "beta" },
-        { Branch.Alpha, "alpha" },
-        { Branch.Developer, "dev" },
-    };
+
     
     private const string AllowedChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     private static readonly int AllowedCharCount = AllowedChars.Length;
@@ -103,13 +94,13 @@ public static class MiscEUtil
         if (type.TryCast<SlimeDefinition>() != null) return SlimeAppearance.AppearanceSaveSet.CLASSIC;
         return SlimeAppearance.AppearanceSaveSet.NONE;
     }
-    public static void AddNullAction(this MelonPreferences_Entry entry) => SR2EModMenu.entriesWithActions.Add(entry, null);
-    public static void AddAction(this MelonPreferences_Entry entry, System.Action action) => SR2EModMenu.entriesWithActions.Add(entry, action);
+    public static void AddNullAction(this MelonPreferences_Entry entry) => StarlightModMenu.entriesWithActions.Add(entry, null);
+    public static void AddAction(this MelonPreferences_Entry entry, Action action) => StarlightModMenu.entriesWithActions.Add(entry, action);
 
-    public static Il2CppSystem.Type il2cppTypeof(this Type type) => Il2CppType.From(type);
+    public static Il2CppSystem.Type IL2CPPTypeof(this Type type) => Il2CppType.From(type);
     
     
-    public static Il2CppArrayBase GetAllMembersArray(this IdentifiableTypeGroup group) => Il2CppSystem.Linq.Enumerable.ToArray(group.GetAllMembers());
+    public static Il2CppArrayBase GetAllMembersArray(this IdentifiableTypeGroup group) => group.GetAllMembers().ToArray();
     public static List<IdentifiableType> GetAllMembersList(this IdentifiableTypeGroup group) => group.GetAllMembers().ToArray().ToList();
 
 
@@ -128,7 +119,10 @@ public static class MiscEUtil
                 target.GetIl2CppType().GetField(field.Name, (Il2CppSystem.Reflection.BindingFlags)60).SetValue(target, field.GetValue(source));
             }
             // Errors when encountering `const` or `readonly`!
-            catch { }
+            catch
+            {
+                // ignored
+            }
         }
     }
     

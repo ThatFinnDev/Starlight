@@ -1,6 +1,6 @@
-﻿namespace SR2E.Commands;
+﻿namespace Starlight.Commands;
 
-internal class GravityCommand : SR2ECommand
+internal class GravityCommand : StarlightCommand
 {
     public override string ID => "gravity";
     public override string Usage => "gravity <x> <y> <z>";

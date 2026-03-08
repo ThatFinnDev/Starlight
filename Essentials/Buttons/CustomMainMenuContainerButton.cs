@@ -2,12 +2,12 @@ using Il2CppMonomiPark.SlimeRancher.UI.ButtonBehavior;
 using Il2CppMonomiPark.SlimeRancher.UI.MainMenu;
 using Il2CppMonomiPark.SlimeRancher.UI.MainMenu.Definition;
 using UnityEngine.Localization;
-using SR2E.Patches.MainMenu;
+using Starlight.Patches.MainMenu;
 using System.Collections.Generic;
 using Il2CppMonomiPark.SlimeRancher.UI.MainMenu.Definition.ButtonBehavior;
 using UnityEngine;
 
-namespace SR2E.Buttons;
+namespace Starlight.Buttons;
 
 public class CustomMainMenuContainerButton : CustomMainMenuButton
 {
@@ -23,7 +23,7 @@ public class CustomMainMenuContainerButton : CustomMainMenuButton
     {
         
     }
-    public CustomMainMenuContainerButton(LocalizedString label, Sprite icon, int insertIndex, System.Action action) : base(label, icon, insertIndex, action)
+    public CustomMainMenuContainerButton(LocalizedString label, Sprite icon, int insertIndex, SystemAction action) : base(label, icon, insertIndex, action)
     {
     }
 }

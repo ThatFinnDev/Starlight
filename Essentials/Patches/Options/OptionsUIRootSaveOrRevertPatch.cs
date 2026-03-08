@@ -1,10 +1,10 @@
 using System;
 using Il2CppMonomiPark.SlimeRancher.Options;
 using Il2CppMonomiPark.SlimeRancher.UI.Options;
-using SR2E.Buttons.OptionsUI;
-using SR2E.Storage;
+using Starlight.Buttons.OptionsUI;
+using Starlight.Storage;
 
-namespace SR2E.Patches.Options;
+namespace Starlight.Patches.Options;
 
 [HarmonyPatch(typeof(OptionsUIRoot), nameof(OptionsUIRoot.SaveOrRevert))]
 internal static class OptionsUIRootSaveOrRevertPatch

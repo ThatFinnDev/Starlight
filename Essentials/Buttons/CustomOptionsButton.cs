@@ -1,7 +1,7 @@
 using Il2CppMonomiPark.SlimeRancher.Options;
-using SR2E.Enums;
+using Starlight.Enums;
 
-namespace SR2E.Buttons;
+namespace Starlight.Buttons;
 // Make it public on release
 internal abstract class CustomOptionsButton
 {

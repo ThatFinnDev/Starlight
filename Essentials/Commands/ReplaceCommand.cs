@@ -1,9 +1,9 @@
 ﻿using Il2CppMonomiPark.SlimeRancher.Damage;
 using Il2CppMonomiPark.SlimeRancher.World;
 
-namespace SR2E.Commands;
+namespace Starlight.Commands;
 
-internal class ReplaceCommand : SR2ECommand
+internal class ReplaceCommand : StarlightCommand
 {
     public override string ID => "replace";
     public override string Usage => "replace <object>";

@@ -1,11 +1,11 @@
-using SR2E.Components;
-using SR2E.Patches.General;
-using SR2E.Patches.Options;
+using Starlight.Components;
+using Starlight.Patches.General;
+using Starlight.Patches.Options;
 using UnityEngine.InputSystem;
 
-namespace SR2E.Commands;
+namespace Starlight.Commands;
 
-internal class FlatLookCommand : SR2ECommand
+internal class FlatLookCommand : StarlightCommand
 {
     public override string ID => "flatlook";
     public override string Usage => "flatlook";

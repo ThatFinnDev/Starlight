@@ -4,25 +4,23 @@ using System.IO;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using UnityEngine.Networking;
 using UnityEngine.UI;
 
-namespace SR2E.Utils;
+namespace Starlight.Utils;
 
 public static class HttpEUtil
 {
-    static Dictionary<Image,string> onGoingImages = new ();
-    static Dictionary<RawImage,string> onGoingRawImages = new ();
+    private static readonly Dictionary<Image,string> OnGoingImages = new ();
+    private static readonly Dictionary<RawImage,string> OnGoingRawImages = new ();
     static Texture2D ResizeTexture(Texture2D source, int newWidth, int newHeight)
     {
         if (newWidth <= 0 || newHeight <= 0) return source;
-        RenderTexture rt = RenderTexture.GetTemporary(newWidth, newHeight);
+        var rt = RenderTexture.GetTemporary(newWidth, newHeight);
         rt.filterMode = FilterMode.Bilinear;
         RenderTexture.active = rt;
         Graphics.Blit(source, rt);
-        Texture2D newTexture = new Texture2D(newWidth, newHeight, TextureFormat.RGBA32, false);
+        var newTexture = new Texture2D(newWidth, newHeight, TextureFormat.RGBA32, false);
         newTexture.ReadPixels(new Rect(0, 0, newWidth, newHeight), 0, 0);
         newTexture.Apply();
         RenderTexture.active = null;
@@ -36,17 +34,21 @@ public static class HttpEUtil
 
     public static void DownloadTexture2DIntoImageAsync(string url, Image image, bool useCache = false, int resizeX = -1, int resizeY = -1)
     {
-        onGoingImages[image]=url;
-        var cachePath = Path.Combine(SR2EEntryPoint.TmpDataPath, "downloadcache."+Convert.ToHexString(MD5.HashData(Encoding.UTF8.GetBytes(url)))+".png");
+        OnGoingImages[image]=url;
+        var cachePath = Path.Combine(StarlightEntryPoint.tmpDataPath, "downloadcache."+Convert.ToHexString(MD5.HashData(Encoding.UTF8.GetBytes(url)))+".png");
         if (useCache)
-            try { image.sprite = ConvertEUtil.BytesToTexture2D(File.ReadAllBytes(cachePath)).Texture2DToSprite(); } catch { }
-        
+            try { image.sprite = ConvertEUtil.BytesToTexture2D(File.ReadAllBytes(cachePath)).Texture2DToSprite(); }
+            catch
+            {
+                // ignored
+            }
+
         MelonCoroutines.Start(_DownloadTexture2DCoroutine(url, ((texture, error) =>
         {
-            if(onGoingImages.ContainsKey(image))
-                if (onGoingImages[image] == url)
+            if(OnGoingImages.ContainsKey(image))
+                if (OnGoingImages[image] == url)
                 {
-                    onGoingImages.Remove(image);
+                    OnGoingImages.Remove(image);
                     if (error == null && texture != null&&image!=null)
                     {
                         image.sprite = texture.Texture2DToSprite();
@@ -54,21 +56,25 @@ public static class HttpEUtil
                             File.WriteAllBytes(cachePath,ConvertEUtil.Texture2DToBytesPNG(ResizeTexture(texture,resizeX,resizeY)));
                     }
                 }
-        })));;
+        })));
     }
     public static void DownloadTexture2DIntoRawImageAsync(string url, RawImage image, bool useCache = false, int resizeX = -1, int resizeY = -1)
     {
-        onGoingRawImages[image]=url;
-        var cachePath = Path.Combine(SR2EEntryPoint.TmpDataPath, "downloadcache."+Convert.ToHexString(MD5.HashData(Encoding.UTF8.GetBytes(url)))+".png");
+        OnGoingRawImages[image]=url;
+        var cachePath = Path.Combine(StarlightEntryPoint.tmpDataPath, "downloadcache."+Convert.ToHexString(MD5.HashData(Encoding.UTF8.GetBytes(url)))+".png");
         if (useCache)
-            try { image.texture = ConvertEUtil.BytesToTexture2D(File.ReadAllBytes(cachePath)); } catch { }
-        
+            try { image.texture = ConvertEUtil.BytesToTexture2D(File.ReadAllBytes(cachePath)); }
+            catch
+            {
+                // ignored
+            }
+
         MelonCoroutines.Start(_DownloadTexture2DCoroutine(url, ((texture, error) =>
         {
-            if(onGoingRawImages.ContainsKey(image))
-                if (onGoingRawImages[image] == url)
+            if(OnGoingRawImages.ContainsKey(image))
+                if (OnGoingRawImages[image] == url)
                 {
-                    onGoingRawImages.Remove(image);
+                    OnGoingRawImages.Remove(image);
                     if (image != null)
                     {
                         if (error == null && texture != null) 

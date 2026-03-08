@@ -1,8 +1,8 @@
 ﻿using Il2CppMonomiPark.SlimeRancher;
 
-namespace SR2E.Commands;
+namespace Starlight.Commands;
 
-internal class FreezeCommand : SR2ECommand
+internal class FreezeCommand : StarlightCommand
 {
     public override string ID => "freeze";
     public override string Usage => "freeze";

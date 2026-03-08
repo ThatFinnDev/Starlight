@@ -2,7 +2,7 @@ using Il2CppMonomiPark.SlimeRancher;
 using Il2CppMonomiPark.SlimeRancher.DataModel;
 using Il2CppMonomiPark.SlimeRancher.Persist;
 
-namespace SR2E.Patches.Saving.Fixer;
+namespace Starlight.Patches.Saving.Fixer;
 
 [HarmonyPriority(-99999999)]
 [HarmonyPatch(typeof(GameModelPushHelpers), nameof(GameModelPushHelpers.PushPedia))]
@@ -12,7 +12,7 @@ internal static class SaveFixerPushPedia
     {
         try {
             //Remove invalid Pedia entries
-            if (!SR2EEntryPoint.disableFixSaves)
+            if (!StarlightEntryPoint.disableFixSaves)
                 foreach (string unlockedID in pedia.UnlockedIds)
                     if(loadReferenceTranslation.IsUnknownPediaEntryId(unlockedID)||loadReferenceTranslation.GetPediaEntry(unlockedID)==null)
                         pedia.UnlockedIds.Remove(unlockedID);

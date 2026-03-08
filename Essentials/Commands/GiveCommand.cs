@@ -1,6 +1,6 @@
-﻿namespace SR2E.Commands;
+﻿namespace Starlight.Commands;
 
-internal class GiveCommand : SR2ECommand
+internal class GiveCommand : StarlightCommand
 {
     public override string ID => "give";
     public override string Usage => "give <item> [amount]";
@@ -25,7 +25,7 @@ internal class GiveCommand : SR2ECommand
         IdentifiableType type = LookupEUtil.GetIdentifiableTypeByName(identifierTypeName);
         if (type == null) return SendNotValidIdentType(identifierTypeName);
         string itemName = type.GetName();
-        if (type.isGadget()) return SendIsGadgetNotItem(itemName);
+        if (type.IsGadget()) return SendIsGadgetNotItem(itemName);
         
         int amount = 1;
         if (args.Length == 2) if(!TryParseInt(args[1], out amount,1, true)) return false;

@@ -1,16 +1,24 @@
-﻿using Il2CppMonomiPark.SlimeRancher;
-using SR2E.Enums;
-using SR2E.Expansion;
-using SR2E.Prism.Lib;
-using SR2E.Saving;
-using SR2E.Storage;
+﻿using Starlight.Expansion;
+using Starlight.Storage;
 
-namespace SR2EExampleExpansion;
+namespace StarlightExampleExpansion;
 
+// This is required to load the expansion
+//
+// Alternatively, you can provide a list of types, if you have multiple expansions in one dll
 
-public class ExpansionEntryPoint : SR2EExpansionV3
+[assembly: StarlightExpansion(typeof(ExpansionEntryPoint))]
+
+public class ExpansionEntryPoint : StarlightExpansionV01
 {
-    public override void OnInitializeMelon()
+    public override StarlightExpansionInfo info => new StarlightExpansionInfo()
+    {
+        ID = "com.devname.modname",
+        name = "Example Expansion",
+        usePrism = true,
+    };
+
+    public override void OnInitialize()
     {
         AddLanguages(EmbeddedResourceEUtil.LoadString("translations.csv"));
     }

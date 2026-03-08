@@ -2,9 +2,9 @@ using System;
 using Il2CppMonomiPark.SlimeRancher.Persist;
 using Il2CppMonomiPark.World;
 
-namespace SR2E.Commands;
+namespace Starlight.Commands;
 
-internal class RanchCommand : SR2ECommand
+internal class RanchCommand : StarlightCommand
 {
     internal static RanchV02 ranch = null;
     public override string ID => "ranch";

@@ -1,6 +1,6 @@
-namespace SR2E.Commands;
+namespace Starlight.Commands;
 
-internal class ReCenterCommand : SR2ECommand
+internal class ReCenterCommand : StarlightCommand
 {
     public override string ID => "recentercamera";
     public override string Usage => "recentercamera";

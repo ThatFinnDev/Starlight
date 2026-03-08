@@ -1,4 +1,4 @@
-namespace SR2E.Patches.InGame;
+namespace Starlight.Patches.InGame;
 
 [HarmonyPatch(typeof(CellDirector), nameof(CellDirector.Start))]
 internal class CellDirectorPatch

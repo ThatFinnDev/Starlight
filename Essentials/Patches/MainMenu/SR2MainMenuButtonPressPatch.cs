@@ -2,9 +2,9 @@ using System;
 using Il2CppMonomiPark.SlimeRancher.UI.ButtonBehavior;
 using Il2CppMonomiPark.SlimeRancher.UI.MainMenu.Definition;
 using Il2CppMonomiPark.SlimeRancher.UI.MainMenu.Model;
-using SR2E.Buttons;
+using Starlight.Buttons;
 
-namespace SR2E.Patches.MainMenu;
+namespace Starlight.Patches.MainMenu;
 
 
 [HarmonyPatch(typeof(LoadGameBehaviorModel), nameof(LoadGameBehaviorModel.InvokeBehavior))]

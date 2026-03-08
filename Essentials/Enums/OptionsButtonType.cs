@@ -1,4 +1,4 @@
-namespace SR2E.Enums;
+namespace Starlight.Enums;
 // Make it public on release
 internal enum OptionsButtonType
 {

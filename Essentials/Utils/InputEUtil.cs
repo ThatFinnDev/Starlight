@@ -1,7 +1,7 @@
-using SR2E.Components;
-using SR2E.Enums;
+using Starlight.Components;
+using Starlight.Enums;
 
-namespace SR2E.Utils;
+namespace Starlight.Utils;
 
 public static class InputEUtil
 {

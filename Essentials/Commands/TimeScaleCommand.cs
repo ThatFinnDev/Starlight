@@ -1,6 +1,6 @@
-﻿namespace SR2E.Commands;
+﻿namespace Starlight.Commands;
 
-internal class TimeScaleCommand : SR2ECommand
+internal class TimeScaleCommand : StarlightCommand
 {
     public override string ID => "timescale";
     public override string Usage => "timescale <scale>";

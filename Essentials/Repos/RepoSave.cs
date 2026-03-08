@@ -1,4 +1,4 @@
-namespace SR2E.Repos;
+namespace Starlight.Repos;
 
 [System.Serializable]
 public class RepoSave

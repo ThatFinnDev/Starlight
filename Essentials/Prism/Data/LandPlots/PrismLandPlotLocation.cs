@@ -1,6 +1,6 @@
-using SR2E.Saving;
+using Starlight.Saving;
 
-namespace SR2E.Prism.Data.LandPlots;
+namespace Starlight.Prism.Data.LandPlots;
 
 public class PrismLandPlotLocation : SubSave
 {

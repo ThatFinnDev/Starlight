@@ -1,6 +1,6 @@
 using System;
 
-namespace SR2E.Enums;
+namespace Starlight.Enums;
 
 /// <summary>
 /// A three-way boolean

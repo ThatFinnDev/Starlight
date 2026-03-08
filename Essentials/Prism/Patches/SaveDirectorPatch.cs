@@ -1,10 +1,10 @@
 ﻿using Il2CppMonomiPark.SlimeRancher;
 using Il2CppMonomiPark.SlimeRancher.Pedia;
-using SR2E.Expansion;
-using SR2E.Prism.Lib;
-using SR2E.Storage;
+using Starlight.Expansion;
+using Starlight.Prism.Lib;
+using Starlight.Storage;
 
-namespace SR2E.Prism.Patches;
+namespace Starlight.Prism.Patches;
 
 
 //[PrismPatch()]
@@ -25,18 +25,12 @@ internal static class SaveDirectorPatch
             catch  {  }
         
         
-        foreach (var expansion in SR2EEntryPoint.expansionsV3)
-            try { expansion.OnPrismCreateAdditions(); }
-            catch (Exception e) { MelonLogger.Error(e); }
-        foreach (var expansion in SR2EEntryPoint.expansionsV2)
+        foreach (var expansion in StarlightEntryPoint.ExpansionV01S)
             try { expansion.OnPrismCreateAdditions(); }
             catch (Exception e) { MelonLogger.Error(e); }
         
         
-        foreach (var expansion in SR2EEntryPoint.expansionsV3)
-            try { expansion.AfterPrismCreateAdditions(); }
-            catch (Exception e) { MelonLogger.Error(e); }
-        foreach (var expansion in SR2EEntryPoint.expansionsV2)
+        foreach (var expansion in StarlightEntryPoint.ExpansionV01S)
             try { expansion.AfterPrismCreateAdditions(); }
             catch (Exception e) { MelonLogger.Error(e); }
         
@@ -47,10 +41,7 @@ internal static class SaveDirectorPatch
             catch (Exception e) { MelonLogger.Error(e); }
         
         
-        foreach (var expansion in SR2EEntryPoint.expansionsV3)
-            try { expansion.AfterPrismLargosCreated(); }
-            catch (Exception e) { MelonLogger.Error(e); }
-        foreach (var expansion in SR2EEntryPoint.expansionsV2)
+        foreach (var expansion in StarlightEntryPoint.ExpansionV01S)
             try { expansion.AfterPrismLargosCreated(); }
             catch (Exception e) { MelonLogger.Error(e); }
         

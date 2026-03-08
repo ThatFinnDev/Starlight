@@ -2,7 +2,7 @@ using Il2CppMonomiPark.SlimeRancher;
 using Il2CppMonomiPark.SlimeRancher.DataModel;
 using Il2CppMonomiPark.SlimeRancher.Persist;
 
-namespace SR2E.Storage;
+namespace Starlight.Storage;
 
 public class SavingGameSessionData
 {

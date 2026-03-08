@@ -2,9 +2,9 @@
 using Il2CppMonomiPark.SlimeRancher.Script.UI.Pause;
 using Il2CppMonomiPark.SlimeRancher.UI;
 using Il2CppMonomiPark.SlimeRancher.UI.Pause;
-using SR2E.Buttons;
+using Starlight.Buttons;
 
-namespace SR2E.Patches.InGame;
+namespace Starlight.Patches.InGame;
 
 [HarmonyPatch(typeof(PauseMenuDirector), nameof(PauseMenuDirector.Awake))]
 internal static class SR2PauseDirectorPatch

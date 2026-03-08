@@ -1,9 +1,9 @@
 using System;
 using Il2CppMonomiPark.SlimeRancher.DebugTool;
-using SR2E.Enums;
-using SR2E.Storage;
+using Starlight.Enums;
+using Starlight.Storage;
 
-namespace SR2E.Components;
+namespace Starlight.Components;
 
 [InjectClass]
 public class DebugDirectorFixer : MonoBehaviour

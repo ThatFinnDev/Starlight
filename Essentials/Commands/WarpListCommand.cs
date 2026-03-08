@@ -1,9 +1,9 @@
-﻿using SR2E.Managers;
-using SR2E.Storage;
+﻿using Starlight.Managers;
+using Starlight.Storage;
 
-namespace SR2E.Commands;
+namespace Starlight.Commands;
 
-internal class WarpListCommand : SR2ECommand
+internal class WarpListCommand : StarlightCommand
 {
     public override string ID => "warplist";
     public override string Usage => "warplist";
@@ -13,10 +13,10 @@ internal class WarpListCommand : SR2ECommand
     {
         if (!args.IsBetween(0,0)) return SendNoArguments();
 
-        if (SR2ESaveManager.data.warps.Count == 0) return SendError(translation("cmd.warplist.error"));
+        if (StarlightSaveManager.data.warps.Count == 0) return SendError(translation("cmd.warplist.error"));
 
         SendMessage(translation("cmd.warplist.success"));
-        foreach (KeyValuePair<string, Warp> pair in SR2ESaveManager.data.warps)
+        foreach (KeyValuePair<string, Warp> pair in StarlightSaveManager.data.warps)
             SendMessage(translation("cmd.warplist.successdesc",pair.Key,pair.Value.sceneGroup,pair.Value.x,pair.Value.y,pair.Value.z));
         return true;
     }

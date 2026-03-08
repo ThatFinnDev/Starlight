@@ -1,6 +1,6 @@
-namespace SR2E.Commands;
+namespace Starlight.Commands;
 
-internal class GordoCommand : SR2ECommand
+internal class GordoCommand : StarlightCommand
 {
     public override string ID => "gordo";
     public override string Usage => "gordo <action> [value]";

@@ -1,7 +1,7 @@
 using Il2CppMonomiPark.SlimeRancher.UI.Options;
-using SR2E.Storage;
+using Starlight.Storage;
 
-namespace SR2E.Patches.Options;
+namespace Starlight.Patches.Options;
 
 [HarmonyPatch(typeof(OptionsUIRoot), nameof(OptionsUIRoot.Start))]
 internal static class OptionsUIRootStartPatch
@@ -11,7 +11,7 @@ internal static class OptionsUIRootStartPatch
     public static void Prefix()
     {
         if (!InjectOptionsButtons.HasFlag()) return;
-        if(SR2EEntryPoint.mainMenuLoaded) SR2EOptionsButtonManager.LoadCustomOptionsButtons("OptionsConfiguration_MainMenu");
-        else if(inGame) SR2EOptionsButtonManager.LoadCustomOptionsButtons("OptionsConfiguration_InGame");
+        if(StarlightEntryPoint.MainMenuLoaded) StarlightOptionsButtonManager.LoadCustomOptionsButtons("OptionsConfiguration_MainMenu");
+        else if(inGame) StarlightOptionsButtonManager.LoadCustomOptionsButtons("OptionsConfiguration_InGame");
     }
 }

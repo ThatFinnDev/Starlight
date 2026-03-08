@@ -1,6 +1,6 @@
 using Il2CppMonomiPark.SlimeRancher;
 
-namespace SR2E.Prism.Lib;
+namespace Starlight.Prism.Lib;
 /// <summary>
 /// A library of helper functions for dealing with saving and loading
 /// </summary>

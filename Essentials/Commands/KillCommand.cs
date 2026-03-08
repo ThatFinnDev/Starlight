@@ -1,9 +1,9 @@
 ﻿using Il2CppMonomiPark.SlimeRancher.Damage;
 using Il2CppMonomiPark.SlimeRancher.World;
 
-namespace SR2E.Commands;
+namespace Starlight.Commands;
 
-internal class KillCommand : SR2ECommand
+internal class KillCommand : StarlightCommand
 {
     public override string ID => "kill";
     public override string Usage => "kill";

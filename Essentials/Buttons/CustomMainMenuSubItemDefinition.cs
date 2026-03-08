@@ -1,11 +1,11 @@
 using Il2CppMonomiPark.SlimeRancher.UI.MainMenu.Definition;
 using Il2CppMonomiPark.SlimeRancher.UI.MainMenu.Definition.ButtonBehavior;
-using SR2E.Storage;
+using Starlight.Storage;
 
-namespace SR2E.Buttons;
+namespace Starlight.Buttons;
 
 [InjectClass]
 internal class CustomMainMenuSubItemDefinition : SubMenuItemDefinition
 {
-    internal System.Action customAction;
+    internal SystemAction customAction;
 }

@@ -2,10 +2,10 @@ using Il2CppMonomiPark.SlimeRancher;
 using Il2CppMonomiPark.SlimeRancher.DataModel;
 using Il2CppMonomiPark.SlimeRancher.Persist;
 using Il2CppMonomiPark.SlimeRancher.UI;
-using SR2E.Storage;
+using Starlight.Storage;
 using UnityEngine.UI;
 
-namespace SR2E.Patches.General;
+namespace Starlight.Patches.General;
 
 
 [HarmonyPatch(typeof(BootstrapCompanyLogoScene), nameof(BootstrapCompanyLogoScene.Start))]
@@ -13,7 +13,7 @@ internal static class BootstrapCompanyLogoScenePatch
 {
     public static void Prefix(BootstrapCompanyLogoScene __instance)
     {
-        GameObject obj = new GameObject("MLIcon", typeof(RectTransform).il2cppTypeof(), typeof(Image).il2cppTypeof());
+        GameObject obj = new GameObject("MLIcon", typeof(RectTransform).IL2CPPTypeof(), typeof(Image).IL2CPPTypeof());
         Image img = obj.GetComponent<Image>();
         img.sprite = EmbeddedResourceEUtil.LoadSprite("Assets.mlIcon.png").CopyWithoutMipmaps();
         img.preserveAspect = true;

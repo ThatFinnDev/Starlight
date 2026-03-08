@@ -1,12 +1,13 @@
 using Il2CppMonomiPark.SlimeRancher.Audio;
-using Il2CppMonomiPark.SlimeRancher.UI.Framework.Audio;
-using SR2E.Enums.Sounds;
+using Starlight.Enums.Sounds;
+// ReSharper disable MemberCanBePrivate.Global
 
-namespace SR2E.Utils;
+namespace Starlight.Utils;
 
-public class AudioEUtil
+public static class AudioEUtil
 {
-    internal static Dictionary<MenuSound, SECTR_AudioCue> _menuSounds = new Dictionary<MenuSound, SECTR_AudioCue>();
+    // ReSharper disable once InconsistentNaming
+    internal static readonly Dictionary<MenuSound, SECTR_AudioCue> _menuSounds = new Dictionary<MenuSound, SECTR_AudioCue>();
 
     public static Dictionary<MenuSound, SECTR_AudioCue> menuSounds => _menuSounds;
     /*

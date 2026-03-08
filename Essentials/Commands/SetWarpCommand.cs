@@ -1,11 +1,11 @@
 ﻿using Il2CppMonomiPark.SlimeRancher.Regions;
-using SR2E.Enums;
-using SR2E.Managers;
-using SR2E.Storage;
+using Starlight.Enums;
+using Starlight.Managers;
+using Starlight.Storage;
 
-namespace SR2E.Commands;
+namespace Starlight.Commands;
 
-internal class SetWarpCommand : SR2ECommand
+internal class SetWarpCommand : StarlightCommand
 {
     public override string ID => "setwarp";
     public override string Usage => "setwarp <name>";
@@ -21,8 +21,8 @@ internal class SetWarpCommand : SR2ECommand
         Quaternion rotation = sceneContext.Player.transform.rotation;
         string sceneGroup = sceneContext.RegionRegistry.CurrentSceneGroup.ReferenceId;
 
-        SR2EError error = SR2EWarpManager.AddWarp(name, new Warp(sceneGroup, pos, rotation));
-        if (error == SR2EError.AlreadyExists) return SendError(translation("cmd.warpstuff.alreadywarpwithname",name));
+        StarlightError error = StarlightWarpManager.AddWarp(name, new Warp(sceneGroup, pos, rotation));
+        if (error == StarlightError.AlreadyExists) return SendError(translation("cmd.warpstuff.alreadywarpwithname",name));
 
         SendMessage(translation("cmd.setwarp.success",name));
         return true;

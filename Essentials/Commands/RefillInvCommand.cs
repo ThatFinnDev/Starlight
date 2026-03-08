@@ -1,8 +1,8 @@
 ﻿using Il2CppMonomiPark.SlimeRancher.Player;
 
-namespace SR2E.Commands;
+namespace Starlight.Commands;
 
-internal class RefillInvCommand : SR2ECommand
+internal class RefillInvCommand : StarlightCommand
 {
     public override string ID => "refillinv";
     public override string Usage => "refillinv [slot]";

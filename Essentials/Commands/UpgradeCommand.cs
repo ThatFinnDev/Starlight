@@ -1,8 +1,8 @@
 using System.Linq;
 
-namespace SR2E.Commands;
+namespace Starlight.Commands;
 
-internal class UpgradeCommand : SR2ECommand
+internal class UpgradeCommand : StarlightCommand
 {
     public override string ID => "upgrade";
     public override string Usage => "upgrade <increment/set/decrement/get> <id> [amount]";

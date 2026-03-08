@@ -1,12 +1,12 @@
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using Il2CppMonomiPark.SlimeRancher.Damage;
 using Il2CppMonomiPark.SlimeRancher.Slime;
-using SR2E.Prism.Data;
-using SR2E.Prism.Lib;
+using Starlight.Prism.Data;
+using Starlight.Prism.Lib;
 using UnityEngine.Localization;
 
 
-namespace SR2E.Prism.Creators;
+namespace Starlight.Prism.Creators;
 
 public class PrismLargoCreatorV01
 {
@@ -166,7 +166,7 @@ public class PrismLargoCreatorV01
         largoDef.hideFlags = HideFlags.DontUnloadUnusedAsset;
         largoDef.Name = name;
         largoDef.name = name;
-        largoDef.prefab = Object.Instantiate(baseLargo.prefab, prefabHolder.transform);
+        largoDef.prefab = Object.Instantiate(baseLargo.prefab, PrefabHolder.transform);
         largoDef.prefab.name = $"slime{name}";
         largoDef.prefab.GetComponent<Identifiable>().identType = largoDef;
         largoDef.prefab.GetComponent<SlimeEat>().SlimeDefinition = largoDef;

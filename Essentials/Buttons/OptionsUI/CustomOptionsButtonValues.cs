@@ -5,12 +5,12 @@ using Il2CppMonomiPark.SlimeRancher.DataModel;
 using Il2CppMonomiPark.SlimeRancher.Input;
 using Il2CppMonomiPark.SlimeRancher.Options;
 using Il2CppMonomiPark.SlimeRancher.Platform;
-using SR2E.Enums;
-using SR2E.Storage;
+using Starlight.Enums;
+using Starlight.Storage;
 using UnityEngine.Localization;
 using QualityLevel = Il2CppMonomiPark.ScriptedValue.QualityLevel;
 
-namespace SR2E.Buttons.OptionsUI;
+namespace Starlight.Buttons.OptionsUI;
 
 // Make it public on release
 internal class CustomOptionsButtonValues : CustomOptionsButton
@@ -29,7 +29,7 @@ internal class CustomOptionsButtonValues : CustomOptionsButton
     protected override OptionsItemDefinition GenerateOptionsItemDefinition()
     {
         if(!string.IsNullOrWhiteSpace(saveid))
-            SR2EOptionsButtonManager.InitializeValuesButton(type,saveid, defaultValueIndex);
+            StarlightOptionsButtonManager.InitializeValuesButton(type,saveid, defaultValueIndex);
         if(info==null) info = GetAny<ScriptedValuePresetOptionDefinition>();
         var instance = ScriptableObject.CreateInstance<CustomOptionsValuesDefinition>();
         
@@ -51,7 +51,7 @@ internal class CustomOptionsButtonValues : CustomOptionsButton
         instance._requireConfirmation = requireConfirmation;
         instance._defaultValueIndex = defaultValueIndex;
         if(!string.IsNullOrWhiteSpace(saveid))
-            instance.SetTempPresetIndex(SR2EOptionsButtonManager.GetValuesButton(type,saveid, defaultValueIndex));
+            instance.SetTempPresetIndex(StarlightOptionsButtonManager.GetValuesButton(type,saveid, defaultValueIndex));
         instance._optionsItemModels = new Il2CppSystem.Collections.Generic.List<PresetOptionsItemModel>();
         instance.SupportedInputDeviceAssets = new Il2CppSystem.Collections.Generic.List<InputDeviceAsset>();
         instance.SupportedPlatforms = new Il2CppSystem.Collections.Generic.List<StoreAndPlatform>();

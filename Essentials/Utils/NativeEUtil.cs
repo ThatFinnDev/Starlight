@@ -1,33 +1,35 @@
-using Il2CppMonomiPark.SlimeRancher.Script.UI.Pause;
 using Il2CppMonomiPark.SlimeRancher.UI;
 using Il2CppMonomiPark.SlimeRancher.UI.Framework.Components;
 using Il2CppMonomiPark.SlimeRancher.UI.MainMenu;
-using UnityEngine.InputSystem.UI;
 
-namespace SR2E.Utils;
+namespace Starlight.Utils;
 
 public static class NativeEUtil
 {
     public static void TryHideMenus()
     {
-        if (SR2EEntryPoint.mainMenuLoaded)
+        if (StarlightEntryPoint.MainMenuLoaded)
         {
             try
             {
                 var ui = GetAnyInScene<MainMenuLandingRootUI>();
-                ui.gameObject.SetActive(false);
-                ui.enabled = false;
-                ui.Close(true, null);
+                if (ui)
+                {
+                    ui.gameObject.SetActive(false);
+                    ui.enabled = false;
+                    ui.Close(true);
+                }
             }  
             catch (Exception e) { MelonLogger.Error(e); }
         }
 
         if (inGame)
         {
-            try
+            try { GetAnyInScene<PauseMenuRoot>()?.HideUI(); }
+            catch
             {
-                GetAnyInScene<PauseMenuRoot>().HideUI();
-            } catch { }
+                // ignored
+            }
         }
     }
 
@@ -48,48 +50,52 @@ public static class NativeEUtil
 
     public static void TryPauseGame(bool usePauseMenu = true)
     {
-        if (SR2EEntryPoint.mainMenuLoaded)
+        if (StarlightEntryPoint.MainMenuLoaded)
             Time.timeScale = 0;
         
-        try
+        try { systemContext.SceneLoader.TryPauseGame(); }
+        catch
         {
-            systemContext.SceneLoader.TryPauseGame();
-        } catch { }
+            // ignored
+        }
 
         if (usePauseMenu)
-            try
+            try { sceneContext.PauseMenuDirector.PauseGame(); }
+            catch
             {
-                sceneContext.PauseMenuDirector.PauseGame();
-            } catch { }
+                // ignored
+            }
     }
 
     public static void TryUnPauseGame(bool usePauseMenu = true)
     {
 
-        if (SR2EEntryPoint.mainMenuLoaded)
+        if (StarlightEntryPoint.MainMenuLoaded)
             Time.timeScale = 1;
         
-        try
+        try { systemContext.SceneLoader.UnpauseGame(); }
+        catch
         {
-            systemContext.SceneLoader.UnpauseGame();
-        } catch { }
+            // ignored
+        }
 
         if (usePauseMenu)
-            try
+            try { sceneContext.PauseMenuDirector.UnPauseGame(); }
+            catch
             {
-                sceneContext.PauseMenuDirector.UnPauseGame();
-            } catch { }
+                // ignored
+            }
     }
 
     public static void TryUnHideMenus()
     {
         try
         {
-            if (SR2EEntryPoint.mainMenuLoaded)
+            if (StarlightEntryPoint.MainMenuLoaded)
             {
                 try
                 {
-                    foreach (UIDisplayContainer container in GetAllInScene<UIDisplayContainer>())
+                    foreach (var container in GetAllInScene<UIDisplayContainer>()!)
                         if (container.TargetContainer.name == "MainMenuRoot" && container.name == "MainMenuRoot")
                         {
                             try
@@ -97,44 +103,66 @@ public static class NativeEUtil
 
                                 container.OnEnable();
                                 break;
-                            } catch {}
+                            }
+                            catch
+                            {
+                                // ignored
+                            }
                         }
-                } catch {}
+                }
+                catch
+                {
+                    // ignored
+                }
             }
             if (inGame) HudUI.Instance.transform.GetChild(0).gameObject.SetActive(true);
         }
-        catch { }
-    }
-
-    internal static float _CustomTimeScale = 1f;
-
-    public static float CustomTimeScale
-    {
-        get { return _CustomTimeScale; }
-        set
+        catch
         {
-            _CustomTimeScale = value;
-            if (value < 0.01f) _CustomTimeScale = 0.01f;
-            if (value > 2000f) _CustomTimeScale = 2000f;
-            SR2EEntryPoint.CheckForTime();
+            // ignored
         }
     }
 
+    private static float _customTimeScale = 1f;
+
+    // ReSharper disable once InconsistentNaming
+    public static float CustomTimeScale
+    {
+        get => _customTimeScale;
+        set
+        {
+            _customTimeScale = value;
+            if (value < 0.01f) _customTimeScale = 0.01f;
+            if (value > 2000f) _customTimeScale = 2000f;
+            StarlightEntryPoint.CheckForTime();
+        }
+    }
+
+    // ReSharper disable once InconsistentNaming
     public static void TryDisableSR2Input()
     {
         try
         {
             gameContext.InputDirector._paused.Map.Disable();
             gameContext.InputDirector._mainGame.Map.Disable();
-        } catch { }
+        }
+        catch
+        {
+            // ignored
+        }
     }
 
+    // ReSharper disable once InconsistentNaming
     public static void TryEnableSR2Input()
     {
         try
         {
             gameContext.InputDirector._paused.Map.Enable();
             gameContext.InputDirector._mainGame.Map.Enable();
-        } catch { }
+        }
+        catch
+        {
+            // ignored
+        }
     }
 }

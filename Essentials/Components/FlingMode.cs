@@ -1,8 +1,8 @@
-using SR2E.Managers;
-using SR2E.Storage;
+using Starlight.Managers;
+using Starlight.Storage;
 using UnityEngine.InputSystem;
 
-namespace SR2E.Components;
+namespace Starlight.Components;
 
 [InjectClass]
 internal class FlingMode : MonoBehaviour
@@ -11,11 +11,11 @@ internal class FlingMode : MonoBehaviour
     {
         if (Mouse.current.leftButton.wasPressedThisFrame)
         {
-            SR2ECommandManager.ExecuteByString("fling 100");
+            StarlightCommandManager.ExecuteByString("fling 100");
         }
         else if (Mouse.current.rightButton.wasPressedThisFrame)
         {
-            SR2ECommandManager.ExecuteByString("fling -100");
+            StarlightCommandManager.ExecuteByString("fling -100");
         }
     }
 }

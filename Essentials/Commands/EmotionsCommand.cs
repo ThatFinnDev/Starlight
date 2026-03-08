@@ -1,8 +1,8 @@
 using Il2CppMonomiPark.SlimeRancher.Slime;
 
-namespace SR2E.Commands;
+namespace Starlight.Commands;
 
-internal class EmotionsCommand : SR2ECommand
+internal class EmotionsCommand : StarlightCommand
 {
     public override string ID => "emotions";
     public override string Usage => "emotions <emotion> [value]";

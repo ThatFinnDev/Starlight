@@ -1,13 +1,13 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace SR2E.Utils;
+namespace Starlight.Utils;
 
 internal static class EncodingEUtil
 {
     internal static string CreateMD5(this string input)
     {
-        using (MD5 md5 = MD5.Create())
+        using (var md5 = MD5.Create())
         {
             byte[] inputBytes = Encoding.Unicode.GetBytes(input);
             byte[] hashBytes = md5.ComputeHash(inputBytes);

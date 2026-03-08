@@ -1,7 +1,7 @@
 ﻿using Il2CppMonomiPark.SlimeRancher.UI.Localization;
 using System.Collections;
 
-namespace SR2E.Patches.General;
+namespace Starlight.Patches.General;
 
 [HarmonyPatch(typeof(LocalizationDirector), nameof(LocalizationDirector.LoadTables))]
 internal static class LocalizationDirectorLoadTablePatch
@@ -26,7 +26,7 @@ internal static class LocalizationDirectorLoadTablePatch
                 }
             }
         }
-        SR2EEntryPoint.CheckFallBackFont();
+        StarlightEntryPoint.CheckFallBackFont();
         yield break;
     }
 }

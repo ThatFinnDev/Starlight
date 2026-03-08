@@ -1,7 +1,7 @@
 using System;
-using SR2E.Prism.Data;
+using Starlight.Prism.Data;
 
-namespace SR2E.Prism.Lib;
+namespace Starlight.Prism.Lib;
 /// <summary>
 /// A library of helper functions for dealing with gordos
 /// </summary>

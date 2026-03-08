@@ -144,7 +144,6 @@ AssetBundleGen/Assets/AssetStoreTools*
 # =========================
 # MelonLoader / mods / custom libs
 # =========================
-**/Libs/
 **/.vs/
 start.bat
 start.sh
@@ -170,3 +169,5 @@ XMLToMD/*.md
 # Exceptions (track these)
 # =========================
 !*.sln
+Libs/
+!Libs/PLACE_YOUR_DLLS_HERE

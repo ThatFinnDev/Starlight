@@ -1,6 +1,6 @@
-using SR2E.Storage;
+using Starlight.Storage;
 
-namespace SR2E.Prism.Patches;
+namespace Starlight.Prism.Patches;
 /*
 [PrismPatch()]
 [HarmonyPatch(typeof(SpawnResource), nameof(SpawnResource.Awake))]

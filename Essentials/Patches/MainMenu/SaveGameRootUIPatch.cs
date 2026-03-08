@@ -7,14 +7,14 @@ using Il2CppMonomiPark.SlimeRancher.Input;
 using Il2CppMonomiPark.SlimeRancher.UI.Framework.CommonControls;
 using Il2CppMonomiPark.SlimeRancher.UI.Framework.Layout;
 using Il2CppMonomiPark.SlimeRancher.UI.MainMenu.Model;
-using SR2E.Components;
-using SR2E.Enums;
-using SR2E.Popups;
-using SR2E.Storage;
+using Starlight.Components;
+using Starlight.Enums;
+using Starlight.Popups;
+using Starlight.Storage;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-namespace SR2E.Patches.MainMenu;
+namespace Starlight.Patches.MainMenu;
 [HarmonyPatch()]
 internal static class SaveGameRootUIPatch
 {
@@ -43,12 +43,12 @@ internal static class SaveGameRootUIPatch
             {
                 string filePath = ofn.lpstrFile;
                 if (string.IsNullOrEmpty(filePath)) return;
-                var savefile = SR2ESaveFileV01.Load(File.ReadAllBytes(filePath));
+                var savefile = StarlightSaveFileV01.Load(File.ReadAllBytes(filePath));
                 var error = SaveFileEUtil.ImportSaveV01(savefile, ui._selectedModelIndex + 1, true);
-                if (error != SR2EError.NoError)
+                if (error != StarlightError.NoError)
                 {
                     MelonLogger.Msg(translation("messages.save.import.error",error));
-                    SR2EConfirmationViewer.Open(translation("messages.save.import.error",error),null,null);
+                    StarlightConfirmationViewer.Open(translation("messages.save.import.error",error),null,null);
                     return;
                 }
                 systemContext.SceneLoader.LoadMainMenuSceneGroup();
@@ -62,11 +62,11 @@ internal static class SaveGameRootUIPatch
                 string filePath = sfn.lpstrFile;
                 if (string.IsNullOrEmpty(filePath)) return;
                 
-                var error = SaveFileEUtil.ExportSaveV01(loadGameBehaviorModel.GameDataSummary, out SR2ESaveFileV01 savefile);
-                if (error != SR2EError.NoError)
+                var error = SaveFileEUtil.ExportSaveV01(loadGameBehaviorModel.GameDataSummary, out StarlightSaveFileV01 savefile);
+                if (error != StarlightError.NoError)
                 {
                     MelonLogger.Msg(translation("messages.save.export.error",error));
-                    SR2EConfirmationViewer.Open(translation("messages.save.export.error",error),null,null);
+                    StarlightConfirmationViewer.Open(translation("messages.save.export.error",error),null,null);
                     return;
                 }
                 if(filePath.EndsWith(".json")) File.WriteAllText(filePath,savefile.Export());  
@@ -139,7 +139,7 @@ internal static class SaveGameRootUIPatch
     [HarmonyPostfix,HarmonyPatch(typeof(SaveGamesRootUI), nameof(SaveGamesRootUI.FocusUI))]
     internal static void Postfix(SaveGamesRootUI __instance)
     {
-        SR2EEntryPoint.baseUIAddSliders.Add(__instance);
+        StarlightEntryPoint.BaseUIAddSliders.Add(__instance);
         if (!AllowSaveExport.HasFlag()) return;
         ui = __instance;
         if (__instance.name.Contains("SRLE")) return;
@@ -183,7 +183,7 @@ internal static class SaveGameRootUIPatch
         public int lStructSize = Marshal.SizeOf(typeof(SAVEFILENAME));
         public IntPtr hwndOwner = IntPtr.Zero;
         public IntPtr hInstance = IntPtr.Zero;
-        public string lpstrFilter = "SR2 Save Files (*"+SR2ESaveFileV01.Extension+")\0*"+SR2ESaveFileV01.Extension+"\0All Files\0*.*\0";
+        public string lpstrFilter = "SR2 Save Files (*"+StarlightSaveFileV01.Extension+")\0*"+StarlightSaveFileV01.Extension+"\0All Files\0*.*\0";
         public string lpstrCustomFilter = null;
         public int nMaxCustFilter = 0;
         public int nFilterIndex = 1;
@@ -196,7 +196,7 @@ internal static class SaveGameRootUIPatch
         public int Flags = 0x00000002 | 0x00080000;
         public short nFileOffset;
         public short nFileExtension;
-        public string lpstrDefExt = SR2ESaveFileV01.Extension.Substring(1);
+        public string lpstrDefExt = StarlightSaveFileV01.Extension.Substring(1);
         public IntPtr lCustData = IntPtr.Zero;
         public IntPtr lpfnHook = IntPtr.Zero;
         public string lpTemplateName = null;
@@ -209,7 +209,7 @@ internal static class SaveGameRootUIPatch
         public int lStructSize = Marshal.SizeOf(typeof(OPENFILENAME));
         public IntPtr hwndOwner = IntPtr.Zero;
         public IntPtr hInstance = IntPtr.Zero;
-        public string lpstrFilter = "SR2 Save Files (*"+SR2ESaveFileV01.Extension+")\0*"+SR2ESaveFileV01.Extension+"\0All Files\0*.*\0";
+        public string lpstrFilter = "SR2 Save Files (*"+StarlightSaveFileV01.Extension+")\0*"+StarlightSaveFileV01.Extension+"\0All Files\0*.*\0";
         public string lpstrCustomFilter = null;
         public int nMaxCustFilter = 0;
         public int nFilterIndex = 1;
@@ -222,7 +222,7 @@ internal static class SaveGameRootUIPatch
         public int Flags = 0x00000008 | 0x00001000;
         public short nFileOffset;
         public short nFileExtension;
-        public string lpstrDefExt = SR2ESaveFileV01.Extension.Substring(1);
+        public string lpstrDefExt = StarlightSaveFileV01.Extension.Substring(1);
         public IntPtr lCustData = IntPtr.Zero;
         public IntPtr lpfnHook = IntPtr.Zero;
         public string lpTemplateName = null;

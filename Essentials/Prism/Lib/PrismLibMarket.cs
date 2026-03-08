@@ -1,8 +1,8 @@
 using Il2CppMonomiPark.SlimeRancher.Economy;
 using Il2CppMonomiPark.SlimeRancher.UI;
-using SR2E.Prism.Data;
+using Starlight.Prism.Data;
 
-namespace SR2E.Prism.Lib;
+namespace Starlight.Prism.Lib;
 /// <summary>
 /// A library of helper functions for dealing with the market
 /// </summary>
@@ -17,7 +17,7 @@ public static class PrismLibMarket
     {
         if (ident == null) return;
         if (ident.IsPlayer) return;
-        if (ident.isGadget()) return;
+        if (ident.IsGadget()) return;
         if (PrismShortcuts.marketData.ContainsKey(ident)) PrismShortcuts.marketData.Remove(ident);
 
         if (PrismShortcuts.removeMarketPlortEntries.Contains(ident))
@@ -78,7 +78,7 @@ public static class PrismLibMarket
     {
         if (ident == null) return false;
         if (ident.IsPlayer) return false;
-        if (ident.isGadget()) return false;
+        if (ident.IsGadget()) return false;
         try
         {
             var settings = Get<PlortEconomySettings>("PlortEconomy");
@@ -122,7 +122,7 @@ public static class PrismLibMarket
     {
         if (ident == null) return;
         if (ident.IsPlayer) return;
-        if (ident.isGadget()) return;
+        if (ident.IsGadget()) return;
         if(!PrismShortcuts.removeMarketPlortEntries.Contains(ident))
          PrismShortcuts.removeMarketPlortEntries.Add(ident);
         foreach (var keyPair in PrismShortcuts.marketPlortEntries)

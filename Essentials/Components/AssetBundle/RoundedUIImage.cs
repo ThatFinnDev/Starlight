@@ -1,9 +1,9 @@
-using SR2E.Patches.Context;
-using SR2E.Storage;
+using Starlight.Patches.Context;
+using Starlight.Storage;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace SR2E.Components.AssetBundle
+namespace Starlight.Components.AssetBundle
 {
 	/// <summary>
 	/// "RoundedUIImage" is a MonoBehaviour you can add every UI element
@@ -53,7 +53,7 @@ namespace SR2E.Components.AssetBundle
 			if (graphic == null) graphic = GetComponent<MaskableGraphic>();
 
 			if (roundedMaterial == null)
-				roundedMaterial = new Material(SystemContextPatch.loadedShaders["UI/SR2E/Rounded"]);
+				roundedMaterial = new Material(SystemContextPatch.loadedShaders["UI/Starlight/Rounded"]);
 
 			if (graphic != null)
 				graphic.material = roundedMaterial;

@@ -1,4 +1,4 @@
-/*namespace SR2E.Prism.Colliders;
+/*namespace Starlight.Prism.Colliders;
 
 public interface IColliderData
 {

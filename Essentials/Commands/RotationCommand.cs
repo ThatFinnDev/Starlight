@@ -1,8 +1,8 @@
 ﻿using Il2CppMonomiPark.SlimeRancher.World;
 
-namespace SR2E.Commands;
+namespace Starlight.Commands;
 
-internal class RotationCommand : SR2ECommand
+internal class RotationCommand : StarlightCommand
 {
     public override string ID => "rotation";
     public override string Usage => "rotation <x> <y> <z> [absolute(true/false)]";

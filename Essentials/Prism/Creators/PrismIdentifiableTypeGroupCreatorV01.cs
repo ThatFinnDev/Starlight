@@ -1,7 +1,7 @@
-using SR2E.Prism.Data;
+using Starlight.Prism.Data;
 using UnityEngine.Localization;
 
-namespace SR2E.Prism.Creators;
+namespace Starlight.Prism.Creators;
 
 public class PrismIdentifiableTypeGroupCreatorV01
 {
@@ -57,8 +57,8 @@ public class PrismIdentifiableTypeGroupCreatorV01
         group._runtimeObject = new IdentifiableTypeGroupRuntimeObject(group);
 
             
-        if(!LookupEUtil._identifiableTypeGroupList.items.Contains(group))
-            LookupEUtil._identifiableTypeGroupList.items.Add(group);
+        if(!LookupEUtil.IdentifiableTypeGroupList.items.Contains(group))
+            LookupEUtil.IdentifiableTypeGroupList.items.Add(group);
         gameContext.LookupDirector.RegisterIdentifiableTypeGroup(group);
         if(!gameContext.LookupDirector._allIdentifiableTypeGroups.items.Contains(group))
             gameContext.LookupDirector._allIdentifiableTypeGroups.items.Add(group);

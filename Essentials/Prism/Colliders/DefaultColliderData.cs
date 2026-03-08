@@ -1,6 +1,6 @@
 /*using System;
 
-namespace SR2E.Prism.Colliders;
+namespace Starlight.Prism.Colliders;
 
 public class DefaultColliderData : IColliderData
 {

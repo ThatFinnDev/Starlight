@@ -1,8 +1,8 @@
-﻿using SR2E.Menus;
+﻿using Starlight.Menus;
 
-namespace SR2E.Commands;
+namespace Starlight.Commands;
 
-internal class ClearCommand : SR2ECommand
+internal class ClearCommand : StarlightCommand
 {
     public override string ID => "clear";
     public override string Usage => "clear";
@@ -12,7 +12,7 @@ internal class ClearCommand : SR2ECommand
     {
         if (!args.IsBetween(0,0)) return SendNoArguments();
 
-        for (int i = 0; i < MenuEUtil.GetMenu<SR2EConsole>().consoleContent.childCount; i++) Object.Destroy(MenuEUtil.GetMenu<SR2EConsole>().consoleContent.GetChild(i).gameObject);
+        for (int i = 0; i < MenuEUtil.GetMenu<StarlightConsole>().consoleContent.childCount; i++) Object.Destroy(MenuEUtil.GetMenu<StarlightConsole>().consoleContent.GetChild(i).gameObject);
 
         return true;
     }

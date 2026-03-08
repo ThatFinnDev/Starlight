@@ -1,6 +1,6 @@
 using Il2CppMonomiPark.SlimeRancher.Pedia;
 
-namespace SR2E.Prism.Data;
+namespace Starlight.Prism.Data;
 
 public class PrismFixedPediaEntry : PrismPediaEntry
 {

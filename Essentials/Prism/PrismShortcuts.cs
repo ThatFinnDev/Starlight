@@ -3,20 +3,20 @@ using System.Linq;
 using Il2CppMonomiPark.SlimeRancher.Pedia;
 using Il2CppMonomiPark.SlimeRancher.UI;
 using Il2CppSystem.Linq;
-using SR2E.Prism.Creators;
-using SR2E.Prism.Data;
-using SR2E.Prism.Lib;
-using SR2E.Storage;
+using Starlight.Prism.Creators;
+using Starlight.Prism.Data;
+using Starlight.Prism.Lib;
+using Starlight.Storage;
 using UnityEngine.Localization;
 
-namespace SR2E.Prism;
+namespace Starlight.Prism;
 
 public static class PrismShortcuts
 {
     internal static Dictionary<IdentifiableType, PrismMarketData> marketData = new (0);
     internal static Dictionary<PlortEntry, bool> marketPlortEntries = new ();
     internal static List<IdentifiableType> removeMarketPlortEntries = new ();
-    internal static List<System.Action> createLargoActions = new ();
+    internal static List<SystemAction> createLargoActions = new ();
     
     
     internal static Dictionary<IdentifiableTypeGroup, PrismIdentifiableTypeGroup> _prismIdentifiableTypeGroups = new Dictionary<IdentifiableTypeGroup, PrismIdentifiableTypeGroup>();

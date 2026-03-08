@@ -2,7 +2,7 @@ using Il2CppMonomiPark.SlimeRancher;
 using Il2CppMonomiPark.SlimeRancher.UI.MainMenu;
 using Il2CppSystem.Reflection;
 
-namespace SR2E.Patches.InGame;
+namespace Starlight.Patches.InGame;
 
 [HarmonyPatch(typeof(AutoSaveDirectorConfiguration), nameof(AutoSaveDirectorConfiguration.SaveSlotCount), MethodType.Getter)]
 internal class AutoSaveDirectorSaveSlotPatch

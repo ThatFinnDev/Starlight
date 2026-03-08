@@ -10,7 +10,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>embedded</DebugType>
-    <DocumentationFile>bin\Debug\net6.0\SR2E.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\net6.0\Starlight.xml</DocumentationFile>
     <WarningLevel>0</WarningLevel>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
@@ -19,16 +19,11 @@
     <EmbeddedResource Include="Assets\**" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Remove="Libs\**" />
-    <None Remove="Libs\**" />
-    <EmbeddedResource Remove="Libs\**" />
-  </ItemGroup>
-  <ItemGroup>
     <None Remove="start.bat" />
     <None Remove="start.sh" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Libs/*.dll">
+    <Reference Include="../Libs/*.dll">
       <Private>false</Private>
     </Reference>
   </ItemGroup>

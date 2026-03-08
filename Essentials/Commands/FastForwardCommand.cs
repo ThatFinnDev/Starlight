@@ -1,6 +1,6 @@
-﻿namespace SR2E.Commands;
+﻿namespace Starlight.Commands;
 
-internal class FastForwardCommand : SR2ECommand
+internal class FastForwardCommand : StarlightCommand
 {
     public override string ID => "fastforward";
     public override string Usage => "fastforward [hour amount]";

@@ -1,9 +1,9 @@
 using Il2CppMonomiPark.SlimeRancher;
 using Il2CppMonomiPark.SlimeRancher.Persist;
 using Il2CppMonomiPark.World;
-using SR2E.Commands;
+using Starlight.Commands;
 
-namespace SR2E.Patches.InGame;
+namespace Starlight.Patches.InGame;
 /*
  
    BROKEN SINCE 1.0.0!

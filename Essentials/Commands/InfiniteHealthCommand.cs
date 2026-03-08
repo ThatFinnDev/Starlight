@@ -1,9 +1,9 @@
 ﻿using Il2CppMonomiPark.SlimeRancher.DataModel;
 using Il2CppMonomiPark.SlimeRancher.UI;
 
-namespace SR2E.Commands;
+namespace Starlight.Commands;
 
-internal class InfiniteHealthCommand : SR2ECommand
+internal class InfiniteHealthCommand : StarlightCommand
 {
     public override string ID => "infhealth";
     public override string Usage => "infhealth";

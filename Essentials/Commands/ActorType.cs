@@ -1,9 +1,9 @@
-using SR2E.Components;
-using SR2E.Enums;
+using Starlight.Components;
+using Starlight.Enums;
 
-namespace SR2E.Commands;
+namespace Starlight.Commands;
 
-internal class ActorType : SR2ECommand
+internal class ActorType : StarlightCommand
 {
     public override string ID => "actortype";
     public override string Usage => "actortype <actor> [state}";
@@ -46,7 +46,7 @@ internal class ActorType : SR2ECommand
         }
         IdentifiableType type = LookupEUtil.GetIdentifiableTypeByName(args[0]);
         if (type == null) return SendNotValidIdentType(args[0]);
-        if (type.isGadget()) return SendIsGadgetNotItem(type.GetName());
+        if (type.IsGadget()) return SendIsGadgetNotItem(type.GetName());
         bool enabled = !disabledActors.Contains(type.ReferenceId);
         if (!TryParseTrool(args[1], out Trool trool)) return false;
         switch (trool)

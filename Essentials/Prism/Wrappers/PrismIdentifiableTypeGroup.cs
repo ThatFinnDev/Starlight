@@ -1,6 +1,6 @@
 using UnityEngine.Localization;
 
-namespace SR2E.Prism.Data;
+namespace Starlight.Prism.Data;
 
 public class PrismIdentifiableTypeGroup
 {

@@ -2,63 +2,68 @@ using System;
 using System.Linq;
 using System.Reflection;
 using Il2CppTMPro;
-using SR2E.Enums;
-using SR2E.Managers;
-using SR2E.Storage;
+using Starlight.Enums;
+using Starlight.Managers;
+using Starlight.Storage;
 
-namespace SR2E.Utils;
+namespace Starlight.Utils;
 
 public static class MenuEUtil
 {
-    internal static Dictionary<string, List<SR2EMenuTheme>> validThemes = new Dictionary<string, List<SR2EMenuTheme>>();
-    internal static List<SR2EPopUp> openPopUps = new List<SR2EPopUp>();
-    internal static GameObject menuBlock;
-    internal static Transform popUpBlock;
+    internal static readonly Dictionary<string, List<StarlightMenuTheme>> ValidThemes = new ();
+    internal static readonly List<StarlightPopUp> OpenPopUps = new ();
+    internal static GameObject MenuBlock;
+    internal static Transform PopUpBlock;
 
-    internal static void OpenPopUpBlock(SR2EPopUp popUp)
+    internal static void OpenPopUpBlock(StarlightPopUp popUp)
     {
-        if (popUpBlock.transform.GetParent() != popUp.transform.GetParent()) return;
-        var instance = GameObject.Instantiate(popUpBlock, popUpBlock.transform);
+        if (PopUpBlock.transform.GetParent() != popUp.transform.GetParent()) return;
+        var instance = Object.Instantiate(PopUpBlock, PopUpBlock.transform);
         instance.gameObject.SetActive(true);
         instance.SetSiblingIndex(popUp.transform.GetSiblingIndex()-1);
         popUp.block = instance;
     }
-    internal static void ReloadFont(this SR2EPopUp popUp)
+    internal static void ReloadFont(this StarlightPopUp popUp)
     {
-        var dataFont = SR2EMenuFont.SR2;
+        var dataFont = StarlightMenuFont.SR2;
         try
         {
             var ident = GetOpenMenu().GetMenuIdentifier();
             if (string.IsNullOrEmpty(ident.saveKey)) return;
-            if (SR2ESaveManager.data.fonts.TryAdd(ident.saveKey, ident.defaultFont)) SR2ESaveManager.Save();
-             dataFont = SR2ESaveManager.data.fonts[ident.saveKey];
-        }catch { }
+            if (StarlightSaveManager.data.fonts.TryAdd(ident.saveKey, ident.defaultFont)) StarlightSaveManager.Save();
+             dataFont = StarlightSaveManager.data.fonts[ident.saveKey];
+        }
+        catch
+        {
+            // ignored
+        }
+
         TMP_FontAsset fontAsset = null;
         switch (dataFont)
         {
-            case SR2EMenuFont.Default: fontAsset = SR2EEntryPoint.normalFont; break;
-            case SR2EMenuFont.NotoSans: fontAsset = SR2EEntryPoint.notoSansFont; break;
-            case SR2EMenuFont.Bold: fontAsset = SR2EEntryPoint.boldFont; break;
-            case SR2EMenuFont.Regular: fontAsset = SR2EEntryPoint.regularFont; break;
-            case SR2EMenuFont.SR2: fontAsset = SR2EEntryPoint.SR2Font; break;
+            case StarlightMenuFont.Default: fontAsset = StarlightEntryPoint.NormalFont; break;
+            case StarlightMenuFont.NotoSans: fontAsset = StarlightEntryPoint.NotoSansFont; break;
+            case StarlightMenuFont.Bold: fontAsset = StarlightEntryPoint.BoldFont; break;
+            case StarlightMenuFont.Regular: fontAsset = StarlightEntryPoint.RegularFont; break;
+            case StarlightMenuFont.SR2: fontAsset = StarlightEntryPoint.Sr2FontAsset; break;
         }
 
         if (fontAsset != null) popUp.ApplyFont(fontAsset);
     }
-    internal static void ReloadFont(this SR2EMenu menu)
+    internal static void ReloadFont(this StarlightMenu menu)
     {
         var ident = menu.GetMenuIdentifier();
         if (string.IsNullOrEmpty(ident.saveKey)) return;
-        if (SR2ESaveManager.data.fonts.TryAdd(ident.saveKey, ident.defaultFont)) SR2ESaveManager.Save();
-        var dataFont = SR2ESaveManager.data.fonts[ident.saveKey];
+        if (StarlightSaveManager.data.fonts.TryAdd(ident.saveKey, ident.defaultFont)) StarlightSaveManager.Save();
+        var dataFont = StarlightSaveManager.data.fonts[ident.saveKey];
         TMP_FontAsset fontAsset = null;
         switch (dataFont)
         {
-            case SR2EMenuFont.Default: fontAsset = SR2EEntryPoint.normalFont; break;
-            case SR2EMenuFont.NotoSans: fontAsset = SR2EEntryPoint.notoSansFont; break;
-            case SR2EMenuFont.Bold: fontAsset = SR2EEntryPoint.boldFont; break;
-            case SR2EMenuFont.Regular: fontAsset = SR2EEntryPoint.regularFont; break;
-            case SR2EMenuFont.SR2: fontAsset = SR2EEntryPoint.SR2Font; break;
+            case StarlightMenuFont.Default: fontAsset = StarlightEntryPoint.NormalFont; break;
+            case StarlightMenuFont.NotoSans: fontAsset = StarlightEntryPoint.NotoSansFont; break;
+            case StarlightMenuFont.Bold: fontAsset = StarlightEntryPoint.BoldFont; break;
+            case StarlightMenuFont.Regular: fontAsset = StarlightEntryPoint.RegularFont; break;
+            case StarlightMenuFont.SR2: fontAsset = StarlightEntryPoint.Sr2FontAsset; break;
         }
 
         if (fontAsset != null) menu.ApplyFont(fontAsset);
@@ -67,11 +72,11 @@ public static class MenuEUtil
     {
         try
         {
-            var methodInfo = type.GetMethod(nameof(SR2EMenu.GetMenuRootObject), BindingFlags.Static | BindingFlags.Public);
+            var methodInfo = type.GetMethod(nameof(StarlightMenu.GetMenuRootObject), BindingFlags.Static | BindingFlags.Public);
             if (methodInfo == null) return null;
             dynamic result = methodInfo.Invoke(null, null);
             if (result == null) return null;
-            if (result is GameObject) return result as GameObject;
+            if (result is GameObject gameObject) return gameObject;
         }
         catch (Exception e) { MelonLogger.Error(e); }
         return null;
@@ -80,27 +85,30 @@ public static class MenuEUtil
     {
         try
         {
-            var methodInfo = type.GetMethod(nameof(SR2EMenu.GetMenuIdentifier), BindingFlags.Static | BindingFlags.Public);
-            var result = methodInfo.Invoke(null, null);
-            if (result == null) return new MenuIdentifier();
-            if (result is MenuIdentifier identifier) return identifier;
+            var methodInfo = type.GetMethod(nameof(StarlightMenu.GetMenuIdentifier), BindingFlags.Static | BindingFlags.Public);
+            if (methodInfo != null)
+            {
+                var result = methodInfo.Invoke(null, null);
+                if (result == null) return new MenuIdentifier();
+                if (result is MenuIdentifier identifier) return identifier;
+            }
         }
         catch (Exception e) { MelonLogger.Error(e); }
         return new MenuIdentifier();
     }
 
-    public static MenuIdentifier GetMenuIdentifier(this SR2EMenu menu) => menu.GetType().GetMenuIdentifierByType();
-    public static T GetMenu<T>() where T : SR2EMenu
+    public static MenuIdentifier GetMenuIdentifier(this StarlightMenu menu) => menu.GetType().GetMenuIdentifierByType();
+    public static T GetMenu<T>() where T : StarlightMenu
     {
-        foreach (var pair in SR2EEntryPoint.menus)
-            if (pair.Key is T) return (T)pair.Key;
+        foreach (var pair in StarlightEntryPoint.Menus)
+            if (pair.Key is T key) return key;
         return null;
     }
-    public static SR2EMenu GetMenu(this MenuIdentifier identifier)
+    public static StarlightMenu GetMenu(this MenuIdentifier identifier)
     {
         try
         {
-            foreach (var pair in SR2EEntryPoint.menus)
+            foreach (var pair in StarlightEntryPoint.Menus)
             {
                 var ident = pair.Key.GetMenuIdentifier();
                 if (ident.saveKey == identifier.saveKey) return pair.Key;
@@ -109,25 +117,31 @@ public static class MenuEUtil
         catch (Exception e) { MelonLogger.Error(e); }
         return null;
     }
-    public static SR2EMenuTheme GetTheme(this SR2EMenu menu)
+    public static StarlightMenuTheme GetTheme(this StarlightMenu menu)
     {
         try
         {
-            var methodInfo = menu.GetType().GetMethod(nameof(SR2EMenu.GetMenuIdentifier), BindingFlags.Static | BindingFlags.Public);
-            var result = methodInfo.Invoke(null, null);
-            if (result is MenuIdentifier identifier)
+            var methodInfo = menu.GetType().GetMethod(nameof(StarlightMenu.GetMenuIdentifier), BindingFlags.Static | BindingFlags.Public);
+            if (methodInfo != null)
             {
-                SR2ESaveManager.data.themes.TryAdd(identifier.saveKey, identifier.defaultTheme);
-                SR2EMenuTheme currentTheme = SR2ESaveManager.data.themes[identifier.saveKey];
-                List<SR2EMenuTheme> validThemes = GetValidThemes(identifier.saveKey);
-                if (validThemes.Count == 0) return SR2EMenuTheme.Default;
-                if(!validThemes.Contains(currentTheme)) currentTheme = validThemes.First();
-                return currentTheme;
+                var result = methodInfo.Invoke(null, null);
+                if (result is MenuIdentifier identifier)
+                {
+                    StarlightSaveManager.data.themes.TryAdd(identifier.saveKey, identifier.defaultTheme);
+                    var currentTheme = StarlightSaveManager.data.themes[identifier.saveKey];
+                    var validThemes = GetValidThemes(identifier.saveKey);
+                    if (validThemes.Count == 0) return StarlightMenuTheme.Default;
+                    if(!validThemes.Contains(currentTheme)) currentTheme = validThemes.First();
+                    return currentTheme;
+                }
             }
+        }
+        catch (Exception e)
+        {
+            // ignored
+        }
 
-        }catch (Exception e) {}
-
-        return SR2EMenuTheme.Default;
+        return StarlightMenuTheme.Default;
     }
     
     
@@ -150,27 +164,32 @@ public static class MenuEUtil
     }
     
     
-    public static List<SR2EMenuTheme> GetValidThemes(string menuSaveKey)
+    public static List<StarlightMenuTheme> GetValidThemes(string menuSaveKey)
     {
-        if (validThemes.ContainsKey(menuSaveKey.ToLower()))
-            return validThemes[menuSaveKey.ToLower()];
-        return new List<SR2EMenuTheme>();
+        if (ValidThemes.ContainsKey(menuSaveKey.ToLower()))
+            return ValidThemes[menuSaveKey.ToLower()];
+        return new List<StarlightMenuTheme>();
     }
 
 
 
-    public static bool isAnyPopUpOpen => openPopUps.Count != 0;
+    public static bool isAnyPopUpOpen => OpenPopUps.Count != 0;
     public static bool isAnyMenuOpen
     {
         get
         {
             try
             {
-                foreach (var child in SR2EEntryPoint.SR2EStuff.GetChildren())
+                foreach (var child in StarlightEntryPoint.StarlightStuff.GetChildren())
                     if (child.activeSelf)
-                        if (child.HasComponent<SR2EMenu>())
+                        if (child.HasComponent<StarlightMenu>())
                             return true;
-            } catch  { }
+            }
+            catch
+            {
+                // ignored
+            }
+
             return false;
         }
     }
@@ -178,30 +197,33 @@ public static class MenuEUtil
     {
         try
         {
-            for (int i = 0; i < SR2EEntryPoint.SR2EStuff.transform.childCount; i++)
+            for (int i = 0; i < StarlightEntryPoint.StarlightStuff.transform.childCount; i++)
             {
-                Transform child = SR2EEntryPoint.SR2EStuff.transform.GetChild(i);
-                if (child.HasComponent<SR2EPopUp>())
+                var child = StarlightEntryPoint.StarlightStuff.transform.GetChild(i);
+                if (child.HasComponent<StarlightPopUp>())
                 {
-                    GameObject.Destroy(child.gameObject);
+                    Object.Destroy(child.gameObject);
                 }
             }
         }
-        catch { }
+        catch
+        {
+            // ignored
+        }
     }
     public static void CloseOpenMenu()
     {
-        SR2EMenu menu = GetOpenMenu();
-        if(menu!=null)
+        var menu = GetOpenMenu();
+        if(menu)
             menu.Close();
     }
-    public static SR2EMenu GetOpenMenu()
+    public static StarlightMenu GetOpenMenu()
     {
-        foreach (var child in SR2EEntryPoint.SR2EStuff.GetChildren())
+        foreach (var child in StarlightEntryPoint.StarlightStuff.GetChildren())
         {
             if (!child.activeSelf) continue;
-            var menu = child.GetComponent<SR2EMenu>();
-            if (menu != null) return menu;
+            var menu = child.GetComponent<StarlightMenu>();
+            if (menu) return menu;
         }
         return null;
     }
@@ -218,7 +240,7 @@ public static class MenuEUtil
         {
             if(_whitePillBg==null)
             {
-                _whitePillBgTex = Get<AssetBundle>("cc50fee78e6b7bdd6142627acdaf89fa.bundle")
+                _whitePillBgTex = Get<AssetBundle>("cc50fee78e6b7bdd6142627acdaf89fa.bundle")!
                     .LoadAsset("Assets/UI/Textures/MenuDemo/whitePillBg.png").Cast<Texture2D>();
                 _whitePillBg = Sprite.Create(_whitePillBgTex,
                     new Rect(0f, 0f, _whitePillBgTex.width, _whitePillBgTex.height),
@@ -234,7 +256,7 @@ public static class MenuEUtil
         {
             if(_whitePillBgTex==null)
             {
-                _whitePillBgTex = Get<AssetBundle>("cc50fee78e6b7bdd6142627acdaf89fa.bundle")
+                _whitePillBgTex = Get<AssetBundle>("cc50fee78e6b7bdd6142627acdaf89fa.bundle")!
                     .LoadAsset("Assets/UI/Textures/MenuDemo/whitePillBg.png").Cast<Texture2D>();
             }
 

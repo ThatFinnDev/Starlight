@@ -1,11 +1,11 @@
 ﻿using System.Text;
-using SR2E.Enums;
-using SR2E.Managers;
+using Starlight.Enums;
+using Starlight.Managers;
 using UnityEngine.InputSystem;
 
-namespace SR2E.Commands;
+namespace Starlight.Commands;
 
-internal class BindCommand : SR2ECommand
+internal class BindCommand : StarlightCommand
 {
     public override string ID => "bind";
     public override string Usage => "bind <key> <command>";
@@ -18,12 +18,12 @@ internal class BindCommand : SR2ECommand
         if (argIndex == 1)
         {
             List<string> list = new List<string>();
-            foreach (KeyValuePair<string, SR2ECommand> entry in SR2ECommandManager.commands) list.Add(entry.Key);
+            foreach (KeyValuePair<string, StarlightCommand> entry in StarlightCommandManager.commands) list.Add(entry.Key);
             return list;
         }
 
         string secondArg = args[1];
-        foreach (KeyValuePair<string, SR2ECommand> entry in SR2ECommandManager.commands)
+        foreach (KeyValuePair<string, StarlightCommand> entry in StarlightCommandManager.commands)
         {
             if (entry.Key == secondArg) return entry.Value.GetAutoComplete(argIndex - 2, args);
         }
@@ -43,7 +43,7 @@ internal class BindCommand : SR2ECommand
         
         string executeString = builder.ToString();
 
-        SR2EBindingManger.BindKey(key, executeString);
+        StarlightBindingManger.BindKey(key, executeString);
         SendMessage(translation("cmd.bind.success", executeString, key));
         return true;
     }

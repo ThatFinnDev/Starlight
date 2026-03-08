@@ -1,4 +1,4 @@
-namespace SR2E.Patches.InGame;
+namespace Starlight.Patches.InGame;
 
 [HarmonyPatch(typeof(WorldPopulator._PopulateRanch_d__3), "MoveNext")]
 internal class WorldPopulatorErrorPatchPopulateRanch

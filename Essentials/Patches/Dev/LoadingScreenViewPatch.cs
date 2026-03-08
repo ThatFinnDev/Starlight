@@ -1,7 +1,7 @@
 using Il2CppMonomiPark.SlimeRancher.UI.Loading;
-using SR2E.Storage;
+using Starlight.Storage;
 
-namespace SR2E.Patches.Dev;
+namespace Starlight.Patches.Dev;
 
 
 [DevPatch()]

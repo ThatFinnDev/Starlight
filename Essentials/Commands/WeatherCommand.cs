@@ -1,8 +1,8 @@
 using Il2CppMonomiPark.SlimeRancher.DataModel;
 using Il2CppMonomiPark.SlimeRancher.Weather;
-namespace SR2E.Commands;
+namespace Starlight.Commands;
 
-internal class WeatherCommand : SR2ECommand
+internal class WeatherCommand : StarlightCommand
 {
     public override string ID => "weather";
     public override string Usage => "weather <action> <action> <action>";

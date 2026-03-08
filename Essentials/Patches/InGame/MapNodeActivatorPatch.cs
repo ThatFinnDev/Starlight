@@ -1,6 +1,6 @@
 /*using Il2CppMonomiPark.SlimeRancher.UI.Map;
 
-namespace SR2E.Patches.InGame;
+namespace Starlight.Patches.InGame;
 
 [HarmonyPatch(typeof(MapNodeActivator), nameof(MapNodeActivator.Start))]
 internal static class MapNodeActivatorPatch

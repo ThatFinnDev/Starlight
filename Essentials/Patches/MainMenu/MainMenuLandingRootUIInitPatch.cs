@@ -7,12 +7,12 @@ using Il2CppMonomiPark.SlimeRancher.UI.MainMenu;
 using Il2CppMonomiPark.SlimeRancher.UI.MainMenu.Definition;
 using Il2CppSystem.Linq;
 using Il2CppTMPro;
-using SR2E.Buttons;
-using SR2E.Enums;
-using SR2E.Managers;
-using SR2E.Storage;
+using Starlight.Buttons;
+using Starlight.Enums;
+using Starlight.Managers;
+using Starlight.Storage;
 
-namespace SR2E.Patches.MainMenu;
+namespace Starlight.Patches.MainMenu;
 
 
 [HarmonyPatch(typeof(MainMenuLandingRootUI), nameof(MainMenuLandingRootUI.Init))]
@@ -35,7 +35,7 @@ internal static class MainMenuLandingRootUIInitPatch
     internal static bool postSafeLock;
     internal static void Prefix(MainMenuLandingRootUI __instance)
     {
-        if (InjectOptionsButtons.HasFlag()) try { SR2EOptionsButtonManager.GenerateMissingButtons(); }catch (Exception e) { MelonLogger.Error(e); }
+        if (InjectOptionsButtons.HasFlag()) try { StarlightOptionsButtonManager.GenerateMissingButtons(); }catch (Exception e) { MelonLogger.Error(e); }
         if (!InjectMainMenuButtons.HasFlag()) return;
         foreach (var pair in buttons)
         {
@@ -94,11 +94,11 @@ internal static class MainMenuLandingRootUIInitPatch
                 var versionLabel = Get<LocalizedVersionText>("Version Label").GetComponent<TextMeshProUGUI>();
                 if(!versionLabel.text.Contains("Mel"))
                 {
-                    if (SR2EUpdateManager.newVersion != null)
-                        if (SR2EUpdateManager.newVersion != BuildInfo.DisplayVersion)
+                    if (StarlightUpdateManager.newVersion != null)
+                        if (StarlightUpdateManager.newVersion != BuildInfo.DisplayVersion)
                         {
-                            if (SR2EUpdateManager.updatedSR2E) versionLabel.text = translation("patches.localizedversionpatch.downloadedversion", SR2EUpdateManager.newVersion, versionLabel.text);
-                            else versionLabel.text = translation("patches.localizedversionpatch.newversion", SR2EUpdateManager.newVersion, versionLabel.text);
+                            if (StarlightUpdateManager.updatedStarlight) versionLabel.text = translation("patches.localizedversionpatch.downloadedversion", StarlightUpdateManager.newVersion, versionLabel.text);
+                            else versionLabel.text = translation("patches.localizedversionpatch.newversion", StarlightUpdateManager.newVersion, versionLabel.text);
                         }
                     versionLabel.text = translation("patches.localizedversionpatch.default", mlVersion, versionLabel.text);
                 }

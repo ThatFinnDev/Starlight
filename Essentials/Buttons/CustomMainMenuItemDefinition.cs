@@ -1,10 +1,10 @@
 using Il2CppMonomiPark.SlimeRancher.UI.MainMenu.Definition;
-using SR2E.Storage;
+using Starlight.Storage;
 
-namespace SR2E.Buttons;
+namespace Starlight.Buttons;
 
 [InjectClass]
 internal class CustomMainMenuItemDefinition : LoadGameItemDefinition
 {
-    internal System.Action customAction;
+    internal SystemAction customAction;
 }

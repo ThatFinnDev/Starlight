@@ -1,8 +1,8 @@
 ﻿using Il2CppMonomiPark.SlimeRancher.Player;
 
-namespace SR2E.Commands;
+namespace Starlight.Commands;
 
-internal class ClearInventoryCommand : SR2ECommand
+internal class ClearInventoryCommand : StarlightCommand
 {
     public override string ID => "clearinv";
     public override string Usage => "clearinv [slot]";

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using MelonLoader.Utils;
-using SR2E.Storage;
+using Starlight.Storage;
 
-namespace SR2E.Components;
+namespace Starlight.Components;
 [InjectClass]
 internal class DevConsoleFixer : MonoBehaviour
 {

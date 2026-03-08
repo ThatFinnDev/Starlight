@@ -1,7 +1,7 @@
 using Il2CppMonomiPark.SlimeRancher.DataModel;
-using Il2CppMonomiPark.SlimeRancher.World;
+// ReSharper disable MemberCanBePrivate.Global
 
-namespace SR2E.Utils;
+namespace Starlight.Utils;
 
 public static class SpawnEUtil
 {        

@@ -1,7 +1,7 @@
 using Il2CppMonomiPark.SlimeRancher.DataModel;
-using SR2E.Buttons.OptionsUI;
+using Starlight.Buttons.OptionsUI;
 
-namespace SR2E.Patches.Options;
+namespace Starlight.Patches.Options;
 
 [HarmonyPatch(typeof(PresetOptionsItemModel), nameof(PresetOptionsItemModel.RebuildOptions))]
 internal static class PresetOptionsItemModelPatch

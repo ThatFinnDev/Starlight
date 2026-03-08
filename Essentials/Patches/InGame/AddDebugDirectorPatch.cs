@@ -1,13 +1,13 @@
 using Il2CppMonomiPark.SlimeRancher.Player;
 
-namespace SR2E.Patches.InGame;
+namespace Starlight.Patches.InGame;
 
 [HarmonyPatch(typeof(PlayerObjectDiscoveryHandler), nameof(PlayerObjectDiscoveryHandler.Start))]
 internal class AddDebugDirectoyPatch
 {
     internal static void Postfix(PlayerObjectDiscoveryHandler __instance)
     {
-        if (__instance.gameObject.GetComponent<SR2EDebugUI>() == null)
-            __instance.gameObject.AddComponent<SR2EDebugUI>();
+        if (__instance.gameObject.GetComponent<StarlightDebugUI>() == null)
+            __instance.gameObject.AddComponent<StarlightDebugUI>();
     }
 }

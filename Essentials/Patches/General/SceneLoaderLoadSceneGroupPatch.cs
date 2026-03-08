@@ -1,9 +1,9 @@
 
 using Il2CppMonomiPark.SlimeRancher.SceneManagement;
-using SR2E.Patches.Saving;
+using Starlight.Patches.Saving;
 using UnityEngine.AddressableAssets;
 
-namespace SR2E.Patches.General;
+namespace Starlight.Patches.General;
 
 
 [HarmonyPatch(typeof(SceneLoader))]

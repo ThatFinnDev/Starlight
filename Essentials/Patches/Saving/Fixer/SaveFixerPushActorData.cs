@@ -3,7 +3,7 @@ using Il2CppMonomiPark.SlimeRancher;
 using Il2CppMonomiPark.SlimeRancher.DataModel;
 using Il2CppMonomiPark.SlimeRancher.Persist;
 
-namespace SR2E.Patches.Saving.Fixer;
+namespace Starlight.Patches.Saving.Fixer;
 
 [HarmonyPriority(-99999999)]
 [HarmonyPatch(typeof(GameModelPushHelpers), nameof(GameModelPushHelpers.PushActorData))]
@@ -18,7 +18,7 @@ internal static class SaveFixerPushActorData
     internal static bool Prefix(GameModel gameModel, ActorDataV02 actorData, ILoadReferenceTranslation loadReferenceTranslation)
     {
         
-        if (!SR2EEntryPoint.disableFixSaves)
+        if (!StarlightEntryPoint.disableFixSaves)
             try
             { 
                 if(needsRemoving(actorData.TypeId,loadReferenceTranslation)) return false;

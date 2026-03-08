@@ -1,7 +1,7 @@
 ﻿using UnityEngine.Rendering;
 using UnityEngine.Rendering.HighDefinition;
-namespace SR2E.Commands;
-internal class PartyCommand : SR2ECommand
+namespace Starlight.Commands;
+internal class PartyCommand : StarlightCommand
 {
     public override string ID => "party";
     public override string Usage => "party";

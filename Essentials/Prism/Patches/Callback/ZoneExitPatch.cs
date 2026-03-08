@@ -1,7 +1,7 @@
 ﻿using Il2CppMonomiPark.SlimeRancher.World;
-using SR2E.Storage;
+using Starlight.Storage;
 
-namespace SR2E.Prism.Patches.Callback;
+namespace Starlight.Prism.Patches.Callback;
 
 [PrismPatch()]
 [HarmonyPatch(typeof(PlayerZoneTracker), nameof(PlayerZoneTracker.OnExited))]

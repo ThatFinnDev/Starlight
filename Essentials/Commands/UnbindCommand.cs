@@ -1,9 +1,9 @@
-﻿using SR2E.Enums;
-using SR2E.Managers;
+﻿using Starlight.Enums;
+using Starlight.Managers;
 using UnityEngine.InputSystem;
 
-namespace SR2E.Commands;
-internal class UnbindCommand : SR2ECommand
+namespace Starlight.Commands;
+internal class UnbindCommand : StarlightCommand
 {
     public override string ID => "unbind";
     public override string Usage => "unbind <key>";
@@ -22,8 +22,8 @@ internal class UnbindCommand : SR2ECommand
         LKey key;
         if (!TryParseLKey(args[0], out key)) return false;
         
-        if (!SR2EBindingManger.isKeyBound(key)) return SendError(translation("cmd.unbind.notbound", args[0]));
-        SR2EBindingManger.UnbindKey(key);
+        if (!StarlightBindingManger.isKeyBound(key)) return SendError(translation("cmd.unbind.notbound", args[0]));
+        StarlightBindingManger.UnbindKey(key);
         SendMessage(translation("cmd.unbind.success", key));
         return true;
     }

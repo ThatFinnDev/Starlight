@@ -1,9 +1,9 @@
 using Il2CppMonomiPark.SlimeRancher.Pedia;
-using SR2E.Prism.Data;
-using SR2E.Prism.Lib;
-using SR2E.Storage;
+using Starlight.Prism.Data;
+using Starlight.Prism.Lib;
+using Starlight.Storage;
 
-namespace SR2E.Prism.Patches;
+namespace Starlight.Prism.Patches;
 
 [PrismPatch()]
 [HarmonyPatch(typeof(PediaCategory), nameof(PediaCategory.GetRuntimeCategory))]

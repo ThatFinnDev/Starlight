@@ -6,7 +6,7 @@ using Il2CppMonomiPark.SlimeRancher.World;
 using Il2CppMonomiPark.UnitPropertySystem;
 using UnityEngine.Localization;
 
-namespace SR2E.Utils;
+namespace Starlight.Utils;
 
 public static class NamingEUtil
 {
@@ -72,7 +72,7 @@ public static class NamingEUtil
     {
         try
         {
-            string itemName = "";
+            string itemName;
             string name = localizedString.GetLocalizedString();
             if (addQuotesIfSpaces && name.Contains(" ")) itemName = "'" + name + "'";
             else itemName = name;
@@ -103,7 +103,7 @@ public static class NamingEUtil
         if (obj == null) return null;
         try
         {
-            string itemName = "";
+            string itemName;
             string name = localizedString.GetLocalizedString();
             if (addQuotesIfSpaces&&name.Contains(" ")) itemName = "'" + name + "'";
             else itemName = name;
@@ -143,17 +143,32 @@ public static class NamingEUtil
         {
             if (addQuotesIfSpaces&&obj.name.Contains(" ")) return "'" + obj.name + "'";
             return obj.name;
-        } catch {  }
+        }
+        catch
+        {
+            // ignored
+        }
+
         return null;
     } 
     static string _GCNNonLocalized(Object obj)
     {
-        try { return obj.name.Replace(" ","").Replace("_",""); } catch {  }
+        try { return obj.name.Replace(" ","").Replace("_",""); }
+        catch
+        {
+            // ignored
+        }
+
         return null;
     }
     static string _GCUNNonLocalized(Object obj)
     {
-        try { return obj.name.Replace(" ","").Replace("_","").ToUpper(); } catch {  }
+        try { return obj.name.Replace(" ","").Replace("_","").ToUpper(); }
+        catch
+        {
+            // ignored
+        }
+
         return null;
     }
 }

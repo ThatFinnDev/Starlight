@@ -3,12 +3,12 @@ using System.Linq;
 using Il2CppKinematicCharacterController;
 using Il2CppMonomiPark.SlimeRancher.Player.CharacterController;
 using Il2CppMonomiPark.SlimeRancher.Player.PlayerItems;
-using SR2E.Components;
-using SR2E.Enums;
+using Starlight.Components;
+using Starlight.Enums;
 
-namespace SR2E.Commands;
+namespace Starlight.Commands;
 
-internal class PlayerCommand : SR2ECommand
+internal class PlayerCommand : StarlightCommand
 {
     public override string ID => "player";
     public override string Usage => "player <action> [value]";

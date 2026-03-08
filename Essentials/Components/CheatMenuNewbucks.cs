@@ -1,9 +1,9 @@
 using System;
 using Il2CppTMPro;
-using SR2E.Storage;
+using Starlight.Storage;
 using UnityEngine.UI;
 
-namespace SR2E.Components;
+namespace Starlight.Components;
 
 [InjectClass]
 internal class CheatMenuNewbucks : MonoBehaviour

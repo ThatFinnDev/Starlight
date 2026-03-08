@@ -1,9 +1,9 @@
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using Il2CppMonomiPark.SlimeRancher.Pedia;
-using SR2E.Prism.Lib;
+using Starlight.Prism.Lib;
 using UnityEngine.Localization;
 
-namespace SR2E.Prism.Data;
+namespace Starlight.Prism.Data;
 
 public class PrismPediaEntry
 {

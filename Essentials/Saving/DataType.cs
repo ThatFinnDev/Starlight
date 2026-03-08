@@ -1,4 +1,4 @@
-namespace SR2E.Saving;
+namespace Starlight.Saving;
 
 internal enum DataType : byte {
     Null = 0,

@@ -1,6 +1,6 @@
 using System;
 
-namespace SR2E.Saving;
+namespace Starlight.Saving;
 
 [AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
 public class StoreInSaveAttribute : Attribute { }

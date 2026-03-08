@@ -1,21 +1,21 @@
 using System;
-using SR2E.Managers;
-using SR2E.Storage;
+using Starlight.Managers;
+using Starlight.Storage;
 
-namespace SR2E.Commands;
+namespace Starlight.Commands;
 
 internal class MenuVisibilityCommands
 {
-    internal class OpenCommand : SR2ECommand
+    internal class OpenCommand : StarlightCommand
     {
-        internal OpenCommand(MenuIdentifier identifier, SR2EMenu menu, bool inGameOnly)
+        internal OpenCommand(MenuIdentifier identifier, StarlightMenu menu, bool inGameOnly)
         {
             this.identifier = identifier;
             this.menu = menu;
             this.inGameOnly = inGameOnly;
         }
         MenuIdentifier identifier = new MenuIdentifier();
-        SR2EMenu menu;
+        StarlightMenu menu;
         private bool inGameOnly;
         public override string ID => "open"+identifier.saveKey.ToLower();
         public override string Usage => "open"+identifier.saveKey.ToLower();
@@ -27,7 +27,7 @@ internal class MenuVisibilityCommands
             get
             {
                 string key = $"cmd.openmenu.extendeddescription";
-                string translation = SR2ELanguageManger.translation(key);
+                string translation = StarlightLanguageManger.translation(key);
                 return key == translation ? Description : translation;
             }
         }
@@ -41,16 +41,16 @@ internal class MenuVisibilityCommands
             return true;
         }
     }
-    internal class CloseCommand : SR2ECommand
+    internal class CloseCommand : StarlightCommand
     {
-        internal CloseCommand(MenuIdentifier identifier, SR2EMenu menu, bool inGameOnly)
+        internal CloseCommand(MenuIdentifier identifier, StarlightMenu menu, bool inGameOnly)
         {
             this.identifier = identifier;
             this.menu = menu;
             this.inGameOnly = inGameOnly;
         }
         MenuIdentifier identifier = new MenuIdentifier();
-        SR2EMenu menu;
+        StarlightMenu menu;
         private bool inGameOnly;
         public override string ID => "close"+identifier.saveKey.ToLower();
         public override string Usage => "close"+identifier.saveKey.ToLower();
@@ -62,7 +62,7 @@ internal class MenuVisibilityCommands
             get
             {
                 string key = $"cmd.closemenu.extendeddescription";
-                string translation = SR2ELanguageManger.translation(key);
+                string translation = StarlightLanguageManger.translation(key);
                 return key == translation ? Description : translation;
             }
         }
@@ -75,16 +75,16 @@ internal class MenuVisibilityCommands
             return true;
         }
     }
-    internal class ToggleCommand : SR2ECommand
+    internal class ToggleCommand : StarlightCommand
     {
-        internal ToggleCommand(MenuIdentifier identifier, SR2EMenu menu, bool inGameOnly)
+        internal ToggleCommand(MenuIdentifier identifier, StarlightMenu menu, bool inGameOnly)
         {
             this.identifier = identifier;
             this.menu = menu;
             this.inGameOnly = inGameOnly;
         }
         MenuIdentifier identifier = new MenuIdentifier();
-        SR2EMenu menu;
+        StarlightMenu menu;
         private bool inGameOnly;
         public override string ID => "toggle"+identifier.saveKey.ToLower();
         public override string Usage => "toggle"+identifier.saveKey.ToLower();
@@ -96,7 +96,7 @@ internal class MenuVisibilityCommands
             get
             {
                 string key = $"cmd.togglemenu.extendeddescription";
-                string translation = SR2ELanguageManger.translation(key);
+                string translation = StarlightLanguageManger.translation(key);
                 return key == translation ? Description : translation;
             }
         }

@@ -1,6 +1,6 @@
-﻿namespace SR2E.Commands;
+﻿namespace Starlight.Commands;
 
-internal class SpawnCommand : SR2ECommand
+internal class SpawnCommand : StarlightCommand
 {
     public override string ID => "spawn";
     public override string Usage => "spawn <object> [amount]";

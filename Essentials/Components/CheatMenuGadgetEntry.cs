@@ -2,10 +2,10 @@ using System;
 using Il2CppMonomiPark.SlimeRancher.Economy;
 using Il2CppMonomiPark.SlimeRancher.UI;
 using Il2CppTMPro;
-using SR2E.Storage;
+using Starlight.Storage;
 using UnityEngine.UI;
 
-namespace SR2E.Components;
+namespace Starlight.Components;
 
 [InjectClass()]
 internal class CheatMenuGadgetEntry : MonoBehaviour

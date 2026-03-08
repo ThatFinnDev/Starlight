@@ -1,6 +1,6 @@
-using SR2E.Storage;
+using Starlight.Storage;
 
-namespace SR2E.Components;
+namespace Starlight.Components;
 
 [InjectClass]
 internal class ObjectBlocker : MonoBehaviour

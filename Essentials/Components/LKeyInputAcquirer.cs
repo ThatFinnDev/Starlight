@@ -1,8 +1,8 @@
-using SR2E.Enums;
-using SR2E.Storage;
+using Starlight.Enums;
+using Starlight.Storage;
 using UnityEngine.InputSystem;
 
-namespace SR2E.Components;
+namespace Starlight.Components;
 
 [InjectClass]
 internal class LKeyInputAcquirer : MonoBehaviour

@@ -1,11 +1,11 @@
-﻿using SR2E.Enums;
-using SR2E.Managers;
-using SR2E.Storage;
+﻿using Starlight.Enums;
+using Starlight.Managers;
+using Starlight.Storage;
 using UnityEngine.InputSystem;
 
-namespace SR2E.Commands;
+namespace Starlight.Commands;
 
-internal class FXPlayCommand : SR2ECommand
+internal class FXPlayCommand : StarlightCommand
 {
     public override string ID => "fxplayer";
     public override string Usage => "fxplayer <FX> [speed] [playandpause]";

@@ -1,9 +1,9 @@
-using SR2E.Enums;
-using SR2E.Managers;
-using SR2E.Storage;
+using Starlight.Enums;
+using Starlight.Managers;
+using Starlight.Storage;
 using UnityEngine.InputSystem;
 
-namespace SR2E.Components;
+namespace Starlight.Components;
 
 /// <summary>
 /// For use with camera

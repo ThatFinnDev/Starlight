@@ -1,31 +1,31 @@
 using Il2CppMonomiPark.SlimeRancher;
 using Il2CppMonomiPark.SlimeRancher.DataModel;
 using Il2CppMonomiPark.SlimeRancher.Persist;
-using SR2E.Expansion;
-using SR2E.Saving;
-using SR2E.Storage;
+using Starlight.Expansion;
+using Starlight.Saving;
+using Starlight.Storage;
 
-namespace SR2E.Patches.Saving;
+namespace Starlight.Patches.Saving;
    
 [HarmonyPriority(99999999)]
 [HarmonyPatch(typeof(GameModelPushHelpers), nameof(GameModelPushHelpers.PushGame))]
 internal static class CustomSaveDataLoadPatch
 {
-    static Dictionary<SR2EExpansionV3, (RootSave, LoadingGameSessionData)> rootSaves = new();
-    static Dictionary<SR2EExpansionV3, LoadingGameSessionData> noRootSaves = new();
-    internal static string prefix = "SR2EDataV01";
-    internal static string prefixown = "SR2EOwnDataV01";
+    static Dictionary<StarlightExpansionV01, (RootSave, LoadingGameSessionData)> rootSaves = new();
+    static Dictionary<StarlightExpansionV01, LoadingGameSessionData> noRootSaves = new();
+    internal static string prefix = "StarlightDataV01";
+    internal static string prefixown = "StarlightOwnDataV01";
     internal static void ExecSaveDataReceived()
     {
-        foreach (var expansion in SR2EEntryPoint.expansionsV3)
+        foreach (var expansion in StarlightEntryPoint.ExpansionV01S)
             if (rootSaves.ContainsKey(expansion))
                 try { expansion.OnCustomSaveDataReceived(rootSaves[expansion].Item1, rootSaves[expansion].Item2); } 
                 catch (Exception e) { MelonLogger.Error(e); }
             else if(noRootSaves.ContainsKey(expansion))
                 try { expansion.OnNoCustomSaveDataReceived(noRootSaves[expansion]); }
                 catch (Exception e) { MelonLogger.Error(e); }
-        rootSaves = new Dictionary<SR2EExpansionV3, (RootSave, LoadingGameSessionData)>();
-        noRootSaves = new Dictionary<SR2EExpansionV3, LoadingGameSessionData>();
+        rootSaves = new Dictionary<StarlightExpansionV01, (RootSave, LoadingGameSessionData)>();
+        noRootSaves = new Dictionary<StarlightExpansionV01, LoadingGameSessionData>();
     }
     internal static void Prefix(ActorIdProvider actorIdProvider, ISaveReferenceTranslation saveReferenceTranslation, GameV09 gameState, GameModel gameModel)
     {
@@ -37,23 +37,23 @@ internal static class CustomSaveDataLoadPatch
                 {
                     string remaining = entry.Substring(prefixown.Length);
                     var rawBytes = remaining.DecodeFromBase128();
-                    var rootSave = RootSave.FromBytes<SR2EOptionsButtonManager.CustomOptionsInGameSave>(rawBytes);
-                    var sessionData = new LoadingGameSessionData(actorIdProvider, saveReferenceTranslation, saveReferenceTranslation.toNonIVariant(), gameState, gameModel);
+                    var rootSave = RootSave.FromBytes<StarlightOptionsButtonManager.CustomOptionsInGameSave>(rawBytes);
+                    var sessionData = new LoadingGameSessionData(actorIdProvider, saveReferenceTranslation, saveReferenceTranslation.ToNonIVariant(), gameState, gameModel);
                     hasExecutedOwn = true;
-                    SR2EOptionsButtonManager.OnInGameLoad(rootSave,sessionData);
+                    StarlightOptionsButtonManager.OnInGameLoad(rootSave,sessionData);
                 }catch (Exception e) { MelonLogger.Error(e); }
             }
         if(!hasExecutedOwn)
             try
             {
-                var sessionData = new LoadingGameSessionData(actorIdProvider, saveReferenceTranslation, saveReferenceTranslation.toNonIVariant(), gameState, gameModel);
-                SR2EOptionsButtonManager.OnInGameLoad(null,sessionData);
+                var sessionData = new LoadingGameSessionData(actorIdProvider, saveReferenceTranslation, saveReferenceTranslation.ToNonIVariant(), gameState, gameModel);
+                StarlightOptionsButtonManager.OnInGameLoad(null,sessionData);
             }catch (Exception e) { MelonLogger.Error(e); }
         
         
-        rootSaves = new Dictionary<SR2EExpansionV3, (RootSave, LoadingGameSessionData)>();
-        noRootSaves = new Dictionary<SR2EExpansionV3, LoadingGameSessionData>();
-        var executedExpansions = new List<SR2EExpansionV3>();
+        rootSaves = new Dictionary<StarlightExpansionV01, (RootSave, LoadingGameSessionData)>();
+        noRootSaves = new Dictionary<StarlightExpansionV01, LoadingGameSessionData>();
+        var executedExpansions = new List<StarlightExpansionV01>();
         foreach (var entry in gameState.ZoneIndex.IndexTable)
             if (entry.StartsWith(prefix))
             {
@@ -63,12 +63,12 @@ internal static class CustomSaveDataLoadPatch
                 {
                     string md5Hash = remaining.Substring(0, 32);
 
-                    foreach (var expansion in SR2EEntryPoint.expansionsV3)
+                    foreach (var expansion in StarlightEntryPoint.ExpansionV01S)
                         try
                         {
-                            if(expansion.MelonBase.Info.Name.CreateMD5() == md5Hash)
+                            if(expansion.info.ID.CreateMD5() == md5Hash)
                             {
-                                var sessionData = new LoadingGameSessionData(actorIdProvider, saveReferenceTranslation, saveReferenceTranslation.toNonIVariant(), gameState, gameModel);
+                                var sessionData = new LoadingGameSessionData(actorIdProvider, saveReferenceTranslation, saveReferenceTranslation.ToNonIVariant(), gameState, gameModel);
                                 RootSave rootSave = null; 
                                 try
                                 {
@@ -81,7 +81,7 @@ internal static class CustomSaveDataLoadPatch
                                 catch (Exception e)
                                 {
                                     MelonLogger.Error(
-                                        $"Failed to save custom save data for expansion {expansion.MelonBase.Info.Name}: {e}");
+                                        $"Failed to save custom save data for expansion {expansion.info.name}: {e}");
                                 }
                                 if(rootSave!=null)
                                     try
@@ -94,11 +94,11 @@ internal static class CustomSaveDataLoadPatch
                 }
                 else MelonLogger.Error("An error occured while loading some custom save data!");
             }
-        foreach (var expansion in SR2EEntryPoint.expansionsV3)
+        foreach (var expansion in StarlightEntryPoint.ExpansionV01S)
             if(!executedExpansions.Contains(expansion))
                 try
                 {
-                    var sessionData = new LoadingGameSessionData(actorIdProvider, saveReferenceTranslation, saveReferenceTranslation.toNonIVariant(), gameState, gameModel);
+                    var sessionData = new LoadingGameSessionData(actorIdProvider, saveReferenceTranslation, saveReferenceTranslation.ToNonIVariant(), gameState, gameModel);
                     noRootSaves.Add(expansion, sessionData);
 
                     expansion.OnEarlyNoCustomSaveDataReceived(sessionData);

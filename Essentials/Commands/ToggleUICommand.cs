@@ -1,7 +1,7 @@
 using Il2CppMonomiPark.SlimeRancher.UI;
 
-namespace SR2E.Commands;
-internal class ToggleUICommand : SR2ECommand
+namespace Starlight.Commands;
+internal class ToggleUICommand : StarlightCommand
 {
     public override string ID => "toggleui";
     public override string Usage => "toggleui";

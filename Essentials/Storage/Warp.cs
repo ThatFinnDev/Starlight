@@ -5,12 +5,12 @@ using Il2CppMonomiPark.SlimeRancher.Player.CharacterController;
 using Il2CppMonomiPark.SlimeRancher.SceneManagement;
 using Il2CppMonomiPark.SlimeRancher.World.Teleportation;
 using Newtonsoft.Json;
-using SR2E.Components;
-using SR2E.Enums;
-using SR2E.Managers;
-using SR2E.Patches.General;
+using Starlight.Components;
+using Starlight.Enums;
+using Starlight.Managers;
+using Starlight.Patches.General;
 
-namespace SR2E.Storage;
+namespace Starlight.Storage;
 
 [System.Serializable]
 public class Warp
@@ -34,15 +34,15 @@ public class Warp
         }
         return false;
     }
-    public SR2EError WarpPlayerThere()
+    public StarlightError WarpPlayerThere()
     {
-        if (!inGame) return SR2EError.NotInGame;
-        if(!IsValid()) return SR2EError.Invalid;
-        if (sceneContext.Player == null) return SR2EError.PlayerNull;
+        if (!inGame) return StarlightError.NotInGame;
+        if(!IsValid()) return StarlightError.Invalid;
+        if (sceneContext.Player == null) return StarlightError.PlayerNull;
         TeleportablePlayer p = sceneContext.Player.GetComponent<TeleportablePlayer>();
-        if (p == null) return SR2EError.TeleportablePlayerNull;
+        if (p == null) return StarlightError.TeleportablePlayerNull;
         SRCharacterController cc = sceneContext.Player.GetComponent<SRCharacterController>();
-        if (cc == null) return SR2EError.SRCharacterControllerNull;
+        if (cc == null) return StarlightError.SRCharacterControllerNull;
         MenuEUtil.CloseOpenMenu();
         if (IsInCorrectSceneGroup(p.SceneGroup.ReferenceId,sceneGroup))
         {
@@ -59,12 +59,12 @@ public class Warp
                 foreach (var g in systemContext.SceneLoader.SceneGroupList.items)
                     if (g.ReferenceId == sceneGroup)
                     {
-                        if(!g.IsGameplay) return SR2EError.SceneGroupNotSupported;
+                        if(!g.IsGameplay) return StarlightError.SceneGroupNotSupported;
                         sc = g;
                         break;
                     }
-                if(sc==null) return SR2EError.SceneGroupNotSupported;
-                SR2EWarpManager.warpTo = this;
+                if(sc==null) return StarlightError.SceneGroupNotSupported;
+                StarlightWarpManager.warpTo = this;
                 SceneLoaderLoadSceneGroupPatch.isTeleportingPlayer = true;
                 LocationBookmarksUtil.GoToLocationPlayer(sc,position+new Vector3(0,LocationBookmarksUtil.PLAYER_HEIGHT/2,0),rotation.eulerAngles);
 
@@ -75,7 +75,7 @@ public class Warp
             }
         }
 
-        return SR2EError.NoError;
+        return StarlightError.NoError;
     }
 
     public string sceneGroup = "None";

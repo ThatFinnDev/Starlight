@@ -2,7 +2,7 @@ using Il2CppMonomiPark.SlimeRancher.UI.ButtonBehavior;
 using Il2CppMonomiPark.SlimeRancher.UI.MainMenu;
 using Il2CppTMPro;
 
-namespace SR2E.Patches.MainMenu;
+namespace Starlight.Patches.MainMenu;
 
 [HarmonyPatch(typeof(SRButton), nameof(SRButton.Awake))]
 internal static class GetSR2FontPatch
@@ -11,10 +11,10 @@ internal static class GetSR2FontPatch
     {
         if (__instance.GetComponent<MainMenuButton>() != null)
         {
-            if (SR2EEntryPoint.SR2Font != null) return;
+            if (StarlightEntryPoint.Sr2FontAsset != null) return;
             TextMeshProUGUI label = __instance.gameObject.GetObjectRecursively<TextMeshProUGUI>("Button_Label");
-            if (label != null) SR2EEntryPoint.SR2Font = label.font;
-            SR2EEntryPoint.SetupFonts();
+            if (label != null) StarlightEntryPoint.Sr2FontAsset = label.font;
+            StarlightEntryPoint.SetupFonts();
         }
         
     }

@@ -1,30 +1,29 @@
 using System;
 using System.Linq;
-using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using Il2CppMonomiPark.SlimeRancher;
 using Il2CppMonomiPark.SlimeRancher.Input;
 using Il2CppMonomiPark.SlimeRancher.Weather;
 using Il2CppSystem.Linq;
-using Il2CppTMPro;
-using SR2E.Enums;
-using SR2E.Storage;
+using Starlight.Enums;
 using UnityEngine.InputSystem;
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable CollectionNeverQueried.Global
 
-namespace SR2E.Utils;
+namespace Starlight.Utils;
 
 public static class LookupEUtil
 {
 
-    internal static InputEvent closeInput = null;
-    internal static Dictionary<string, InputActionMap> actionMaps = new Dictionary<string, InputActionMap>();
-    internal static Dictionary<string, InputAction> MainGameActions = new Dictionary<string, InputAction>();
-    internal static Dictionary<string, InputAction> PausedActions = new Dictionary<string, InputAction>();
-    internal static Dictionary<string, InputAction> DebugActions = new Dictionary<string, InputAction>();
-    internal static IdentifiableTypeGroupList _identifiableTypeGroupList;
+    internal static InputEvent CloseInput = null;
+    internal static Dictionary<string, InputActionMap> ActionMaps = new ();
+    internal static Dictionary<string, InputAction> MainGameActions = new ();
+    internal static Dictionary<string, InputAction> PausedActions = new ();
+    public static Dictionary<string, InputAction> DebugActions = new ();
+    internal static IdentifiableTypeGroupList IdentifiableTypeGroupList;
 
     
-    public static TripleDictionary<GameObject, ParticleSystemRenderer, string> FXLibrary = new TripleDictionary<GameObject, ParticleSystemRenderer, string>();
-    public static TripleDictionary<string, ParticleSystemRenderer, GameObject> FXLibraryReversable = new TripleDictionary<string, ParticleSystemRenderer, GameObject>();
+    public static readonly Dictionary<GameObject, (ParticleSystemRenderer, string)> FXLibrary = new ();
+    public static readonly Dictionary<string, (ParticleSystemRenderer, GameObject)> FXLibraryReversable = new ();
     
     
     public static WeatherStateDefinition[] weatherStateDefinitions => autoSaveDirector._configuration.WeatherStates.items.ToArray();
@@ -32,10 +31,8 @@ public static class LookupEUtil
         get
         {
             var dict = new Dictionary<string, IdentifiableTypeGroup>();
-            if (_identifiableTypeGroupList == null) return dict;
-            foreach (var item in _identifiableTypeGroupList.items)
-                if(!dict.ContainsKey(item.name))
-                    dict.Add(item.name,item);
+            if (IdentifiableTypeGroupList == null) return dict;
+            foreach (var item in IdentifiableTypeGroupList.items) dict.TryAdd(item.name, item);
             return dict;
         }
 }
@@ -63,13 +60,13 @@ public static class LookupEUtil
     
     static IdentifiableType[] _FromGroupList(string name)
     {
-        if (_identifiableTypeGroupList == null) return Array.Empty<IdentifiableType>();
+        if (IdentifiableTypeGroupList == null) return Array.Empty<IdentifiableType>();
         if(!allIdentifiableTypeGroups.ContainsKey(name)) return  Array.Empty<IdentifiableType>();
         return allIdentifiableTypeGroups[name].GetAllMembers().ToArray().Where(type => !string.IsNullOrEmpty(type.ReferenceId)).ToArray();
     }
     static ToyDefinition[] _FromTGroupList(string name)
     {
-        if (_identifiableTypeGroupList == null) return Array.Empty<ToyDefinition>();
+        if (IdentifiableTypeGroupList == null) return Array.Empty<ToyDefinition>();
         if(!allIdentifiableTypeGroups.ContainsKey(name)) return  Array.Empty<ToyDefinition>();
         var list = new List<ToyDefinition>();
         foreach (IdentifiableType type in allIdentifiableTypeGroups[name].GetAllMembersList())
@@ -82,7 +79,7 @@ public static class LookupEUtil
     }
     static GadgetDefinition[] _FromGGroupList(string name)
     {
-        if (_identifiableTypeGroupList == null) return Array.Empty<GadgetDefinition>();
+        if (IdentifiableTypeGroupList == null) return Array.Empty<GadgetDefinition>();
         if(!allIdentifiableTypeGroups.ContainsKey(name)) return  Array.Empty<GadgetDefinition>();
         var list = new List<GadgetDefinition>();
         foreach (IdentifiableType type in allIdentifiableTypeGroups[name].GetAllMembersList())
@@ -95,7 +92,7 @@ public static class LookupEUtil
     }
     static SlimeDefinition[] _FromSGroupList(string name)
     {
-        if (_identifiableTypeGroupList == null) return Array.Empty<SlimeDefinition>();
+        if (IdentifiableTypeGroupList == null) return Array.Empty<SlimeDefinition>();
         if(!allIdentifiableTypeGroups.ContainsKey(name)) return Array.Empty<SlimeDefinition>();
         var list = new List<SlimeDefinition>();
         foreach (IdentifiableType type in allIdentifiableTypeGroups[name].GetAllMembersList())
@@ -172,7 +169,7 @@ public static class LookupEUtil
     
     
     
-    public static bool isGadget(this IdentifiableType type) => type.TryCast<GadgetDefinition>() != null;
+    public static bool IsGadget(this IdentifiableType type) => type.TryCast<GadgetDefinition>() != null;
     /// <summary>
     /// Get an IdentifiableType either by its code name or localized name
     /// </summary>
@@ -198,12 +195,12 @@ public static class LookupEUtil
         var ids = gadgetTypes;
         foreach (var type in ids) 
             if (type.name.ToUpper() == name) 
-                if(type.isGadget())
+                if(type.IsGadget())
                     return type.Cast<GadgetDefinition>();
         name=name.Replace("_", "").Replace(" ","");
         foreach (var type in ids)
             if (type.GetCompactUpperName() == name)
-                if(type.isGadget())
+                if(type.IsGadget())
                     return type.Cast<GadgetDefinition>();
         return null;
     }
@@ -352,7 +349,7 @@ public static class LookupEUtil
                 if (type == null) continue;
                 if (type.ReferenceId.ToUpper().Contains("GORDO")) continue;
                 if (type.ReferenceId.ToUpper() == "NONE" || type.ReferenceId.ToUpper() == "PLAYER") continue;
-                if (type.isGadget()) continue;
+                if (type.IsGadget()) continue;
                 var name = type.GetCompactName();
                 if (name.StartsWith("!")) continue;
                 if(list.Contains(name)) continue;
@@ -370,7 +367,7 @@ public static class LookupEUtil
             if (type == null) continue;
             if (type.ReferenceId.ToUpper().Contains("GORDO")) continue;
             if (type.ReferenceId.ToUpper() == "NONE" || type.ReferenceId.ToUpper() == "PLAYER") continue;
-            if (type.isGadget()) continue;
+            if (type.IsGadget()) continue;
             var name = type.GetCompactName();
             if (name.StartsWith("!")) continue;
             if(list.Contains(name)) continue;
@@ -479,18 +476,18 @@ public static class LookupEUtil
         maxEntries -= 1;
         if (string.IsNullOrWhiteSpace(partial))
         {
-            foreach (Key key in System.Enum.GetValues<Key>())
+            foreach (Key key in Enum.GetValues<Key>())
             {
                 if (list.Count > maxEntries) break;
                 if (key != Key.None)
-                    if (key.ToString().ToUpper().StartsWith(partial.ToUpper()))
+                    if (partial != null && key.ToString().ToUpper().StartsWith(partial.ToUpper()))
                         list.Add(key.ToString());
             }
             list.Sort();
             return list;
         }
 
-        foreach (Key key in System.Enum.GetValues<Key>())
+        foreach (Key key in Enum.GetValues<Key>())
         {
             if (list.Count > maxEntries) break;
             if (key != Key.None)
@@ -511,24 +508,23 @@ public static class LookupEUtil
         maxEntries -= 1;
         if (string.IsNullOrWhiteSpace(partial))
         {
-            foreach (LKey key in System.Enum.GetValues<LKey>())
+            foreach (LKey key in Enum.GetValues<LKey>())
             {
                 if (list.Count > maxEntries) break;
                 var kint = Convert.ToInt32(key);
-                if (!includeExtendedLatin && kint > 100 && kint < 200) break;
-                if (!includeCyrillic && kint > 900 && kint < 1000) break;
+                if (!includeExtendedLatin && kint is > 100 and < 200) break;
+                if (!includeCyrillic && kint is > 900 and < 1000) break;
                 if (key != LKey.None)
-                    if (key.ToString().ToUpper().StartsWith(partial.ToUpper()))
+                    if (partial != null && key.ToString().ToUpper().StartsWith(partial.ToUpper()))
                         list.Add(key.ToString());
             }
             list.Sort();
             return list;
         }
 
-        foreach (LKey key in System.Enum.GetValues<LKey>())
+        foreach (LKey key in Enum.GetValues<LKey>())
         {
             if (list.Count > maxEntries) break;
-            var kint = Convert.ToInt32(key);
             if (key != LKey.None)
                 if (key.ToString().ToUpper().StartsWithOrContain(partial.ToUpper(), useContain))
                 {
@@ -547,18 +543,18 @@ public static class LookupEUtil
         maxEntries -= 1;
         if (string.IsNullOrWhiteSpace(partial))
         {
-            foreach (KeyCode key in System.Enum.GetValues<KeyCode>())
+            foreach (KeyCode key in Enum.GetValues<KeyCode>())
             {
                 if (list.Count > maxEntries) break;
                 if (key != KeyCode.None)
-                    if (key.ToString().ToUpper().StartsWith(partial.ToUpper()))
+                    if (partial != null && key.ToString().ToUpper().StartsWith(partial.ToUpper()))
                         list.Add(key.ToString());
             }
             list.Sort();
             return list;
         }
 
-        foreach (KeyCode key in System.Enum.GetValues<KeyCode>())
+        foreach (KeyCode key in Enum.GetValues<KeyCode>())
         {
             if (list.Count > maxEntries) break;
             if (key != KeyCode.None)

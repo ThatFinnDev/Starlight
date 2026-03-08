@@ -1,6 +1,6 @@
 using System;
 
-namespace SR2E.Enums.Features;
+namespace Starlight.Enums.Features;
 
 public enum FeatureFlag
 {
@@ -117,19 +117,19 @@ public enum FeatureFlag
     /// </summary>
     AddModMenuButton=230, //
     /// <summary>
-    /// Allow loading and integrating SR2E expansions
+    /// Allow loading and integrating Starlight expansions
     /// </summary>
     AllowExpansions=240, //
     /// <summary>
-    /// Allow loading and integrating SR2E expansions
+    /// Allow loading and integrating Starlight expansions
     /// </summary>
     AllowExpansionsV1=241, //
     /// <summary>
-    /// Allow loading and integrating SR2E expansions of V1
+    /// Allow loading and integrating Starlight expansions of V1
     /// </summary>
     AllowExpansionsV2=242, //
     /// <summary>
-    /// Allow loading and integrating SR2E expansions of V2
+    /// Allow loading and integrating Starlight expansions of V2
     /// </summary>
     AllowExpansionsV3=243, //
     /// <summary>
@@ -199,7 +199,7 @@ public enum FeatureFlag
 
     //Updates and Patches
     /// <summary>
-    /// Allow checking for new SR2E updates
+    /// Allow checking for new Starlight updates
     /// </summary>
     CheckForUpdates=360, //
     /// <summary>
@@ -213,7 +213,7 @@ public enum FeatureFlag
     /// <summary>
     /// Redirects the StorageProvider to a FileStorgeProvider
     /// As a result the save path will be changed
-    /// It will be redirected to the SR2E folder
+    /// It will be redirected to the Starlight folder
     /// </summary>
     RedirectSaveFiles=390, //
     /// <summary>

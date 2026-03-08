@@ -4,14 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SR2E.Storage;
+using Starlight.Storage;
 
-namespace SR2E.Buttons;
+namespace Starlight.Buttons;
 
 [InjectClass]
 internal class CustomPauseItemModel : ResumePauseItemModel
 {
-    internal System.Action action;
+    internal SystemAction action;
     public override void InvokeBehavior()
     {
         action.Invoke();

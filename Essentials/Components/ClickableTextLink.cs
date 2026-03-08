@@ -2,13 +2,13 @@ using System;
 using System.Linq;
 using System.Reflection;
 using Il2CppTMPro;
-using SR2E.Enums.Sounds;
-using SR2E.Storage;
+using Starlight.Enums.Sounds;
+using Starlight.Storage;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-namespace SR2E.Components;
+namespace Starlight.Components;
 
 /// <summary>
 /// "ClickableTextLink" is a MonoBehaviour you can add every TextMeshProUGUI
@@ -25,7 +25,7 @@ public class ClickableTextLink : MonoBehaviour
     /// <summary>
     /// The Dictionary to specify all custom actions
     /// </summary>
-    public Dictionary<string, System.Action> actions = new Dictionary<string, Action>();
+    public Dictionary<string, SystemAction> actions = new Dictionary<string, Action>();
     void Start()
     {
         text = GetComponent<TextMeshProUGUI>();

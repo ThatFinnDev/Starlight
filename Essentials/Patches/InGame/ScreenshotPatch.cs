@@ -1,8 +1,8 @@
 using Il2CppMonomiPark.SlimeRancher.UI.Map;
 using Il2CppMonomiPark.SlimeRancher.UI.Pause;
-using SR2E.Menus;
+using Starlight.Menus;
 
-namespace SR2E.Patches.InGame;
+namespace Starlight.Patches.InGame;
 
 [HarmonyPatch(typeof(GameContext), nameof(GameContext.TakeScreenshot))]
 internal static class ScreenshotPatch
@@ -18,7 +18,7 @@ internal static class ScreenshotPatch
     
     internal static void Prefix(ScreenshotPauseItemModel __instance)
     {
-        if (SR2ECheatMenu.betterScreenshot)
+        if (StarlightCheatMenu.betterScreenshot)
         {
             sceneContext.PlayerState.VacuumItem.gameObject.SetActive(false);
             MelonCoroutines.Start(WaitForUnpause());

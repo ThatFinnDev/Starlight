@@ -1,7 +1,7 @@
 using Il2CppMonomiPark.SlimeRancher.UI;
-using SR2E.Storage;
+using Starlight.Storage;
 
-namespace SR2E.Prism.Patches;
+namespace Starlight.Prism.Patches;
 
 [PrismPatch()]
 [HarmonyPatch(typeof(TargetingUI), nameof(TargetingUI.Start))]
@@ -18,7 +18,7 @@ internal class TargetingPatch
         if (eatStrings == null) return;
         if (eatStrings._foodGroupStringMap == null) return;
             
-        foreach (var group in LookupEUtil._identifiableTypeGroupList.items)
+        foreach (var group in LookupEUtil.IdentifiableTypeGroupList.items)
             if (group._localizedName != null && group._isFood)
                 eatStrings._foodGroupStringMap.TryAdd(group, group._localizedName);
     }

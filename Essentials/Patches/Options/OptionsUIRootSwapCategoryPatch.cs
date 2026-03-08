@@ -3,10 +3,10 @@ using Il2CppMonomiPark.SlimeRancher.DataModel;
 using Il2CppMonomiPark.SlimeRancher.Options;
 using Il2CppMonomiPark.SlimeRancher.Persist;
 using Il2CppMonomiPark.SlimeRancher.UI.Options;
-using SR2E.Buttons.OptionsUI;
-using SR2E.Storage;
+using Starlight.Buttons.OptionsUI;
+using Starlight.Storage;
 
-namespace SR2E.Patches.Options;
+namespace Starlight.Patches.Options;
 
 [HarmonyPatch(typeof(OptionsUIRoot), nameof(OptionsUIRoot.SwapCategory))]
 internal static class OptionsUIRootSwapCategoryPatch
@@ -35,7 +35,7 @@ internal static class OptionsUIRootSwapCategoryPatch
                     
                     if (!string.IsNullOrWhiteSpace(customDef.button.saveid))
                     {
-                        var value = SR2EOptionsButtonManager.GetValuesButton(customDef.button.type,customDef.button.saveid, customDef.button.defaultValueIndex);
+                        var value = StarlightOptionsButtonManager.GetValuesButton(customDef.button.type,customDef.button.saveid, customDef.button.defaultValueIndex);
                         MelonLogger.Msg(value);
                         try
                         {

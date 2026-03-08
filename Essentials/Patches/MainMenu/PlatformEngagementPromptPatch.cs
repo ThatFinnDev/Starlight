@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Users;
 using UnityEngine.InputSystem.Utilities;
 
-namespace SR2E.Patches.MainMenu;
+namespace Starlight.Patches.MainMenu;
 
 [HarmonyPatch(typeof(PlatformEngagementPrompt), nameof(PlatformEngagementPrompt.Start))]
 internal static class PlatformEngagementPromptPatch
@@ -23,7 +23,7 @@ internal static class PlatformEngagementPromptPatch
                 hasRegistered = true;
                 ExecuteInTicks(() =>
                 {
-                    if (SR2EEntryPoint.mainMenuLoaded)
+                    if (StarlightEntryPoint.MainMenuLoaded)
                     {
                         GetAnyInScene<MainMenuLandingRootUI>().Awake();
                     }

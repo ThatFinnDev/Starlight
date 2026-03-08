@@ -1,4 +1,4 @@
-namespace SR2E.Storage;
+namespace Starlight.Storage;
 
 /// <summary>
 /// A dictionary with 3 values per key.

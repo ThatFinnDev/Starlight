@@ -1,8 +1,8 @@
 ﻿using Il2CppMonomiPark.SlimeRancher.World;
 
-namespace SR2E.Commands;
+namespace Starlight.Commands;
 
-internal class StrikeCommand : SR2ECommand
+internal class StrikeCommand : StarlightCommand
 {
     public override string ID => "strike";
     public override string Usage => "strike [power]";
@@ -33,7 +33,7 @@ internal class StrikeCommand : SR2ECommand
         }
         return SendNotLookingAtAnything();
     }
-    public override void OnGameContext(GameContext gameContext)
+    public override void AfterGameContext(GameContext gameContext)
     {
         lightningPrefab = Object.Instantiate(Get<GameObject>("LightningStrike"));
         lightningPrefab.MakePrefab();

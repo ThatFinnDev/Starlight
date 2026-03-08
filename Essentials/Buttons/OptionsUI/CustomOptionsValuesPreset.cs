@@ -1,6 +1,6 @@
 using Il2CppMonomiPark.SlimeRancher.Options;
 
-namespace SR2E.Buttons.OptionsUI;
+namespace Starlight.Buttons.OptionsUI;
 
 internal class CustomOptionsValuesPreset : ScriptedValuePresetOptionDefinition.ScriptedValuePreset
 {

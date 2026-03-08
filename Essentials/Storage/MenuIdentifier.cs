@@ -1,15 +1,15 @@
-using SR2E.Enums;
+using Starlight.Enums;
 
-namespace SR2E.Storage;
+namespace Starlight.Storage;
 
 public struct MenuIdentifier
 {
     public string translationKey { get; }
-    public SR2EMenuTheme defaultTheme { get; }
+    public StarlightMenuTheme defaultTheme { get; }
     public string saveKey { get; }
-    public SR2EMenuFont defaultFont { get; }
+    public StarlightMenuFont defaultFont { get; }
 
-    public MenuIdentifier(string translationKey, SR2EMenuFont defaultFont, SR2EMenuTheme defaultTheme, string saveKey)
+    public MenuIdentifier(string translationKey, StarlightMenuFont defaultFont, StarlightMenuTheme defaultTheme, string saveKey)
     {
         this.translationKey = translationKey;
         this.defaultFont = defaultFont;

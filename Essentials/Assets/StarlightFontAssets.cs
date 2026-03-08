@@ -34,19 +34,19 @@ public static class StarlightFontAssets
         {
             var settings = Get<TMP_Settings>("TMP Settings");
             if (settings == null) return;
-            var tempPath = Path.Combine(TmpDataPath, "tmpFallbackFont.ttf");
+            var tempPath = Path.Combine(StarlightEntryPoint.tmpDataPath, "tmpFallbackFont.ttf");
             File.WriteAllBytes(tempPath, EmbeddedResourceEUtil.LoadResource("Asset                   s.NotoSans.ttf"));
             var tempFont = new Font(tempPath);
-            notoSansFont = TMP_FontAsset.CreateFontAsset(tempFont);
+            StarlightEntryPoint.NotoSansFont = TMP_FontAsset.CreateFontAsset(tempFont);
             //settings.m_fallbackFontAssets.Add(fallBackFont);, creates issues for some reason :(
             settings.m_warningsDisabled = true;
         }
 
         foreach (var fontAsset in GetAll<TMP_FontAsset>())
         {
-            if (fontAsset == notoSansFont) continue;
-            if (!fontAsset.fallbackFontAssetTable.Contains(notoSansFont))
-                fontAsset.fallbackFontAssetTable.Add(notoSansFont);
+            if (fontAsset == StarlightEntryPoint.NotoSansFont) continue;
+            if (!fontAsset.fallbackFontAssetTable.Contains(StarlightEntryPoint.NotoSansFont))
+                fontAsset.fallbackFontAssetTable.Add(StarlightEntryPoint.NotoSansFont);
         }
     }
 }

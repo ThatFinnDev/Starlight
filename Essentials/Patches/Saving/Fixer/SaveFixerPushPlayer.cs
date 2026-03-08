@@ -5,7 +5,7 @@ using Il2CppMonomiPark.SlimeRancher.DataModel;
 using Il2CppMonomiPark.SlimeRancher.Persist;
 using Il2CppMonomiPark.SlimeRancher.UI.Fabricator;
 
-namespace SR2E.Patches.Saving.Fixer;
+namespace Starlight.Patches.Saving.Fixer;
 
 
 [HarmonyPriority(-99999999)]
@@ -22,7 +22,7 @@ internal static class SaveFixerPushPlayer
     {
         try
         {
-            if (!SR2EEntryPoint.disableFixSaves)
+            if (!StarlightEntryPoint.disableFixSaves)
             {
                 Dictionary<int, int> copyOfItemCounts = new Dictionary<int, int>();
                 var enumerator = player.ItemCounts.GetEnumerator();

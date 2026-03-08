@@ -1,9 +1,9 @@
 ﻿using System.Linq;
 using Il2CppMonomiPark.SlimeRancher.UI;
-using SR2E.Prism.Lib;
-using SR2E.Storage;
+using Starlight.Prism.Lib;
+using Starlight.Storage;
 
-namespace SR2E.Prism.Patches;
+namespace Starlight.Prism.Patches;
 
 [PrismPatch()]
 [HarmonyPriority(-9999999)]

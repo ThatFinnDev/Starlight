@@ -1,10 +1,10 @@
 using Il2CppMonomiPark.SlimeRancher.Options;
-using SR2E.Enums;
-using SR2E.Patches.MainMenu;
-using SR2E.Storage;
+using Starlight.Enums;
+using Starlight.Patches.MainMenu;
+using Starlight.Storage;
 using UnityEngine.Localization;
 
-namespace SR2E.Buttons;
+namespace Starlight.Buttons;
 // Make it public on release
 internal class CustomOptionsUICategory
 {
@@ -23,19 +23,19 @@ internal class CustomOptionsUICategory
         this.icon = icon;
         this.visibleState = visibleState;
 
-        SR2EOptionsButtonManager.customOptionsUICategories.Add(this,new HashSet<CustomOptionsButton>());
+        StarlightOptionsButtonManager.customOptionsUICategories.Add(this,new HashSet<CustomOptionsButton>());
     }
     
 
     public void AddButton(CustomOptionsButton button)
     { 
-        if(!SR2EOptionsButtonManager.customOptionsUICategories[this].Contains(button))
-            SR2EOptionsButtonManager.customOptionsUICategories[this].Add(button);
+        if(!StarlightOptionsButtonManager.customOptionsUICategories[this].Contains(button))
+            StarlightOptionsButtonManager.customOptionsUICategories[this].Add(button);
     }
     public void RemoveButton(CustomOptionsButton button)
     { 
-        if(SR2EOptionsButtonManager.customOptionsUICategories[this].Contains(button))
-            SR2EOptionsButtonManager.customOptionsUICategories[this].Remove(button);
+        if(StarlightOptionsButtonManager.customOptionsUICategories[this].Contains(button))
+            StarlightOptionsButtonManager.customOptionsUICategories[this].Remove(button);
     }
     public void Remove()
     {

@@ -1,16 +1,16 @@
-﻿using SR2E.Patches.InGame;
+﻿using Starlight.Patches.InGame;
 using UnityEngine.Localization;
 
-namespace SR2E.Buttons;
+namespace Starlight.Buttons;
 
 public class CustomPauseMenuButton
 {
     public LocalizedString label;
     public int insertIndex;
     internal CustomPauseItemModel _model;
-    public System.Action action;
+    public SystemAction action;
     public bool enabled = true;
-    public CustomPauseMenuButton(LocalizedString label, int insertIndex, System.Action action)
+    public CustomPauseMenuButton(LocalizedString label, int insertIndex, SystemAction action)
     {
         this.label = label; ;
         this.insertIndex = insertIndex;

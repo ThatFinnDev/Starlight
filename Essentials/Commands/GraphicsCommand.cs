@@ -1,8 +1,8 @@
-﻿using SR2E.Managers;
+﻿using Starlight.Managers;
 
-namespace SR2E.Commands;
+namespace Starlight.Commands;
 
-internal class GraphicsCommand : SR2ECommand
+internal class GraphicsCommand : StarlightCommand
 {
     public override string ID => "graphics";
     public override string Usage => "graphics <mode>";
@@ -13,7 +13,7 @@ internal class GraphicsCommand : SR2ECommand
         if (argIndex == 0)
         {
             var list = new List<string> { "NORMAL" };
-            list.AddRange(SR2EVolumeProfileManager.presets.Keys);
+            list.AddRange(StarlightVolumeProfileManager.presets.Keys);
             return list;
         }
         return null;
@@ -28,21 +28,21 @@ internal class GraphicsCommand : SR2ECommand
         
         if (args[0] == "NORMAL")
         {
-            SR2EVolumeProfileManager.DisableProfile();
+            StarlightVolumeProfileManager.DisableProfile();
             SendMessage(translation("cmd.graphics.success","NORMAL"));
             return true;
         }
 
-        foreach (var preset in SR2EVolumeProfileManager.presets.Keys)
+        foreach (var preset in StarlightVolumeProfileManager.presets.Keys)
             if (preset == args[0])
             {
-                SR2EVolumeProfileManager.DisableProfile();
-                SR2EVolumeProfileManager.EnableProfile(preset);
+                StarlightVolumeProfileManager.DisableProfile();
+                StarlightVolumeProfileManager.EnableProfile(preset);
                 SendMessage(translation("cmd.graphics.success",preset));
                 return true;
             }
         
-        SR2EVolumeProfileManager.DisableProfile();
+        StarlightVolumeProfileManager.DisableProfile();
         SendMessage(translation("cmd.graphics.success","NORMAL"));
         return true;
     }

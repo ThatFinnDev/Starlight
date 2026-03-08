@@ -1,24 +1,24 @@
 using Il2CppKinematicCharacterController;
 using Il2CppMonomiPark.SlimeRancher.Player.CharacterController;
-using SR2E.Commands;
-using SR2E.Enums;
-using SR2E.Managers;
-using SR2E.Storage;
+using Starlight.Commands;
+using Starlight.Enums;
+using Starlight.Managers;
+using Starlight.Storage;
 using UnityEngine.InputSystem;
 
-namespace SR2E.Components;
+namespace Starlight.Components;
 
 [InjectClass]
 internal class NoClipComponent : MonoBehaviour
 {
     private float baseSpeed = 15f;
-    private static float speedAdjust => SR2EEntryPoint.noclipAdjustSpeed;
+    private static float speedAdjust => StarlightEntryPoint.noclipAdjustSpeed;
     private float speed
     {
         get
         {
             if (isSprint)
-                return baseSpeed * SR2EEntryPoint.noclipSpeedMultiplier;
+                return baseSpeed * StarlightEntryPoint.noclipSpeedMultiplier;
             return baseSpeed;
         }
     }

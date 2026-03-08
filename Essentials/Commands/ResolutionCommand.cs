@@ -1,6 +1,6 @@
-namespace SR2E.Commands;
+namespace Starlight.Commands;
 
-internal class ResolutionCommand : SR2ECommand
+internal class ResolutionCommand : StarlightCommand
 {
     public override string ID => "resolution";
     public override string Usage => "resolution <x> <y> [fullscreen(true/false)]";

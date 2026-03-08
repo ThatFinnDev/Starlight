@@ -1,6 +1,6 @@
 using System.IO;
 
-namespace SR2E.Patches.Saving;
+namespace Starlight.Patches.Saving;
 
 [HarmonyPatch(typeof(SystemContext), nameof(SystemContext.GetStorageProvider))]
 internal static class RedirectSaveFilesPatch
@@ -12,7 +12,7 @@ internal static class RedirectSaveFilesPatch
         {
             if (_Provider == null)
             {
-                var savePath = Path.Combine(SR2EEntryPoint.DataPath, "redirectedSaves");
+                var savePath = Path.Combine(StarlightEntryPoint.dataPath, "redirectedSaves");
                 Directory.CreateDirectory(savePath);
                 _Provider = new FileStorageProvider(savePath).TryCast<StorageProvider>();
             }

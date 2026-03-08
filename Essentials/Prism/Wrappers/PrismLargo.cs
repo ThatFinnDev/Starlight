@@ -1,4 +1,4 @@
-namespace SR2E.Prism.Data;
+namespace Starlight.Prism.Data;
 
 public class PrismLargo : PrismSlime
 {

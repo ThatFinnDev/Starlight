@@ -1,6 +1,7 @@
 using System.Linq;
+// ReSharper disable MemberCanBePrivate.Global
 
-namespace SR2E.Utils;
+namespace Starlight.Utils;
 
 public static class UnityEUtil
 {
@@ -8,16 +9,13 @@ public static class UnityEUtil
     {
         var transform = obj.transform;
 
-        List<GameObject> totalChildren = GetAllChildren(transform);
-        for (int i = 0; i < totalChildren.Count; i++)
-            if (totalChildren[i].name == name)
+        var totalChildren = GetAllChildren(transform);
+        foreach (var child in totalChildren)
+            if (child.name == name)
             {
-                if (typeof(T) == typeof(GameObject))
-                    return totalChildren[i] as T;
-                if (typeof(T) == typeof(Transform))
-                    return totalChildren[i].transform as T;
-                if (totalChildren[i].GetComponent<T>() != null)
-                    return totalChildren[i].GetComponent<T>();
+                if (typeof(T) == typeof(GameObject)) return child as T;
+                if (typeof(T) == typeof(Transform)) return child.transform as T;
+                if (child.GetComponent<T>() != null) return child.GetComponent<T>();
             }
 
         return null;
@@ -26,14 +24,14 @@ public static class UnityEUtil
     public static T GetObjectRecursively<T>(this Transform transform, string name) where T : class => GetObjectRecursively<T>(transform.gameObject, name);
     public static List<Transform> GetChildren(this Transform obj)
     {
-        List<Transform> children = new List<Transform>();
+        var children = new List<Transform>();
         for (int i = 0; i < obj.childCount; i++)
             children.Add(obj.GetChild(i));
         return children;
     }   
     public static List<GameObject> GetChildren(this GameObject obj)
     {
-        List<GameObject> children = new List<GameObject>();
+        var children = new List<GameObject>();
         for (int i = 0; i < obj.transform.childCount; i++)
             children.Add(obj.transform.GetChild(i).gameObject);
         return children;
@@ -41,14 +39,14 @@ public static class UnityEUtil
     public static void DestroyAllChildren(this Transform obj)
     {
         for (int i = 0; i < obj.childCount; i++) 
-            GameObject.Destroy(obj.GetChild(i).gameObject);
+            Object.Destroy(obj.GetChild(i).gameObject);
     }
 
     public static void DestroyAllChildren(this GameObject obj) => obj.transform.DestroyAllChildren();
     public static void DestroyImmediateAllChildren(this Transform obj)
     {
         for (int i = 0; i < obj.childCount; i++) 
-            GameObject.DestroyImmediate(obj.GetChild(i).gameObject);
+            Object.DestroyImmediate(obj.GetChild(i).gameObject);
     }
 
     public static void DestroyImmediateAllChildren(this GameObject obj) => obj.transform.DestroyImmediateAllChildren();
@@ -56,7 +54,7 @@ public static class UnityEUtil
     public static List<GameObject> GetAllChildren(this GameObject obj)
     {
         var container = obj.transform;
-        List<GameObject> allChildren = new List<GameObject>();
+        var allChildren = new List<GameObject>();
         for (int i = 0; i < container.childCount; i++)
         {
             var child = container.GetChild(i);
@@ -85,43 +83,43 @@ public static class UnityEUtil
 
     public static T[] GetAllChildrenOfType<T>(this Transform obj) where T : Component => GetAllChildrenOfType<T>(obj.gameObject);
     
-    public static T? Get<T>(string name) where T : Object => Resources.FindObjectsOfTypeAll<T>().FirstOrDefault((T x) => x.name == name);
+    public static T? Get<T>(string name) where T : Object => Resources.FindObjectsOfTypeAll<T>().FirstOrDefault(x => x.name == name);
     public static T? GetAny<T>() where T : Object => Resources.FindObjectsOfTypeAll<T>().FirstOrDefault();
     public static List<T> GetAll<T>() where T : Object => Resources.FindObjectsOfTypeAll<T>().ToList();
-    public static List<T> GetAll<T>(string name) where T : Object => Resources.FindObjectsOfTypeAll<T>().Where((T x) => x.name == name).ToList();
+    public static List<T> GetAll<T>(string name) where T : Object => Resources.FindObjectsOfTypeAll<T>().Where(x => x.name == name).ToList();
     
     public static T? GetInScene<T>(string name) where T : Object => Resources.FindObjectsOfTypeAll<T>().FirstOrDefault(x =>
     {
-        if (x == null) return false;
+        if (!x) return false;
         GameObject obj = null;
-        if (x.TryCast<Component>() != null) obj = x.TryCast<Component>().gameObject;
-        else if (x.TryCast<GameObject>() != null) obj = x.TryCast<GameObject>();
-        if (obj == null || !obj.scene.IsValid() || !obj.scene.isLoaded) return false;
+        if (x.TryCast<Component>()) obj = x.TryCast<Component>()?.gameObject;
+        else if (x.TryCast<GameObject>()) obj = x.TryCast<GameObject>();
+        if (!obj || !obj.scene.IsValid() || !obj.scene.isLoaded) return false;
         return obj.name == name;
     });
     public static T? GetAnyInScene<T>() where T : Object => Resources.FindObjectsOfTypeAll<T>().FirstOrDefault(x =>
     {
-        if (x == null) return false;
+        if (!x) return false;
         GameObject obj = null;
-        if (x.TryCast<Component>() != null) obj = x.TryCast<Component>().gameObject;
-        else if (x.TryCast<GameObject>() != null) obj = x.TryCast<GameObject>();
-        return obj != null && obj.scene.IsValid() && obj.scene.isLoaded;
+        if (x.TryCast<Component>()) obj = x.TryCast<Component>()?.gameObject;
+        else if (x.TryCast<GameObject>()) obj = x.TryCast<GameObject>();
+        return obj && obj.scene.IsValid() && obj.scene.isLoaded;
     });
     public static List<T>? GetAllInScene<T>() where T : Object => Resources.FindObjectsOfTypeAll<T>().Where(x =>
     {
-        if (x == null) return false;
+        if (!x) return false;
         GameObject obj = null;
-        if (x.TryCast<Component>() != null) obj = x.TryCast<Component>().gameObject;
-        else if (x.TryCast<GameObject>() != null) obj = x.TryCast<GameObject>();
-        return obj != null && obj.scene.IsValid() && obj.scene.isLoaded;
+        if (x.TryCast<Component>()) obj = x.TryCast<Component>()?.gameObject;
+        else if (x.TryCast<GameObject>()) obj = x.TryCast<GameObject>();
+        return obj && obj.scene.IsValid() && obj.scene.isLoaded;
     }).ToList();
     public static List<T>? GetAllInScene<T>(string name) where T : Object => Resources.FindObjectsOfTypeAll<T>().Where(x =>
     {
-        if (x == null) return false;
+        if (!x) return false;
         GameObject obj = null;
-        if (x.TryCast<Component>() != null) obj = x.TryCast<Component>().gameObject;
-        else if (x.TryCast<GameObject>() != null) obj = x.TryCast<GameObject>();
-        return obj != null && obj.name == name && obj.scene.IsValid() && obj.scene.isLoaded;
+        if (x.TryCast<Component>()) obj = x.TryCast<Component>()?.gameObject;
+        else if (x.TryCast<GameObject>()) obj = x.TryCast<GameObject>();
+        return obj && obj.name == name && obj.scene.IsValid() && obj.scene.isLoaded;
     }).ToList();
     
     
@@ -129,8 +127,8 @@ public static class UnityEUtil
     public static T AddComponent<T>(this Component obj) where T : Component => obj.gameObject.AddComponent<T>();
     public static bool AddComponent<T>(this Transform obj) where T : Component => obj.gameObject.AddComponent<T>();
     public static bool AddComponent(this Transform obj, Il2CppSystem.Type componentType) => obj.gameObject.AddComponent(componentType);
-    public static bool AddComponent(this Transform obj, System.Type componentType) => obj.gameObject.AddComponent(componentType.il2cppTypeof());
-    public static bool AddComponent(this GameObject obj, System.Type componentType) => obj.AddComponent(componentType.il2cppTypeof());
+    public static bool AddComponent(this Transform obj, System.Type componentType) => obj.gameObject.AddComponent(componentType.IL2CPPTypeof());
+    public static bool AddComponent(this GameObject obj, System.Type componentType) => obj.AddComponent(componentType.IL2CPPTypeof());
     
     public static bool HasComponent<T>(this Transform obj) where T : Component => HasComponent<T>(obj.gameObject);
     public static bool HasComponent<T>(this GameObject obj) where T : Component
@@ -142,20 +140,21 @@ public static class UnityEUtil
     {
         try
         {
-            T comp = obj.GetComponent<T>();
-            var check = comp.gameObject;
+            var comp = obj.GetComponent<T>();
+            // Used to throw if comp is invalid
+            var unused = comp.gameObject;
             Object.Destroy(comp);
             return true;
         }
         catch { return false; }
     }
     
-    public static GameObject CopyObject(this GameObject obj) => Object.Instantiate(obj, prefabHolder.transform);
+    public static GameObject CopyObject(this GameObject obj) => Object.Instantiate(obj, PrefabHolder.transform);
 
     public static void MakePrefab(this GameObject obj)
     {
         Object.DontDestroyOnLoad(obj);
-        obj.transform.parent = prefabHolder.transform;
+        obj.transform.parent = PrefabHolder.transform;
     }
     public static GameObject CreatePrefab(string name, GameObject obj)
     {
@@ -163,7 +162,7 @@ public static class UnityEUtil
         Object.DontDestroyOnLoad(copy);
         
         copy.name = name;
-        copy.transform.parent = prefabHolder.transform;
+        copy.transform.parent = PrefabHolder.transform;
 
         
         return copy;
@@ -173,7 +172,7 @@ public static class UnityEUtil
         var copy = obj.CopyObject();
         Object.DontDestroyOnLoad(copy);
         
-        copy.transform.parent = prefabHolder.transform;
+        copy.transform.parent = PrefabHolder.transform;
 
         
         return copy;
