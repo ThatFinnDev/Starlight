@@ -4,6 +4,7 @@ using Il2CppInterop.Runtime;
 using Il2CppInterop.Runtime.InteropTypes;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using Il2CppSystem.Linq;
+using MelonLoader;
 using Starlight.Menus;
 using Starlight.Patches.MainMenu;
 using Unity.Mathematics;
@@ -94,8 +95,8 @@ public static class MiscEUtil
         if (type.TryCast<SlimeDefinition>() != null) return SlimeAppearance.AppearanceSaveSet.CLASSIC;
         return SlimeAppearance.AppearanceSaveSet.NONE;
     }
-    public static void AddNullAction(this MelonPreferences_Entry entry) => StarlightModMenu.entriesWithActions.Add(entry, null);
-    public static void AddAction(this MelonPreferences_Entry entry, Action action) => StarlightModMenu.entriesWithActions.Add(entry, action);
+    public static void AddNullAction(this MelonPreferences_Entry entry) => StarlightModMenu.EntriesWithActions.Add(entry, null);
+    public static void AddAction(this MelonPreferences_Entry entry, Action action) => StarlightModMenu.EntriesWithActions.Add(entry, action);
 
     public static Il2CppSystem.Type IL2CPPTypeof(this Type type) => Il2CppType.From(type);
     

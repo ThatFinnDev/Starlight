@@ -4,7 +4,6 @@ using Il2CppTMPro;
 using Starlight.Enums;
 using Starlight.Enums.Sounds;
 using Starlight.Storage;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace Starlight.Popups;

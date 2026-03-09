@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Xml;
+using MelonLoader;
 using Starlight.Enums.Features;
 using Starlight.Managers;
 // ReSharper disable InconsistentNaming

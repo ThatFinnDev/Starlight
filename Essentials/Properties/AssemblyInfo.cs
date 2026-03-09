@@ -1,5 +1,6 @@
 using System.Reflection;
 using Il2CppNewtonsoft.Json.Utilities;
+using MelonLoader;
 using Starlight.Expansion;
 
 [assembly: AssemblyTitle(Starlight.BuildInfo.Name)]

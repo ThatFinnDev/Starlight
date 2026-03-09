@@ -11,16 +11,16 @@ namespace Starlight.Popups;
 public class StarlightConfirmationViewer : StarlightPopUp
 {
     private string _text;
-    private int variant = 0;
-    private Action okAction = null;
-    private Action yesAction = null;
-    private Action noAction = null;
-    private Action escapeAction = null;
+    private int _variant;
+    private readonly Action _okAction = null;
+    private readonly Action _yesAction = null;
+    private readonly Action _noAction = null;
+    private readonly Action _escapeAction = null;
     public new static void PreAwake(GameObject obj, List<object> objects)
     {
         var comp = obj.AddComponent<StarlightConfirmationViewer>();
         comp._text = objects[0].ToString();
-        comp.variant= int.Parse(objects[1].ToString());
+        comp._variant= int.Parse(objects[1].ToString() ?? string.Empty);
         
         comp.ReloadFont();
         
@@ -31,30 +31,30 @@ public class StarlightConfirmationViewer : StarlightPopUp
         var okButton = gameObject.GetObjectRecursively<Button>("OKButtonRec");
         var yesButton = gameObject.GetObjectRecursively<Button>("YesButtonRec");
         var noButton = gameObject.GetObjectRecursively<Button>("NoButtonRec");
-        if (variant == 0)
+        if (_variant == 0)
         {
             okButton.gameObject.SetActive(true);
             yesButton.gameObject.SetActive(false);
             noButton.gameObject.SetActive(false);
             okButton.onClick.AddListener((Action)(() =>
             {
-                if(okAction!=null) okAction.Invoke();
+                if(_okAction!=null) _okAction.Invoke();
                 Close();
             }));
         }
-        else if (variant == 1)
+        else if (_variant == 1)
         {
             okButton.gameObject.SetActive(false);
             yesButton.gameObject.SetActive(true);
             noButton.gameObject.SetActive(true);
             yesButton.onClick.AddListener((Action)(() =>
             {
-                if(yesAction!=null) yesAction.Invoke();
+                if(_yesAction!=null) _yesAction.Invoke();
                 Close();
             }));
             noButton.onClick.AddListener((Action)(() =>
             {
-                if(noAction!=null) noAction.Invoke();
+                if(_noAction!=null) _noAction.Invoke();
                 Close();
             }));
         }
@@ -99,7 +99,7 @@ public class StarlightConfirmationViewer : StarlightPopUp
     {
         if (LKey.Escape.OnKeyDown())
         {
-            if(escapeAction!=null) escapeAction.Invoke();
+            if(_escapeAction!=null) _escapeAction.Invoke();
             Close();
         }
     }

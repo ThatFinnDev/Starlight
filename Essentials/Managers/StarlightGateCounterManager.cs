@@ -1,3 +1,4 @@
+using MelonLoader;
 using Starlight.Expansion;
 using Starlight.Patches.Context;
 
@@ -38,48 +39,48 @@ public static class StarlightCounterGateManager
         catch 
         { }
     }
-    public static void RegisterFor_PlayerCameraDisableUseOcclusionCulling(this StarlightExpansionV01 expansionV3)
+    public static void RegisterFor_PlayerCameraDisableUseOcclusionCulling(this StarlightExpansionVXX expansion)
     {
-        if (!useOcclusionCullingList.Contains(expansionV3)) useOcclusionCullingList.Add(expansionV3);
+        if (!useOcclusionCullingList.Contains(expansion)) useOcclusionCullingList.Add(expansion);
         RefreshOcclusionCulling();
     }
-    public static void DeregisterFor_PlayerCameraDisableUseOcclusionCulling(this StarlightExpansionV01 expansionV3)
+    public static void DeregisterFor_PlayerCameraDisableUseOcclusionCulling(this StarlightExpansionVXX expansion)
     {
-        if (!useOcclusionCullingList.Contains(expansionV3)) useOcclusionCullingList.Remove(expansionV3);
+        if (!useOcclusionCullingList.Contains(expansion)) useOcclusionCullingList.Remove(expansion);
         RefreshOcclusionCulling();
     }
-    public static void RegisterFor_PlayerCameraDisableUseOcclusionCulling(this MelonMod mod)
+    public static void RegisterFor_PlayerCameraDisableUseOcclusionCulling(this MelonBase melon)
     {
-        if (!useOcclusionCullingList.Contains(mod)) useOcclusionCullingList.Add(mod);
+        if (!useOcclusionCullingList.Contains(melon)) useOcclusionCullingList.Add(melon);
         RefreshOcclusionCulling();
     }
-    public static void DeregisterFor_PlayerCameraDisableUseOcclusionCulling(this MelonMod mod)
+    public static void DeregisterFor_PlayerCameraDisableUseOcclusionCulling(this MelonBase melon)
     {
-        if (!useOcclusionCullingList.Contains(mod)) useOcclusionCullingList.Remove(mod);
+        if (!useOcclusionCullingList.Contains(melon)) useOcclusionCullingList.Remove(melon);
         RefreshOcclusionCulling();
     }
     
     
     
     
-    public static void RegisterFor_DisableCheats(this StarlightExpansionV01 expansionV3)
+    public static void RegisterFor_DisableCheats(this StarlightExpansionVXX expansion)
     {
-        if (!disableCheatsList.Contains(expansionV3)) disableCheatsList.Add(expansionV3);
+        if (!disableCheatsList.Contains(expansion)) disableCheatsList.Add(expansion);
         RefreshDisableCheats();
     }
-    public static void DeregisterFor_DisableCheats(this StarlightExpansionV01 expansionV3)
+    public static void DeregisterFor_DisableCheats(this StarlightExpansionVXX expansion)
     {
-        if (!disableCheatsList.Contains(expansionV3)) disableCheatsList.Remove(expansionV3);
+        if (!disableCheatsList.Contains(expansion)) disableCheatsList.Remove(expansion);
         RefreshDisableCheats();
     }
-    public static void RegisterFor_DisableCheats(this MelonMod mod)
+    public static void RegisterFor_DisableCheats(this MelonBase melon)
     {
-        if (!disableCheatsList.Contains(mod)) disableCheatsList.Add(mod);
+        if (!disableCheatsList.Contains(melon)) disableCheatsList.Add(melon);
         RefreshDisableCheats();
     }
-    public static void DeregisterFor_DisableCheats(this MelonMod mod)
+    public static void DeregisterFor_DisableCheats(this MelonBase melon)
     {
-        if (!disableCheatsList.Contains(mod)) disableCheatsList.Remove(mod);
+        if (!disableCheatsList.Contains(melon)) disableCheatsList.Remove(melon);
         RefreshDisableCheats();
     }
 }

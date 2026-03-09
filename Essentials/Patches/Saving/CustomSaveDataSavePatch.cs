@@ -1,6 +1,7 @@
 using Il2CppMonomiPark.SlimeRancher;
 using Il2CppMonomiPark.SlimeRancher.DataModel;
 using Il2CppMonomiPark.SlimeRancher.Persist;
+using Starlight.Managers;
 using Starlight.Saving;
 using Starlight.Storage;
 
@@ -36,13 +37,13 @@ internal static class CustomSaveDataSavePatch
                     saveReferenceTranslation.ToNonIVariant(), __result, gameModel,metadata,savedGameInfoProvider)); 
                 if (rootSave == null) continue;
                 var base128 = rootSave.ToBytes().EncodeToBase128();
-                var md5Hash = expansion.info.ID.CreateMD5();
+                var md5Hash = expansion.GetPackageInfoFromExpansion().Value.ID.CreateMD5();
                 var finalEntry = $"{prefix}{md5Hash}{base128}";
                 __result.ZoneIndex.IndexTable = __result.ZoneIndex.IndexTable.AddToNew(finalEntry);
             }
             catch (Exception e)
             {
-                LogError($"Failed to save custom save data for expansion {expansion.info.name}: {e}");
+                LogError($"Failed to save custom save data for expansion {expansion.GetPackageInfoFromExpansion().Value.name}: {e}");
             }
         }
     }

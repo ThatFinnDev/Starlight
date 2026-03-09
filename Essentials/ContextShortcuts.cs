@@ -1,6 +1,7 @@
 using System.Collections;
 using Il2CppMonomiPark.SlimeRancher;
 using Il2CppMonomiPark.SlimeRancher.Damage;
+using MelonLoader;
 
 namespace Starlight;
 

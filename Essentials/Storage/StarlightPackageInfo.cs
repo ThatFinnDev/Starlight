@@ -1,8 +1,9 @@
 using System.Reflection;
+using Starlight.Enums;
 
 namespace Starlight.Storage;
 
-public struct StarlightExpansionInfo
+public record struct StarlightPackageInfo
 {
     public string ID = null;
     public string name = null;
@@ -17,13 +18,20 @@ public struct StarlightExpansionInfo
     public bool usePrism = false;
     public string iconPath = "Assets.icon.png";
 
-
+    public string GetDllName() => dllName;
+    public Assembly GetAssembly() => assembly;
+    public int GetExpansionVersion() => expansionVersion;
+    public Sprite GetIcon() => icon;
+    public PackageType GetPackageType() => type;
+    public dynamic GetEntrypoint() => mainClass;
+    internal dynamic mainClass = null;
     internal string dllName = null;
     internal Assembly assembly = null;
     internal int expansionVersion = 0;
     internal Sprite icon;
+    internal PackageType type = PackageType.Expansion;
     
-    public StarlightExpansionInfo()
+    public StarlightPackageInfo()
     {
         
     }

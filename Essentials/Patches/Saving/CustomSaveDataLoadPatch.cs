@@ -2,6 +2,7 @@ using Il2CppMonomiPark.SlimeRancher;
 using Il2CppMonomiPark.SlimeRancher.DataModel;
 using Il2CppMonomiPark.SlimeRancher.Persist;
 using Starlight.Expansion;
+using Starlight.Managers;
 using Starlight.Saving;
 using Starlight.Storage;
 
@@ -66,7 +67,8 @@ internal static class CustomSaveDataLoadPatch
                     foreach (var expansion in StarlightEntryPoint.ExpansionV01S)
                         try
                         {
-                            if(expansion.info.ID.CreateMD5() == md5Hash)
+                            var info = expansion.GetPackageInfoFromExpansion().Value;
+                            if(info.ID.CreateMD5() == md5Hash)
                             {
                                 var sessionData = new LoadingGameSessionData(actorIdProvider, saveReferenceTranslation, saveReferenceTranslation.ToNonIVariant(), gameState, gameModel);
                                 RootSave rootSave = null; 
@@ -81,7 +83,7 @@ internal static class CustomSaveDataLoadPatch
                                 catch (Exception e)
                                 {
                                     LogError(
-                                        $"Failed to save custom save data for expansion {expansion.info.name}: {e}");
+                                        $"Failed to save custom save data for expansion {info.name}: {e}");
                                 }
                                 if(rootSave!=null)
                                     try

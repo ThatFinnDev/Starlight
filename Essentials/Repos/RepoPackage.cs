@@ -1,9 +1,10 @@
 ﻿using System;
+using Starlight.Enums;
 
 namespace Starlight.Repos;
 
 [System.Serializable]
-public class RepoMod
+public class RepoPackage
 {
     public string name;
     public string author;
@@ -24,13 +25,13 @@ public class RepoMod
     public byte colorG;
     public byte colorB;
     public byte colorA;
-    public RepoModType type = RepoModType.Mod;
+    public PackageType type = PackageType.MelonMod;
     public bool universal;
-    public List<RepoModVersion> versions = new List<RepoModVersion>();
+    public List<RepoPackageVersion> versions = new List<RepoPackageVersion>();
 
-    public RepoModVersion getLatestVersion(string branch)
+    public RepoPackageVersion getLatestVersion(string branch)
     {
-        RepoModVersion latestVersion = null;
+        RepoPackageVersion latestVersion = null;
         foreach (var version in versions)
         {
             if (branch == version.branch)

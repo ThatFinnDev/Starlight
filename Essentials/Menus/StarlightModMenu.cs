@@ -1,32 +1,51 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using Il2CppInterop.Runtime.Attributes;
 using Il2CppMonomiPark.SlimeRancher.Input;
 using Il2CppMonomiPark.SlimeRancher.UI;
 using Il2CppTMPro;
+using MelonLoader;
 using Starlight.Components;
 using Starlight.Enums;
 using Starlight.Enums.Features;
 using Starlight.Enums.Sounds;
-using Starlight.Expansion;
 using Starlight.Managers;
 using Starlight.Popups;
 using Starlight.Storage;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
 using Button = UnityEngine.UI.Button;
 using Image = UnityEngine.UI.Image;
 using Toggle = UnityEngine.UI.Toggle;
+// ReSharper disable EmptyGeneralCatchClause
 
 namespace Starlight.Menus;
 
 public class StarlightModMenu : StarlightMenu
 {
-    public new static MenuIdentifier GetMenuIdentifier() => new MenuIdentifier("modmenu",StarlightMenuFont.SR2,StarlightMenuTheme.Default,"ModMenu");
+    public new static MenuIdentifier GetMenuIdentifier() => new ("modmenu",StarlightMenuFont.SR2,StarlightMenuTheme.Default,"ModMenu");
     protected override bool createCommands => true;
     protected override bool inGameOnly => false;
+    
+    internal static readonly Dictionary<MelonPreferences_Entry, SystemAction> EntriesWithActions = new ();
+    private TextMeshProUGUI _modInfoText;
+    private GameObject _entryTemplate;
+    private GameObject _headerTemplate;
+    private GameObject _warningText;
+    private Texture2D _modMenuTabImage;
+    private readonly List<Key> _allPossibleUnityKeys = new ();
+    private readonly List<KeyCode> _allPossibleUnityKeyCodes = new ();
+    private readonly List<LKey> _allPossibleLKey = new ();
+    private TextMeshProUGUI _themeMenuText;
+    private Button _themeButton;
+    private Transform _modContent;
+    private Transform _modConfigContent;
+    private InputEvent _inputDown;
+    private InputEvent _inputUp;
+    private Dictionary<GameObject, string> _modButtons = new ();
+    private readonly List<SystemAction> _configTabActions = new ();
+    private static int _listeningType = 0;
+    private static System.Action<int> _listeningAction = null;
+    
     
     protected override void OnAwake()
     {
@@ -34,62 +53,43 @@ public class StarlightModMenu : StarlightMenu
         openActions = new List<MenuActions> { MenuActions.PauseGame, MenuActions.HideMenus }.ToArray();
         closeActions = new List<MenuActions> { MenuActions.UnPauseGame, MenuActions.UnHideMenus, MenuActions.EnableInput }.ToArray();
     }
-    
-    
-    internal static Dictionary<MelonPreferences_Entry, SystemAction> entriesWithActions = new ();
-    TextMeshProUGUI modInfoText;
-    GameObject entryTemplate;
-    GameObject headerTemplate;
-    GameObject warningText;
-    Texture2D modMenuTabImage;
-    List<Key> allPossibleUnityKeys = new List<Key>();
-    private List<KeyCode> allPossibleUnityKeyCodes = new List<KeyCode>();
-    private List<LKey> allPossibleLKey = new List<LKey>();
-    TextMeshProUGUI themeMenuText;
-    Button themeButton;
-    private Transform modContent;
-    private Transform modConfigContent;
-
     protected override void OnClose()
     {
         gameObject.GetObjectRecursively<Button>("ModMenuModMenuSelectionButtonRec").onClick.Invoke();
-        for (int i = 0; i < modContent.childCount; i++)
-            Object.Destroy(modContent.GetChild(i).gameObject);
+        for (int i = 0; i < _modContent.childCount; i++)
+            Destroy(_modContent.GetChild(i).gameObject);
     }
     
-    private InputEvent inputDown;
-    private InputEvent inputUp;
     public override void AfterGameContext(GameContext gameContext)
     {
-        inputDown = Get<InputEvent>("ItemDown");
-        inputUp = Get<InputEvent>("ItemUp");
-        var refScroll = modContent.parent.parent;
+        _inputDown = Get<InputEvent>("ItemDown");
+        _inputUp = Get<InputEvent>("ItemUp");
+        var refScroll = _modContent.parent.parent;
         if (!refScroll.HasComponent<ScrollByMenuKeys>())
         {
             var comp = refScroll.gameObject.AddComponent<ScrollByMenuKeys>();
-            comp._scrollDownInput = inputDown;
-            comp._scrollUpInput = inputUp;
+            comp._scrollDownInput = _inputDown;
+            comp._scrollUpInput = _inputUp;
             comp._scrollPerFrame = 9f;
         }
-        var gadgetScroll = modConfigContent.parent.parent;
+        var gadgetScroll = _modConfigContent.parent.parent;
         if (!gadgetScroll.HasComponent<ScrollByMenuKeys>())
         {
             var comp = gadgetScroll.gameObject.AddComponent<ScrollByMenuKeys>();
-            comp._scrollDownInput = inputDown;
-            comp._scrollUpInput = inputUp;
+            comp._scrollDownInput = _inputDown;
+            comp._scrollUpInput = _inputUp;
             comp._scrollPerFrame = 9f;
         }
     }
 
-    private Dictionary<GameObject, string> modButtons = new ();
-    [HideFromIl2Cpp] void ProcessMelon(StarlightExpansionInfo info,string downloadLink,bool isExpansion,bool isRotten,GameObject buttonPrefab, List<object> rottenInfo)
+    [HideFromIl2Cpp] void ProcessPackage(StarlightPackageInfo info,string downloadLink,bool isRotten,GameObject buttonPrefab, List<object> rottenInfo)
     {
-        var obj = Instantiate(buttonPrefab, modContent);
-        modButtons.Add(obj,info.name);
+        var obj = Instantiate(buttonPrefab, _modContent);
+        _modButtons.Add(obj,info.name);
         var b = obj.GetComponent<Button>();
         b.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = info.name;
         obj.SetActive(true);
-        if (isExpansion)
+        if (info.type==PackageType.Expansion)
         {
             var colorBlock = b.colors;
             colorBlock.normalColor = new Color(0.149f, 0.7176f, 0.3961f, 1);
@@ -117,52 +117,52 @@ public class StarlightModMenu : StarlightMenu
         b.onClick.AddListener((SystemAction)(() =>
         {
             AudioEUtil.PlaySound(MenuSound.Click);
-            themeButton.gameObject.SetActive(info.name=="Starlight Core Essentials");
+            _themeButton.gameObject.SetActive(info.name=="Starlight Core Essentials");
             if (isRotten)
             {
-                modInfoText.text = translation("modmenu.modinfo.brokenmod", info.name);
-                if (isExpansion) modInfoText.text = translation("modmenu.modinfo.brokenexpansion", info.name);
+                _modInfoText.text = translation("modmenu.modinfo.brokenmod", info.name);
+                if (info.type==PackageType.Expansion) _modInfoText.text = translation("modmenu.modinfo.brokenexpansion", info.name);
             }
             else
             {
-                modInfoText.text = translation("modmenu.modinfo.mod", info.name);
-                if (isExpansion) modInfoText.text = translation("modmenu.modinfo.expansion", info.name);
+                _modInfoText.text = translation("modmenu.modinfo.mod", info.name);
+                if (info.type==PackageType.Expansion) _modInfoText.text = translation("modmenu.modinfo.expansion", info.name);
             }
             if(!string.IsNullOrWhiteSpace(info.ID)) 
-                modInfoText.text += "\n" + translation("modmenu.modinfo.id", info.ID);
-            modInfoText.text += "\n" + translation("modmenu.modinfo.author", string.IsNullOrEmpty(info.author)?"Anonymous":info.author);
+                _modInfoText.text += "\n" + translation("modmenu.modinfo.id", info.ID);
+            _modInfoText.text += "\n" + translation("modmenu.modinfo.author", string.IsNullOrEmpty(info.author)?"Anonymous":info.author);
 
-            if(isExpansion)
-                modInfoText.text += "\n" + translation("modmenu.modinfo.useprism", info.usePrism);
+            if(info.type==PackageType.Expansion)
+                _modInfoText.text += "\n" + translation("modmenu.modinfo.useprism", info.usePrism);
 
-            if (info.coAuthors is { Length: > 0 }) modInfoText.text += "\n" + translation("modmenu.modinfo.coauthor", string.Join(", ",info.coAuthors));
-            if (info.contributors is { Length: > 0 }) modInfoText.text += "\n" + translation("modmenu.modinfo.contributors", string.Join(", ",info.contributors));
+            if (info.coAuthors is { Length: > 0 }) _modInfoText.text += "\n" + translation("modmenu.modinfo.coauthor", string.Join(", ",info.coAuthors));
+            if (info.contributors is { Length: > 0 }) _modInfoText.text += "\n" + translation("modmenu.modinfo.contributors", string.Join(", ",info.contributors));
             
-            modInfoText.text += "\n" + translation("modmenu.modinfo.version", info.version) + "\n";
+            _modInfoText.text += "\n" + translation("modmenu.modinfo.version", info.version) + "\n";
             
             
             if(!string.IsNullOrWhiteSpace(info.sourceCode)) 
-                modInfoText.text += "\n" + translation("modmenu.modinfo.sourcecode", FormatLink(info.sourceCode));
+                _modInfoText.text += "\n" + translation("modmenu.modinfo.sourcecode", FormatLink(info.sourceCode));
             
             if(!string.IsNullOrWhiteSpace(info.nexus)) 
-                modInfoText.text += "\n" + translation("modmenu.modinfo.nexus", FormatLink(info.nexus));
+                _modInfoText.text += "\n" + translation("modmenu.modinfo.nexus", FormatLink(info.nexus));
             
             if(!string.IsNullOrWhiteSpace(info.discord)) 
-                modInfoText.text += "\n" + translation("modmenu.modinfo.discord", FormatLink(info.discord));
+                _modInfoText.text += "\n" + translation("modmenu.modinfo.discord", FormatLink(info.discord));
 
 
             if (!string.IsNullOrWhiteSpace(downloadLink))
-                modInfoText.text += "\n" + translation("modmenu.modinfo.link", FormatLink(downloadLink));
+                _modInfoText.text += "\n" + translation("modmenu.modinfo.link", FormatLink(downloadLink));
 
             if(!string.IsNullOrWhiteSpace(info.description)) 
-                modInfoText.text += "\n" + translation("modmenu.modinfo.description", info.description + "\n");
+                _modInfoText.text += "\n" + translation("modmenu.modinfo.description", info.description + "\n");
 
             if (isRotten&&rottenInfo!=null&rottenInfo.Count>=3)
             {
-                modInfoText.text += "\n";
-                try {modInfoText.text += "\n" + translation("modmenu.modinfo.path", rottenInfo[0]);} catch {}
-                try {modInfoText.text += "\n" + translation("modmenu.modinfo.exception", rottenInfo[1]);} catch {}
-                try {modInfoText.text += "\n" + translation("modmenu.modinfo.errormessage", rottenInfo[2]);} catch {}
+                _modInfoText.text += "\n";
+                try {_modInfoText.text += "\n" + translation("modmenu.modinfo.path", rottenInfo[0]);} catch {}
+                try {_modInfoText.text += "\n" + translation("modmenu.modinfo.exception", rottenInfo[1]);} catch {}
+                try {_modInfoText.text += "\n" + translation("modmenu.modinfo.errormessage", rottenInfo[2]);} catch {}
             }
         }));
     }
@@ -170,135 +170,35 @@ public class StarlightModMenu : StarlightMenu
     {
         GameObject buttonPrefab = transform.GetObjectRecursively<GameObject>("ModMenuModMenuTemplateButtonRec");
         buttonPrefab.SetActive(false);
-        modButtons = new();
-        //Load broken Melons
-        foreach (var loadedAssembly in MelonAssembly.LoadedAssemblies) foreach (dynamic rotten in loadedAssembly.RottenMelons)
-        {
-            // Do it this way to support ML 0.7.1 and newer versions
-            try
-            {
-                Assembly assembly = null;
-                string exception = null;
-                string errorMessage = null;
-                try
-                {
-                    assembly = rotten.assembly;
-                    exception = rotten.exception?.ToString();
-                    errorMessage = rotten.errorMessage;
-                }
-                catch
-                {
-                    try
-                    {
-                        assembly = rotten.Assembly.assembly;
-                        exception = rotten.exception?.ToString();
-                        errorMessage = rotten.errorMessage;
-                    }
-                    catch { }
-                }
-                if (assembly == null) break;
-                
-                string melonName = "";
-                try {melonName = assembly.FullName; } catch {}
-                if (string.IsNullOrEmpty(melonName)) melonName = translation("modmenu.modinfo.brokentitle");
-                ProcessMelon(new StarlightExpansionInfo(){name = melonName,assembly = assembly, dllName = new FileInfo(assembly.Location).Name},null,false,true,buttonPrefab,new List<object>() { assembly.Location, exception, errorMessage });
-
-            }
+        _modButtons = new();
+        
+        // Melons
+        foreach (var info in StarlightPackageManager.GetAllMelonInfos())
+            try { ProcessPackage(info,null,false, buttonPrefab, null); }
             catch (Exception e) { LogError(e); }
-        }
-        //Load Melons
-        foreach (var melonBase in MelonBase.RegisteredMelons)
-        {
-            try
-            {
-                var assembly = melonBase.MelonAssembly.Assembly;
-                if (StarlightEntryPoint.Expansions.Keys.ToList().Contains(assembly))
-                    continue;
-                var info = new StarlightExpansionInfo()
-                {
-                    name = melonBase.Info.Name,
-                    author = melonBase.Info.Author,
-                    version = melonBase.Info.Version,
-                    dllName = new FileInfo(assembly.Location).Name
-                };
-            
-                var desc = assembly.GetCustomAttribute<AssemblyDescriptionAttribute>();
-                if (desc != null)
-                    info.description = desc.Description;
-                foreach (var meta in assembly.GetCustomAttributes<AssemblyMetadataAttribute>())
-                {
-                    if (meta == null) continue;
-                    if (string.IsNullOrWhiteSpace(meta.Key)) continue;
-                    if (string.IsNullOrWhiteSpace(meta.Value)) continue;
-                    switch (meta.Key)
-                    {
-                        case StarlightModInfoAttributes.SourceCode: info.sourceCode = meta.Value; break;
-                        case StarlightModInfoAttributes.Nexus: info.nexus = meta.Value; break;
-                        case StarlightModInfoAttributes.Discord: info.discord = meta.Value; break;
-                        case StarlightModInfoAttributes.DisplayVersion: info.version = meta.Value; break;
-                        case StarlightModInfoAttributes.CoAuthors: info.coAuthors = meta.Value.Split(", "); break;
-                        case StarlightModInfoAttributes.Contributors: info.contributors = meta.Value.Split(", "); break;
-                        case StarlightModInfoAttributes.IconB64: try { info.icon = ConvertEUtil.Base64ToTexture2D(meta.Value).Texture2DToSprite(); } catch { } break;
-                    }
-                }
-
-                if (info.icon != null)
-                {
-                    try { info.icon = EmbeddedResourceEUtil.LoadSprite("icon.png",assembly).CopyWithoutMipmaps(); }
-                    catch { }
-                    if (info.icon != null)
-                    {
-                        try { info.icon = EmbeddedResourceEUtil.LoadSprite("Assets.icon.png", assembly).CopyWithoutMipmaps(); }
-                        catch { }
-                    }
-                }
-                ProcessMelon(info, melonBase.Info.DownloadLink, false, false, buttonPrefab, null);
-            }
+        // Expansions
+        foreach (var info in StarlightPackageManager.GetAllExpansionInfos())
+            try { ProcessPackage(info,null,false, buttonPrefab, null); }
             catch (Exception e) { LogError(e); }
-        }
-
-        //Load Expansions
-        foreach (var pair in StarlightEntryPoint.Expansions.Values.ToList())
-        {
-            try
-            {
-                foreach (var pair2 in pair.Item1)
-                {
-                    try
-                    { 
-                        ProcessMelon(pair2.Value,null, true,false, buttonPrefab, null);
-                    }
-                    catch (Exception e) { LogError(e); }
-                }
-            }
+        // Rotten
+        foreach (var pair in StarlightPackageManager.GetAllRottenInfos())
+            try { ProcessPackage(pair.Key,null,true, buttonPrefab, pair.Value); }
             catch (Exception e) { LogError(e); }
-        }
-        //Load broken Expansions
-        foreach (var group in StarlightEntryPoint.BrokenExpansions)
-        {
-            try
-            {
-                ProcessMelon(new StarlightExpansionInfo(){name = group.Item1,assembly = group.Item2, dllName = new FileInfo(group.Item2.Location).Name},null, true,true,
-                    buttonPrefab, new List<object>() { group.Item2.Location, group.Item3,  group.Item4 });
-            }
-            catch (Exception e) { LogError(e); }
-        }
         
         
         
-        
-        var sortedButtons = modButtons.Keys.ToList().OrderBy(obj =>
+        var sortedButtons = _modButtons.Keys.ToList().OrderBy(obj =>
         {
-            var text = modButtons[obj];
-            if (text == "Starlight Core Essentials") return " ";
+            var text = _modButtons[obj];
+            if (text == BuildInfo.Name) return " ";
             return text;
         }).ToList();
 
         for (int i = 0; i < sortedButtons.Count; i++)
             sortedButtons[i].transform.SetSiblingIndex(i);
-        modButtons = new ();
+        _modButtons = new ();
         
-        modContent.transform.GetChild(0).GetComponent<Button>().onClick.Invoke();
+        _modContent.transform.GetChild(0).GetComponent<Button>().onClick.Invoke();
     }
 
     string FormatLink(string url)
@@ -306,49 +206,39 @@ public class StarlightModMenu : StarlightMenu
         return $"<link=\"{url}\"><color=#2C6EC8><u>{url}</u></color></link>";
     }
 
-    private List<SystemAction> configTabActions = new ();
     protected override void OnLateAwake()
     {
-        modContent = transform.GetObjectRecursively<Transform>("ModMenuModMenuContentRec");
-        modConfigContent = transform.GetObjectRecursively<Transform>("ModMenuModConfigurationContentRec");
-        entryTemplate = transform.GetObjectRecursively<GameObject>("ModMenuModConfigurationTemplateEntryRec");
-        headerTemplate = transform.GetObjectRecursively<GameObject>("ModMenuModConfigurationTemplateHeaderRec");
-        warningText = transform.GetObjectRecursively<GameObject>("ModMenuModConfigurationRestartWarningRec");
-        toTranslate.Add(warningText.GetComponent<TextMeshProUGUI>(),"modmenu.warning.restart");
-        modInfoText = transform.GetObjectRecursively<TextMeshProUGUI>("ModMenuModInfoTextRec");
-        modInfoText.AddComponent<ClickableTextLink>();
-        foreach (string stringKey in System.Enum.GetNames(typeof(Key)))
+        _modContent = transform.GetObjectRecursively<Transform>("ModMenuModMenuContentRec");
+        _modConfigContent = transform.GetObjectRecursively<Transform>("ModMenuModConfigurationContentRec");
+        _entryTemplate = transform.GetObjectRecursively<GameObject>("ModMenuModConfigurationTemplateEntryRec");
+        _headerTemplate = transform.GetObjectRecursively<GameObject>("ModMenuModConfigurationTemplateHeaderRec");
+        _warningText = transform.GetObjectRecursively<GameObject>("ModMenuModConfigurationRestartWarningRec");
+        toTranslate.Add(_warningText.GetComponent<TextMeshProUGUI>(),"modmenu.warning.restart");
+        _modInfoText = transform.GetObjectRecursively<TextMeshProUGUI>("ModMenuModInfoTextRec");
+        _modInfoText.AddComponent<ClickableTextLink>();
+        foreach (string stringKey in Enum.GetNames(typeof(Key)))
             if (!string.IsNullOrEmpty(stringKey))
                 if (stringKey != "None")
                 {
-                    Key key;
-                    if (Key.TryParse(stringKey, out key))
-                        if (key != null)
-                            allPossibleUnityKeys.Add(key);
+                    if (Enum.TryParse(stringKey, out Key key)) _allPossibleUnityKeys.Add(key);
                 }
-        allPossibleUnityKeys.Remove(Key.LeftCommand);
-        allPossibleUnityKeys.Remove(Key.RightCommand);
+        _allPossibleUnityKeys.Remove(Key.LeftCommand);
+        _allPossibleUnityKeys.Remove(Key.RightCommand);
         
-        foreach (string stringKey in System.Enum.GetNames(typeof(KeyCode)))
+        foreach (string stringKey in Enum.GetNames(typeof(KeyCode)))
             if (!string.IsNullOrEmpty(stringKey))
                 if (stringKey != "None")
                 {
-                    KeyCode key;
-                    if (KeyCode.TryParse(stringKey, out key))
-                        if (key != null)
-                            allPossibleUnityKeyCodes.Add(key);
+                    if (Enum.TryParse(stringKey, out KeyCode key)) _allPossibleUnityKeyCodes.Add(key);
                 }
-        allPossibleUnityKeyCodes.Remove(KeyCode.LeftWindows);
-        allPossibleUnityKeyCodes.Remove(KeyCode.RightWindows);
+        _allPossibleUnityKeyCodes.Remove(KeyCode.LeftWindows);
+        _allPossibleUnityKeyCodes.Remove(KeyCode.RightWindows);
         
-        foreach (string stringKey in System.Enum.GetNames(typeof(LKey)))
+        foreach (string stringKey in Enum.GetNames(typeof(LKey)))
             if (!string.IsNullOrEmpty(stringKey))
                 if (stringKey != "None")
                 {
-                    LKey key;
-                    if (LKey.TryParse(stringKey, out key))
-                        if (key != null)
-                            allPossibleLKey.Add(key);
+                    if (Enum.TryParse(stringKey, out LKey key)) _allPossibleLKey.Add(key);
                 }
         var button1 = transform.GetObjectRecursively<Image>("ModMenuModMenuSelectionButtonRec");
         button1.GetComponent<Button>().onClick.AddListener(selectCategorySound);
@@ -361,7 +251,7 @@ public class StarlightModMenu : StarlightMenu
             ExecuteInTicks((() =>
             {
                 
-                foreach (var action in configTabActions)
+                foreach (var action in _configTabActions)
                     action.Invoke();
             }),1);
         }));
@@ -385,19 +275,19 @@ public class StarlightModMenu : StarlightMenu
         toTranslate.Add(button3.transform.GetChild(0).GetComponent<TextMeshProUGUI>(),"modmenu.category.repo");
         toTranslate.Add(transform.GetObjectRecursively<TextMeshProUGUI>("TitleTextRec"),"modmenu.title");
         
-        themeButton = transform.GetObjectRecursively<Button>("ThemeMenuButtonRec");
-        themeButton.onClick.AddListener((SystemAction)(() =>{ AudioEUtil.PlaySound(MenuSound.Click); Close(); MenuEUtil.GetMenu<StarlightThemeMenu>().OpenC(this); }));
-        toTranslate.Add(themeButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>(),"buttons.thememenu.label");
-        foreach (MelonPreferences_Category category in MelonPreferences.Categories)
+        _themeButton = transform.GetObjectRecursively<Button>("ThemeMenuButtonRec");
+        _themeButton.onClick.AddListener((SystemAction)(() =>{ AudioEUtil.PlaySound(MenuSound.Click); Close(); MenuEUtil.GetMenu<StarlightThemeMenu>().OpenC(this); }));
+        toTranslate.Add(_themeButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>(),"buttons.thememenu.label");
+        foreach (var category in MelonPreferences.Categories)
         {
-            GameObject header = Instantiate(headerTemplate, modConfigContent);
+            var header = Instantiate(_headerTemplate, _modConfigContent);
             header.SetActive(true);
             header.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = category.DisplayName;
-            foreach (MelonPreferences_Entry entry in category.Entries)
+            foreach (var entry in category.Entries)
             {
                 if (!entry.IsHidden)
                 {
-                    GameObject obj = Instantiate(entryTemplate, modConfigContent);
+                    GameObject obj = Instantiate(_entryTemplate, _modConfigContent);
                     obj.SetActive(true);
                     var entryName = obj.GetObjectRecursively<TextMeshProUGUI>("EntryName");
                     entryName.text = entry.DisplayName;
@@ -406,7 +296,7 @@ public class StarlightModMenu : StarlightMenu
                             $"\n<size=60%>{entry.Description.Replace("\n", " ")}</size>";
                     //entryName.autoSizeTextContainer = true;
                     obj.GetObjectRecursively<TextMeshProUGUI>("Value").text = entry.GetEditedValueAsString();
-                    configTabActions.Add(() =>
+                    _configTabActions.Add(() =>
                     {
                         var rectT = obj.GetComponent<RectTransform>();
                         var newValue = entryName.GetRenderedHeight() + 5;
@@ -418,17 +308,16 @@ public class StarlightModMenu : StarlightMenu
                         obj.GetObjectRecursively<GameObject>("EntryToggle").SetActive(true);
                         obj.GetObjectRecursively<Toggle>("EntryToggle").isOn =
                             bool.Parse(entry.GetEditedValueAsString());
-                        obj.GetObjectRecursively<Toggle>("EntryToggle").onValueChanged.AddListener((System.Action<bool>)(
+                        obj.GetObjectRecursively<Toggle>("EntryToggle").onValueChanged.AddListener((Action<bool>)(
                             (isOn) =>
                             {
                                 if(isOpen) AudioEUtil.PlaySound(MenuSound.Click);
                                 entry.BoxedEditedValue = isOn;
                                 category.SaveToFile(false);
-                                if (!entriesWithActions.ContainsKey(entry))
-                                    warningText.SetActive(true);
+                                if (!EntriesWithActions.TryGetValue(entry, out var action))
+                                    _warningText.SetActive(true);
                                 else
                                 {
-                                    var action = entriesWithActions[entry];
                                     if (action != null)
                                         action.Invoke();
                                 }
@@ -447,22 +336,20 @@ public class StarlightModMenu : StarlightMenu
                         inputField.contentType = TMP_InputField.ContentType.IntegerNumber;
                         inputField.transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text =
                             translation("modmenu.modconfig.enterint");
-                        inputField.onValueChanged.AddListener((System.Action<string>)(
+                        inputField.onValueChanged.AddListener((Action<string>)(
                             (text) =>
                             {
                                 if(isOpen) AudioEUtil.PlaySound(MenuSound.Click);
                                 if (string.IsNullOrEmpty(text))
                                     text = "0";
-                                int value;
-                                if (int.TryParse(text, out value))
+                                if (int.TryParse(text, out var value))
                                 {
                                     entry.BoxedEditedValue = value;
                                     category.SaveToFile(false);
-                                    if (!entriesWithActions.ContainsKey(entry))
-                                        warningText.SetActive(true);
+                                    if (!EntriesWithActions.TryGetValue(entry, out var action))
+                                        _warningText.SetActive(true);
                                     else
                                     {
-                                        var action = entriesWithActions[entry];
                                         if (action != null)
                                             action.Invoke();
                                     }
@@ -481,23 +368,21 @@ public class StarlightModMenu : StarlightMenu
                         inputField.contentType = TMP_InputField.ContentType.DecimalNumber;
                         inputField.transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text =
                             translation("modmenu.modconfig.enterfloat");
-                        inputField.onValueChanged.AddListener((System.Action<string>)(
+                        inputField.onValueChanged.AddListener((Action<string>)(
                             (text) =>
                             {
                                 if(isOpen) AudioEUtil.PlaySound(MenuSound.Click);
                                 if (string.IsNullOrEmpty(text))
                                     text = "0.0";
-                                float value;
-                                if (float.TryParse(text, out value))
+                                if (float.TryParse(text, out var value))
                                 {
                                     entry.BoxedEditedValue = value;
                                     category.SaveToFile(false);
                                     obj.GetObjectRecursively<TextMeshProUGUI>("Value").text = text;
-                                    if (!entriesWithActions.ContainsKey(entry))
-                                        warningText.SetActive(true);
+                                    if (!EntriesWithActions.TryGetValue(entry, out var action))
+                                        _warningText.SetActive(true);
                                     else
                                     {
-                                        var action = entriesWithActions[entry];
                                         if (action != null)
                                             action.Invoke();
                                     }
@@ -516,23 +401,21 @@ public class StarlightModMenu : StarlightMenu
                         inputField.contentType = TMP_InputField.ContentType.DecimalNumber;
                         inputField.transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text =
                             translation("modmenu.modconfig.enterdouble");
-                        inputField.onValueChanged.AddListener((System.Action<string>)(
+                        inputField.onValueChanged.AddListener((Action<string>)(
                             (text) =>
                             {
                                 if(isOpen) AudioEUtil.PlaySound(MenuSound.Click);
                                 if (string.IsNullOrEmpty(text))
                                     text = "0.0";
-                                double value;
-                                if (double.TryParse(text, out value))
+                                if (double.TryParse(text, out var value))
                                 {
                                     entry.BoxedEditedValue = value;
                                     category.SaveToFile(false);
                                     obj.GetObjectRecursively<TextMeshProUGUI>("Value").text = text;
-                                    if (!entriesWithActions.ContainsKey(entry))
-                                        warningText.SetActive(true);
+                                    if (!EntriesWithActions.TryGetValue(entry, out var action))
+                                        _warningText.SetActive(true);
                                     else
                                     {
-                                        var action = entriesWithActions[entry];
                                         if (action != null)
                                             action.Invoke();
                                     }
@@ -551,16 +434,15 @@ public class StarlightModMenu : StarlightMenu
                         inputField.contentType = TMP_InputField.ContentType.Standard;
                         inputField.transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text =
                             translation("modmenu.modconfig.entertext");
-                        inputField.onValueChanged.AddListener((System.Action<string>)((text) =>
+                        inputField.onValueChanged.AddListener((Action<string>)((text) =>
                         {
                             if(isOpen) AudioEUtil.PlaySound(MenuSound.Click);
                             entry.BoxedEditedValue = text;
                             category.SaveToFile(false);
-                            if (!entriesWithActions.ContainsKey(entry))
-                                warningText.SetActive(true);
+                            if (!EntriesWithActions.TryGetValue(entry, out var action))
+                                _warningText.SetActive(true);
                             else
                             {
-                                var action = entriesWithActions[entry];
                                 if (action != null)
                                     action.Invoke();
                             }
@@ -577,33 +459,25 @@ public class StarlightModMenu : StarlightMenu
                         {
                             if(isOpen) AudioEUtil.PlaySound(MenuSound.Click);
                             textMesh.text = translation("modmenu.modconfig.keylistening");
-                            listeningType = 3;
-                            listeningAction = (integer) =>
+                            _listeningType = 3;
+                            _listeningAction = (integer) =>
                             {
                                 var inputKey = (Key) integer;
-                                Key key = inputKey == Key.Escape ? Key.None : inputKey;
-                                if (key == null)
+                                var key = inputKey == Key.Escape ? Key.None : inputKey;
+                                if (entry.BoxedEditedValue is Key)
                                 {
-                                    textMesh.text = entry.GetEditedValueAsString();
-                                }
-                                else
-                                {
-                                    if (entry.BoxedEditedValue is Key)
+                                    textMesh.text = key.ToString();
+                                    entry.BoxedEditedValue = key;
+                                    if (!EntriesWithActions.TryGetValue(entry, out var action))
+                                        _warningText.SetActive(true);
+                                    else
                                     {
-                                        textMesh.text = key.ToString();
-                                        entry.BoxedEditedValue = key;
-                                        if (!entriesWithActions.ContainsKey(entry))
-                                            warningText.SetActive(true);
-                                        else
-                                        {
-                                            var action = entriesWithActions[entry];
-                                            if (action != null)
-                                                action.Invoke();
-                                        }
+                                        if (action != null)
+                                            action.Invoke();
                                     }
                                 }
 
-                                listeningAction = null;
+                                _listeningAction = null;
                             };
                         }));
                     }
@@ -618,33 +492,25 @@ public class StarlightModMenu : StarlightMenu
                         {
                             if(isOpen) AudioEUtil.PlaySound(MenuSound.Click);
                             textMesh.text = translation("modmenu.modconfig.keylistening");
-                            listeningType = 2;
-                            listeningAction = (integer) =>
+                            _listeningType = 2;
+                            _listeningAction = (integer) =>
                             {
-                                KeyCode inputKey = (KeyCode) integer;
-                                KeyCode key = inputKey == KeyCode.Escape ? KeyCode.None : inputKey;
-                                if (key == null)
+                                var inputKey = (KeyCode) integer;
+                                var key = inputKey == KeyCode.Escape ? KeyCode.None : inputKey;
+                                if (entry.BoxedEditedValue is KeyCode)
                                 {
-                                    textMesh.text = entry.GetEditedValueAsString();
-                                }
-                                else
-                                {
-                                    if (entry.BoxedEditedValue is KeyCode)
+                                    textMesh.text = key.ToString();
+                                    entry.BoxedEditedValue = key;
+                                    if (!EntriesWithActions.TryGetValue(entry, out var action))
+                                        _warningText.SetActive(true);
+                                    else
                                     {
-                                        textMesh.text = key.ToString();
-                                        entry.BoxedEditedValue = key;
-                                        if (!entriesWithActions.ContainsKey(entry))
-                                            warningText.SetActive(true);
-                                        else
-                                        {
-                                            var action = entriesWithActions[entry];
-                                            if (action != null)
-                                                action.Invoke();
-                                        }
+                                        if (action != null)
+                                            action.Invoke();
                                     }
                                 }
 
-                                listeningAction = null;
+                                _listeningAction = null;
                             };
                         }));
                     }
@@ -659,33 +525,25 @@ public class StarlightModMenu : StarlightMenu
                         {
                             if(isOpen) AudioEUtil.PlaySound(MenuSound.Click);
                             textMesh.text = translation("modmenu.modconfig.keylistening");
-                            listeningType = 1;
-                            listeningAction = (integer) =>
+                            _listeningType = 1;
+                            _listeningAction = (integer) =>
                             {
-                                LKey inputKey = (LKey) integer;
-                                LKey key = inputKey == LKey.Escape ? LKey.None : inputKey;
-                                if (key == null)
+                                var inputKey = (LKey) integer;
+                                var key = inputKey == LKey.Escape ? LKey.None : inputKey;
+                                if (entry.BoxedEditedValue is LKey)
                                 {
-                                    textMesh.text = entry.GetEditedValueAsString();
-                                }
-                                else
-                                {
-                                    if (entry.BoxedEditedValue is LKey)
+                                    textMesh.text = key.ToString();
+                                    entry.BoxedEditedValue = key;
+                                    if (!EntriesWithActions.TryGetValue(entry, out var action))
+                                        _warningText.SetActive(true);
+                                    else
                                     {
-                                        textMesh.text = key.ToString();
-                                        entry.BoxedEditedValue = key;
-                                        if (!entriesWithActions.ContainsKey(entry))
-                                            warningText.SetActive(true);
-                                        else
-                                        {
-                                            var action = entriesWithActions[entry];
-                                            if (action != null)
-                                                action.Invoke();
-                                        }
+                                        if (action != null)
+                                            action.Invoke();
                                     }
                                 }
 
-                                listeningAction = null;
+                                _listeningAction = null;
                             };
                         }));
                     }
@@ -694,12 +552,10 @@ public class StarlightModMenu : StarlightMenu
         }
     }
 
-    private static int listeningType = 0;
-    static System.Action<int> listeningAction = null;
 
     public override void OnCloseUIPressed()
     {
-        if (listeningAction != null) return;
+        if (_listeningAction != null) return;
         if (MenuEUtil.isAnyPopUpOpen) return;
         
         Close();
@@ -707,19 +563,19 @@ public class StarlightModMenu : StarlightMenu
 
     protected override void OnUpdate()
     {
-        if(listeningAction !=null) switch (listeningType)
+        if(_listeningAction !=null) switch (_listeningType)
         {
             case 1:
-                foreach (LKey key in allPossibleLKey)
-                    try { if(key.OnKeyDown()) { listeningAction.Invoke(Convert.ToInt32(key)); } } catch { }
+                foreach (LKey key in _allPossibleLKey)
+                    try { if(key.OnKeyDown()) { _listeningAction.Invoke(Convert.ToInt32(key)); } } catch { }
                 break;
             case 2:
-                foreach (KeyCode key in allPossibleUnityKeyCodes)
-                    try { if(key.OnKeyDown()) listeningAction.Invoke(Convert.ToInt32(key)); } catch { }
+                foreach (KeyCode key in _allPossibleUnityKeyCodes)
+                    try { if(key.OnKeyDown()) _listeningAction.Invoke(Convert.ToInt32(key)); } catch { }
                 break;
             case 3:
-                foreach (Key key in allPossibleUnityKeys)
-                    try { if(Keyboard.current[key].wasPressedThisFrame) listeningAction.Invoke(Convert.ToInt32(key)); }catch { }
+                foreach (Key key in _allPossibleUnityKeys)
+                    try { if(Keyboard.current[key].wasPressedThisFrame) _listeningAction.Invoke(Convert.ToInt32(key)); }catch { }
                 break;
         }
 
@@ -731,8 +587,8 @@ public class StarlightModMenu : StarlightMenu
             Mouse.current.leftButton.wasPressedThisFrame ||
             Mouse.current.leftButton.wasPressedThisFrame)
         {
-            if (listeningAction != null)
-                listeningAction.Invoke(0);
+            if (_listeningAction != null)
+                _listeningAction.Invoke(0);
         }
     }
 }

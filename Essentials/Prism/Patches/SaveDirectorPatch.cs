@@ -36,7 +36,7 @@ internal static class SaveDirectorPatch
             catch (Exception e) { LogError(e); }
         
         
-        // Doing this so it executes after all mods have made their slimes.
+        // Doing this so it executes after all expansions have made their slimes.
         foreach (var largoAction in PrismShortcuts.CreateLargoActions)
             try { largoAction.Invoke(); }
             catch (Exception e) { LogError(e); }

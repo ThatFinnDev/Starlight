@@ -9,8 +9,9 @@ namespace Starlight.Expansion;
 [SuppressMessage("ReSharper", "InconsistentNaming")]
 public abstract class StarlightExpansionVXX
 {
-    public abstract StarlightExpansionInfo info { get; }
-    
+    protected StarlightExpansionVXX() {}
+    protected abstract StarlightPackageInfo info { get; }
+    internal StarlightPackageInfo StarlightInternal_GetInfo => info;
     
     public Assembly Assembly => _assembly;
     private Assembly _assembly;

@@ -1,7 +1,6 @@
 ﻿using Il2CppTMPro;
 using Starlight.Enums;
 using Starlight.Storage;
-using UnityEngine.InputSystem;
 
 namespace Starlight.Popups;
 

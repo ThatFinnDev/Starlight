@@ -11,6 +11,7 @@ using UnityEngine.UI;
 using Il2CppMonomiPark.ScriptedValue;
 using Il2CppMonomiPark.SlimeRancher;
 using Il2CppMonomiPark.SlimeRancher.UI.ButtonBehavior;
+using MelonLoader;
 using MelonLoader.Utils;
 using Starlight.Expansion;
 using Starlight.Components;
@@ -63,11 +64,11 @@ public class StarlightEntryPoint : MelonMod
 {
     private static string _starlightFolderName = "Starlight";
 
-    internal static readonly Dictionary<Assembly, (Dictionary<StarlightExpansionVXX,StarlightExpansionInfo>, HarmonyLib.Harmony)> Expansions = new();
+    internal static readonly Dictionary<Assembly, (Dictionary<StarlightExpansionVXX,StarlightPackageInfo>, HarmonyLib.Harmony)> Expansions = new();
     internal static readonly List<StarlightExpansionV01> ExpansionV01S = new();
-    
-    
     internal static readonly List<(string, Assembly, string, string)> BrokenExpansions = new();
+    
+    
     
     
     internal static TMP_FontAsset Sr2FontAsset;
@@ -97,6 +98,7 @@ public class StarlightEntryPoint : MelonMod
     internal static bool EarlyRegistered = false;
 
     public static bool isPrismInUse { get; private set; }
+    internal static bool shouldEnablePrism = false;
 
     private static readonly MelonLogger.Instance UnityLog = new("Unity");
     
@@ -153,121 +155,8 @@ public class StarlightEntryPoint : MelonMod
         if (!Directory.Exists(customVolumeProfilesPath)) Directory.CreateDirectory(customVolumeProfilesPath);
         
         InitFlagManager();
+        StarlightPackageManager.LoadAllExpansions();
         
-        if(AllowExpansions.HasFlag())
-        {
-            var baseType = typeof(StarlightExpansionVXX);
-            foreach (var dllPath in Directory.GetFiles(MelonEnvironment.ModsDirectory))
-            {
-                try
-                {
-                    if (!dllPath.EndsWith(".dll")) continue;
-                    if (!HasAttribute(dllPath)) continue;
-                    var assembly = Assembly.LoadFrom(dllPath);
-                    var hInstance = new HarmonyLib.Harmony(dllPath);
-                    var att = assembly.GetCustomAttribute<StarlightExpansionAttribute>();
-                    var instances = new Dictionary<StarlightExpansionVXX,StarlightExpansionInfo>();
-                    if (att is { types.Length: > 0 })
-                        foreach (var type in att.types)
-                            if (baseType.IsAssignableFrom(type) && type != baseType)
-                            {
-                                var instance = (StarlightExpansionVXX)Activator.CreateInstance(type);
-                                bool success = true;
-                                var message = "";
-                                string errorMessage = null;
-                                var info = instance.info;
-                                info.assembly = assembly;
-                                info.dllName = new FileInfo(assembly.Location).Name;
-                                try
-                                {
-                                    if (string.IsNullOrWhiteSpace(info.ID) &&
-                                        (!string.IsNullOrEmpty(info.ID) &&
-                                         info.ID.All(char.IsLetterOrDigit)))
-                                        message +=
-                                            "\nThe expansion's ID is invalid! It needs to be a non-empty alphanumeric string! For example: \"com.devname.expansionanme\"";
-                                    if (string.IsNullOrWhiteSpace(info.name))
-                                        message +=
-                                            "\nThe expansion's name is invalid! It needs to be a non-empty string! For example: \"Blue Slimes\"";
-                                }
-                                catch (Exception e)
-                                {
-                                    success = false;
-                                    LogError(e);
-                                    LogError(
-                                        $"Couldn't load the expansion \"{type.FullName}\" in the dll at \"{dllPath}\" due to an unknown error!");
-                                    errorMessage = e.Message;
-                                }
-
-                                if (!string.IsNullOrWhiteSpace(message))
-                                {
-                                    success = false;
-                                    LogError(
-                                        $"Couldn't load the expansion \"{type.FullName}\" in the dll at \"{dllPath}\"!");
-                                    LogError("The expansion info is invalid!");
-                                    LogError(message);
-                                }
-
-                                try
-                                {
-                                    info.icon = EmbeddedResourceEUtil.LoadSprite(info.iconPath,assembly).CopyWithoutMipmaps();
-                                }
-                                catch (Exception e)
-                                {
-                                    LogError($"Couldn't load the icon of expansion \"{type.FullName}\" in the dll at \"{dllPath}\"!");
-                                }
-                                if (instance is StarlightExpansionV01)
-                                {
-                                    if (!AllowExpansionsV1.HasFlag())
-                                    {
-                                        success = false;
-                                        message += "\nExpansionV1s are disbled!";
-                                    }
-                                    info.expansionVersion = 1;
-                                }
-                                /*else if (instance is StarlightExpansionV02)
-                                {
-                                    if (!AllowExpansionsV2.HasFlag())
-                                    {
-                                        success = false;
-                                        message += "\nExpansionV2s are disbled!";
-                                    }
-                                    info.expansionVersion = 2;
-                                }*/
-                                else
-                                {
-                                    success = false;
-                                    message += "\nInvalid expansion version!";
-                                }
-                                
-                                
-                                
-                                
-                                if (success)
-                                {
-                                    if (AllowPrism.HasFlag() && info.usePrism)
-                                        isPrismInUse = true;
-                                    if (instance is StarlightExpansionV01 v01) ExpansionV01S.Add(v01);
-                                    baseType.GetField("_assembly", BindingFlags.Instance | BindingFlags.NonPublic)
-                                        .SetValue(instance, assembly);
-                                    baseType.GetField("_harmonyInstance", BindingFlags.Instance | BindingFlags.NonPublic)
-                                        .SetValue(instance, hInstance);
-                                    instances.Add(instance,info);
-                                }
-                                else
-                                {
-                                    BrokenExpansions.Add((type.FullName, assembly, message, errorMessage));
-                                }
-                            }
-
-                    if(instances.Count>0)
-                        Expansions.Add(assembly, (instances, hInstance));
-                }
-                catch (Exception e)
-                {
-                    LogError(e);
-                }
-            }
-        }
         StarlightCallEventManager.LoadAssemblies(Expansions.Keys.ToList());
         PatchIl2CppDetourMethodPatcher.InstallSecondPart(HarmonyInstance);
     }
@@ -282,12 +171,14 @@ public class StarlightEntryPoint : MelonMod
         InjectIl2CppComponents();
         
         
-        if (!isPrismInUse)
-            try { isPrismInUse = _prefs.GetEntry<bool>("forceUsePrism").Value; }
+        if (!shouldEnablePrism)
+            try { shouldEnablePrism = _prefs.GetEntry<bool>("forceUsePrism").Value; }
             catch
             {
                 // ignored
             }
+
+        if (shouldEnablePrism) isPrismInUse = true;
         if (!AllowPrism.HasFlag()) isPrismInUse = false;
         PatchGame(HarmonyInstance,MelonAssembly.Assembly);
         foreach (var pair in Expansions)
@@ -339,27 +230,7 @@ public class StarlightEntryPoint : MelonMod
     
     
     
-    static bool HasAttribute(string path)
-    {
-        var context = new AssemblyLoadContext("StarlightUnloadableContext", isCollectible: true);
-        bool isExpansion;
-        try 
-        {
-            var assembly = context.LoadFromAssemblyPath(path);
-            isExpansion = assembly.GetCustomAttribute<StarlightExpansionAttribute>()!=null;
-        }
-        finally 
-        {
-            context.Unload();
-        }
-        for (int i = 0; i < 10 && GC.GetTotalMemory(false) > 0; i++)
-        {
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-        }
 
-        return isExpansion;
-    }
     private static bool IsDisplayVersionValid()
     {
         if (!BuildInfo.DisplayVersion.Contains(BuildInfo.CodeVersion)) return false;
@@ -858,7 +729,7 @@ public class StarlightEntryPoint : MelonMod
             {
                 try
                 {
-                    if (StarlightConsole.openKey.OnKeyDown() || StarlightConsole.openKey2.OnKeyDown())
+                    if (StarlightConsole.OpenKey.OnKeyDown() || StarlightConsole.OpenKey2.OnKeyDown())
                         MenuEUtil.GetMenu<StarlightConsole>().Toggle();
                 }
                 catch (Exception e) { LogError(e); }

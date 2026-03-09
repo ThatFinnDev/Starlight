@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+using MelonLoader;
 using Starlight.Menus;
 
 namespace Starlight.Managers;

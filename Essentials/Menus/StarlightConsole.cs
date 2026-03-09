@@ -1,5 +1,4 @@
-﻿using Il2CppMonomiPark.ScriptedValue;
-using System;
+﻿using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Il2CppTMPro;
@@ -9,31 +8,31 @@ using Starlight.Managers;
 using Starlight.Storage;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+// ReSharper disable EmptyGeneralCatchClause
 
 namespace Starlight.Menus;
 
 public class StarlightConsole : StarlightMenu
 {
-    public new static MenuIdentifier GetMenuIdentifier() =>
-        new MenuIdentifier("console",StarlightMenuFont.Regular, StarlightMenuTheme.Black, "Console");
+    public new static MenuIdentifier GetMenuIdentifier() => new ("console",StarlightMenuFont.Regular, StarlightMenuTheme.Black, "Console");
 
     protected override bool createCommands => true;
     protected override bool inGameOnly => false;
 
-    internal static readonly LKey openKey = LKey.F11;
-    internal static readonly LMultiKey openKey2 = new LMultiKey(LKey.Tab, LKey.LeftControl);
+    internal static readonly LKey OpenKey = LKey.F11;
+    internal static readonly LMultiKey OpenKey2 = new (LKey.Tab, LKey.LeftControl);
     internal Transform consoleContent;
-    TMP_InputField commandInput;
-    GameObject autoCompleteEntryPrefab;
-    Transform autoCompleteContent;
-    GameObject autoCompleteScrollView;
-    GameObject messagePrefab;
-    int selectedAutoComplete = 0;
-    List<string> commandHistory;
-    int commandHistoryIdx = -1;
-    Scrollbar _scrollbar;
-    bool shouldResetTime = false;
-    bool scrollCompletlyDown = false;
+    private TMP_InputField _commandInput;
+    private GameObject _autoCompleteEntryPrefab;
+    private Transform _autoCompleteContent;
+    private GameObject _autoCompleteScrollView;
+    private GameObject _messagePrefab;
+    private int _selectedAutoComplete;
+    private List<string> _commandHistory;
+    private int _commandHistoryIdx = -1;
+    private Scrollbar _scrollbar;
+    private bool _shouldResetTime = false;
+    private bool _scrollCompletlyDown;
     
     protected override void OnAwake()
     {
@@ -62,57 +61,45 @@ public class StarlightConsole : StarlightMenu
                 foreach (string singularLine in message.Split('\n')) SendMessage(singularLine);
                 return;
             }
-            GameObject instance = Instantiate(messagePrefab, consoleContent);
+            GameObject instance = Instantiate(_messagePrefab, consoleContent);
             instance.gameObject.SetActive(true);
             instance.transform.GetChild(0).gameObject.SetActive(true);
             instance.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = message;
             instance.transform.GetChild(1).GetComponent<TextMeshProUGUI>().color = color;
             _scrollbar.value = 0f;
-            scrollCompletlyDown = true;
+            _scrollCompletlyDown = true;
         } catch { }
     }
+
+    private void SendMessage(string message) => Send(message, Color.white);
+    private void SendError(string message) => Send(message, Color.red);
+    private void SendWarning(string message) => Send(message, Color.yellow);
     
-    internal void SendMessage(string message)
-    {
-        Send(message, Color.white);
-    }
-    internal void SendError(string message)
-    {
-        Send(message, Color.red);
-    }
-    internal void SendWarning(string message)
-    {
-        Send(message, Color.yellow);
-    }
 
 
     protected override void OnClose()
     {
-        for (int i = 0; i < autoCompleteContent.childCount; i++)
-        {
-            Destroy(autoCompleteContent.GetChild(i).gameObject);
-        }
+        _autoCompleteContent.DestroyAllChildren();
     }
 
     protected override void OnOpen()
     {
-        RefreshAutoComplete(commandInput.text);
+        RefreshAutoComplete(_commandInput.text);
     }
 
 
     void RefreshAutoComplete(string text)
     {
-        autoCompleteContent.parent.parent.GetComponent<ScrollRect>().enabled = true; // Make sure that the component is enabled            
+        _autoCompleteContent.parent.parent.GetComponent<ScrollRect>().enabled = true; // Make sure that the component is enabled            
 
-        if (selectedAutoComplete > autoCompleteContent.childCount - 1)
-            selectedAutoComplete = 0;
-        for (int i = 0; i < autoCompleteContent.childCount; i++)
-            Object.Destroy(autoCompleteContent.GetChild(i).gameObject);
+        if (_selectedAutoComplete > _autoCompleteContent.childCount - 1)
+            _selectedAutoComplete = 0;
+        _autoCompleteContent.DestroyAllChildren();
         if (string.IsNullOrWhiteSpace(text))
         {
             ExecuteInTicks((() =>
             {
-                autoCompleteScrollView.SetActive(autoCompleteContent.childCount != 0);
+                _autoCompleteScrollView.SetActive(_autoCompleteContent.childCount != 0);
             }), 1);
             return;
         }
@@ -123,7 +110,7 @@ public class StarlightConsole : StarlightMenu
             if (StarlightCommandManager.commands.ContainsKey(cmd))
             {
                 var argString = text;
-                List<string> split = argString.Split(' ').ToList();
+                var split = argString.Split(' ').ToList();
                 split.RemoveAt(0);
                 int argIndex = split.Count - 1;
                 string[] args = null;
@@ -149,7 +136,7 @@ public class StarlightConsole : StarlightMenu
                     {
                         if (predicted >= maxPredictions) break;
                         predicted++;
-                        GameObject instance = Instantiate(autoCompleteEntryPrefab, autoCompleteContent);
+                        GameObject instance = Instantiate(_autoCompleteEntryPrefab, _autoCompleteContent);
                         TextMeshProUGUI textMesh = instance.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
                         if (string.IsNullOrEmpty(containing))
                             textMesh.text =
@@ -160,74 +147,71 @@ public class StarlightConsole : StarlightMenu
                             textMesh.text = "<alpha=#67>"+new Regex(Regex.Escape(containing), RegexOptions.IgnoreCase).Replace(
                                 argument,
                                 "<alpha=#FF>" + 
-                                argument.Substring(argument.ToUpper().IndexOf(containing.ToUpper()),containing.Length) 
+                                argument.Substring(argument.ToUpper().IndexOf(containing.ToUpper(), StringComparison.Ordinal),containing.Length) 
                                 + "<alpha=#67>", 1);
                         }
                         instance.SetActive(true);
                         instance.GetComponent<Button>().onClick.AddListener((Action)(() =>
                         {
-                            commandInput.text = cmd;
+                            _commandInput.text = cmd;
 
                             if (args != null)
                             {
                                 for (int i = 0; i < args.Length - 1; i++)
-                                {
-                                    commandInput.text += " " + args[i];
-                                }
-
-                                commandInput.text += " " + argument;
+                                    _commandInput.text += " " + args[i];
+                                _commandInput.text += " " + argument;
                             }
 
-                            commandInput.MoveToEndOfLine(false, false);
+                            _commandInput.MoveToEndOfLine(false, false);
                         }));
                     }
                 }
             }
         }
         else
-            foreach (KeyValuePair<string, StarlightCommand> valuePair in StarlightCommandManager.commands)
+            foreach (var valuePair in StarlightCommandManager.commands)
                 if (valuePair.Key.StartsWith(text) && !valuePair.Value.Hidden)
                 {
-                    GameObject instance = Object.Instantiate(autoCompleteEntryPrefab, autoCompleteContent);
+                    GameObject instance = Object.Instantiate(_autoCompleteEntryPrefab, _autoCompleteContent);
                     instance.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = valuePair.Key;
                     instance.SetActive(true);
                     instance.GetComponent<Button>().onClick.AddListener((Action)(() =>
                     {
-                        commandInput.text = valuePair.Key;
-                        commandInput.MoveToEndOfLine(false, false);
+                        _commandInput.text = valuePair.Key;
+                        _commandInput.MoveToEndOfLine(false, false);
                     }));
                 }
 
-        autoCompleteScrollView.SetActive(autoCompleteContent.childCount != 0);
-        autoCompleteContent.parent.parent.GetComponent<ScrollRect>().enabled = false;
+        _autoCompleteScrollView.SetActive(_autoCompleteContent.childCount != 0);
+        _autoCompleteContent.parent.parent.GetComponent<ScrollRect>().enabled = false;
 
     }
 
 
     protected override void OnLateAwake()
     {
-        commandHistory = new List<string>();
+        _commandHistory = new List<string>();
 
         consoleContent = transform.GetObjectRecursively<Transform>("ConsoleMenuConsoleContentRec");
-        messagePrefab = transform.GetObjectRecursively<GameObject>("ConsoleMenuTemplateMessageRec");
-        commandInput = transform.GetObjectRecursively<TMP_InputField>("ConsoleMenuCommandInputRec");
+        _messagePrefab = transform.GetObjectRecursively<GameObject>("ConsoleMenuTemplateMessageRec");
+        _commandInput = transform.GetObjectRecursively<TMP_InputField>("ConsoleMenuCommandInputRec");
         _scrollbar = transform.GetObjectRecursively<Scrollbar>("ConsoleMenuConsoleScrollbarRec");
-        autoCompleteContent = transform.GetObjectRecursively<Transform>("ConsoleMenuAutoCompleteContentRec");
-        autoCompleteEntryPrefab = transform.GetObjectRecursively<GameObject>("ConsoleMenuTemplateAutoCompleteEntryRec");
-        autoCompleteScrollView = transform.GetObjectRecursively<GameObject>("ConsoleMenuAutoCompleteScrollRectRec");
+        _autoCompleteContent = transform.GetObjectRecursively<Transform>("ConsoleMenuAutoCompleteContentRec");
+        _autoCompleteEntryPrefab = transform.GetObjectRecursively<GameObject>("ConsoleMenuTemplateAutoCompleteEntryRec");
+        _autoCompleteScrollView = transform.GetObjectRecursively<GameObject>("ConsoleMenuAutoCompleteScrollRectRec");
         //autoCompleteScrollView.GetComponent<ScrollRect>().enabled = false;
         //autoCompleteScrollView.SetActive(false);
 
-        commandInput.onValueChanged.AddListener((Action<string>)((text) =>
+        _commandInput.onValueChanged.AddListener((Action<string>)((text) =>
         {
-            if (text.Contains("\n")) commandInput.text = text.Replace("\n", "");
+            if (text.Contains("\n")) _commandInput.text = text.Replace("\n", "");
             RefreshAutoComplete(text);
         }));
         
         foreach (Transform child in transform.parent.GetChildren())
             child.gameObject.SetActive(false);
         
-        messagePrefab.SetActive(false);
+        _messagePrefab.SetActive(false);
         
         Send("Hello Console!", Color.green);
     }
@@ -239,57 +223,55 @@ public class StarlightConsole : StarlightMenu
             Destroy(consoleContent.GetChild(0).gameObject);
         } catch { }
 
-        commandInput.ActivateInputField();
-        if (scrollCompletlyDown)
+        _commandInput.ActivateInputField();
+        if (_scrollCompletlyDown)
             if (_scrollbar.value != 0)
             {
                 _scrollbar.value = 0f;
-                scrollCompletlyDown = false;
+                _scrollCompletlyDown = false;
             }
 
-        if (Keyboard.current.tabKey.wasPressedThisFrame)
+        if (LKey.Tab.OnKeyDown())
         {
-            if (autoCompleteContent.childCount != 0)
+            if (_autoCompleteContent.childCount != 0)
                 try
                 {
-                    autoCompleteContent.GetChild(selectedAutoComplete).GetComponent<Button>().onClick
+                    _autoCompleteContent.GetChild(_selectedAutoComplete).GetComponent<Button>().onClick
                         .Invoke();
-                    selectedAutoComplete = 0;
+                    _selectedAutoComplete = 0;
                 }
-                catch
-                {
-                }
+                catch { }
 
         }
 
-        if (Keyboard.current.enterKey.wasPressedThisFrame)
-            if (commandInput.text != "")
+        if (LKey.KeypadEnter.OnKeyDown())
+            if (_commandInput.text != "")
                 Execute();
 
-        if (commandHistoryIdx != -1 && !autoCompleteScrollView.active)
+        if (_commandHistoryIdx != -1 && !_autoCompleteScrollView.active)
         {
-            if (Keyboard.current.upArrowKey.wasPressedThisFrame)
+            if (LKey.UpArrow.OnKeyDown())
             {
-                commandInput.text = commandHistory[commandHistoryIdx];
-                commandInput.MoveToEndOfLine(false, false);
-                RefreshAutoComplete(commandInput.text);
-                commandHistoryIdx -= 1;
-                autoCompleteScrollView.SetActive(false);
+                _commandInput.text = _commandHistory[_commandHistoryIdx];
+                _commandInput.MoveToEndOfLine(false, false);
+                RefreshAutoComplete(_commandInput.text);
+                _commandHistoryIdx -= 1;
+                _autoCompleteScrollView.SetActive(false);
             }
         }
 
-        if (autoCompleteContent.childCount != 0 && autoCompleteScrollView.active)
+        if (_autoCompleteContent.childCount != 0 && _autoCompleteScrollView.active)
         {
-            if (Keyboard.current.downArrowKey.wasPressedThisFrame)
+            if (LKey.DownArrow.OnKeyDown())
                 NextAutoComplete();
 
-            if (Keyboard.current.upArrowKey.wasPressedThisFrame)
+            if (LKey.UpArrow.OnKeyDown())
                 PrevAutoComplete();
         }
 
-        if (selectedAutoComplete == autoCompleteContent.childCount)
+        if (_selectedAutoComplete == _autoCompleteContent.childCount)
         {
-            selectedAutoComplete = 0;
+            _selectedAutoComplete = 0;
         }
 
         if (_scrollbar != null)
@@ -305,20 +287,20 @@ public class StarlightConsole : StarlightMenu
 
         try
         {
-            if (autoCompleteContent.childCount != 0)
+            if (_autoCompleteContent.childCount != 0)
             {
-                autoCompleteContent.GetChild(selectedAutoComplete).GetComponent<Image>().color =
+                _autoCompleteContent.GetChild(_selectedAutoComplete).GetComponent<Image>().color =
                     new Color32(255, 211, 0, 120);
-                if (selectedAutoComplete > MAX_AUTOCOMPLETEONSCREEN.Get())
-                    autoCompleteContent.position = new Vector3(autoCompleteContent.position.x,
+                if (_selectedAutoComplete > MAX_AUTOCOMPLETEONSCREEN.Get())
+                    _autoCompleteContent.position = new Vector3(_autoCompleteContent.position.x,
                         ((744f / 1080f) * Screen.height) - (27 * MAX_AUTOCOMPLETEONSCREEN.Get()) +
-                        (27 * selectedAutoComplete),
-                        autoCompleteContent.position.z);
+                        (27 * _selectedAutoComplete),
+                        _autoCompleteContent.position.z);
 
                 else
-                    autoCompleteContent.position = new Vector3(autoCompleteContent.position.x,
+                    _autoCompleteContent.position = new Vector3(_autoCompleteContent.position.x,
                         ((744f / 1080f) * Screen.height),
-                        autoCompleteContent.position.z);
+                        _autoCompleteContent.position.z);
             }
         }
         catch
@@ -330,20 +312,20 @@ public class StarlightConsole : StarlightMenu
     void NextAutoComplete()
     {
         if (!isOpen) return;
-        selectedAutoComplete += 1;
-        if (selectedAutoComplete > autoCompleteContent.childCount - 1)
+        _selectedAutoComplete += 1;
+        if (_selectedAutoComplete > _autoCompleteContent.childCount - 1)
         {
-            selectedAutoComplete = 0;
-            autoCompleteContent.GetChild(autoCompleteContent.childCount - 1).GetComponent<Image>().color =
+            _selectedAutoComplete = 0;
+            _autoCompleteContent.GetChild(_autoCompleteContent.childCount - 1).GetComponent<Image>().color =
                 new Color32(0, 0, 0, 25);
-            autoCompleteContent.GetChild(selectedAutoComplete).GetComponent<Image>().color =
+            _autoCompleteContent.GetChild(_selectedAutoComplete).GetComponent<Image>().color =
                 new Color32(255, 211, 0, 120);
         }
         else
         {
-            autoCompleteContent.GetChild(selectedAutoComplete - 1).GetComponent<Image>().color =
+            _autoCompleteContent.GetChild(_selectedAutoComplete - 1).GetComponent<Image>().color =
                 new Color32(0, 0, 0, 25);
-            autoCompleteContent.GetChild(selectedAutoComplete).GetComponent<Image>().color =
+            _autoCompleteContent.GetChild(_selectedAutoComplete).GetComponent<Image>().color =
                 new Color32(255, 211, 0, 120);
         }
     }
@@ -351,20 +333,20 @@ public class StarlightConsole : StarlightMenu
     void PrevAutoComplete()
     {
         if (!isOpen) return;
-        selectedAutoComplete -= 1;
+        _selectedAutoComplete -= 1;
 
-        if (selectedAutoComplete < 0)
+        if (_selectedAutoComplete < 0)
         {
-            selectedAutoComplete = autoCompleteContent.childCount - 1;
-            autoCompleteContent.GetChild(0).GetComponent<Image>().color = new Color32(0, 0, 0, 25);
-            autoCompleteContent.GetChild(selectedAutoComplete).GetComponent<Image>().color =
+            _selectedAutoComplete = _autoCompleteContent.childCount - 1;
+            _autoCompleteContent.GetChild(0).GetComponent<Image>().color = new Color32(0, 0, 0, 25);
+            _autoCompleteContent.GetChild(_selectedAutoComplete).GetComponent<Image>().color =
                 new Color32(255, 211, 0, 120);
         }
         else
         {
-            autoCompleteContent.GetChild(selectedAutoComplete + 1).GetComponent<Image>().color =
+            _autoCompleteContent.GetChild(_selectedAutoComplete + 1).GetComponent<Image>().color =
                 new Color32(0, 0, 0, 25);
-            autoCompleteContent.GetChild(selectedAutoComplete).GetComponent<Image>().color =
+            _autoCompleteContent.GetChild(_selectedAutoComplete).GetComponent<Image>().color =
                 new Color32(255, 211, 0, 120);
         }
     }
@@ -372,12 +354,11 @@ public class StarlightConsole : StarlightMenu
     void Execute()
     {
         if (!EnableConsole.HasFlag()) return;
-        string cmds = commandInput.text;
-        commandHistory.Add(cmds);
-        commandHistoryIdx = commandHistory.Count - 1;
-        commandInput.text = "";
-        for (int i = 0; i < autoCompleteContent.childCount; i++)
-            Object.Destroy(autoCompleteContent.GetChild(i).gameObject);
+        string cmds = _commandInput.text;
+        _commandHistory.Add(cmds);
+        _commandHistoryIdx = _commandHistory.Count - 1;
+        _commandInput.text = "";
+        _autoCompleteContent.DestroyAllChildren();
         StarlightCommandManager.ExecuteByString(cmds);
     }
 

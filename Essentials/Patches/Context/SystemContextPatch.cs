@@ -94,13 +94,7 @@ internal class SystemContextPatch
                     
                     ExecuteInTicks(() =>
                     {
-                        var assemblies = StarlightEntryPoint.Expansions.Keys.ToList();
-                        foreach (var melonBase in MelonBase.RegisteredMelons)
-                        {
-                            if(!assemblies.Contains(melonBase.MelonAssembly.Assembly))
-                                assemblies.Add(melonBase.MelonAssembly.Assembly);
-                        }
-                        foreach (var assembly in assemblies)
+                        foreach (var assembly in StarlightPackageManager.GetAllPackageAssemblies())
                         {
                             var exporters = assembly.GetTypes().Where(t => t.IsSubclassOf(typeof(StarlightMenu)) && !t.IsAbstract);
                             foreach (Type type in exporters)

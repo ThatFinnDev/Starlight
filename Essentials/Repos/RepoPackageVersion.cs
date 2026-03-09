@@ -1,7 +1,7 @@
 ﻿namespace Starlight.Repos;
 
 [System.Serializable]
-public class RepoModVersion
+public class RepoPackageVersion
 {
     public List<string> ml_ver;
     public List<string> sr2_ver;
