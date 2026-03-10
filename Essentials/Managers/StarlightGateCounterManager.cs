@@ -6,10 +6,12 @@ namespace Starlight.Managers;
 
 public static class StarlightCounterGateManager
 {
-    internal static List<object> useOcclusionCullingList = new List<object>();
-    internal static List<object> disableCheatsList = new List<object>();
-    public static bool playerCameraUseOcclusionCulling => useOcclusionCullingList.Count == 0;
-    public static bool disableCheats => disableCheatsList.Count != 0;
+    private static readonly List<object> UseOcclusionCullingList = new ();
+    private static readonly List<object> DisableCheatsList = new ();
+    private static readonly List<object> LockPackages = new ();
+    public static bool playerCameraUseOcclusionCulling => UseOcclusionCullingList.Count == 0;
+    public static bool disableCheats => DisableCheatsList.Count != 0;
+    public static bool packagesLocked => LockPackages.Count != 0;
 
     internal static void OnSceneWasLoaded(int buildIndex, string sceneName)
     {
@@ -25,8 +27,10 @@ public static class StarlightCounterGateManager
                 else
                     GameContextPatch.cheatMenuButton.AddAgain();
         }
-        catch 
-        { }
+        catch
+        {
+            // ignored
+        }
     }
     static void RefreshOcclusionCulling()
     {
@@ -36,27 +40,29 @@ public static class StarlightCounterGateManager
                 if(cam.name.Contains("Player")||cam.name.Contains("SRLECamera"))
                     cam.useOcclusionCulling = playerCameraUseOcclusionCulling;
         }
-        catch 
-        { }
+        catch
+        {
+            // ignored
+        }
     }
     public static void RegisterFor_PlayerCameraDisableUseOcclusionCulling(this StarlightExpansionVXX expansion)
     {
-        if (!useOcclusionCullingList.Contains(expansion)) useOcclusionCullingList.Add(expansion);
+        if (!UseOcclusionCullingList.Contains(expansion)) UseOcclusionCullingList.Add(expansion);
         RefreshOcclusionCulling();
     }
     public static void DeregisterFor_PlayerCameraDisableUseOcclusionCulling(this StarlightExpansionVXX expansion)
     {
-        if (!useOcclusionCullingList.Contains(expansion)) useOcclusionCullingList.Remove(expansion);
+        if (!UseOcclusionCullingList.Contains(expansion)) UseOcclusionCullingList.Remove(expansion);
         RefreshOcclusionCulling();
     }
     public static void RegisterFor_PlayerCameraDisableUseOcclusionCulling(this MelonBase melon)
     {
-        if (!useOcclusionCullingList.Contains(melon)) useOcclusionCullingList.Add(melon);
+        if (!UseOcclusionCullingList.Contains(melon)) UseOcclusionCullingList.Add(melon);
         RefreshOcclusionCulling();
     }
     public static void DeregisterFor_PlayerCameraDisableUseOcclusionCulling(this MelonBase melon)
     {
-        if (!useOcclusionCullingList.Contains(melon)) useOcclusionCullingList.Remove(melon);
+        if (!UseOcclusionCullingList.Contains(melon)) UseOcclusionCullingList.Remove(melon);
         RefreshOcclusionCulling();
     }
     
@@ -65,22 +71,41 @@ public static class StarlightCounterGateManager
     
     public static void RegisterFor_DisableCheats(this StarlightExpansionVXX expansion)
     {
-        if (!disableCheatsList.Contains(expansion)) disableCheatsList.Add(expansion);
+        if (!DisableCheatsList.Contains(expansion)) DisableCheatsList.Add(expansion);
         RefreshDisableCheats();
     }
     public static void DeregisterFor_DisableCheats(this StarlightExpansionVXX expansion)
     {
-        if (!disableCheatsList.Contains(expansion)) disableCheatsList.Remove(expansion);
+        if (!DisableCheatsList.Contains(expansion)) DisableCheatsList.Remove(expansion);
         RefreshDisableCheats();
     }
     public static void RegisterFor_DisableCheats(this MelonBase melon)
     {
-        if (!disableCheatsList.Contains(melon)) disableCheatsList.Add(melon);
+        if (!DisableCheatsList.Contains(melon)) DisableCheatsList.Add(melon);
         RefreshDisableCheats();
     }
     public static void DeregisterFor_DisableCheats(this MelonBase melon)
     {
-        if (!disableCheatsList.Contains(melon)) disableCheatsList.Remove(melon);
+        if (!DisableCheatsList.Contains(melon)) DisableCheatsList.Remove(melon);
         RefreshDisableCheats();
+    }
+    
+    
+    
+    public static void RegisterFor_LockPackages(this StarlightExpansionVXX expansion)
+    {
+        if (!LockPackages.Contains(expansion)) LockPackages.Add(expansion);
+    }
+    public static void DeregisterFor_LockPackages(this StarlightExpansionVXX expansion)
+    {
+        if (!LockPackages.Contains(expansion)) LockPackages.Remove(expansion);
+    }
+    public static void RegisterFor_LockPackages(this MelonBase melon)
+    {
+        if (!LockPackages.Contains(melon)) LockPackages.Add(melon);
+    }
+    public static void DeregisterFor_LockPackages(this MelonBase melon)
+    {
+        if (!LockPackages.Contains(melon)) LockPackages.Remove(melon);
     }
 }

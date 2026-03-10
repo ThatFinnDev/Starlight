@@ -67,6 +67,12 @@ public abstract class StarlightExpansionV01 : StarlightExpansionVXX
     /// Runs once a Scene unloads.
     /// </summary>
     public virtual void OnSceneWasUnloaded(int buildIndex, string sceneName) { }
+    
+    /// <summary>
+    /// Runs when the Expansion is unloaded.
+    /// </summary>
+    public virtual void OnUnload() { }
+    
     #endregion
     
     
@@ -217,7 +223,7 @@ public abstract class StarlightExpansionV01 : StarlightExpansionVXX
     public virtual void OnNoCustomSaveDataReceived(LoadingGameSessionData loadingGameSessionData) { }
     
     
-    /// <summary>
+    ///.
     /// Gets executed everytime a save file is being saved<br/>
     /// Return null if you don't use custom save data
     /// </summary>

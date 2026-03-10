@@ -24,6 +24,7 @@ internal class GameContextPatch
     internal static CustomPauseMenuButton cheatMenuButton;
     internal static void Postfix(GameContext __instance)
     {
+        StarlightEntryPoint.GameContextStarted = true;
         var damageSource = ScriptableObject.CreateInstance<DamageSourceDefinition>();
         damageSource._logMessage = "Modded.StarlightKill";
         damageSource.name = "ModdedStarlightDamage";

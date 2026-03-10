@@ -12,11 +12,15 @@ public record struct StarlightPackageInfo
     public string author = null;
     public string[] coAuthors = null;
     public string[] contributors = null;
+    public string[] dependencies = null;
     public string sourceCode = null;
     public string nexus = null;
     public string discord = null;
     public bool usePrism = false;
     public string iconPath = "Assets.icon.png";
+    public ExpansionLoadTime loadTime = ExpansionLoadTime.Startup;
+    public ExpansionUnloadTime unloadTime = ExpansionUnloadTime.Never;
+    public MultiplayerRequirement multiplayerRequirement = MultiplayerRequirement.ServerAndClient;
 
     public string GetDllName() => dllName;
     public Assembly GetAssembly() => assembly;

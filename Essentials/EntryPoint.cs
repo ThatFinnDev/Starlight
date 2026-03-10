@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.Loader;
 using System.Text.RegularExpressions;
 using Il2CppInterop.Runtime.Injection;
 using Il2CppMonomiPark.SlimeRancher.UI;
@@ -59,7 +58,6 @@ public static class BuildInfo
         { "dev", (true, "") }
     };
 }
-
 public class StarlightEntryPoint : MelonMod
 {
     private static string _starlightFolderName = "Starlight";
@@ -67,9 +65,9 @@ public class StarlightEntryPoint : MelonMod
     internal static readonly Dictionary<Assembly, (Dictionary<StarlightExpansionVXX,StarlightPackageInfo>, HarmonyLib.Harmony)> Expansions = new();
     internal static readonly List<StarlightExpansionV01> ExpansionV01S = new();
     internal static readonly List<(string, Assembly, string, string)> BrokenExpansions = new();
-    
-    
-    
+
+
+    internal static bool GameContextStarted;
     
     internal static TMP_FontAsset Sr2FontAsset;
     internal static TMP_FontAsset NormalFont;
@@ -98,7 +96,7 @@ public class StarlightEntryPoint : MelonMod
     internal static bool EarlyRegistered = false;
 
     public static bool isPrismInUse { get; private set; }
-    internal static bool shouldEnablePrism = false;
+    internal static bool ShouldEnablePrism;
 
     private static readonly MelonLogger.Instance UnityLog = new("Unity");
     
@@ -171,14 +169,14 @@ public class StarlightEntryPoint : MelonMod
         InjectIl2CppComponents();
         
         
-        if (!shouldEnablePrism)
-            try { shouldEnablePrism = _prefs.GetEntry<bool>("forceUsePrism").Value; }
+        if (!ShouldEnablePrism)
+            try { ShouldEnablePrism = _prefs.GetEntry<bool>("forceUsePrism").Value; }
             catch
             {
                 // ignored
             }
 
-        if (shouldEnablePrism) isPrismInUse = true;
+        if (ShouldEnablePrism) isPrismInUse = true;
         if (!AllowPrism.HasFlag()) isPrismInUse = false;
         PatchGame(HarmonyInstance,MelonAssembly.Assembly);
         foreach (var pair in Expansions)

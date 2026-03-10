@@ -16,7 +16,7 @@ static class OptionFileInfo
 {
     internal const string MinimumGameVersion = null; //e.g 1.1.0 or something similar (optional)
     internal const string ExactGameVersion = null; //e.g 1.1.0 or something similar (optional)
-    internal const string MinimumStarlightVersion = "4.0.1"; //e.g 4.0.0 put in the minimum required version of Starlight (optional)
+    internal const string MinimumStarlightVersion = null; //e.g 4.0.0 put in the minimum required version of Starlight (optional)
 }
 
 
@@ -223,7 +223,7 @@ class OptionFileEntrypoint : MelonMod
         img.sprite = pill;
         var btn = buttonObj.AddComponent<Button>();
         
-        GameObject textObj = new GameObject("Text");
+        var textObj = new GameObject("Text");
         btn.colors = buttonColorBlock;
         textObj.transform.SetParent(buttonObj.transform, false);
         

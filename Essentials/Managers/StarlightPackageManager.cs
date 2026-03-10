@@ -14,14 +14,25 @@ namespace Starlight.Managers;
 
 public static class StarlightPackageManager
 {
-    private static readonly Dictionary<MelonBase, StarlightPackageInfo> MelonInfos = new ();
-    
-    
+    private static readonly Dictionary<MelonBase, StarlightPackageInfo> MelonInfos = new();
+    private static readonly HashSet<string> LoadedExpansionIds = new();
+    private static readonly HashSet<string> AllDiscoveredIds = new();
+    public static bool IsLocked() => StarlightCounterGateManager.packagesLocked;
+
+    private class PendingExpansion
+    {
+        public Type type { get; init; }
+        public Assembly assembly { get; init; }
+        public StarlightPackageInfo info { get; init; }
+        public HarmonyLib.Harmony harmony { get; init; }
+        public StarlightExpansionVXX instance { get; init; }
+    }
+
     public static StarlightPackageInfo? GetPackageInfoFromMelon(this MelonBase melonBase)
     {
         if (MelonInfos.TryGetValue(melonBase, out var melon)) return melon;
         var assembly = melonBase.MelonAssembly.Assembly;
-        if (StarlightEntryPoint.Expansions.Keys.ToList().Contains(assembly))
+        if (StarlightEntryPoint.Expansions.Keys.Any(a => a == assembly))
             return null;
         var info = new StarlightPackageInfo()
         {
@@ -40,9 +51,7 @@ public static class StarlightPackageManager
             info.description = desc.Description;
         foreach (var meta in assembly.GetCustomAttributes<AssemblyMetadataAttribute>())
         {
-            if (meta == null) continue;
-            if (string.IsNullOrWhiteSpace(meta.Key)) continue;
-            if (string.IsNullOrWhiteSpace(meta.Value)) continue;
+            if (meta == null || string.IsNullOrWhiteSpace(meta.Key) || string.IsNullOrWhiteSpace(meta.Value)) continue;
             switch (meta.Key)
             {
                 case StarlightModInfoAttributes.SourceCode: info.sourceCode = meta.Value; break;
@@ -52,81 +61,52 @@ public static class StarlightPackageManager
                 case StarlightModInfoAttributes.CoAuthors: info.coAuthors = meta.Value.Split(", "); break;
                 case StarlightModInfoAttributes.Contributors: info.contributors = meta.Value.Split(", "); break;
                 case StarlightModInfoAttributes.IconB64:
-                    try
-                    {
-                        info.icon = ConvertEUtil.Base64ToTexture2D(meta.Value).Texture2DToSprite();
-                    }
-                    catch
-                    {
-                        // ignored
-                    }
-
+                    try { info.icon = ConvertEUtil.Base64ToTexture2D(meta.Value).Texture2DToSprite(); } catch { /* ignored */ }
                     break;
             }
         }
 
-        if (info.icon)
-        { try { info.icon = EmbeddedResourceEUtil.LoadSprite("icon.png", assembly).CopyWithoutMipmaps(); }
-            catch
+        if (info.icon == null)
+        {
+            try { info.icon = EmbeddedResourceEUtil.LoadSprite("icon.png", assembly).CopyWithoutMipmaps(); } catch { /* ignored */ }
+            if (info.icon == null)
             {
-                // ignored
-            }
-            if (info.icon)
-            { try { info.icon = EmbeddedResourceEUtil.LoadSprite("Assets.icon.png", assembly).CopyWithoutMipmaps(); }
-                catch
-                {
-                    // ignored
-                }
+                try { info.icon = EmbeddedResourceEUtil.LoadSprite("Assets.icon.png", assembly).CopyWithoutMipmaps(); } catch { /* ignored */ }
             }
         }
-        MelonInfos.Add(melonBase,info);
+        MelonInfos.Add(melonBase, info);
         return info;
     }
+
     public static StarlightPackageInfo? GetPackageInfoFromExpansion(this StarlightExpansionVXX expansion)
     {
-        foreach (var pair in StarlightEntryPoint.Expansions.Values.ToList())
-            try
-            {
-                foreach (var pair2 in pair.Item1)
-                    try { if (pair2.Key == expansion) return pair2.Value; }
-                    catch (Exception e) { LogError(e); }
-            }
-            catch (Exception e) { LogError(e); }
-
-        return null;
+        return StarlightEntryPoint.Expansions.Values
+            .SelectMany(pair => pair.Item1)
+            .FirstOrDefault(pair2 => pair2.Key == expansion).Value;
     }
-
 
     public static List<Assembly> GetAllPackageAssemblies()
     {
         var assemblies = StarlightEntryPoint.Expansions.Keys.ToList();
-        foreach (var melonBase in MelonBase.RegisteredMelons)
-        {
-            if(!assemblies.Contains(melonBase.MelonAssembly.Assembly))
-                assemblies.Add(melonBase.MelonAssembly.Assembly);
-        }
+        assemblies.AddRange(MelonBase.RegisteredMelons.Select(m => m.MelonAssembly.Assembly).Where(a => !assemblies.Contains(a)));
         return assemblies;
     }
-    
-    public static Dictionary<StarlightPackageInfo,List<object>> GetAllRottenInfos()
+
+    public static Dictionary<StarlightPackageInfo, List<object>> GetAllRottenInfos()
     {
-        var list = new Dictionary<StarlightPackageInfo,List<object>>();
-        foreach (var group in StarlightEntryPoint.BrokenExpansions)
+        var list = new Dictionary<StarlightPackageInfo, List<object>>();
+        foreach (var (name, assembly, message, errorMessage) in StarlightEntryPoint.BrokenExpansions)
         {
             try
             {
-                list.Add(new StarlightPackageInfo()
-                {
-                    type = PackageType.Expansion, name = group.Item1, assembly = group.Item2, version = "<unknown>",
-                    dllName = group.Item1
-                },new List<object>() { group.Item2.Location, group.Item3,  group.Item4 });
+                list.Add(new StarlightPackageInfo { type = PackageType.Expansion, name = name, assembly = assembly, version = "<unknown>", dllName = name },
+                    [assembly.Location, message, errorMessage]);
             }
             catch (Exception e) { LogError(e); }
         }
 
         foreach (var loadedAssembly in MelonAssembly.LoadedAssemblies) foreach (dynamic rotten in loadedAssembly.RottenMelons)
         {
-            // Do it this way to support ML 0.7.1 and newer versions
             try
             {
                 Assembly assembly = null; string exception = null; string errorMessage = null;
@@ -135,258 +115,333 @@ public static class StarlightPackageManager
                     assembly = rotten.assembly;
                     exception = rotten.exception?.ToString();
                     errorMessage = rotten.errorMessage;
-                }
-                catch { try {
+                } catch { try {
                         assembly = rotten.Assembly.assembly;
                         exception = rotten.exception?.ToString();
                         errorMessage = rotten.errorMessage;
-                    } catch {
+                    }
+                    catch {
                         // ignored
                     }
                 }
                 if (assembly == null) break;
-                list.Add(new StarlightPackageInfo(){type = PackageType.Expansion, name = new FileInfo(assembly.Location).Name,assembly = assembly, version = "<unknown>", dllName = new FileInfo(assembly.Location).Name},new List<object>() { assembly.Location, exception, errorMessage });
-
-            }
-            catch (Exception e) { LogError(e); }
-        }
-        return list;
-    }
-    public static List<StarlightPackageInfo> GetAllMelonInfos()
-    {
-        var list = new List<StarlightPackageInfo>();
-        foreach (var melonBase in MelonBase.RegisteredMelons)
-        {
-            try
-            {
-                // ReSharper disable once PossibleInvalidOperationException
-                list.Add(GetPackageInfoFromMelon(melonBase).Value);
-            }
-            catch (Exception e) { LogError(e); }
+                list.Add(
+                    new StarlightPackageInfo()
+                    {
+                        type = PackageType.Expansion, name = new FileInfo(assembly.Location).Name, assembly = assembly,
+                        version = "<unknown>", dllName = new FileInfo(assembly.Location).Name
+                    },
+                    [assembly.Location, exception, errorMessage]);
+            } catch (Exception e) { LogError(e); }
         }
 
         return list;
     }
-    public static List<StarlightPackageInfo> GetAllExpansionInfos()
-    {
-        var list = new List<StarlightPackageInfo>();
-        foreach (var pair in StarlightEntryPoint.Expansions.Values.ToList())
-            try
-            {
-                foreach (var pair2 in pair.Item1)
-                    try { list.Add(pair2.Value); }
-                    catch (Exception e) { LogError(e); }
-            }
-            catch (Exception e) { LogError(e); }
-        return list;
-    }
-    public static List<StarlightExpansionVXX> GetAllExpansions()
-    {
-        var list = new List<StarlightExpansionVXX>();
-        foreach (var pair in StarlightEntryPoint.Expansions.Values.ToList())
-            try
-            {
-                foreach (var pair2 in pair.Item1)
-                    try { list.Add(pair2.Key); }
-                    catch (Exception e) { LogError(e); }
-            }
-            catch (Exception e) { LogError(e); }
-        return list;
-    }
-    public static List<MelonBase> GetAllMelons()
-    {
-        var list = new List<MelonBase>();
-        foreach (var mBase in MelonBase.RegisteredMelons)
-        {
-            try
-            {
-                var assembly = mBase.MelonAssembly.Assembly;
-                if (StarlightEntryPoint.Expansions.Keys.ToList().Contains(assembly))
-                    continue;
-                list.Add(mBase);
-            }
-            catch (Exception e) { LogError(e); }
-        }
-        return list;
-    }
 
-    
-    
+    public static List<StarlightPackageInfo> GetAllMelonInfos() => MelonBase.RegisteredMelons.Select(GetPackageInfoFromMelon).Where(info => info.HasValue).Select(info => info.Value).ToList();
+    public static List<StarlightPackageInfo> GetAllExpansionInfos() => StarlightEntryPoint.Expansions.Values.SelectMany(pair => pair.Item1.Values).ToList();
+    public static List<StarlightExpansionVXX> GetAllExpansions() => StarlightEntryPoint.Expansions.Values.SelectMany(pair => pair.Item1.Keys).ToList();
+    public static List<MelonBase> GetAllMelons() => MelonBase.RegisteredMelons.Where(m => !StarlightEntryPoint.Expansions.ContainsKey(m.MelonAssembly.Assembly)).ToList();
+
     public static StarlightPackageInfo? GetPackageInfoFromID(string id)
     {
-        var infos = new List<StarlightPackageInfo>();
-        if (id.StartsWith("melon.")) infos = GetAllMelonInfos();
-        else GetAllExpansionInfos();
-        foreach (var info in infos)
-            if (info.ID == id)
-                return info;
-        return null;
+        return id.StartsWith("melon.") ? GetAllMelonInfos().FirstOrDefault(info => info.ID == id) : GetAllExpansionInfos().FirstOrDefault(info => info.ID == id);
     }
-    public static MelonBase GetMelonFromID(string id)
-    {
-        if (!id.StartsWith("melon.")) return null;
-        foreach (var info in GetAllMelonInfos())
-            if (info.ID == id)
-                return info.mainClass as MelonBase;
-        return null;
-    }
-    public static StarlightExpansionVXX GetExpansionFromID(string id)
-    {
-        if (id.StartsWith("melon.")) return null;
-        foreach (var info in GetAllMelonInfos())
-            if (info.ID == id)
-                return info.mainClass as StarlightExpansionVXX;
-        return null;
-    }
-    public static StarlightExpansionVXX GetExpansionV1FromID(string id)
-    {
-        if (id.StartsWith("melon.")) return null;
-        foreach (var info in GetAllMelonInfos())
-            if (info.ID == id)
-                if(info.mainClass is StarlightExpansionV01 e)
-                    return e;
-        return null;
-    }
-    
-    
+
+    public static MelonBase GetMelonFromID(string id) => GetPackageInfoFromID(id)?.mainClass as MelonBase;
+    public static StarlightExpansionVXX GetExpansionFromID(string id) => GetPackageInfoFromID(id)?.mainClass as StarlightExpansionVXX;
+    public static StarlightExpansionV01 GetExpansionV1FromID(string id) => GetPackageInfoFromID(id)?.mainClass as StarlightExpansionV01;
+
     public static void LoadExpansions(string dllPath)
     {
-        if (!AllowExpansions.HasFlag()) return;
-        var baseType = typeof(StarlightExpansionVXX);
-        if (!ContainsExpansions(dllPath)) return;
-        var assembly = Assembly.LoadFrom(dllPath);
-        foreach (var meta in assembly.GetCustomAttributes<AssemblyMetadataAttribute>())
-            if(meta.Key==StarlightModInfoAttributes.MinimumStarlightVersion)
-            {
-                StarlightEntryPoint.BrokenExpansions.Add((new FileInfo(assembly.Location).Name, assembly,
-                    $"You need a newer version of Starlight installed! A minimum of <b>Starlight {meta.Value}</b> is required!",
-                    "Starlight too old!"));
-                return;
-            }
-        var hInstance = new HarmonyLib.Harmony(dllPath);
-        var types = assembly.GetTypes().Where(t => t.GetCustomAttributes(typeof(StarlightLoadExpansionAttribute), false).Any()).ToList();
-        var instances = new Dictionary<StarlightExpansionVXX,StarlightPackageInfo>();
-        if (types is { Count: > 0 })
-            foreach (var type in types)
-                if (baseType.IsAssignableFrom(type) && type != baseType)
-                {
-                    var instance = (StarlightExpansionVXX)Activator.CreateInstance(type);
-                    bool success = true;
-                    var message = "";
-                    string errorMessage = null;
-                    var info = instance.StarlightInternal_GetInfo;
-                    info.assembly = assembly;
-                    info.dllName = new FileInfo(assembly.Location).Name;
-                    info.type = PackageType.Expansion;
-                    info.mainClass = instance;
-                    try
-                    {
-                        if (string.IsNullOrWhiteSpace(info.ID) && (!string.IsNullOrEmpty(info.ID) && info.ID.All(char.IsLetterOrDigit))) 
-                            message += "\nThe expansion's ID is invalid! It needs to be a non-empty alphanumeric string! For example: \"com.devname.expansionanme\"";
-                        if (string.IsNullOrWhiteSpace(info.name))
-                            message += "\nThe expansion's name is invalid! It needs to be a non-empty string! For example: \"Blue Slimes\"";
-                    }
-                    catch (Exception e)
-                    {
-                        success = false;
-                        LogError(e);
-                        LogError($"Couldn't load the expansion \"{type.FullName}\" in the dll at \"{dllPath}\" due to an unknown error!");
-                        errorMessage = e.Message;
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(message))
-                    {
-                        success = false;
-                        LogError($"Couldn't load the expansion \"{type.FullName}\" in the dll at \"{dllPath}\"!");
-                        LogError("The expansion info is invalid!");
-                        LogError(message);
-                    }
-
-                    try { info.icon = EmbeddedResourceEUtil.LoadSprite(info.iconPath, assembly).CopyWithoutMipmaps(); }
-                    catch (Exception e) { LogError($"Couldn't load the icon of expansion \"{type.FullName}\" in the dll at \"{dllPath}\"!"); }
-
-                    if (instance is StarlightExpansionV01)
-                    {
-                        if (!AllowExpansionsV1.HasFlag())
-                        {
-                            success = false;
-                            message += "\nExpansionV1s are disabled!";
-                        }
-                        info.expansionVersion = 1;
-                    }
-                    /*else if (instance is StarlightExpansionV02)
-                    {
-                        if (!AllowExpansionsV2.HasFlag())
-                        {
-                            success = false;
-                            message += "\nExpansionV2s are disabled!";
-                        }
-                        info.expansionVersion = 2;
-                    }*/
-                    else
-                    {
-                        success = false;
-                        message += "\nInvalid expansion version!";
-                    }
-                    
-
-                    if (success)
-                    {
-                        if (AllowPrism.HasFlag() && info.usePrism)
-                            StarlightEntryPoint.shouldEnablePrism = true;
-                        if (instance is StarlightExpansionV01 v01) StarlightEntryPoint.ExpansionV01S.Add(v01);
-                        baseType.GetField("_assembly", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(instance, assembly);
-                        baseType.GetField("_harmonyInstance", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(instance, hInstance);
-                        instances.Add(instance, info);
-                    }
-                    else StarlightEntryPoint.BrokenExpansions.Add((type.FullName, assembly, message, errorMessage));
-                }
-
-        if(instances.Count>0)
-            StarlightEntryPoint.Expansions.Add(assembly, (instances, hInstance));
+        if (IsLocked())
+        {
+            LogError("Package manager is locked, cannot load expansions.");
+            return;
+        }
+        DiscoverAndLoadExpansions([dllPath]);
     }
 
     internal static void LoadAllExpansions()
     {
         if (!AllowExpansions.HasFlag()) return;
-        
-        foreach (var dllPath in Directory.GetFiles(MelonEnvironment.ModsDirectory))
-        {
-            if(dllPath.EndsWith(".dll"))
-                try { LoadExpansions(dllPath); }
-                catch (Exception e) { LogError(e); }
-        }
-        
+        DiscoverAndLoadExpansions(Directory.GetFiles(MelonEnvironment.ModsDirectory, "*.dll").ToList());
     }
+    
+    public static void UnloadExpansion(string id)
+    {
+        if (IsLocked())
+        {
+            LogError("Package manager is locked, cannot unload expansions.");
+            return;
+        }
+
+        var info = GetPackageInfoFromID(id);
+        if (info is not { type: PackageType.Expansion })
+        {
+            LogError($"Expansion with ID '{id}' not found.");
+            return;
+        }
+
+        var infoValue = info.Value;
+        
+        var isDependedOn = GetAllExpansionInfos().Any(exp => (exp.dependencies ?? Array.Empty<string>()).Contains(id));
+        if (isDependedOn)
+        {
+            LogError($"Cannot unload expansion '{id}' because another expansion depends on it.");
+            return;
+        }
+
+        switch (infoValue.unloadTime)
+        {
+            case ExpansionUnloadTime.Never:
+                LogError($"Expansion '{id}' is marked as not unloadable.");
+                return;
+            case ExpansionUnloadTime.InMainMenu when SceneContext.Instance != null && SceneContext.Instance.GameModel != null:
+                LogError($"Expansion '{id}' can only be unloaded in the main menu.");
+                return;
+        }
+
+        var expansion = infoValue.mainClass as StarlightExpansionVXX;
+        if (expansion is StarlightExpansionV01 v01)
+        {
+            try { v01.OnUnload(); }
+            catch (Exception e) { LogError($"Error during OnUnload for expansion '{id}': {e}"); }
+        }
+
+        var assembly = infoValue.assembly;
+        if (StarlightEntryPoint.Expansions.TryGetValue(assembly, out var assemblyExpansions))
+        {
+            if (expansion != null) assemblyExpansions.Item1.Remove(expansion);
+            assemblyExpansions.Item2.UnpatchSelf();
+            if (assemblyExpansions.Item1.Count == 0)
+            {
+                StarlightEntryPoint.Expansions.Remove(assembly);
+            }
+        }
+
+        LoadedExpansionIds.Remove(id);
+        AllDiscoveredIds.Remove(id);
+        if(DebugLogging.HasFlag()) Log($"Unloaded expansion: {infoValue.name} ({id})");
+    }
+    static bool IsSameOrNewer(string v1, string v2)
+    {
+        if (string.IsNullOrEmpty(v1)) return true;
+        bool TryParse(string s, out int[] parts)
+        {
+            parts = null;
+            var split = s.Split('.');
+            if (split.Length != 3) return false;
+            parts = new int[3];
+            for (int i = 0; i < 3; i++)
+                if (!int.TryParse(split[i], out parts[i]) || parts[i] < 0)
+                    return false;
+            return true;
+        }
+
+        if (!TryParse(v1, out var a) || !TryParse(v2, out var b)) return false;
+        for (int i = 0; i < 3; i++)
+        {
+            if (b[i] > a[i]) return true;
+            if (b[i] < a[i]) return false;
+        }
+
+        return true;
+    }
+    private static void DiscoverAndLoadExpansions(List<string> dllPaths)
+    {
+        if (!AllowExpansions.HasFlag()) return;
+
+        var pendingExpansions = new List<PendingExpansion>();
+        var baseType = typeof(StarlightExpansionVXX);
+
+        foreach (var dllPath in dllPaths)
+        {
+            try
+            {
+                if (!ContainsExpansions(dllPath)) continue;
+                var assembly = Assembly.LoadFrom(dllPath);
+                
+                if (assembly.GetCustomAttributes<AssemblyMetadataAttribute>().FirstOrDefault(m => m.Key == StarlightModInfoAttributes.MinimumStarlightVersion) is { } minVersionAttr)
+                {
+                    if(!IsSameOrNewer(minVersionAttr.Value,BuildInfo.CodeVersion))
+                    {
+                        StarlightEntryPoint.BrokenExpansions.Add((new FileInfo(assembly.Location).Name, assembly, $"You need a newer version of Starlight installed! A minimum of <b>Starlight {minVersionAttr.Value}</b> is required!", "Starlight too old!"));
+                        continue;
+                    }
+                }
+
+                var types = assembly.GetTypes().Where(t => t.IsClass && !t.IsAbstract && baseType.IsAssignableFrom(t) && t.GetCustomAttributes(typeof(StarlightLoadExpansionAttribute), false).Any()).ToList();
+                if (types.Count == 0) continue;
+
+                var hInstance = new HarmonyLib.Harmony(dllPath);
+                foreach (var type in types)
+                {
+                    var message = "";
+                    string errorMessage = null;
+                    var success = true;
+                    
+                    try
+                    {
+                        var instance = (StarlightExpansionVXX)Activator.CreateInstance(type);
+                        var info = instance.StarlightInternal_GetInfo;
+
+                        var gameContextStarted = StarlightEntryPoint.GameContextStarted;
+
+                        switch (info.loadTime)
+                        {
+                            case ExpansionLoadTime.Startup when gameContextStarted:
+                                message += "\nCannot be loaded after game startup.";
+                                break;
+                            case ExpansionLoadTime.BeforeGameContext when gameContextStarted:
+                                message += "\nCannot be loaded after GameContext has started.";
+                                break;
+                            case ExpansionLoadTime.InMainMenu when inGame:
+                                message += "\nCan only be loaded in the main menu.";
+                                break;
+                        }
+
+                        info.assembly = assembly;
+                        info.dllName = new FileInfo(assembly.Location).Name;
+                        info.type = PackageType.Expansion;
+                        info.mainClass = instance;
+
+                        if (string.IsNullOrWhiteSpace(info.ID) || info.ID.StartsWith("melon.") || info.ID.Count(c => c == '.') != 2 || !Regex.IsMatch(info.ID, @"^[a-z0-9\.]+$"))
+                            message += "\nThe expansion's ID is invalid. It must be in the format 'author.packagename.expansionname', using only lowercase letters, numbers, and two dots.";
+                        else if (!AllDiscoveredIds.Add(info.ID))
+                            message += $"\nAn expansion with the ID '{info.ID}' already exists. Expansion IDs must be unique.";
+                        if (string.IsNullOrWhiteSpace(info.name)) message += "\nThe expansion's name cannot be empty.";
+                        if (instance is StarlightExpansionV01)
+                        {
+                            if (!AllowExpansionsV1.HasFlag()) message += "\nExpansionV1s are disabled!";
+                            info.expansionVersion = 1;
+                        }
+                        else message += "\nInvalid or unsupported expansion version!";
+
+                        if (!string.IsNullOrWhiteSpace(message)) success = false;
+                        
+                        if (success) pendingExpansions.Add(new PendingExpansion { type = type, assembly = assembly, info = info, harmony = hInstance, instance = instance });
+                        else StarlightEntryPoint.BrokenExpansions.Add((type.FullName, assembly, message, errorMessage));
+                    }
+                    catch (Exception e)
+                    {
+                        LogError(e);
+                        StarlightEntryPoint.BrokenExpansions.Add((type.FullName, assembly, $"An unexpected error occurred while validating the expansion: {e.Message}", e.ToString()));
+                    }
+                }
+            }
+            catch (Exception e) { LogError($"Failed to process DLL: {dllPath}\n{e}"); }
+        }
+
+        var allMelonIds = new Lazy<HashSet<string>>(() => [..GetAllMelonInfos().Select(i => i.ID)]);
+        int loadedInPass;
+        var dependencyGraph = pendingExpansions.ToDictionary(p => p.info.ID, p => new HashSet<string>(p.info.dependencies ?? Array.Empty<string>()));
+        var failedDueToCycle = new HashSet<string>();
+
+        do
+        {
+            var toProcess = dependencyGraph.Keys.Except(failedDueToCycle).ToList();
+            foreach (var nodeId in toProcess)
+            {
+                var path = new List<string> { nodeId };
+                var toVisit = new Stack<string>(dependencyGraph[nodeId]);
+                while (toVisit.Count > 0)
+                {
+                    var current = toVisit.Pop();
+                    if (path.Contains(current))
+                    {
+                        path.Add(current);
+                        var cycle = string.Join(" -> ", path);
+                        LogError($"Cross dependency detected: {cycle}");
+                        foreach (var id in path)
+                            if (failedDueToCycle.Add(id))
+                            {
+                                var pending = pendingExpansions.FirstOrDefault(p => p.info.ID == id);
+                                if (pending != null)
+                                {
+                                    StarlightEntryPoint.BrokenExpansions.Add((pending.type.FullName, pending.assembly, $"Circular dependency detected: {cycle}", "Dependency Error"));
+                                    pendingExpansions.Remove(pending);
+                                }
+                            }
+                        break;
+                    }
+                    if (dependencyGraph.TryGetValue(current, out var value))
+                    {
+                        path.Add(current);
+                        foreach (var dep in value) toVisit.Push(dep);
+                    }
+                }
+            }
+            
+            loadedInPass = 0;
+            var remainingPending = new List<PendingExpansion>();
+            foreach (var pending in pendingExpansions)
+            {
+                if (failedDueToCycle.Contains(pending.info.ID)) continue;
+
+                var dependenciesMet = (pending.info.dependencies ?? Array.Empty<string>()).All(depId =>
+                    LoadedExpansionIds.Contains(depId) || (depId.StartsWith("melon.") && allMelonIds.Value.Contains(depId)));
+
+                if (dependenciesMet)
+                {
+                    try
+                    {
+                        var instance = pending.instance;
+                        var info = pending.info;
+                        try { info.icon = EmbeddedResourceEUtil.LoadSprite(info.iconPath, pending.assembly).CopyWithoutMipmaps(); } catch { /* ignored */ }
+                        if (AllowPrism.HasFlag() && info.usePrism) StarlightEntryPoint.ShouldEnablePrism = true;
+                        if (instance is StarlightExpansionV01 v01) StarlightEntryPoint.ExpansionV01S.Add(v01);
+                        baseType.GetField("_assembly", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(instance, pending.assembly);
+                        baseType.GetField("_harmonyInstance", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(instance, pending.harmony);
+                        if (!StarlightEntryPoint.Expansions.TryGetValue(pending.assembly, out var assemblyExpansions))
+                        {
+                            assemblyExpansions = (new Dictionary<StarlightExpansionVXX, StarlightPackageInfo>(), pending.harmony);
+                            StarlightEntryPoint.Expansions.Add(pending.assembly, assemblyExpansions);
+                        }
+                        assemblyExpansions.Item1.Add(instance, info);
+                        LoadedExpansionIds.Add(info.ID);
+                        loadedInPass++;
+                        if (instance is StarlightExpansionV01 vv01) try { vv01.OnEarlyInitialize(); } catch (Exception e) { LogError(e); }
+                        if(DebugLogging.HasFlag()) Log($"Loaded expansion: {info.name} ({info.ID}) version {info.version}");
+                    }
+                    catch (Exception e)
+                    {
+                        LogError($"Failed to load expansion '{pending.info.name} ({pending.info.ID})': {e}");
+                        StarlightEntryPoint.BrokenExpansions.Add((pending.type.FullName, pending.assembly, "An exception occurred during loading.", e.ToString()));
+                    }
+                }
+                else remainingPending.Add(pending);
+            }
+            pendingExpansions = remainingPending;
+        } while (loadedInPass > 0 && pendingExpansions.Count > 0);
+
+        foreach (var pending in pendingExpansions.Where(p => !failedDueToCycle.Contains(p.info.ID)))
+        {
+            var missingDeps = (pending.info.dependencies ?? Array.Empty<string>()).Where(depId => !LoadedExpansionIds.Contains(depId) && !(depId.StartsWith("melon.") && allMelonIds.Value.Contains(depId)));
+            var message = $"Could not load expansion due to missing dependencies: {string.Join(", ", missingDeps)}";
+            LogError(message);
+            StarlightEntryPoint.BrokenExpansions.Add((pending.type.FullName, pending.assembly, message, "Missing Dependencies"));
+        }
+    }
+
     public static bool ContainsExpansions(string dllPath)
     {
         var context = new AssemblyLoadContext("StarlightUnloadableContext", isCollectible: true);
-        bool isExpansion;
-        try 
+        try
         {
             var assembly = context.LoadFromAssemblyPath(dllPath);
-            isExpansion = assembly.GetTypes().Any(t => Attribute.IsDefined(t, typeof(StarlightLoadExpansionAttribute)));
+            return assembly.GetTypes().Any(t => Attribute.IsDefined(t, typeof(StarlightLoadExpansionAttribute)));
         }
-        finally 
+        finally
         {
             context.Unload();
+            for (int i = 0; i < 10 && GC.GetTotalMemory(false) > 0; i++)
+            {
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+            }
         }
-        for (int i = 0; i < 10 && GC.GetTotalMemory(false) > 0; i++)
-        {
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-        }
-
-        return isExpansion;
     }
 
-
-
-
-
-
-
-    static string TruncateForID(string input) => Regex.Replace(input, "[^a-zA-Z0-9]", "").ToLower();
-    
-    
+    private static string TruncateForID(string input) => Regex.Replace(input, "[^a-zA-Z0-9]", "").ToLower();
 }

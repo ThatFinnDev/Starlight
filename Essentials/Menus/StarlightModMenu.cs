@@ -128,8 +128,7 @@ public class StarlightModMenu : StarlightMenu
                 _modInfoText.text = translation("modmenu.modinfo.mod", info.name);
                 if (info.type==PackageType.Expansion) _modInfoText.text = translation("modmenu.modinfo.expansion", info.name);
             }
-            if(!string.IsNullOrWhiteSpace(info.ID)) 
-                _modInfoText.text += "\n" + translation("modmenu.modinfo.id", info.ID);
+            if(!string.IsNullOrWhiteSpace(info.ID)) _modInfoText.text += "\n" + translation("modmenu.modinfo.id", info.ID);
             _modInfoText.text += "\n" + translation("modmenu.modinfo.author", string.IsNullOrEmpty(info.author)?"Anonymous":info.author);
 
             if(info.type==PackageType.Expansion)
@@ -141,19 +140,33 @@ public class StarlightModMenu : StarlightMenu
             _modInfoText.text += "\n" + translation("modmenu.modinfo.version", info.version) + "\n";
             
             
-            if(!string.IsNullOrWhiteSpace(info.sourceCode)) 
-                _modInfoText.text += "\n" + translation("modmenu.modinfo.sourcecode", FormatLink(info.sourceCode));
+            if(!string.IsNullOrWhiteSpace(info.sourceCode)) _modInfoText.text += "\n" + translation("modmenu.modinfo.sourcecode", FormatLink(info.sourceCode));
+            if(!string.IsNullOrWhiteSpace(info.nexus)) _modInfoText.text += "\n" + translation("modmenu.modinfo.nexus", FormatLink(info.nexus));
+            if(!string.IsNullOrWhiteSpace(info.discord)) _modInfoText.text += "\n" + translation("modmenu.modinfo.discord", FormatLink(info.discord));
+            if(!string.IsNullOrWhiteSpace(downloadLink)) _modInfoText.text += "\n" + translation("modmenu.modinfo.link", FormatLink(downloadLink));
+
+            if (!isRotten)
+            {
+                
+                _modInfoText.text += "\n";
+                if (info.dependencies is { Length: > 0 })
+                {
+                    var translatedDependencies = info.dependencies.ToList();
+                    for (var i = 0; i < translatedDependencies.Count; i++)
+                    {
+                        var depInfo = StarlightPackageManager.GetPackageInfoFromID(translatedDependencies[i]);
+                        if (depInfo is null) continue;
+                        var newName = depInfo.Value.name;
+                        translatedDependencies[i] = newName.Contains(' ') ?"\""+newName+"\"":newName;
+                    }
+                    _modInfoText.text += "\n" + translation("modmenu.modinfo.dependencies", string.Join(", ", translatedDependencies));
+                }
+                _modInfoText.text += "\n" + translation("modmenu.modinfo.loadtime", info.loadTime);
+                _modInfoText.text += "\n" + translation("modmenu.modinfo.unloadtime", info.unloadTime);
+                _modInfoText.text += "\n" + translation("modmenu.modinfo.mprequirement", info.multiplayerRequirement);
+                _modInfoText.text += "\n";
+            }
             
-            if(!string.IsNullOrWhiteSpace(info.nexus)) 
-                _modInfoText.text += "\n" + translation("modmenu.modinfo.nexus", FormatLink(info.nexus));
-            
-            if(!string.IsNullOrWhiteSpace(info.discord)) 
-                _modInfoText.text += "\n" + translation("modmenu.modinfo.discord", FormatLink(info.discord));
-
-
-            if (!string.IsNullOrWhiteSpace(downloadLink))
-                _modInfoText.text += "\n" + translation("modmenu.modinfo.link", FormatLink(downloadLink));
-
             if(!string.IsNullOrWhiteSpace(info.description)) 
                 _modInfoText.text += "\n" + translation("modmenu.modinfo.description", info.description + "\n");
 
