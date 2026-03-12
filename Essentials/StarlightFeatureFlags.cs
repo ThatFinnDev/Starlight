@@ -227,10 +227,10 @@ public static class StarlightFeatureFlags
         
 
         string[] launchArgs = Environment.GetCommandLineArgs();
-        var usedArgs = new List<String>();
+        var usedArgs = new List<string>();
         foreach (string arg in launchArgs)
         {
-            if (arg.StartsWith("-sr2e.") && arg.Contains("="))
+            if (arg.StartsWith("-starlight.") && arg.Contains("="))
             {
                 var split = arg.Split("=");
                 if (split.Length != 2) continue;
@@ -238,8 +238,11 @@ public static class StarlightFeatureFlags
                 usedArgs.Add(split[0]);
                 switch (split[0])
                 {
-                    case "-sr2e.forceredirectsaves":
+                    case "-starlight.forceredirectsaves":
                         if (split[1] == "true") RedirectSaveFiles.EnableFlag();
+                        break;
+                    case "-starlight.forceloadmainmenu":
+                        if (split[1] == "true") ForceLoadMainMenu.EnableFlag();
                         break;
                 }
             }

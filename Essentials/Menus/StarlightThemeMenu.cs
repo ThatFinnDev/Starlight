@@ -5,7 +5,6 @@ using Starlight.Enums.Features;
 using Starlight.Enums.Sounds;
 using Starlight.Managers;
 using Starlight.Storage;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace Starlight.Menus;
@@ -17,10 +16,11 @@ public class StarlightThemeMenu : StarlightMenu
     protected override bool createCommands => false;
     protected override bool inGameOnly => false;
     
-    GameObject entryTemplate;
-    GameObject buttonTemplate;
-    GameObject dropdownTemplate;
-    Transform content;
+    private GameObject _entryTemplate;
+    private GameObject _buttonTemplate;
+    private GameObject _dropdownTemplate;
+    private Transform _content;
+    private GameObject _warningText;
 
     protected override void OnAwake()
     {
@@ -31,11 +31,11 @@ public class StarlightThemeMenu : StarlightMenu
 
     protected override void OnClose()
     {
-        content.DestroyAllChildren();
+        _content.DestroyAllChildren();
     }
     protected override void OnOpen()
     {
-        List<MenuIdentifier> identifiers = new List<MenuIdentifier>();
+        var identifiers = new List<MenuIdentifier>();
         foreach (var pair in StarlightEntryPoint.Menus)
         {
             var ident = pair.Key.GetMenuIdentifier();
@@ -44,17 +44,16 @@ public class StarlightThemeMenu : StarlightMenu
         }
         foreach (var identifier in identifiers)
         {
-            GameObject entry = Object.Instantiate(entryTemplate, content);
+            var entry = Instantiate(_entryTemplate, _content);
             entry.SetActive(true);
             entry.GetObjectRecursively<TextMeshProUGUI>("Title").text = translation(identifier.translationKey+".title");
 
-            Transform contentRec = entry.GetObjectRecursively<Transform>("ContentRec");
-            GameObject dropDownObj = Instantiate(dropdownTemplate, contentRec);
+            var contentRec = entry.GetObjectRecursively<Transform>("ContentRec");
+            var dropDownObj = Instantiate(_dropdownTemplate, contentRec);
             dropDownObj.SetActive(true);
-            TMP_Dropdown dropdown = dropDownObj.GetObjectRecursively<TMP_Dropdown>("Dropdown");
+            var dropdown = dropDownObj.GetObjectRecursively<TMP_Dropdown>("Dropdown");
             dropDownObj.GetObjectRecursively<Canvas>("Canvas").overrideSorting=false;
             dropdown.ClearOptions();
-            //idk how to convert to il2cpp list
             var options = new Il2CppSystem.Collections.Generic.List<string>();
             var fonts = new List<StarlightMenuFont>();
             var currValue = 0;
@@ -78,21 +77,21 @@ public class StarlightThemeMenu : StarlightMenu
                 if (menu != null)
                     menu.ReloadFont();
             }));
-            foreach (StarlightMenuTheme theme in MenuEUtil.GetValidThemes(identifier.saveKey))
+            foreach (var theme in MenuEUtil.GetValidThemes(identifier.saveKey))
             {
-                GameObject button = Instantiate(buttonTemplate, contentRec);
+                var button = Instantiate(_buttonTemplate, contentRec);
                 button.SetActive(true);
                 button.transform.GetChild(0).GetComponent<Button>().onClick.AddListener((SystemAction)(() =>
                 {
                     AudioEUtil.PlaySound(MenuSound.Click);
-                    warningText.SetActive(true);
+                    _warningText.SetActive(true);
                     for (int i = 0; i < contentRec.childCount; i++)
                         if(!contentRec.GetChild(i).HasComponent<CanvasGroup>())
                             contentRec.GetChild(i).GetComponent<Image>().color = contentRec.GetChild(i) == button.transform ? Color.green : Color.red;
                     StarlightSaveManager.data.themes[identifier.saveKey] = theme;
                     StarlightSaveManager.Save();
                 }));
-                Texture2D texture = new Texture2D(3, 1, TextureFormat.RGBA32, false)
+                var texture = new Texture2D(3, 1, TextureFormat.RGBA32, false)
                 { filterMode = FilterMode.Point, wrapMode = TextureWrapMode.Clamp };
                 switch (theme)
                 {
@@ -114,25 +113,23 @@ public class StarlightThemeMenu : StarlightMenu
                 }
 
                 texture.Apply();
-                button.transform.GetChild(0).GetComponent<Image>().sprite = ConvertEUtil.Texture2DToSprite(texture);
-                if (StarlightSaveManager.data.themes.ContainsKey(identifier.saveKey))
+                button.transform.GetChild(0).GetComponent<Image>().sprite = texture.Texture2DToSprite();
+                if (StarlightSaveManager.data.themes.TryGetValue(identifier.saveKey, out var dataTheme))
                 {
-                    if (StarlightSaveManager.data.themes[identifier.saveKey] == theme)
+                    if (dataTheme == theme)
                         button.GetComponent<Image>().color = Color.green;
                 }
             }
         }
     }
-    
-    GameObject warningText;
     protected override void OnLateAwake()
     {
-        entryTemplate = transform.GetObjectRecursively<GameObject>("ThemeSelectorEntryRec");
-        buttonTemplate = transform.GetObjectRecursively<GameObject>("ThemeSelectorEntryButtonEntryRec");
-        dropdownTemplate = transform.GetObjectRecursively<GameObject>("ThemeSelectorEntryDropdownEntryRec");
-        warningText = transform.GetObjectRecursively<GameObject>("ThemeMenuRestartWarningRec");
-        toTranslate.Add(warningText.GetComponent<TextMeshProUGUI>(),"thememenu.warning.restart");
-        content = transform.GetObjectRecursively<Transform>("ThemeMenuThemeSelectorContentRec");
+        _entryTemplate = transform.GetObjectRecursively<GameObject>("ThemeSelectorEntryRec");
+        _buttonTemplate = transform.GetObjectRecursively<GameObject>("ThemeSelectorEntryButtonEntryRec");
+        _dropdownTemplate = transform.GetObjectRecursively<GameObject>("ThemeSelectorEntryDropdownEntryRec");
+        _warningText = transform.GetObjectRecursively<GameObject>("ThemeMenuRestartWarningRec");
+        toTranslate.Add(_warningText.GetComponent<TextMeshProUGUI>(),"thememenu.warning.restart");
+        _content = transform.GetObjectRecursively<Transform>("ThemeMenuThemeSelectorContentRec");
         
         var button1 = transform.GetObjectRecursively<Image>("ThemeMenuThemeSelectorSelectionButtonRec");
         button1.sprite = whitePillBg;

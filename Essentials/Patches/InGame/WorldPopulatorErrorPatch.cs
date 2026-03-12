@@ -1,6 +1,6 @@
 namespace Starlight.Patches.InGame;
 
-[HarmonyPatch(typeof(WorldPopulator._PopulateRanch_d__3), "MoveNext")]
+[HarmonyPatch(typeof(WorldPopulator._PopulateRanch_d__15), "MoveNext")]
 internal class WorldPopulatorErrorPatchPopulateRanch
 {
     public static void Prefix(WorldPopulator._PopulateRanch_d__3 __instance)

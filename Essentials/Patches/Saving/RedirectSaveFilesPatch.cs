@@ -14,7 +14,9 @@ internal static class RedirectSaveFilesPatch
             {
                 var savePath = Path.Combine(StarlightEntryPoint.dataPath, "redirectedSaves");
                 Directory.CreateDirectory(savePath);
-                _Provider = new FileStorageProvider(savePath).TryCast<StorageProvider>();
+                var prov = new FileStorageProvider(savePath);
+                prov.isInitialized = true;
+                _Provider = prov.TryCast<StorageProvider>();
             }
             return _Provider;
         }

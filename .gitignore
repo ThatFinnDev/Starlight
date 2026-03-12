@@ -170,4 +170,5 @@ XMLToMD/*.md
 # =========================
 !*.sln
 Libs/
+Libs2/
 !Libs/PLACE_YOUR_DLLS_HERE

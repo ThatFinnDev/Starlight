@@ -18,7 +18,7 @@ internal static class ScreenshotPatch
     
     internal static void Prefix(ScreenshotPauseItemModel __instance)
     {
-        if (StarlightCheatMenu.betterScreenshot)
+        if (StarlightCheatMenu.BetterScreenshot)
         {
             sceneContext.PlayerState.VacuumItem.gameObject.SetActive(false);
             StartCoroutine(WaitForUnpause());

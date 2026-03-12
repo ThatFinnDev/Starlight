@@ -1,3 +1,4 @@
+using System.Collections;
 using Il2CppMonomiPark.SlimeRancher.Input;
 using Il2CppMonomiPark.SlimeRancher.UI.MainMenu;
 using UnityEngine.InputSystem;
@@ -30,5 +31,13 @@ internal static class PlatformEngagementPromptPatch
                 }, 1);
                 
             }));
+        if(ForceLoadMainMenu.HasFlag())
+            StartCoroutine(Load(__instance));
+    }
+    
+    static IEnumerator Load(PlatformEngagementPrompt __instance)
+    {
+        yield return new WaitForSecondsRealtime(5f);
+        __instance.LoadSceneGroup();
     }
 }

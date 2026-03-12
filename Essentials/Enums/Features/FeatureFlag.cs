@@ -239,6 +239,13 @@ public enum FeatureFlag
     /// If it stumbles across an invalid scene, it will be skipped
     /// </summary>
     TryFixingInvalidSceneGroups=530, //
+    /// <summary>
+    /// It's for primarily for development of mods<br/>
+    /// This will force load the main menu, however it will break things and thus is only for developing mods
+    /// </summary>
+    ForceLoadMainMenu=540, //
+    
+    
     
     
 

@@ -18,8 +18,8 @@ internal static class StarlightRepoManager
     static void StartSeperate()
     {
         
-        List<RepoSave> repoSaves = new List<RepoSave>(){new RepoSave("official","https://api.sr2e.sr2.dev/repo")};
-        if(UseMockRepo.HasFlag()) repoSaves.Add(new RepoSave("official_mock","https://api.sr2e.sr2.dev/mockrepo"));
+        List<RepoSave> repoSaves = new List<RepoSave>(){new RepoSave("official","https://api.starlight.sr2.dev/repo")};
+        if(UseMockRepo.HasFlag()) repoSaves.Add(new RepoSave("official_mock","https://api.starlight.sr2.dev/mockrepo"));
         repoSaves.AddRange(StarlightSaveManager.data.repos);
         foreach (RepoSave repoSave in repoSaves)
         {

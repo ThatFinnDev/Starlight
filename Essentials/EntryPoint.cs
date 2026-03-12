@@ -35,7 +35,7 @@ public static class BuildInfo
     public const string CoAuthors = "YLohkuhl";
     public const string Contributors = "PinkTarr, shizophrenicgopher, Atmudia";
     public const string CodeVersion = "4.0.0";
-    public const string DownloadLink = "https://sr2e.sr2.dev/";
+    public const string DownloadLink = "https://starlight.sr2.dev/";
     public const string SourceCode = "https://github.com/ThatFinnDev/Starlight";
     public const string Nexus = "https://www.nexusmods.com/slimerancher2/mods/60";
     public const string Discord = "https://discord.gg/a7wfBw5feU";
@@ -52,9 +52,9 @@ public static class BuildInfo
     // Allow Metadata, Check Update Link
     internal static readonly Dictionary<string, (bool, string)> PreInfo = new()
     {
-        { "release", (false, "https://api.sr2e.sr2.dev/branch/release") },
-        { "alpha", (false, "https://api.sr2e.sr2.dev/branch/alpha") },
-        { "beta", (false, "https://api.sr2e.sr2.dev/branch/beta") },
+        { "release", (false, "https://api.starlight.sr2.dev/branch/release") },
+        { "alpha", (false, "https://api.starlight.sr2.dev/branch/alpha") },
+        { "beta", (false, "https://api.starlight.sr2.dev/branch/beta") },
         { "dev", (true, "") }
     };
 }
@@ -127,7 +127,7 @@ public class StarlightEntryPoint : MelonMod
         string[] launchArgs = Environment.GetCommandLineArgs();
         var usedArgs = new List<string>();
         foreach (var arg in launchArgs)
-            if (arg.StartsWith("-sr2e.") && arg.Contains("="))
+            if (arg.StartsWith("-starlight.") && arg.Contains("="))
             {
                 var split = arg.Split("=");
                 if (split.Length != 2) continue;
@@ -135,7 +135,7 @@ public class StarlightEntryPoint : MelonMod
                 usedArgs.Add(split[0]);
                 switch (split[0])
                 {
-                    case "-sr2e.id":
+                    case "-starlight.id":
                         var id = 0;
                         try { id = int.Parse(split[1]); }
                         catch

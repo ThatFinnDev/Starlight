@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using Il2CppMonomiPark.SlimeRancher.Input;
 using Il2CppMonomiPark.SlimeRancher.UI;
-using Il2CppMonomiPark.SlimeRancher.UI.Map;
 using Il2CppSystem.Linq;
 using Il2CppTMPro;
 using Starlight.Buttons;
@@ -13,7 +12,6 @@ using Starlight.Enums.Features;
 using Starlight.Enums.Sounds;
 using Starlight.Managers;
 using Starlight.Storage;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace Starlight.Menus;
@@ -32,33 +30,35 @@ public class StarlightCheatMenu : StarlightMenu
     }
     
     
-    internal static List<StarlightCheatMenuButton> cheatButtons = new List<StarlightCheatMenuButton>();
-    List<CheatMenuRefineryEntry> refineryEntries = new List<CheatMenuRefineryEntry>();
-    List<CheatMenuGadgetEntry> gadgetEntries = new List<CheatMenuGadgetEntry>();
-    List<CheatMenuSlot> cheatSlots = new List<CheatMenuSlot>();
-    Transform cheatButtonContent;
-    Transform refineryContent;
-    Transform gadgetsContent;
-    Transform warpsContent;
-    GameObject buttonTemplate;
-    GameObject refineryEntryTemplate;
-    GameObject gadgetsEntryTemplate;
-    StarlightCheatMenuButton refillButton;
-    StarlightCheatMenuButton noclipButton;
-    StarlightCheatMenuButton infEnergyButton;
-    StarlightCheatMenuButton infHealthButton;
-    StarlightCheatMenuButton removeFogButton;
-    StarlightCheatMenuButton betterScreenshotButton;
-    internal static bool removeFog = false;
-    internal static bool betterScreenshot = false;
+    internal static readonly List<StarlightCheatMenuButton> cheatButtons = new();
+    private readonly List<CheatMenuRefineryEntry> _refineryEntries = new();
+    private readonly List<CheatMenuGadgetEntry> _gadgetEntries = new();
+    private readonly List<CheatMenuSlot> _cheatSlots = new();
+    private Transform _cheatButtonContent;
+    private Transform _refineryContent;
+    private Transform _gadgetsContent;
+    private Transform _warpsContent;
+    private GameObject _buttonTemplate;
+    private GameObject _refineryEntryTemplate;
+    private GameObject _gadgetsEntryTemplate;
+    private StarlightCheatMenuButton _refillButton;
+    private StarlightCheatMenuButton _noclipButton;
+    private StarlightCheatMenuButton _infEnergyButton;
+    private StarlightCheatMenuButton _infHealthButton;
+    private StarlightCheatMenuButton _removeFogButton;
+    private StarlightCheatMenuButton _betterScreenshotButton;
+    internal static bool RemoveFog;
+    internal static bool BetterScreenshot;
+    private InputEvent _inputDown;
+    private InputEvent _inputUp;
     
     protected override void OnClose()
     {
         gameObject.GetObjectRecursively<Button>("CheatMenuMainSelectionButtonRec").onClick.Invoke();
-        refineryContent.DestroyAllChildren();
-        gadgetsContent.DestroyAllChildren();
-        cheatButtonContent.DestroyAllChildren();
-        warpsContent.DestroyAllChildren();
+        _refineryContent.DestroyAllChildren();
+        _gadgetsContent.DestroyAllChildren();
+        _cheatButtonContent.DestroyAllChildren();
+        _warpsContent.DestroyAllChildren();
     }
     
     protected override void OnOpen()
@@ -73,12 +73,12 @@ public class StarlightCheatMenu : StarlightMenu
         refineryItems.Sort((x, y) => string.Compare(x.GetName(), y.GetName(), StringComparison.OrdinalIgnoreCase));
         foreach (IdentifiableType refineryItem in refineryItems)
         {
-            GameObject entry = Instantiate(refineryEntryTemplate, refineryContent);
+            GameObject entry = Instantiate(_refineryEntryTemplate, _refineryContent);
             entry.SetActive(true);
             entry.AddComponent<CheatMenuRefineryEntry>();
             entry.GetComponent<CheatMenuRefineryEntry>().item = refineryItem;
             entry.GetComponent<CheatMenuRefineryEntry>().OnOpen();
-            refineryEntries.Add(entry.GetComponent<CheatMenuRefineryEntry>());
+            _refineryEntries.Add(entry.GetComponent<CheatMenuRefineryEntry>());
         }
         //Gadgets
 
@@ -86,19 +86,19 @@ public class StarlightCheatMenu : StarlightMenu
         gadgetItems.Sort((x, y) => string.Compare(x.GetName(), y.GetName(), StringComparison.OrdinalIgnoreCase));
         foreach (IdentifiableType gadgetItem in gadgetItems)
         {
-            GameObject entry = Instantiate(gadgetsEntryTemplate, gadgetsContent);
+            GameObject entry = Instantiate(_gadgetsEntryTemplate, _gadgetsContent);
             entry.SetActive(true);
             entry.AddComponent<CheatMenuGadgetEntry>();
             entry.GetComponent<CheatMenuGadgetEntry>().item = gadgetItem;
             entry.GetComponent<CheatMenuGadgetEntry>().OnOpen();
-            gadgetEntries.Add(entry.GetComponent<CheatMenuGadgetEntry>());
+            _gadgetEntries.Add(entry.GetComponent<CheatMenuGadgetEntry>());
         }
         
         
         //Cheat Buttons
         foreach (StarlightCheatMenuButton cheatButton in cheatButtons)
         {
-            GameObject button = Instantiate(buttonTemplate, cheatButtonContent);
+            GameObject button = Instantiate(_buttonTemplate, _cheatButtonContent);
             button.SetActive(true);
             button.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = cheatButton.label;
             button.GetComponent<Button>().onClick.AddListener((Action)(() =>
@@ -110,18 +110,18 @@ public class StarlightCheatMenu : StarlightMenu
         }
 
 
-        noclipButton.textInstance.text = translation("cheatmenu.cheatbuttons.noclip" + (sceneContext.Camera.GetComponent<NoClipComponent>() == null ? "off" : "on"));
-        refillButton.textInstance.text = translation("cheatmenu.cheatbuttons.refillinv");
-        if (EnableInfHealth.HasFlag()) infHealthButton.textInstance.text = translation("cheatmenu.cheatbuttons.infhealth" + (InfiniteHealthCommand.infHealth? "on" : "off"));
-        if (EnableInfEnergy.HasFlag()) infEnergyButton.textInstance.text = translation("cheatmenu.cheatbuttons.infenergy" + (InfiniteEnergyCommand.infEnergy? "on" : "off"));
-        removeFogButton.textInstance.text = translation("cheatmenu.cheatbuttons.removeFog" + (removeFog? "on" : "off"));
-        betterScreenshotButton.textInstance.text = translation("cheatmenu.cheatbuttons.betterScreenshot" + (betterScreenshot? "on" : "off"));
+        _noclipButton.textInstance.text = translation("cheatmenu.cheatbuttons.noclip" + (sceneContext.Camera.GetComponent<NoClipComponent>() == null ? "off" : "on"));
+        _refillButton.textInstance.text = translation("cheatmenu.cheatbuttons.refillinv");
+        if (EnableInfHealth.HasFlag()) _infHealthButton.textInstance.text = translation("cheatmenu.cheatbuttons.infhealth" + (InfiniteHealthCommand.infHealth? "on" : "off"));
+        if (EnableInfEnergy.HasFlag()) _infEnergyButton.textInstance.text = translation("cheatmenu.cheatbuttons.infenergy" + (InfiniteEnergyCommand.infEnergy? "on" : "off"));
+        _removeFogButton.textInstance.text = translation("cheatmenu.cheatbuttons.removeFog" + (RemoveFog? "on" : "off"));
+        _betterScreenshotButton.textInstance.text = translation("cheatmenu.cheatbuttons.betterScreenshot" + (BetterScreenshot? "on" : "off"));
 
         
         //Warp Buttons
         foreach (KeyValuePair<string,Warp> pair in StarlightSaveManager.data.warps.OrderBy(x => x.Key))
         {
-            GameObject button = Instantiate(buttonTemplate, warpsContent);
+            GameObject button = Instantiate(_buttonTemplate, _warpsContent);
             button.SetActive(true);
             button.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = pair.Key;
             button.GetComponent<Button>().onClick.AddListener((Action)(() =>
@@ -139,7 +139,7 @@ public class StarlightCheatMenu : StarlightMenu
 
         //Cheat Slots
         int i = -1;
-        foreach (CheatMenuSlot slot in cheatSlots)
+        foreach (CheatMenuSlot slot in _cheatSlots)
         {
             i++;
             slot.gameObject.SetActive(sceneContext.PlayerState.Ammo.Slots[i].IsUnlocked);
@@ -153,47 +153,45 @@ public class StarlightCheatMenu : StarlightMenu
         Close();
     }
 
-    private InputEvent inputDown;
-    private InputEvent inputUp;
     public override void AfterGameContext(GameContext gameContext)
     {
-        inputDown = Get<InputEvent>("ItemDown");
-        inputUp = Get<InputEvent>("ItemUp");
-        var refScroll = refineryContent.parent.parent;
+        _inputDown = Get<InputEvent>("ItemDown");
+        _inputUp = Get<InputEvent>("ItemUp");
+        var refScroll = _refineryContent.parent.parent;
         if (!refScroll.HasComponent<ScrollByMenuKeys>())
         {
             var comp = refScroll.gameObject.AddComponent<ScrollByMenuKeys>();
-            comp._scrollDownInput = inputDown;
-            comp._scrollUpInput = inputUp;
+            comp._scrollDownInput = _inputDown;
+            comp._scrollUpInput = _inputUp;
             comp._scrollPerFrame = 9f;
         }
-        var gadgetScroll = gadgetsContent.parent.parent;
+        var gadgetScroll = _gadgetsContent.parent.parent;
         if (!gadgetScroll.HasComponent<ScrollByMenuKeys>())
         {
             var comp = gadgetScroll.gameObject.AddComponent<ScrollByMenuKeys>();
-            comp._scrollDownInput = inputDown;
-            comp._scrollUpInput = inputUp;
+            comp._scrollDownInput = _inputDown;
+            comp._scrollUpInput = _inputUp;
             comp._scrollPerFrame = 9f;
         }
     }
 
     protected override void OnLateAwake()
     {
-        cheatButtonContent = transform.GetObjectRecursively<Transform>("CheatMenuCheatButtonsContentRec");
-        refineryContent = transform.GetObjectRecursively<Transform>("CheatMenuRefineryContentRec");
-        warpsContent = transform.GetObjectRecursively<Transform>("CheatMenuWarpsContentRec");
-        gadgetsContent = transform.GetObjectRecursively<Transform>("CheatMenuGadgetContentRec");
-        buttonTemplate = transform.GetObjectRecursively<GameObject>("CheatMenuTemplateButton");
-        refineryEntryTemplate = transform.GetObjectRecursively<GameObject>("CheatMenuRefineryTemplateEntry");
-        gadgetsEntryTemplate = transform.GetObjectRecursively<GameObject>("CheatMenuGadgetsTemplateEntry");
+        _cheatButtonContent = transform.GetObjectRecursively<Transform>("CheatMenuCheatButtonsContentRec");
+        _refineryContent = transform.GetObjectRecursively<Transform>("CheatMenuRefineryContentRec");
+        _warpsContent = transform.GetObjectRecursively<Transform>("CheatMenuWarpsContentRec");
+        _gadgetsContent = transform.GetObjectRecursively<Transform>("CheatMenuGadgetContentRec");
+        _buttonTemplate = transform.GetObjectRecursively<GameObject>("CheatMenuTemplateButton");
+        _refineryEntryTemplate = transform.GetObjectRecursively<GameObject>("CheatMenuRefineryTemplateEntry");
+        _gadgetsEntryTemplate = transform.GetObjectRecursively<GameObject>("CheatMenuGadgetsTemplateEntry");
         
         CheatButtons();
-        cheatSlots.Add(transform.GetObjectRecursively<GameObject>("CheatMenuStatsSlot1Rec").AddComponent<CheatMenuSlot>());
-        cheatSlots.Add(transform.GetObjectRecursively<GameObject>("CheatMenuStatsSlot2Rec").AddComponent<CheatMenuSlot>());
-        cheatSlots.Add(transform.GetObjectRecursively<GameObject>("CheatMenuStatsSlot3Rec").AddComponent<CheatMenuSlot>());
-        cheatSlots.Add(transform.GetObjectRecursively<GameObject>("CheatMenuStatsSlot4Rec").AddComponent<CheatMenuSlot>());
-        cheatSlots.Add(transform.GetObjectRecursively<GameObject>("CheatMenuStatsSlot5Rec").AddComponent<CheatMenuSlot>());
-        cheatSlots.Add(transform.GetObjectRecursively<GameObject>("CheatMenuStatsSlot6Rec").AddComponent<CheatMenuSlot>());
+        _cheatSlots.Add(transform.GetObjectRecursively<GameObject>("CheatMenuStatsSlot1Rec").AddComponent<CheatMenuSlot>());
+        _cheatSlots.Add(transform.GetObjectRecursively<GameObject>("CheatMenuStatsSlot2Rec").AddComponent<CheatMenuSlot>());
+        _cheatSlots.Add(transform.GetObjectRecursively<GameObject>("CheatMenuStatsSlot3Rec").AddComponent<CheatMenuSlot>());
+        _cheatSlots.Add(transform.GetObjectRecursively<GameObject>("CheatMenuStatsSlot4Rec").AddComponent<CheatMenuSlot>());
+        _cheatSlots.Add(transform.GetObjectRecursively<GameObject>("CheatMenuStatsSlot5Rec").AddComponent<CheatMenuSlot>());
+        _cheatSlots.Add(transform.GetObjectRecursively<GameObject>("CheatMenuStatsSlot6Rec").AddComponent<CheatMenuSlot>());
 
         transform.GetObjectRecursively<GameObject>("CheatMenuStatsNewbucksRec").AddComponent<CheatMenuNewbucks>();
         
@@ -217,42 +215,42 @@ public class StarlightCheatMenu : StarlightMenu
     }
     void CheatButtons()
     {
-        if (EnableInfEnergy.HasFlag()) infEnergyButton = new StarlightCheatMenuButton(translation("cheatmenu.cheatbuttons.infenergyoff"),
+        if (EnableInfEnergy.HasFlag()) _infEnergyButton = new StarlightCheatMenuButton(translation("cheatmenu.cheatbuttons.infenergyoff"),
             () =>
         {
             AudioEUtil.PlaySound(MenuSound.Click);
             StarlightCommandManager.ExecuteByString("infenergy", true,true);
-            infEnergyButton.textInstance.text = translation("cheatmenu.cheatbuttons.infenergy" + (InfiniteEnergyCommand.infEnergy? "on" : "off"));
+            _infEnergyButton.textInstance.text = translation("cheatmenu.cheatbuttons.infenergy" + (InfiniteEnergyCommand.infEnergy? "on" : "off"));
         });
-        if (EnableInfHealth.HasFlag()) infHealthButton = new StarlightCheatMenuButton(translation("cheatmenu.cheatbuttons.infhealthoff"),
+        if (EnableInfHealth.HasFlag()) _infHealthButton = new StarlightCheatMenuButton(translation("cheatmenu.cheatbuttons.infhealthoff"),
             () =>
         {
             AudioEUtil.PlaySound(MenuSound.Click);
             StarlightCommandManager.ExecuteByString("infhealth", true,true);
-            infHealthButton.textInstance.text = translation("cheatmenu.cheatbuttons.infhealth" + (InfiniteHealthCommand.infHealth? "on" : "off"));
+            _infHealthButton.textInstance.text = translation("cheatmenu.cheatbuttons.infhealth" + (InfiniteHealthCommand.infHealth? "on" : "off"));
             });
-        removeFogButton = new StarlightCheatMenuButton(translation("cheatmenu.cheatbuttons.removeFogoff"),
+        _removeFogButton = new StarlightCheatMenuButton(translation("cheatmenu.cheatbuttons.removeFogoff"),
             () =>
             {
                 AudioEUtil.PlaySound(MenuSound.Click);
-                removeFog = !removeFog;
-                removeFogButton.textInstance.text = translation("cheatmenu.cheatbuttons.removeFog" + (removeFog? "on" : "off"));
+                RemoveFog = !RemoveFog;
+                _removeFogButton.textInstance.text = translation("cheatmenu.cheatbuttons.removeFog" + (RemoveFog? "on" : "off"));
             });
-        betterScreenshotButton = new StarlightCheatMenuButton(translation("cheatmenu.cheatbuttons.betterScreenshotoff"),
+        _betterScreenshotButton = new StarlightCheatMenuButton(translation("cheatmenu.cheatbuttons.betterScreenshotoff"),
             () =>
             {
                 AudioEUtil.PlaySound(MenuSound.Click);
-                betterScreenshot = !betterScreenshot;
-                betterScreenshotButton.textInstance.text = translation("cheatmenu.cheatbuttons.betterScreenshot" + (betterScreenshot? "on" : "off"));
+                BetterScreenshot = !BetterScreenshot;
+                _betterScreenshotButton.textInstance.text = translation("cheatmenu.cheatbuttons.betterScreenshot" + (BetterScreenshot? "on" : "off"));
             });
-        noclipButton = new StarlightCheatMenuButton(translation("cheatmenu.cheatbuttons.noclipoff"),
+        _noclipButton = new StarlightCheatMenuButton(translation("cheatmenu.cheatbuttons.noclipoff"),
             () =>
             {
                 AudioEUtil.PlaySound(MenuSound.Click);
                 StarlightCommandManager.ExecuteByString("noclip", true,true);
-                noclipButton.textInstance.text = translation("cheatmenu.cheatbuttons.noclip" + (sceneContext.Camera.GetComponent<NoClipComponent>()!=null ? "on" : "off"));
+                _noclipButton.textInstance.text = translation("cheatmenu.cheatbuttons.noclip" + (sceneContext.Camera.GetComponent<NoClipComponent>()!=null ? "on" : "off"));
             });
-        refillButton = new StarlightCheatMenuButton(translation("cheatmenu.cheatbuttons.refillinv"), () =>
+        _refillButton = new StarlightCheatMenuButton(translation("cheatmenu.cheatbuttons.refillinv"), () =>
         {
             AudioEUtil.PlaySound(MenuSound.Click);
             StarlightCommandManager.ExecuteByString("refillinv", true,true);
