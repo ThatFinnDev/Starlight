@@ -19,6 +19,7 @@ using Starlight.Managers;
 using Starlight.Menus;
 using Starlight.Menus.Debug;
 using Starlight.Patches.General;
+using Starlight.Patches.InGame;
 using Starlight.Prism;
 using Starlight.Prism.Lib;
 using Starlight.Storage;
@@ -61,7 +62,7 @@ public static class BuildInfo
 public class StarlightEntryPoint : MelonMod
 {
     private static string _starlightFolderName = "Starlight";
-
+    internal static bool changedUserFolder { get; private set; }
     internal static readonly Dictionary<Assembly, (Dictionary<StarlightExpansionVXX,StarlightPackageInfo>, HarmonyLib.Harmony)> Expansions = new();
     internal static readonly List<StarlightExpansionV01> ExpansionV01S = new();
     internal static readonly List<(string, Assembly, string, string)> BrokenExpansions = new();
@@ -142,7 +143,11 @@ public class StarlightEntryPoint : MelonMod
                         {
                             // ignored
                         }
-                        if (id != 0) _starlightFolderName += id;
+                        if (id != 0)
+                        {
+                            _starlightFolderName += id;
+                            changedUserFolder = true;
+                        }
                         break;
                 }
             }
@@ -179,6 +184,9 @@ public class StarlightEntryPoint : MelonMod
         if (ShouldEnablePrism) isPrismInUse = true;
         if (!AllowPrism.HasFlag()) isPrismInUse = false;
         PatchGame(HarmonyInstance,MelonAssembly.Assembly);
+        
+        try { WorldPopulatorErrorPatch.Apply(HarmonyInstance); }
+        catch (Exception e) { LogError(e); }
         foreach (var pair in Expansions)
             PatchGame(pair.Value.Item2,pair.Key);
         
