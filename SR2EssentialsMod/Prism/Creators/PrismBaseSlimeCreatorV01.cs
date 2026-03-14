@@ -44,7 +44,6 @@ public class PrismBaseSlimeCreatorV01
         for (int i = 0; i < name.Length; i++)
             if (!((name[i] >= 'A' && name[i] <= 'Z') || (name[i] >= 'a' && name[i] <= 'z')))
                 return false;
-        if (icon==null) return false;
         if (localized==null) return false;
         if (customBasePrefab != null)
         {
