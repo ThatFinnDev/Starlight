@@ -295,6 +295,7 @@ public static class PrismLibAppearances
         mat.EnableKeyword("_ENABLETWINEFFECT_ON");
     }
 
+    // todo: automatically set the effect textures from the actual twin slime
     /// <summary>
     /// Enables the twin effect on a slime
     /// </summary>
@@ -316,6 +317,30 @@ public static class PrismLibAppearances
     /// </summary>
     /// <param name="prismSlime">The slime to enable the effect on</param>
     public static void EnableSloomberEffect(this PrismSlime prismSlime)
+    {
+        var slimeDef = prismSlime.GetSlimeDefinition();
+        var sloomberMat = PrismNativeBaseSlime.Sloomber
+            .GetPrismBaseSlime()
+            .GetSlimeAppearance()
+            ._structures[0]!
+            .DefaultMaterials[0];
+        for (int i = 0; i < slimeDef.AppearancesDefault[0].Structures.Count - 1; i++)
+        {
+            SlimeAppearanceStructure a = slimeDef.AppearancesDefault[0].Structures[i];
+            var mat = a.DefaultMaterials[0];
+            
+            mat.EnableKeyword("_BODYCOLORING_SLOOMBER");
+            
+            mat.SetTexture("_SloomberStarMask", sloomberMat.GetTexture("_SloomberStarMask"));
+            mat.SetTexture("_SloomberColorOverlay", sloomberMat.GetTexture("_SloomberColorOverlay"));
+        }
+    }
+
+    /// <summary>
+    /// Enables the sloomber effect on a slime but without automatically setting the texture
+    /// </summary>
+    /// <param name="prismSlime">The slime to enable the effect on</param>
+    public static void EnableSloomberEffectTextureless(this PrismSlime prismSlime)
     {
         var slimeDef = prismSlime.GetSlimeDefinition();
         for (int i = 0; i < slimeDef.AppearancesDefault[0].Structures.Count - 1; i++)
