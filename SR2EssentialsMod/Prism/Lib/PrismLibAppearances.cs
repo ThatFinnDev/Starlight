@@ -279,9 +279,15 @@ public static class PrismLibAppearances
     /// <param name="index2">The index of the material</param>
     /// <param name="isSS">Whether the appearance is a secret style</param>
     /// <param name="structure">The index of the structure</param>
-    public static void EnableTwinEffectSpecific(this PrismSlime prismSlime, int index, int index2, bool isSS, int structure)
+    /// <param name="applyTextures">Whether or not to automatically apply textures</param>
+    public static void EnableTwinEffectSpecific(this PrismSlime prismSlime, int index, int index2, bool isSS, int structure, bool applyTextures = true)
     {
         var slimeDef = prismSlime.GetSlimeDefinition();
+        var twinMat = PrismNativeBaseSlime.Twin
+            .GetPrismBaseSlime()
+            .GetSlimeAppearance()
+            ._structures[0]!
+            .DefaultMaterials[0];
         Material mat;
         if (isSS == true)
         {
@@ -293,9 +299,11 @@ public static class PrismLibAppearances
         }
 
         mat.EnableKeyword("_ENABLETWINEFFECT_ON");
+        
+        if (applyTextures)
+            mat.SetTexture("_NoiseEdge", twinMat.GetTexture("_NoiseEdge"));
     }
 
-    // todo: automatically set the effect textures from the actual twin slime
     /// <summary>
     /// Enables the twin effect on a slime
     /// </summary>
@@ -303,6 +311,30 @@ public static class PrismLibAppearances
     public static void EnableTwinEffect(this PrismSlime prismSlime)
     {
         var slimeDef = prismSlime.GetSlimeDefinition();
+        var twinMat = PrismNativeBaseSlime.Twin
+            .GetPrismBaseSlime()
+            .GetSlimeAppearance()
+            ._structures[0]!
+            .DefaultMaterials[0];
+        for (int i = 0; i < slimeDef.AppearancesDefault[0].Structures.Count - 1; i++)
+        {
+            SlimeAppearanceStructure a = slimeDef.AppearancesDefault[0].Structures[i];
+            var mat = a.DefaultMaterials[0];
+            
+            mat.EnableKeyword("_ENABLETWINEFFECT_ON");
+            mat.SetTexture("_NoiseEdge", twinMat.GetTexture("_NoiseEdge"));
+        }
+        
+        prismSlime.AdjustTwinEffect();
+    }
+    /// <summary>
+    /// Enables the twin effect on a slime without automatically setting the textures
+    /// </summary>
+    /// <param name="prismSlime">The slime to enable the effect on</param>
+    public static void EnableTwinEffectTextureless(this PrismSlime prismSlime)
+    {
+        var slimeDef = prismSlime.GetSlimeDefinition();
+        
         for (int i = 0; i < slimeDef.AppearancesDefault[0].Structures.Count - 1; i++)
         {
             SlimeAppearanceStructure a = slimeDef.AppearancesDefault[0].Structures[i];
@@ -357,6 +389,40 @@ public static class PrismLibAppearances
             
             mat.SetFloat("_StarTiling", size);
             mat.SetFloat("_StarMaskIntensity_BODYCOLORING_SLOOMBER", intensity);
+        }
+    }
+    
+    /// <summary>
+    /// Adjusts the settings for the sloomber sparkle effect
+    /// <br/><br/>
+    /// The default values for the parameters are the default for the sloomber slime.
+    /// </summary>
+    /// <param name="prismSlime">The slime to enable the effect on</param>
+    /// <param name="size">The size for the effect</param>
+    /// <param name="intensity">The strength of the effect.</param>
+    /// <param name="vortex">Whether or not to enable the vortex</param>
+    /// <param name="vortexDistortion">The vortex distortion size</param>
+    /// <param name="vortexOffset">The vortex offset (use null for default)</param>
+    public static void AdjustTwinEffect(this PrismSlime prismSlime, float size = 1f, float intensity = 0.8f, bool vortex = true, float vortexDistortion = 12f, Vector4? vortexOffset = null)
+    {
+        Vector4 vortexOffset2;
+        if (vortexOffset == null)
+            vortexOffset2 = new Vector4(0, -0.5f, 0, 0);
+        else
+            vortexOffset2 = (Vector4)vortexOffset;
+        
+        var slimeDef = prismSlime.GetSlimeDefinition();
+
+        for (int i = 0; i < slimeDef.AppearancesDefault[0].Structures.Count - 1; i++)
+        {
+            SlimeAppearanceStructure a = slimeDef.AppearancesDefault[0].Structures[i];
+            var mat = a.DefaultMaterials[0];
+            
+            mat.SetFloat("_TwinEffectSize", size);
+            mat.SetFloat("_TwinLineDivisionIntensity", intensity);
+            mat.SetFloat("_EnableVortex", vortex ? 1f : 0f);
+            mat.SetFloat("_VortexDistortionSize", vortexDistortion);
+            mat.SetVector("_TwinVortexOffset", vortexOffset2);
         }
     }
 
