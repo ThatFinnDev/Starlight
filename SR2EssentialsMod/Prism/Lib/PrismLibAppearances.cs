@@ -334,6 +334,30 @@ public static class PrismLibAppearances
             mat.SetTexture("_SloomberStarMask", sloomberMat.GetTexture("_SloomberStarMask"));
             mat.SetTexture("_SloomberColorOverlay", sloomberMat.GetTexture("_SloomberColorOverlay"));
         }
+        
+        prismSlime.AdjustSloomberSparkles();
+    }
+    
+    /// <summary>
+    /// Adjusts the settings for the sloomber sparkle effect
+    /// <br/><br/>
+    /// The default values for the parameters are the default for the sloomber slime.
+    /// </summary>
+    /// <param name="prismSlime">The slime to enable the effect on</param>
+    /// <param name="size">The size for tiling.</param>
+    /// <param name="intensity">The strength of the texture.</param>
+    public static void AdjustSloomberSparkles(this PrismSlime prismSlime, float size = 3.26f, float intensity = 1)
+    {
+        var slimeDef = prismSlime.GetSlimeDefinition();
+
+        for (int i = 0; i < slimeDef.AppearancesDefault[0].Structures.Count - 1; i++)
+        {
+            SlimeAppearanceStructure a = slimeDef.AppearancesDefault[0].Structures[i];
+            var mat = a.DefaultMaterials[0];
+            
+            mat.SetFloat("_StarTiling", size);
+            mat.SetFloat("_StarMaskIntensity_BODYCOLORING_SLOOMBER", intensity);
+        }
     }
 
     /// <summary>
