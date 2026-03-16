@@ -21,11 +21,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1028177452534929660, guid: fad5da3880251b64e92b01c10bce13a1, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1028177452534929660, guid: fad5da3880251b64e92b01c10bce13a1, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1028177452534929660, guid: fad5da3880251b64e92b01c10bce13a1, type: 3}
       propertyPath: m_SizeDelta.y
@@ -157,7 +157,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7694823504668673891, guid: fad5da3880251b64e92b01c10bce13a1, type: 3}
       propertyPath: m_Name
-      value: ConfirmationViewer_SR2E
+      value: ConfirmationViewer_Starlight
       objectReference: {fileID: 0}
     - target: {fileID: 8695299198897952945, guid: fad5da3880251b64e92b01c10bce13a1, type: 3}
       propertyPath: m_AnchorMax.x

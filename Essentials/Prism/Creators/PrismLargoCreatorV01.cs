@@ -12,52 +12,51 @@ namespace Starlight.Prism.Creators;
 public class PrismLargoCreatorV01
 {
     private PrismLargo _createdLargo;
-    
-    public PrismBaseSlime firstSlime;
-    public PrismBaseSlime secondSlime;
-    
-    public PrismLargoMergeSettings largoMergeSettings = new PrismLargoMergeSettings();
-    public string name => firstSlime.slimeDefinition.Name + secondSlime.slimeDefinition.Name;
-    public string referenceID => "SlimeDefinition.Modded" + name;
 
+    public PrismBaseSlime FirstSlime;
+    public PrismBaseSlime SecondSlime;
     
-    public LocalizedString customLocalized;
-    public GameObject customBasePrefab = null;
+    public PrismLargoMergeSettings LargoMergeSettings = new ();
+    private string name => FirstSlime.SlimeDefinition.Name + SecondSlime.SlimeDefinition.Name;
+    private string referenceID => "SlimeDefinition.Modded" + name;
+
+
+    public LocalizedString CustomLocalized;
+    public GameObject CustomBasePrefab = null;
 
 
     public PrismLargoCreatorV01(PrismNativeBaseSlime firstSlime, PrismNativeBaseSlime secondSlime)
     {
-        this.firstSlime = firstSlime;
-        this.secondSlime = secondSlime;
+        this.FirstSlime = firstSlime;
+        this.SecondSlime = secondSlime;
     }
     public PrismLargoCreatorV01(PrismNativeBaseSlime firstSlime, PrismBaseSlime secondSlime)
     {
-        this.firstSlime = firstSlime;
-        this.secondSlime = secondSlime;
+        this.FirstSlime = firstSlime;
+        this.SecondSlime = secondSlime;
     }
     public PrismLargoCreatorV01(PrismBaseSlime firstSlime, PrismBaseSlime secondSlime)
     {
-        this.firstSlime = firstSlime;
-        this.secondSlime = secondSlime;
+        this.FirstSlime = firstSlime;
+        this.SecondSlime = secondSlime;
     }
     public PrismLargoCreatorV01(PrismBaseSlime firstSlime, PrismNativeBaseSlime secondSlime)
     {
-        this.firstSlime = firstSlime;
-        this.secondSlime = secondSlime;
+        this.FirstSlime = firstSlime;
+        this.SecondSlime = secondSlime;
     }
     
     public bool IsValid()
     {
         if (string.IsNullOrWhiteSpace(name)) return false;
-        for (int i = 0; i < name.Length; i++)
-            if (!((name[i] >= 'A' && name[i] <= 'Z') || (name[i] >= 'a' && name[i] <= 'z')))
+        foreach (var t in name)
+            if (!((t >= 'A' && t <= 'Z') || (t >= 'a' && t <= 'z')))
                 return false;
-        if (firstSlime == null | secondSlime == null) return false;
-        if (customBasePrefab != null)
-        {
-            if (!customBasePrefab.HasComponent<SlimeAppearanceApplicator>()) return false;
-            if (!customBasePrefab.HasComponent<IdentifiableActor>()) return false;
-        }
+
+        if (FirstSlime == null | SecondSlime == null) return false;
+        if (CustomBasePrefab == null) return true;
+        if (!CustomBasePrefab.HasComponent<SlimeAppearanceApplicator>()) return false;
+        if (!CustomBasePrefab.HasComponent<IdentifiableActor>()) return false;
         return true;
     }
     
@@ -71,11 +70,11 @@ public class PrismLargoCreatorV01
         if (_createdLargo != null) return _createdLargo;
 
 
-        if (PrismLibLookup.DoesLargoComboExist(firstSlime, secondSlime)) return null;
+        if (FirstSlime.DoesLargoComboExist(SecondSlime)) return null;
 
-        if (largoMergeSettings == null) largoMergeSettings = new PrismLargoMergeSettings();
-        var firstSlimeDef = firstSlime.GetSlimeDefinition();
-        var secondSlimeDef = secondSlime.GetSlimeDefinition();
+        if (LargoMergeSettings == null) LargoMergeSettings = new PrismLargoMergeSettings();
+        var firstSlimeDef = FirstSlime.GetSlimeDefinition();
+        var secondSlimeDef = SecondSlime.GetSlimeDefinition();
 
         if (firstSlimeDef.IsLargo || secondSlimeDef.IsLargo)
             return null;
@@ -83,7 +82,7 @@ public class PrismLargoCreatorV01
         firstSlimeDef.CanLargofy = true;
         secondSlimeDef.CanLargofy = true;
 
-        SlimeDefinition baseLargo = null;
+        SlimeDefinition baseLargo;
         if(firstSlimeDef.ReferenceId=="SlimeDefinition.Boom"||secondSlimeDef.referenceId=="SlimeDefinition.Boom") 
             baseLargo=LookupEUtil.largoTypes.GetEntryByRefID("SlimeDefinition.PinkBoom");
         
@@ -141,7 +140,7 @@ public class PrismLargoCreatorV01
         else
             baseLargo=LookupEUtil.largoTypes.GetEntryByRefID("SlimeDefinition.PinkRock");
         
-        SlimeDefinition largoDef = Object.Instantiate(baseLargo);
+        var largoDef = Object.Instantiate(baseLargo);
         largoDef.BaseSlimes = new[]
         {
             firstSlimeDef, secondSlimeDef
@@ -155,14 +154,14 @@ public class PrismLargoCreatorV01
 
         largoDef.referenceId = referenceID;
 
-        if (customLocalized != null)
-            largoDef.localizedName = customLocalized;
+        if (CustomLocalized != null)
+            largoDef.localizedName = CustomLocalized;
         else
             largoDef.localizedName = AddTranslation(firstSlimeDef.name + " " + secondSlimeDef.name + " Largo",
                 "l." + largoDef._pediaPersistenceSuffix);
 
 
-        largoDef.FavoriteToyIdents = new Il2CppReferenceArray<ToyDefinition>(PrismLibMerging.MergeFavoriteToys(firstSlime, secondSlime));
+        largoDef.FavoriteToyIdents = new Il2CppReferenceArray<ToyDefinition>(PrismLibMerging.MergeFavoriteToys(FirstSlime, SecondSlime));
 
         largoDef.hideFlags = HideFlags.DontUnloadUnusedAsset;
         largoDef.Name = name;
@@ -189,17 +188,17 @@ public class PrismLargoCreatorV01
             firstSlimeDef.AppearancesDefault[0], secondSlimeDef.AppearancesDefault[0]
         };
 
-        bool firstFace = PrismLibMerging.ShouldUseFirstStructure(largoMergeSettings.face, !PrismLibMerging.GetLargoHasDefaultFace(firstSlime.GetSlimeAppearance()));
+        bool firstFace = PrismLibMerging.ShouldUseFirstStructure(LargoMergeSettings.Face, !PrismLibMerging.GetLargoHasDefaultFace(FirstSlime.GetSlimeAppearance()));
         if (firstFace)
-            appearance._face = Object.Instantiate(firstSlime.GetSlimeAppearance()._face);
-        else appearance._face = Object.Instantiate(secondSlime.GetSlimeAppearance()._face);
+            appearance._face = Object.Instantiate(FirstSlime.GetSlimeAppearance()._face);
+        else appearance._face = Object.Instantiate(SecondSlime.GetSlimeAppearance()._face);
         var optimalPriortization = PrismLibMerging.GetOptimalV01(firstSlimeDef,secondSlimeDef);
-        if (largoMergeSettings.baseColors==PrismColorMergeStrategy.Merge||
-            (largoMergeSettings.baseColors == PrismColorMergeStrategy.Optimal && optimalPriortization==PrismThreeMergeStrategy.Merge))
+        if (LargoMergeSettings.BaseColors==PrismColorMergeStrategy.Merge||
+            (LargoMergeSettings.BaseColors == PrismColorMergeStrategy.Optimal && optimalPriortization==PrismThreeMergeStrategy.Merge))
         {
-            var firstPalette = firstSlime.GetSlimeAppearance()._colorPalette;
-            var secondPalette = secondSlime.GetSlimeAppearance()._colorPalette;
-            appearance._splatColor = Color.Lerp(firstSlime.GetSlimeAppearance()._splatColor, secondSlime.GetSlimeAppearance()._splatColor, 0.5f);
+            var firstPalette = FirstSlime.GetSlimeAppearance()._colorPalette;
+            var secondPalette = SecondSlime.GetSlimeAppearance()._colorPalette;
+            appearance._splatColor = Color.Lerp(FirstSlime.GetSlimeAppearance()._splatColor, SecondSlime.GetSlimeAppearance()._splatColor, 0.5f);
             largoDef.color = Color.Lerp(firstSlimeDef.color, secondSlimeDef.color, 0.5f);
             appearance._colorPalette = new SlimeAppearance.Palette()
             {
@@ -215,11 +214,11 @@ public class PrismLargoCreatorV01
             switch (optimalPriortization)
             {
                 case PrismThreeMergeStrategy.PrioritizeSecond :
-                    prioritizedAppearance = secondSlime.GetSlimeAppearance();
+                    prioritizedAppearance = SecondSlime.GetSlimeAppearance();
                     largoDef.color = secondSlimeDef.color;
                     break;
                 default:
-                    prioritizedAppearance = firstSlime.GetSlimeAppearance();
+                    prioritizedAppearance = FirstSlime.GetSlimeAppearance();
                     largoDef.color = firstSlimeDef.color;
                     break;
             }
@@ -233,7 +232,7 @@ public class PrismLargoCreatorV01
             };
         }
         appearance._structures = PrismLibMerging.MergeStructuresV01(appearance._dependentAppearances[0],
-            appearance._dependentAppearances[1], largoMergeSettings,optimalPriortization);
+            appearance._dependentAppearances[1], LargoMergeSettings,optimalPriortization);
 
         try
         {
@@ -241,9 +240,9 @@ public class PrismLargoCreatorV01
         }
         catch
         {
-            switch (largoMergeSettings.body)
+            switch (LargoMergeSettings.Body)
             {
-                case PrismBFMergeStrategy.KeepSecond:
+                case PrismBfMergeStrategy.KeepSecond:
                     largoDef.Diet = secondSlimeDef.Diet;
                     LogBigError("Largo Error",
                         "Failed to merge diet, and largo settings are incorrectly set! Defaulting to slime 2's diet.");
@@ -276,19 +275,19 @@ public class PrismLargoCreatorV01
         }
         if(firstPlort!=null&&secondPlort!=null)
         {
-            firstSlime.AddEatmapToSlime(PrismLibDiet.CreateEatmapEntry(SlimeEmotions.Emotion.AGITATION, 0.5f, null, secondPlort, largoDef), true);
-            secondSlime.AddEatmapToSlime(PrismLibDiet.CreateEatmapEntry(SlimeEmotions.Emotion.AGITATION, 0.5f, null, firstPlort, largoDef), true);
-            firstSlime.RefreshEatMap();
-            secondSlime.RefreshEatMap();
+            FirstSlime.AddEatmapToSlime(PrismLibDiet.CreateEatmapEntry(SlimeEmotions.Emotion.AGITATION, 0.5f, null, secondPlort, largoDef), true);
+            SecondSlime.AddEatmapToSlime(PrismLibDiet.CreateEatmapEntry(SlimeEmotions.Emotion.AGITATION, 0.5f, null, firstPlort, largoDef), true);
+            FirstSlime.RefreshEatMap();
+            SecondSlime.RefreshEatMap();
         }
 
 
 
-        if(largoMergeSettings.mergeComponents)
+        if(LargoMergeSettings.MergeComponents)
             PrismLibMerging.MergeComponentsV01(largoDef.prefab, firstSlimeDef.prefab, secondSlimeDef.prefab);
 
         
-        if (firstSlime.GetIsNative())
+        if (FirstSlime.GetIsNative())
             largoDef.Prism_AddToGroup(firstSlimeDef.Name+"LargoGroup");
         else
         {
@@ -297,16 +296,16 @@ public class PrismLargoCreatorV01
             else
             {
                 var creator = new PrismIdentifiableTypeGroupCreatorV01(firstSlimeDef.Name + "ModdedLargoGroup", PrismShortcuts.EmptyTranslation);
-                creator.memberTypes = new List<IdentifiableType>() { largoDef };
+                creator.MemberTypes = new List<IdentifiableType>() { largoDef };
                 var group = creator.CreateIdentifiableTypeGroup();
                 group.AddToGroup("EdibleSlimeGroup");
                 group.AddToGroup("LargoGroup");
-                if(firstSlime.IsInImmediateGroup("SlimesSinkInShallowWaterGroup")&&secondSlime.IsInImmediateGroup("SlimesSinkInShallowWaterGroup"))
+                if(FirstSlime.IsInImmediateGroup("SlimesSinkInShallowWaterGroup")&&SecondSlime.IsInImmediateGroup("SlimesSinkInShallowWaterGroup"))
                     group.AddToGroup("SlimesSinkInShallowWaterGroup");
             }
         }
         
-        if (secondSlime.GetIsNative())
+        if (SecondSlime.GetIsNative())
             largoDef.Prism_AddToGroup(secondSlimeDef.Name+"LargoGroup");
         else
         {
@@ -315,11 +314,11 @@ public class PrismLargoCreatorV01
             else
             {
                 var creator = new PrismIdentifiableTypeGroupCreatorV01(secondSlimeDef.Name + "ModdedLargoGroup", PrismShortcuts.EmptyTranslation);
-                creator.memberTypes = new List<IdentifiableType>() { largoDef };
+                creator.MemberTypes = new List<IdentifiableType>() { largoDef };
                 var group = creator.CreateIdentifiableTypeGroup();
                 group.AddToGroup("EdibleSlimeGroup");
                 group.AddToGroup("LargoGroup");
-                if(firstSlime.IsInImmediateGroup("SlimesSinkInShallowWaterGroup")&&secondSlime.IsInImmediateGroup("SlimesSinkInShallowWaterGroup"))
+                if(FirstSlime.IsInImmediateGroup("SlimesSinkInShallowWaterGroup")&&SecondSlime.IsInImmediateGroup("SlimesSinkInShallowWaterGroup"))
                     group.AddToGroup("SlimesSinkInShallowWaterGroup");
             }
         }
@@ -332,7 +331,7 @@ public class PrismLargoCreatorV01
           //  PrismLibDiet.AddEatProduction(prismLargo, plort);
         
         _createdLargo = prismLargo;
-        PrismShortcuts.PrismLargoBases.Add(_createdLargo,(firstSlime,secondSlime));
+        PrismShortcuts.PrismLargoBases.Add(_createdLargo,(FirstSlime,SecondSlime));
         PrismShortcuts.PrismLargos.Add(largoDef.ReferenceId,_createdLargo);
         return _createdLargo;
     }   

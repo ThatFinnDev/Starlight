@@ -2,20 +2,20 @@ namespace Starlight.Prism.Data;
 
 public struct PrismMarketData
 {
-    public readonly float saturation;
-    public readonly float value;
-    public readonly bool hideInMarketUI;
+    public readonly float Saturation;
+    public readonly float Value;
+    public readonly bool HideInMarketUI;
 
     public PrismMarketData(float saturation, float value)
     {
-        this.saturation = saturation;
-        this.value = value;
-        this.hideInMarketUI = false;
+        this.Saturation = saturation;
+        this.Value = value;
+        this.HideInMarketUI = false;
     }
     public PrismMarketData(float saturation, float value, bool hideInMarketUI)
     {
-        this.saturation = saturation;
-        this.value = value;
-        this.hideInMarketUI = hideInMarketUI;
+        this.Saturation = saturation;
+        this.Value = value;
+        this.HideInMarketUI = hideInMarketUI;
     }
 }

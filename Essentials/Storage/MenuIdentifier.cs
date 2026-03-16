@@ -2,7 +2,7 @@ using Starlight.Enums;
 
 namespace Starlight.Storage;
 
-public struct MenuIdentifier(
+public readonly struct MenuIdentifier(
     string translationKey,
     StarlightMenuFont defaultFont,
     StarlightMenuTheme defaultTheme,

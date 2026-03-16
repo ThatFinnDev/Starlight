@@ -145,11 +145,7 @@ public static class StarlightFeatureFlags
         
         if (!File.Exists(flagPath)) return;
 
-        try { xmlDoc.Load(flagPath); }
-        catch
-        {
-            //ignored
-        }
+        try { xmlDoc.Load(flagPath); } catch { }
 
         XmlElement root = xmlDoc["StarlightFeatureFlags"];
         if (root == null) return; 
@@ -219,11 +215,7 @@ public static class StarlightFeatureFlags
         {
             if (File.Exists(flagPath)) LoadFromFlagFile();
             SaveToFlagFile();
-        }
-        catch
-        {
-            //ignored
-        }
+        } catch { }
         
 
         string[] launchArgs = Environment.GetCommandLineArgs();

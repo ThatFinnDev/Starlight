@@ -9,35 +9,35 @@ namespace Starlight.Prism.Creators;
 public class PrismFixedPediaEntryCreatorV01
 {
     PrismFixedPediaEntry _createdPediaEntry;
-    public string name;
-    public Sprite icon;
-    public PrismPediaCategoryType categoryType;
-    public PrismPediaFactSetType factSet;
-    public PrismPediaAdditionalFact[] additionalFacts;
-    public LocalizedString descriptionLocalized;
-    public LocalizedString titleLocalized;
-    public PrismPediaDetail[] details;
+    public string Name;
+    public Sprite Icon;
+    public PrismPediaCategoryType CategoryType;
+    public PrismPediaFactSetType FactSet;
+    public PrismPediaAdditionalFact[] AdditionalFacts;
+    public LocalizedString DescriptionLocalized;
+    public LocalizedString TitleLocalized;
+    public PrismPediaDetail[] Details;
 
-    public string customPersistenceSuffix = null;
+    public string CustomPersistenceSuffix = null;
     public PrismFixedPediaEntryCreatorV01(string name, PrismPediaCategoryType categoryType, LocalizedString titleLocalized, LocalizedString descriptionLocalized)
     {
-        this.name = name;
-        this.categoryType = categoryType;
-        this.descriptionLocalized = descriptionLocalized;
-        this.titleLocalized = titleLocalized;
+        this.Name = name;
+        this.CategoryType = categoryType;
+        this.DescriptionLocalized = descriptionLocalized;
+        this.TitleLocalized = titleLocalized;
     }
     
     public bool IsValid()
     {
-        if (string.IsNullOrWhiteSpace(name)) return false;
-        for (int i = 0; i < name.Length; i++)
-            if (!((name[i] >= 'A' && name[i] <= 'Z') || (name[i] >= 'a' && name[i] <= 'z')))
+        if (string.IsNullOrWhiteSpace(Name)) return false;
+        for (int i = 0; i < Name.Length; i++)
+            if (!((Name[i] >= 'A' && Name[i] <= 'Z') || (Name[i] >= 'a' && Name[i] <= 'z')))
                 return false;
-        if (descriptionLocalized==null) return false;
-        if (titleLocalized==null) return false;
-        if (customPersistenceSuffix!=null)
-            for (int i = 0; i < customPersistenceSuffix.Length; i++)
-                if (!((customPersistenceSuffix[i] >= 'A' && customPersistenceSuffix[i] <= 'Z') || (customPersistenceSuffix[i] >= 'a' && customPersistenceSuffix[i] <= 'z')))
+        if (DescriptionLocalized==null) return false;
+        if (TitleLocalized==null) return false;
+        if (CustomPersistenceSuffix!=null)
+            for (int i = 0; i < CustomPersistenceSuffix.Length; i++)
+                if (!((CustomPersistenceSuffix[i] >= 'A' && CustomPersistenceSuffix[i] <= 'Z') || (CustomPersistenceSuffix[i] >= 'a' && CustomPersistenceSuffix[i] <= 'z')))
                     return false;
         return true;
     }
@@ -48,34 +48,34 @@ public class PrismFixedPediaEntryCreatorV01
         if (!IsValid()) return null;
         if (_createdPediaEntry != null) return _createdPediaEntry;
         
-        var entry = Object.Instantiate(PrismLibPedia._fixedPediaEntryPrefab);
+        var entry = Object.Instantiate(PrismLibPedia.FixedPediaEntryPrefab);
         entry.hideFlags = HideFlags.DontUnloadUnusedAsset;
-        entry._title = titleLocalized;
-        entry._icon = icon!=null?icon:PrismShortcuts.UnavailableIcon;
-        entry._description = descriptionLocalized;
-        entry.name = name;
-        entry._highlightSet = factSet.GetPediaHighlightSet();
-        if (customPersistenceSuffix == null)
+        entry._title = TitleLocalized;
+        entry._icon = Icon ?? PrismShortcuts.UnavailableIcon;
+        entry._description = DescriptionLocalized;
+        entry.name = Name;
+        entry._highlightSet = FactSet.GetPediaHighlightSet();
+        if (CustomPersistenceSuffix == null)
             entry._persistenceSuffix = entry.name.ToLower();
-        else entry._persistenceSuffix = customPersistenceSuffix;
+        else entry._persistenceSuffix = CustomPersistenceSuffix;
         var _details = new List<PediaEntryDetail>();
-        if(details!=null)
-            foreach (var detail in details)
+        if(Details!=null)
+            foreach (var detail in Details)
                 _details.Add(detail.ConvertToNativeType());
         entry._details = _details.ToArray();
-        PrismLibPedia.pediaEntryLookup[categoryType].Add(entry);
+        PrismLibPedia.PediaEntryLookup[CategoryType].Add(entry);
         
         var prismEntry = new PrismFixedPediaEntry(entry, false);
 
         _createdPediaEntry = prismEntry;
         PrismShortcuts.PrismFixedPediaEntries.Add(entry,prismEntry);
         
-        if(additionalFacts!=null)
-            foreach (var additionalFact in additionalFacts)
+        if(AdditionalFacts!=null)
+            foreach (var additionalFact in AdditionalFacts)
                 prismEntry.AddAdditionalFact(additionalFact);
         
-        if (PrismLibPedia.pediaCategories.ContainsKey(categoryType))
-            PrismLibPedia.pediaCategories[categoryType].GetRuntimeCategory();
+        if (PrismLibPedia.PediaCategories.ContainsKey(CategoryType))
+            PrismLibPedia.PediaCategories[CategoryType].GetRuntimeCategory();
         return prismEntry;
     }
 }

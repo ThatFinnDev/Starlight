@@ -13,10 +13,10 @@ public class ExpansionEntryPoint : StarlightExpansionV01
     protected override StarlightPackageInfo info => new ()
     {
         ID = "com.devname.modname",
-        name = "Example Expansion",
-        author = "YourName",
-        description = "Example description",
-        version = "1.0.0",
+        Name = "Example Expansion",
+        Author = "YourName",
+        Description = "Example description",
+        Version = "1.0.0",
         /// Optionally use these arguments
         
         //coAuthors = new []{"coauthor1","coauthor2"},

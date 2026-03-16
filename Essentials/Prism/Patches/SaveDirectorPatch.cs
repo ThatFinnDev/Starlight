@@ -1,8 +1,6 @@
 ﻿using Il2CppMonomiPark.SlimeRancher;
 using Il2CppMonomiPark.SlimeRancher.Pedia;
-using Starlight.Expansion;
 using Starlight.Prism.Lib;
-using Starlight.Storage;
 
 namespace Starlight.Prism.Patches;
 
@@ -12,6 +10,7 @@ namespace Starlight.Prism.Patches;
 // Starlight's patch loads it
 internal static class SaveDirectorPatch
 {
+    // ReSharper disable once InconsistentNaming
     internal static void Postfix(AutoSaveDirector __instance)
     {
         PrismShortcuts.EmptyTranslation = AddTranslation("");
@@ -19,13 +18,10 @@ internal static class SaveDirectorPatch
         PrismLibPedia.PediaDetailTypesInitialize();
         
         foreach (var category in GetAll<PediaCategory>())
-            try
-            {
-                category.GetRuntimeCategory();
-            }
-            catch  {  }
-        
-        
+            try { category.GetRuntimeCategory(); 
+            } catch { }
+
+
         foreach (var expansion in StarlightEntryPoint.ExpansionV01S)
             try { expansion.OnPrismCreateAdditions(); }
             catch (Exception e) { LogError(e); }

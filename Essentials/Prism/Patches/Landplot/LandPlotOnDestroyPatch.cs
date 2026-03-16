@@ -11,7 +11,7 @@ internal static class LandPlotOnDestroyPatch
     static Exception Finalizer(LandPlot __instance,Exception __exception)
     {
         if (__exception == null) return null;
-        try { if (PrismLibLandPlots.landPlotLocations.Contains(__instance.transform.parent.GetComponent<LandPlotLocation>())) return null; } catch { }
+        try { if (PrismLibLandPlots.LandPlotLocations.Contains(__instance.transform.parent.GetComponent<LandPlotLocation>())) return null; } catch { }
         return __exception;
     }
 }

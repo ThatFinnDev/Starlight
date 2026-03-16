@@ -138,11 +138,7 @@ public class StarlightEntryPoint : MelonMod
                 {
                     case "-starlight.id":
                         var id = 0;
-                        try { id = int.Parse(split[1]); }
-                        catch
-                        {
-                            // ignored
-                        }
+                        try { id = int.Parse(split[1]); } catch { }
                         if (id != 0)
                         {
                             _starlightFolderName += id;
@@ -175,11 +171,7 @@ public class StarlightEntryPoint : MelonMod
         
         
         if (!ShouldEnablePrism)
-            try { ShouldEnablePrism = _prefs.GetEntry<bool>("forceUsePrism").Value; }
-            catch
-            {
-                // ignored
-            }
+            try { ShouldEnablePrism = _prefs.GetEntry<bool>("forceUsePrism").Value; } catch { }
 
         if (ShouldEnablePrism) isPrismInUse = true;
         if (!AllowPrism.HasFlag()) isPrismInUse = false;
@@ -392,11 +384,7 @@ public class StarlightEntryPoint : MelonMod
 
     public override void OnApplicationQuit()
     {
-        try { if (systemContext.SceneLoader.IsCurrentSceneGroupGameplay()) autoSaveDirector.SaveGame(); }
-        catch
-        {
-            // ignored
-        }
+        try { if (systemContext.SceneLoader.IsCurrentSceneGroupGameplay()) autoSaveDirector.SaveGame(); } catch { }
 
         foreach (var expansion in ExpansionV01S)
             try { expansion.OnApplicationQuit(); }
@@ -425,11 +413,7 @@ public class StarlightEntryPoint : MelonMod
                 if (!fontAsset.fallbackFontAssetTable.Contains(NotoSansFont))
                     fontAsset.fallbackFontAssetTable.Add(NotoSansFont);
             }
-        }
-        catch
-        {
-            //ignored
-        }
+        } catch { }
     }
 
     public override void OnSceneWasLoaded(int buildIndex, string sceneName)
@@ -446,11 +430,7 @@ public class StarlightEntryPoint : MelonMod
                 if (MenuEUtil.isAnyMenuOpen) MenuEUtil.CloseOpenMenu();
                 if (MenuEUtil.isAnyPopUpOpen) ;
                 MenuEUtil.CloseOpenPopUps();
-            }
-            catch
-            {
-                // ignored
-            }
+            } catch { }
 
         switch (sceneName)
         {
@@ -564,11 +544,7 @@ public class StarlightEntryPoint : MelonMod
         {
             if (Time.timeScale != 0 && !Mathf.Approximately(Time.timeScale, NativeEUtil.CustomTimeScale))
                 Time.timeScale = NativeEUtil.CustomTimeScale;
-        }
-        catch
-        {
-            // ignored
-        }
+        } catch { }
 
         ExecuteInSeconds(CheckForTime, 1);
     }

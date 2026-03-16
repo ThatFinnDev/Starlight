@@ -85,9 +85,9 @@ public class StarlightModMenu : StarlightMenu
     [HideFromIl2Cpp] void ProcessPackage(StarlightPackageInfo info,string downloadLink,bool isRotten,GameObject buttonPrefab, List<object> rottenInfo)
     {
         var obj = Instantiate(buttonPrefab, _modContent);
-        _modButtons.Add(obj,info.name);
+        _modButtons.Add(obj,info.Name);
         var b = obj.GetComponent<Button>();
-        b.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = info.name;
+        b.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = info.Name;
         obj.SetActive(true);
         if (info.type==PackageType.Expansion)
         {
@@ -117,58 +117,58 @@ public class StarlightModMenu : StarlightMenu
         b.onClick.AddListener((SystemAction)(() =>
         {
             AudioEUtil.PlaySound(MenuSound.Click);
-            _themeButton.gameObject.SetActive(info.name=="Starlight Core Essentials");
+            _themeButton.gameObject.SetActive(info.Name=="Starlight Core Essentials");
             if (isRotten)
             {
-                _modInfoText.text = translation("modmenu.modinfo.brokenmod", info.name);
-                if (info.type==PackageType.Expansion) _modInfoText.text = translation("modmenu.modinfo.brokenexpansion", info.name);
+                _modInfoText.text = translation("modmenu.modinfo.brokenmod", info.Name);
+                if (info.type==PackageType.Expansion) _modInfoText.text = translation("modmenu.modinfo.brokenexpansion", info.Name);
             }
             else
             {
-                _modInfoText.text = translation("modmenu.modinfo.mod", info.name);
-                if (info.type==PackageType.Expansion) _modInfoText.text = translation("modmenu.modinfo.expansion", info.name);
+                _modInfoText.text = translation("modmenu.modinfo.mod", info.Name);
+                if (info.type==PackageType.Expansion) _modInfoText.text = translation("modmenu.modinfo.expansion", info.Name);
             }
             if(!string.IsNullOrWhiteSpace(info.ID)) _modInfoText.text += "\n" + translation("modmenu.modinfo.id", info.ID);
-            _modInfoText.text += "\n" + translation("modmenu.modinfo.author", string.IsNullOrEmpty(info.author)?"Anonymous":info.author);
+            _modInfoText.text += "\n" + translation("modmenu.modinfo.author", string.IsNullOrEmpty(info.Author)?"Anonymous":info.Author);
 
             if(info.type==PackageType.Expansion)
-                _modInfoText.text += "\n" + translation("modmenu.modinfo.useprism", info.usePrism);
+                _modInfoText.text += "\n" + translation("modmenu.modinfo.useprism", info.UsePrism);
 
-            if (info.coAuthors is { Length: > 0 }) _modInfoText.text += "\n" + translation("modmenu.modinfo.coauthor", string.Join(", ",info.coAuthors));
-            if (info.contributors is { Length: > 0 }) _modInfoText.text += "\n" + translation("modmenu.modinfo.contributors", string.Join(", ",info.contributors));
+            if (info.CoAuthors is { Length: > 0 }) _modInfoText.text += "\n" + translation("modmenu.modinfo.coauthor", string.Join(", ",info.CoAuthors));
+            if (info.Contributors is { Length: > 0 }) _modInfoText.text += "\n" + translation("modmenu.modinfo.contributors", string.Join(", ",info.Contributors));
             
-            _modInfoText.text += "\n" + translation("modmenu.modinfo.version", info.version) + "\n";
+            _modInfoText.text += "\n" + translation("modmenu.modinfo.version", info.Version) + "\n";
             
             
-            if(!string.IsNullOrWhiteSpace(info.sourceCode)) _modInfoText.text += "\n" + translation("modmenu.modinfo.sourcecode", FormatLink(info.sourceCode));
-            if(!string.IsNullOrWhiteSpace(info.nexus)) _modInfoText.text += "\n" + translation("modmenu.modinfo.nexus", FormatLink(info.nexus));
-            if(!string.IsNullOrWhiteSpace(info.discord)) _modInfoText.text += "\n" + translation("modmenu.modinfo.discord", FormatLink(info.discord));
+            if(!string.IsNullOrWhiteSpace(info.SourceCode)) _modInfoText.text += "\n" + translation("modmenu.modinfo.sourcecode", FormatLink(info.SourceCode));
+            if(!string.IsNullOrWhiteSpace(info.Nexus)) _modInfoText.text += "\n" + translation("modmenu.modinfo.nexus", FormatLink(info.Nexus));
+            if(!string.IsNullOrWhiteSpace(info.Discord)) _modInfoText.text += "\n" + translation("modmenu.modinfo.discord", FormatLink(info.Discord));
             if(!string.IsNullOrWhiteSpace(downloadLink)) _modInfoText.text += "\n" + translation("modmenu.modinfo.link", FormatLink(downloadLink));
 
             if (!isRotten)
             {
                 
                 _modInfoText.text += "\n";
-                if (info.dependencies is { Length: > 0 })
+                if (info.Dependencies is { Length: > 0 })
                 {
-                    var translatedDependencies = info.dependencies.ToList();
+                    var translatedDependencies = info.Dependencies.ToList();
                     for (var i = 0; i < translatedDependencies.Count; i++)
                     {
                         var depInfo = StarlightPackageManager.GetPackageInfoFromID(translatedDependencies[i]);
                         if (depInfo is null) continue;
-                        var newName = depInfo.Value.name;
+                        var newName = depInfo.Value.Name;
                         translatedDependencies[i] = newName.Contains(' ') ?"\""+newName+"\"":newName;
                     }
                     _modInfoText.text += "\n" + translation("modmenu.modinfo.dependencies", string.Join(", ", translatedDependencies));
                 }
-                _modInfoText.text += "\n" + translation("modmenu.modinfo.loadtime", info.loadTime);
-                _modInfoText.text += "\n" + translation("modmenu.modinfo.unloadtime", info.unloadTime);
-                _modInfoText.text += "\n" + translation("modmenu.modinfo.mprequirement", info.multiplayerRequirement);
+                _modInfoText.text += "\n" + translation("modmenu.modinfo.loadtime", info.LoadTime);
+                _modInfoText.text += "\n" + translation("modmenu.modinfo.unloadtime", info.UnloadTime);
+                _modInfoText.text += "\n" + translation("modmenu.modinfo.mprequirement", info.MultiplayerRequirement);
                 _modInfoText.text += "\n";
             }
             
-            if(!string.IsNullOrWhiteSpace(info.description)) 
-                _modInfoText.text += "\n" + translation("modmenu.modinfo.description", info.description + "\n");
+            if(!string.IsNullOrWhiteSpace(info.Description)) 
+                _modInfoText.text += "\n" + translation("modmenu.modinfo.description", info.Description + "\n");
 
             if (isRotten&&rottenInfo!=null&rottenInfo.Count>=3)
             {

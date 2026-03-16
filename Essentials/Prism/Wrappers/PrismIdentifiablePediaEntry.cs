@@ -13,11 +13,11 @@ public class PrismIdentifiablePediaEntry : PrismPediaEntry
     {
         return identifiablePediaEntry.GetPrismIdentifiablePediaEntry();
     }
-    public IdentifiablePediaEntry GetIdentifiablePediaEntry() => pediaEntry.TryCast<IdentifiablePediaEntry>();
+    public IdentifiablePediaEntry GetIdentifiablePediaEntry() => PediaEntry.TryCast<IdentifiablePediaEntry>();
     public IdentifiableType GetIdentifiableType() => GetIdentifiablePediaEntry().IdentifiableType;
     internal PrismIdentifiablePediaEntry(PediaEntry pediaEntry, bool isNative): base(pediaEntry, isNative)
     {
-        this.pediaEntry = pediaEntry;
-        this.isNative = isNative;
+        this.PediaEntry = pediaEntry;
+        this.IsNative = isNative;
     }
 }

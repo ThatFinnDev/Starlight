@@ -26,11 +26,7 @@ public static class StarlightCounterGateManager
                     GameContextPatch.cheatMenuButton.Remove();
                 else
                     GameContextPatch.cheatMenuButton.AddAgain();
-        }
-        catch
-        {
-            // ignored
-        }
+        } catch { }
     }
     static void RefreshOcclusionCulling()
     {
@@ -39,11 +35,7 @@ public static class StarlightCounterGateManager
             foreach (var cam in Camera.allCameras)
                 if(cam.name.Contains("Player")||cam.name.Contains("SRLECamera"))
                     cam.useOcclusionCulling = playerCameraUseOcclusionCulling;
-        }
-        catch
-        {
-            // ignored
-        }
+        } catch { }
     }
     public static void RegisterFor_PlayerCameraDisableUseOcclusionCulling(this StarlightExpansionVXX expansion)
     {

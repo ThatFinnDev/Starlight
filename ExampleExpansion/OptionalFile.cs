@@ -113,10 +113,7 @@ class OptionFileEntrypoint : MelonMod
             pill = Sprite.Create(pillTex, new Rect(0f, 0f, pillTex.width, pillTex.height),
                 new Vector2(0.5f, 0.5f), 1f);
         }
-        catch
-        {
-            //ignored
-        }
+        catch { }
         
         var img = buttonObj.AddComponent<Image>();
         img.color = new Color(0.2f, 0.2f, 0.2f, 1f);

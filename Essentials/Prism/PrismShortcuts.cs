@@ -65,21 +65,14 @@ public static class PrismShortcuts
     
     public static PrismBaseSlime GetPrismBaseSlime(this PrismNativeBaseSlime nativeBaseSlime)
     {
-        try { return LookupEUtil.baseSlimeTypes.GetEntryByRefID(nativeBaseSlime.GetReferenceID()).GetPrismBaseSlime(); }
-        catch
-        {
-            // ignored
-        }
+        try { return LookupEUtil.baseSlimeTypes.GetEntryByRefID(nativeBaseSlime.GetReferenceID()).GetPrismBaseSlime(); } catch { }
 
         return null;
     }
     public static PrismPlort GetPrismPlort(this PrismNativePlort nativePlort)
     {
-        try { return LookupEUtil.plortTypes.GetEntryByRefID(nativePlort.GetReferenceID()).GetPrismPlort(); }
-        catch
-        {
-            // ignored
-        }
+        try { return LookupEUtil.plortTypes.GetEntryByRefID(nativePlort.GetReferenceID()).GetPrismPlort(); 
+        } catch { }
 
         return null;
     }

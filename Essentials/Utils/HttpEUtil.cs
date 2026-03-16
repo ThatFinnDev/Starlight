@@ -37,11 +37,7 @@ public static class HttpEUtil
         OnGoingImages[image]=url;
         var cachePath = Path.Combine(StarlightEntryPoint.tmpDataPath, "downloadcache."+Convert.ToHexString(MD5.HashData(Encoding.UTF8.GetBytes(url)))+".png");
         if (useCache)
-            try { image.sprite = ConvertEUtil.BytesToTexture2D(File.ReadAllBytes(cachePath)).Texture2DToSprite(); }
-            catch
-            {
-                // ignored
-            }
+            try { image.sprite = ConvertEUtil.BytesToTexture2D(File.ReadAllBytes(cachePath)).Texture2DToSprite(); } catch { }
 
         StartCoroutine(_DownloadTexture2DCoroutine(url, ((texture, error) =>
         {
@@ -63,11 +59,7 @@ public static class HttpEUtil
         OnGoingRawImages[image]=url;
         var cachePath = Path.Combine(StarlightEntryPoint.tmpDataPath, "downloadcache."+Convert.ToHexString(MD5.HashData(Encoding.UTF8.GetBytes(url)))+".png");
         if (useCache)
-            try { image.texture = ConvertEUtil.BytesToTexture2D(File.ReadAllBytes(cachePath)); }
-            catch
-            {
-                // ignored
-            }
+            try { image.texture = ConvertEUtil.BytesToTexture2D(File.ReadAllBytes(cachePath)); } catch { }
 
         StartCoroutine(_DownloadTexture2DCoroutine(url, ((texture, error) =>
         {

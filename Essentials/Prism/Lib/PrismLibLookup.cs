@@ -102,10 +102,10 @@ public static class PrismLibLookup
     public static void AddToGroup(this PrismIdentifiableTypeGroup group, string groupName)
     {
         var group2 = LookupEUtil.allIdentifiableTypeGroups[groupName];
-        if (group2._memberGroups.Contains(group.group)) return;
-        group2._memberGroups.Add(group.group);
-        if (group2.GetRuntimeObject()._memberGroups.Contains(group.group)) return;
-        group2.GetRuntimeObject()._memberGroups.Add(group.group);
+        if (group2._memberGroups.Contains(group.Group)) return;
+        group2._memberGroups.Add(group.Group);
+        if (group2.GetRuntimeObject()._memberGroups.Contains(group.Group)) return;
+        group2.GetRuntimeObject()._memberGroups.Add(group.Group);
     }
     /// <summary>
     /// Checks if an IdentifiableType is in a group
@@ -129,7 +129,7 @@ public static class PrismLibLookup
     {
         var group = LookupEUtil.allIdentifiableTypeGroups[groupName];
         if (group == null) return false;
-        return group._memberTypes.Contains(prismSlime.slimeDefinition);
+        return group._memberTypes.Contains(prismSlime.SlimeDefinition);
     }
     /// <summary>
     /// Checks if a PrismPlort is in a group
@@ -141,7 +141,7 @@ public static class PrismLibLookup
     {
         var group = LookupEUtil.allIdentifiableTypeGroups[groupName];
         if (group == null) return false;
-        return group._memberTypes.Contains(prismPlort.identifiableType);
+        return group._memberTypes.Contains(prismPlort.IdentifiableType);
     }
     /// <summary>
     /// Checks if a largo combination exists
@@ -171,8 +171,8 @@ public static class PrismLibLookup
     /// <returns>The reference ID of the native base slime</returns>
     public static string GetReferenceID(this PrismNativeBaseSlime nativeBaseSlime)
     {
-        if (refIDTranslationPrismNativeBaseSlime.ContainsKey(nativeBaseSlime))
-            return refIDTranslationPrismNativeBaseSlime[nativeBaseSlime];
+        if (RefIDTranslationPrismNativeBaseSlime.ContainsKey(nativeBaseSlime))
+            return RefIDTranslationPrismNativeBaseSlime[nativeBaseSlime];
         return null;
     }
     /// <summary>
@@ -182,12 +182,9 @@ public static class PrismLibLookup
     /// <returns>The reference ID of the native plort</returns>
     public static string GetReferenceID(this PrismNativePlort nativePlort)
     {
-        
-        if (refIDTranslationPrismNativePlort.ContainsKey(nativePlort))
-            return refIDTranslationPrismNativePlort[nativePlort];
-        return null;
+        return RefIDTranslationPrismNativePlort.GetValueOrDefault(nativePlort);
     }
-    internal static Dictionary<PrismNativeBaseSlime, string> refIDTranslationPrismNativeBaseSlime =
+    internal static readonly Dictionary<PrismNativeBaseSlime, string> RefIDTranslationPrismNativeBaseSlime =
         new Dictionary<PrismNativeBaseSlime, string>()
         {
             { PrismNativeBaseSlime.Pink, "SlimeDefinition.Pink" },
@@ -217,7 +214,8 @@ public static class PrismLibLookup
             { PrismNativeBaseSlime.Lucky, "SlimeDefinition.Lucky" },
             { PrismNativeBaseSlime.Tarr, "SlimeDefinition.Tarr" },
         };
-    internal static Dictionary<PrismNativePlort, string> refIDTranslationPrismNativePlort =
+
+    private static readonly Dictionary<PrismNativePlort, string> RefIDTranslationPrismNativePlort =
         new Dictionary<PrismNativePlort, string>()
         {
             { PrismNativePlort.Pink, "IdentifiableType.PinkPlort" },

@@ -9,7 +9,7 @@ namespace Starlight.Prism.Patches;
 [HarmonyPatch(typeof(PediaCategory), nameof(PediaCategory.GetRuntimeCategory))]
 internal class RuntimePediaCategoryPatch
 {
-    static Dictionary<string, PrismPediaCategoryType> categories = new()
+    private static readonly Dictionary<string, PrismPediaCategoryType> Categories = new()
     {
         {"Slimes", PrismPediaCategoryType.Slimes},
         {"Resources", PrismPediaCategoryType.Resources},
@@ -23,12 +23,11 @@ internal class RuntimePediaCategoryPatch
     };
     public static void Postfix(PediaCategory __instance, ref PediaRuntimeCategory __result)
     {
-        if (categories.TryGetValue(__instance.name, out PrismPediaCategoryType category))
+        if (Categories.TryGetValue(__instance.name, out PrismPediaCategoryType category))
         {
-            if (PrismLibPedia.pediaCategories.ContainsKey(category))
-                PrismLibPedia.pediaCategories.Remove(category);
-            PrismLibPedia.pediaCategories.Add(category,__instance);
-            foreach (var pedia in PrismLibPedia.pediaEntryLookup[category])
+            PrismLibPedia.PediaCategories.Remove(category);
+            PrismLibPedia.PediaCategories.Add(category,__instance);
+            foreach (var pedia in PrismLibPedia.PediaEntryLookup[category])
             {
                 if (!__result._items.Contains(pedia))
                      __result._items.Add(pedia);

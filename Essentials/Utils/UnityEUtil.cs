@@ -105,7 +105,7 @@ public static class UnityEUtil
         else if (x.TryCast<GameObject>()) obj = x.TryCast<GameObject>();
         return obj && obj.scene.IsValid() && obj.scene.isLoaded;
     });
-    public static List<T>? GetAllInScene<T>() where T : Object => Resources.FindObjectsOfTypeAll<T>().Where(x =>
+    public static List<T> GetAllInScene<T>() where T : Object => Resources.FindObjectsOfTypeAll<T>().Where(x =>
     {
         if (!x) return false;
         GameObject obj = null;
@@ -113,7 +113,7 @@ public static class UnityEUtil
         else if (x.TryCast<GameObject>()) obj = x.TryCast<GameObject>();
         return obj && obj.scene.IsValid() && obj.scene.isLoaded;
     }).ToList();
-    public static List<T>? GetAllInScene<T>(string name) where T : Object => Resources.FindObjectsOfTypeAll<T>().Where(x =>
+    public static List<T> GetAllInScene<T>(string name) where T : Object => Resources.FindObjectsOfTypeAll<T>().Where(x =>
     {
         if (!x) return false;
         GameObject obj = null;

@@ -8,22 +8,22 @@ public class PrismIdentifiableTypeGroupCreatorV01
 {
     
     PrismIdentifiableTypeGroup _createdGroup;
-    public string name;
-    public LocalizedString localized;
-    public List<IdentifiableType> memberTypes;
-    public List<IdentifiableTypeGroup> memberGroupes;
-    public bool isFood = false;
+    public string Name;
+    public LocalizedString Localized;
+    public List<IdentifiableType> MemberTypes;
+    public List<IdentifiableTypeGroup> MemberGroupes;
+    public bool IsFood = false;
     public PrismIdentifiableTypeGroupCreatorV01(string name, LocalizedString localized)
     {
-        this.name = name;
-        this.localized = localized;
+        this.Name = name;
+        this.Localized = localized;
     }
     
     public bool IsValid()
     {
-        if (string.IsNullOrWhiteSpace(name)) return false;
-        for (int i = 0; i < name.Length; i++)
-            if (!((name[i] >= 'A' && name[i] <= 'Z') || (name[i] >= 'a' && name[i] <= 'z')))
+        if (string.IsNullOrWhiteSpace(Name)) return false;
+        for (int i = 0; i < Name.Length; i++)
+            if (!((Name[i] >= 'A' && Name[i] <= 'Z') || (Name[i] >= 'a' && Name[i] <= 'z')))
                 return false;
         return true;
     }
@@ -38,20 +38,20 @@ public class PrismIdentifiableTypeGroupCreatorV01
         group.hideFlags = HideFlags.DontUnloadUnusedAsset;
 
         group._memberTypes = new Il2CppSystem.Collections.Generic.List<IdentifiableType>();
-        if(memberTypes!=null)
-            foreach (var type in memberTypes)
+        if(MemberTypes!=null)
+            foreach (var type in MemberTypes)
                 group._memberTypes.Add(type);
 
         group._memberGroups = new Il2CppSystem.Collections.Generic.List<IdentifiableTypeGroup>();
-        if(memberGroupes!=null)
-            foreach (var subGroup in memberGroupes)
+        if(MemberGroupes!=null)
+            foreach (var subGroup in MemberGroupes)
                 group._memberGroups.Add(subGroup);
 
-        group._isFood = isFood;
+        group._isFood = IsFood;
         
-        if (localized != null) group._localizedName = localized;
+        if (Localized != null) group._localizedName = Localized;
         else group._localizedName = PrismShortcuts.EmptyTranslation;
-        group.name = name;
+        group.name = Name;
 
         group.AllowedCategories = new Il2CppSystem.Collections.Generic.List<IdentifiableCategory>();
 

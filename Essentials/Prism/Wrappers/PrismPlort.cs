@@ -16,30 +16,30 @@ public class PrismPlort
         return nativePlort.GetPrismPlort();
     }
 
-    internal readonly IdentifiableType identifiableType;
+    internal readonly IdentifiableType IdentifiableType;
     private readonly bool _isNative;
-    public IdentifiableType GetIdentifiableType() => identifiableType;
-    public string GetReferenceID() => identifiableType.ReferenceId;
-    public string GetName() => identifiableType.name;
-    public Sprite GetIcon() => identifiableType.icon;
-    public LocalizedString GetLocalized() => identifiableType.LocalizedName;
-    public Color32 GetVacColor() => identifiableType.color;
-    public GameObject GetPrefab() => identifiableType.prefab;
+    public IdentifiableType GetIdentifiableType() => IdentifiableType;
+    public string GetReferenceID() => IdentifiableType.ReferenceId;
+    public string GetName() => IdentifiableType.name;
+    public Sprite GetIcon() => IdentifiableType.icon;
+    public LocalizedString GetLocalized() => IdentifiableType.LocalizedName;
+    public Color32 GetVacColor() => IdentifiableType.color;
+    public GameObject GetPrefab() => IdentifiableType.prefab;
     public bool GetIsNative() => _isNative;
     
     
     public void SetIcon(Sprite newIcon)
     {
-        identifiableType.icon = newIcon;
+        IdentifiableType.icon = newIcon;
     }
     public void SetVacColor(Color32 newColor)
     {
-        identifiableType.color = newColor;
+        IdentifiableType.color = newColor;
     }
     
     internal PrismPlort(IdentifiableType identifiableType, bool isNative)
     {
-        this.identifiableType = identifiableType;
+        this.IdentifiableType = identifiableType;
         this._isNative = isNative;
     }
 }

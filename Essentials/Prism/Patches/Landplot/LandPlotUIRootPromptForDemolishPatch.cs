@@ -16,8 +16,9 @@ internal static class LandPlotUIRootClosePatch
             ExecuteInTicks(() =>
             {
                 foreach (var c in GetAllInScene<Canvas>("DimBackground(Clone)")) 
-                    GameObject.Destroy(c.gameObject);
-                try { __instance.Close(); }catch { }
+                    Object.Destroy(c.gameObject);
+                try { __instance.Close(); 
+                } catch { }
             },2);
     }
 }

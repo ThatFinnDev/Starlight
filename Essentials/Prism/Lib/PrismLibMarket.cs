@@ -18,7 +18,7 @@ public static class PrismLibMarket
         if (ident == null) return;
         if (ident.IsPlayer) return;
         if (ident.IsGadget()) return;
-        if (PrismShortcuts.MarketData.ContainsKey(ident)) PrismShortcuts.MarketData.Remove(ident);
+        PrismShortcuts.MarketData.Remove(ident);
 
         if (PrismShortcuts.RemoveMarketPlortEntries.Contains(ident))
             PrismShortcuts.RemoveMarketPlortEntries.Remove(ident);
@@ -26,7 +26,7 @@ public static class PrismLibMarket
             {
                 IdentType = ident
             },
-            prismMarketData.hideInMarketUI);
+            prismMarketData.HideInMarketUI);
         PrismShortcuts.MarketData.Add(ident, prismMarketData);
         TryRefreshMarketData();
     }
@@ -50,23 +50,22 @@ public static class PrismLibMarket
                     }
                 }
 
-                var defualtValues = new PlortValueConfiguration()
+                var defaultValues = new PlortValueConfiguration()
                 {
-                    FullSaturation = entry.Value.saturation,
+                    FullSaturation = entry.Value.Saturation,
                     Type = entry.Key,
-                    InitialValue = entry.Value.value
+                    InitialValue = entry.Value.Value
                 };
 
-                entries.Add(defualtValues);
+                entries.Add(defaultValues);
             }
 
-            PlortValueConfigurationTable newTable = new PlortValueConfigurationTable();
-            newTable.Plorts = entries.ToArray();
+            var newTable = new PlortValueConfigurationTable
+            {
+                Plorts = entries.ToArray()
+            };
             settings.PlortsTable = newTable;
-        }
-        catch
-        {
-        }
+        } catch { }
     }
 
     /// <summary>
@@ -82,11 +81,11 @@ public static class PrismLibMarket
         try
         {
             var settings = Get<PlortEconomySettings>("PlortEconomy");
-            foreach (var entry in settings.PlortsTable.Plorts)
-                if (entry.Type == ident)
-                    return true;
-        }catch { }
-
+            if (settings != null)
+                foreach (var entry in settings.PlortsTable.Plorts)
+                    if (entry.Type == ident)
+                        return true;
+        } catch { }
 
 
         if (PrismShortcuts.MarketData.ContainsKey(ident)) return true;
@@ -98,7 +97,7 @@ public static class PrismLibMarket
         }
         
         if(ident.ReferenceId!="IdentifiableType.UnstablePlort")
-            foreach (var pair in PrismLibLookup.refIDTranslationPrismNativeBaseSlime)
+            foreach (var pair in PrismLibLookup.RefIDTranslationPrismNativeBaseSlime)
                 if (pair.Value == ident.ReferenceId)
                 {
                     bool returnBool = true;
@@ -135,7 +134,6 @@ public static class PrismLibMarket
             }
         }
 
-        if (PrismShortcuts.MarketData.ContainsKey(ident))
-            PrismShortcuts.MarketData.Remove(ident);
+        PrismShortcuts.MarketData.Remove(ident);
     }
 }

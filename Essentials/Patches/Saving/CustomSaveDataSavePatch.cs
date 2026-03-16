@@ -43,7 +43,7 @@ internal static class CustomSaveDataSavePatch
             }
             catch (Exception e)
             {
-                LogError($"Failed to save custom save data for expansion {expansion.GetPackageInfoFromExpansion().Value.name}: {e}");
+                LogError($"Failed to save custom save data for expansion {expansion.GetPackageInfoFromExpansion().Value.Name}: {e}");
             }
         }
     }

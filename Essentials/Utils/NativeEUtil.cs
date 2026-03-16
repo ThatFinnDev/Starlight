@@ -25,11 +25,7 @@ public static class NativeEUtil
 
         if (inGame)
         {
-            try { GetAnyInScene<PauseMenuRoot>()?.HideUI(); }
-            catch
-            {
-                // ignored
-            }
+            try { GetAnyInScene<PauseMenuRoot>()?.HideUI(); } catch { }
         }
     }
 
@@ -53,18 +49,10 @@ public static class NativeEUtil
         if (StarlightEntryPoint.MainMenuLoaded)
             Time.timeScale = 0;
         
-        try { systemContext.SceneLoader.TryPauseGame(); }
-        catch
-        {
-            // ignored
-        }
+        try { systemContext.SceneLoader.TryPauseGame(); } catch { }
 
         if (usePauseMenu)
-            try { sceneContext.PauseMenuDirector.PauseGame(); }
-            catch
-            {
-                // ignored
-            }
+            try { sceneContext.PauseMenuDirector.PauseGame(); } catch { }
     }
 
     public static void TryUnPauseGame(bool usePauseMenu = true)
@@ -73,18 +61,10 @@ public static class NativeEUtil
         if (StarlightEntryPoint.MainMenuLoaded)
             Time.timeScale = 1;
         
-        try { systemContext.SceneLoader.UnpauseGame(); }
-        catch
-        {
-            // ignored
-        }
+        try { systemContext.SceneLoader.UnpauseGame(); } catch { }
 
         if (usePauseMenu)
-            try { sceneContext.PauseMenuDirector.UnPauseGame(); }
-            catch
-            {
-                // ignored
-            }
+            try { sceneContext.PauseMenuDirector.UnPauseGame(); } catch { }
     }
 
     public static void TryUnHideMenus()
@@ -103,24 +83,12 @@ public static class NativeEUtil
 
                                 container.OnEnable();
                                 break;
-                            }
-                            catch
-                            {
-                                // ignored
-                            }
+                            } catch { }
                         }
-                }
-                catch
-                {
-                    // ignored
-                }
+                } catch { }
             }
             if (inGame) HudUI.Instance.transform.GetChild(0).gameObject.SetActive(true);
-        }
-        catch
-        {
-            // ignored
-        }
+        } catch { }
     }
 
     private static float _customTimeScale = 1f;
@@ -145,11 +113,7 @@ public static class NativeEUtil
         {
             gameContext.InputDirector._paused.Map.Disable();
             gameContext.InputDirector._mainGame.Map.Disable();
-        }
-        catch
-        {
-            // ignored
-        }
+        } catch { }
     }
 
     // ReSharper disable once InconsistentNaming
@@ -159,10 +123,6 @@ public static class NativeEUtil
         {
             gameContext.InputDirector._paused.Map.Enable();
             gameContext.InputDirector._mainGame.Map.Enable();
-        }
-        catch
-        {
-            // ignored
-        }
+        } catch { }
     }
 }

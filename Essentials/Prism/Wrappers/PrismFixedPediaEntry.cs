@@ -13,12 +13,12 @@ public class PrismFixedPediaEntry : PrismPediaEntry
     {
         return fixedPediaEntry.GetPrismFixedPediaEntry();
     }
-    public FixedPediaEntry GetFixedPediaEntry() => pediaEntry.TryCast<FixedPediaEntry>();
+    public FixedPediaEntry GetFixedPediaEntry() => PediaEntry.TryCast<FixedPediaEntry>();
     
     internal PrismFixedPediaEntry(PediaEntry pediaEntry, bool isNative): base(pediaEntry, isNative)
     {
-        this.pediaEntry = pediaEntry;
-        this.isNative = isNative;
+        this.PediaEntry = pediaEntry;
+        this.IsNative = isNative;
     }
     
     public void SetIcon(Sprite newIcon)

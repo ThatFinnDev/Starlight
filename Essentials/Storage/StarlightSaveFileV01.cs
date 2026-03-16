@@ -3,6 +3,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
+// ReSharper disable InconsistentNaming
 
 namespace Starlight.Storage;
 
@@ -14,7 +15,7 @@ public class StarlightSaveFileV01
     public string StarlightCodeVersion = null; //BuildInfo.CodeVersion;
     public string StarlightDisplayVersion = null; //BuildInfo.DisplayVersion;
     public int latest = -1;
-    public Dictionary<string, object> modifiers = new Dictionary<string, object>();
+    public Dictionary<string, object> modifiers = new ();
     public int metaSaveSlotIndex = -1; //0;
     public string metaDisplayName = null; // = "1";
     public string metaGameName = null; //"20210101093021_1";
@@ -23,7 +24,7 @@ public class StarlightSaveFileV01
     public bool metaFeralEnabled = true;
     public bool metaTarrEnabled = true;
     public string metaSR2Version = null; //"1.0.2 [20250930224232-103839]"; "0.1.2 [202210311641-82086]";
-    public Dictionary<int,byte[]> savesData = new Dictionary<int,byte[]>();
+    public Dictionary<int,byte[]> savesData = new ();
     
     public bool IsValid()
     {
@@ -53,8 +54,8 @@ public class StarlightSaveFileV01
         {
             if (isPath) jsonOrJsonPath = File.ReadAllText(jsonOrJsonPath);
             return JsonConvert.DeserializeObject<StarlightSaveFileV01>(jsonOrJsonPath, jsonSerializerSettings);
-        }
-        catch { }
+        } catch { }
+
         return null;
     }
 
@@ -65,12 +66,12 @@ public class StarlightSaveFileV01
 
         bool isCompressed = jsonOrCompressed.Length > 2 &&jsonOrCompressed[0] == GzipHeader[0] && jsonOrCompressed[1] == GzipHeader[1];
         if (!isCompressed) return LoadJson(Encoding.UTF8.GetString(jsonOrCompressed), false);
-        MemoryStream ms = new MemoryStream(jsonOrCompressed);
+        var ms = new MemoryStream(jsonOrCompressed);
         GZipStream gzip = null;
         try
         {
             gzip = new GZipStream(ms, CompressionMode.Decompress);
-            MemoryStream decompressed = new MemoryStream();
+            var decompressed = new MemoryStream();
             byte[] buffer = new byte[4096];
             int read;
 
@@ -90,21 +91,15 @@ public class StarlightSaveFileV01
     }
     public static StarlightSaveFileV01 LoadCompressed(byte[] json)
     {
-        try
-        {
-            return JsonConvert.DeserializeObject<StarlightSaveFileV01>(Encoding.UTF8.GetString(json), jsonSerializerSettings);
-        }
-        catch { }
+        try { return JsonConvert.DeserializeObject<StarlightSaveFileV01>(Encoding.UTF8.GetString(json), jsonSerializerSettings); } catch { }
+
         return null;
     }
 
     public string Export()
     {
-        try
-        {
-            return JsonConvert.SerializeObject(this, Formatting.Indented);
-        }
-        catch { }
+        try { return JsonConvert.SerializeObject(this, Formatting.Indented); } catch { }
+
         return null;
     }
     public byte[] ExportCompressed()
@@ -112,7 +107,7 @@ public class StarlightSaveFileV01
         try
         {
             var bytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(this, Formatting.Indented));
-            MemoryStream output = new MemoryStream();
+            var output = new MemoryStream();
             GZipStream gzip = null;
             try
             {
@@ -128,14 +123,14 @@ public class StarlightSaveFileV01
             byte[] compressed = output.ToArray();
             output.Dispose();
             return compressed;
-        }
-        catch { }
+        } catch { }
+
         return null;
     }
-    
-    static JsonSerializerSettings jsonSerializerSettings = new JsonSerializerSettings
+
+    private static readonly JsonSerializerSettings jsonSerializerSettings = new ()
     {
-        Error = (sender, args) =>
+        Error = (_, args) =>
         {
             if(DebugLogging.HasFlag()) Log($"Error: {args.ErrorContext.Error.Message}");
             //args.ErrorContext.Handled = false;

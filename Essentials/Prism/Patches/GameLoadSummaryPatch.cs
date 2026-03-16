@@ -8,15 +8,12 @@ namespace Starlight.Prism.Patches;
 [HarmonyPatch(typeof(GameV09), nameof(GameV09.LoadSummaryData))]
 internal static class GameLoadSummaryPatch
 {
-    static void Prefix()
+    private static void Prefix()
     {
         try
         {
-            foreach (var actor in PrismLibSaving.savedIdents)
-            {
+            foreach (var actor in PrismLibSaving.SavedIdents)
                 PrismLibSaving.RefreshIfNotFound(autoSaveDirector._saveReferenceTranslation,actor.Value);
-            }
-        }
-        catch {}
+        } catch { }
     }
 }

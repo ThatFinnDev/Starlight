@@ -2,8 +2,7 @@ using System;
 
 namespace Starlight.Storage;
 
-[AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
+[AttributeUsage(AttributeTargets.Class, Inherited = false)]
 internal class InjectClass : Attribute
 {
-    internal InjectClass(){}
 }

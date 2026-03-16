@@ -8,37 +8,36 @@ namespace Starlight.Prism.Creators;
 public class PrismPlortCreatorV01
 {
     private PrismPlort _createdPlort;
-    
-    public string name;
-    public Sprite icon;
-    public LocalizedString localized;
-    public string referenceID => "IdentifiableType.Modded" + name + "Plort";
 
-    public Color32 vacColor = new Color32(0,0,0,255);
-    public GameObject customBasePrefab = null;
-    
-    
-    public PrismMarketData? moddedMarketData = null;
+    public string Name;
+    public Sprite Icon;
+    public LocalizedString Localized;
+    private string referenceID => "IdentifiableType.Modded" + Name + "Plort";
+
+    public Color32 VacColor = new Color32(0,0,0,255);
+    public GameObject CustomBasePrefab = null;
+
+
+    public PrismMarketData? ModdedMarketData = null;
     
     
     public PrismPlortCreatorV01(string name, Sprite icon, LocalizedString localized)
     {
-        this.name = name;
-        this.icon = icon;
-        this.localized = localized;
+        this.Name = name;
+        this.Icon = icon;
+        this.Localized = localized;
     }
     
     public bool IsValid()
     {
-        if (string.IsNullOrWhiteSpace(name)) return false;
-        for (int i = 0; i < name.Length; i++)
-            if (!((name[i] >= 'A' && name[i] <= 'Z') || (name[i] >= 'a' && name[i] <= 'z')))
+        if (string.IsNullOrWhiteSpace(Name)) return false;
+        for (int i = 0; i < Name.Length; i++)
+            if (!((Name[i] >= 'A' && Name[i] <= 'Z') || (Name[i] >= 'a' && Name[i] <= 'z')))
                 return false;
-        if (icon==null) return false;
-        if (localized==null) return false;
-        if (customBasePrefab != null)
+        if (Localized==null) return false;
+        if (CustomBasePrefab != null)
         {
-            if (!customBasePrefab.HasComponent<IdentifiableActor>()) return false;
+            if (!CustomBasePrefab.HasComponent<IdentifiableActor>()) return false;
         }
         return true;
     }
@@ -49,25 +48,26 @@ public class PrismPlortCreatorV01
         if (_createdPlort != null) return _createdPlort;
         var plort = ScriptableObject.CreateInstance<IdentifiableType>();
         plort.hideFlags = HideFlags.DontUnloadUnusedAsset;
-        plort.name = name + "Plort";
-        plort.color = vacColor;
-        plort.icon = icon;
+        plort.name = Name + "Plort";
+        plort.color = VacColor;
+        plort.icon = Icon;
+        plort.icon ??= PrismShortcuts.UnavailableIcon;
         plort.IsPlort = true;
         
         
-        plort.localizedName = localized;
-        plort._pediaPersistenceSuffix = "modded"+name.ToLower()+"_plort";
+        plort.localizedName = Localized;
+        plort._pediaPersistenceSuffix = "modded"+Name.ToLower()+"_plort";
         
-        if(moddedMarketData.HasValue)
-            PrismLibMarket.MakeSellable(plort, moddedMarketData.Value);
+        if(ModdedMarketData.HasValue)
+            PrismLibMarket.MakeSellable(plort, ModdedMarketData.Value);
         plort.Prism_AddToGroup("PlortGroup");
         plort.Prism_AddToGroup("EdiblePlortFoodGroup");
         plort.Prism_AddToGroup("PlortGroupDroneExplorer");
         plort.Prism_AddToGroup("IdentifiableTypesGroup");
         
-        var basePrefab = customBasePrefab;
+        var basePrefab = CustomBasePrefab;
         if (basePrefab == null) basePrefab = PrismNativePlort.Pink.GetPrismPlort().GetPrefab();
-        plort.prefab = CreatePrefab("plort"+name, basePrefab);
+        plort.prefab = CreatePrefab("plort"+Name, basePrefab);
         plort.prefab.GetComponent<IdentifiableActor>().identType = plort;
         
         PrismLibSaving.SetupForSaving(plort,referenceID);

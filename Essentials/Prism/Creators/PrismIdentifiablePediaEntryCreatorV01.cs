@@ -9,24 +9,24 @@ namespace Starlight.Prism.Creators;
 public class PrismIdentifiablePediaEntryCreatorV01
 {
     PrismIdentifiablePediaEntry _createdPediaEntry;
-    public IdentifiableType identifiableType;
-    public PrismPediaCategoryType categoryType;
-    public PrismPediaAdditionalFact[] additionalFacts;
-    public PrismPediaFactSetType factSet;
-    public LocalizedString descriptionLocalized;
-    public PrismPediaDetail[] details;
+    public IdentifiableType IdentifiableType;
+    public PrismPediaCategoryType CategoryType;
+    public PrismPediaAdditionalFact[] AdditionalFacts;
+    public PrismPediaFactSetType FactSet;
+    public LocalizedString DescriptionLocalized;
+    public PrismPediaDetail[] Details;
     
     public PrismIdentifiablePediaEntryCreatorV01(IdentifiableType identifiableType, PrismPediaCategoryType categoryType, LocalizedString descriptionLocalized)
     {
-        this.identifiableType = identifiableType;
-        this.categoryType = categoryType;
-        this.descriptionLocalized = descriptionLocalized;
+        this.IdentifiableType = identifiableType;
+        this.CategoryType = categoryType;
+        this.DescriptionLocalized = descriptionLocalized;
     }
     
     public bool IsValid()
     {
-        if (identifiableType==null) return false;
-        if (descriptionLocalized==null) return false;
+        if (IdentifiableType==null) return false;
+        if (DescriptionLocalized==null) return false;
         return true;
     }
 
@@ -36,32 +36,32 @@ public class PrismIdentifiablePediaEntryCreatorV01
         if (!IsValid()) return null;
         if (_createdPediaEntry != null) return _createdPediaEntry;
         
-        var entry = Object.Instantiate(PrismLibPedia._identifiablePediaEntryPrefab);
+        var entry = Object.Instantiate(PrismLibPedia.IdentifiablePediaEntryPrefab);
         entry.hideFlags = HideFlags.DontUnloadUnusedAsset;
 
-        entry._title = identifiableType.localizedName;
-        entry._identifiableType = identifiableType;
-        entry._description = descriptionLocalized;
-        entry.name = identifiableType.name;
-        entry._highlightSet = factSet.GetPediaHighlightSet();
-        var _details = new List<PediaEntryDetail>();
-        if(details!=null)
-            foreach (var detail in details)
-                _details.Add(detail.ConvertToNativeType());
-        entry._details = _details.ToArray();
-        PrismLibPedia.pediaEntryLookup[categoryType].Add(entry);
+        entry._title = IdentifiableType.localizedName;
+        entry._identifiableType = IdentifiableType;
+        entry._description = DescriptionLocalized;
+        entry.name = IdentifiableType.name;
+        entry._highlightSet = FactSet.GetPediaHighlightSet();
+        var details = new List<PediaEntryDetail>();
+        if(Details!=null)
+            foreach (var detail in Details)
+                details.Add(detail.ConvertToNativeType());
+        entry._details = details.ToArray();
+        PrismLibPedia.PediaEntryLookup[CategoryType].Add(entry);
         
         var prismEntry = new PrismIdentifiablePediaEntry(entry, false);
 
         _createdPediaEntry = prismEntry;
         PrismShortcuts.PrismIdentifiablePediaEntries.Add(entry,prismEntry);
         
-        if(additionalFacts!=null)
-            foreach (var additionalFact in additionalFacts)
+        if(AdditionalFacts!=null)
+            foreach (var additionalFact in AdditionalFacts)
                 prismEntry.AddAdditionalFact(additionalFact);
         
-        if (PrismLibPedia.pediaCategories.ContainsKey(categoryType))
-            PrismLibPedia.pediaCategories[categoryType].GetRuntimeCategory();
+        if (PrismLibPedia.PediaCategories.ContainsKey(CategoryType))
+            PrismLibPedia.PediaCategories[CategoryType].GetRuntimeCategory();
         return prismEntry;
     }
 }

@@ -1,6 +1,6 @@
 namespace Starlight.Prism.Data;
 
-public enum PrismBFMergeStrategy
+public enum PrismBfMergeStrategy
 {
     KeepFirst, KeepSecond, Optimal
 }

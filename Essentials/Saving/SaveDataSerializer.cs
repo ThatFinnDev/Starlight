@@ -49,8 +49,8 @@ internal static class SaveDataSerializer
     internal static T Deserialize<T>(byte[] data) where T : RootSave {
         return Deserialize(data, typeof(T)) as T;
     }
-    
-    internal static RootSave Deserialize(byte[] data, Type rootType) {
+
+    private static RootSave Deserialize(byte[] data, Type rootType) {
         var loadableObjects = new List<StarlightSaveableBase>();
 
         try {

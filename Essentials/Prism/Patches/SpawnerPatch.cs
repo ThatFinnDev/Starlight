@@ -9,9 +9,10 @@ internal class SpawnerPatch
 {
     [HarmonyPatch(nameof(DirectedActorSpawner.Awake))]
     [HarmonyPostfix]
+    // ReSharper disable once InconsistentNaming
     static void PostAwake(DirectedActorSpawner __instance)
     {
-        foreach (var action in PrismLibSpawning.executeOnSpawnerAwake)
+        foreach (var action in PrismLibSpawning.ExecuteOnSpawnerAwake)
             try
             {
                 action.Invoke(__instance);

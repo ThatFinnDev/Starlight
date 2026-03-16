@@ -14,7 +14,7 @@ public static class PrismLibSpawning
     //public static Dictionary<string, GameObject> gordos = new Dictionary<string, GameObject>();
     //public static Dictionary<string, ResourceGrowerDefinition> resourceGrowerDefinitions = new();
 
-    internal static List<Action<DirectedActorSpawner>> executeOnSpawnerAwake = new List<Action<DirectedActorSpawner>>();
+    internal static readonly List<Action<DirectedActorSpawner>> ExecuteOnSpawnerAwake = new ();
 
 
     /// <summary>
@@ -68,7 +68,7 @@ public static class PrismLibSpawning
         foreach (var custom in customZoneSceneNames)
             list.Add(custom);
 
-        executeOnSpawnerAwake.Add((Action<DirectedActorSpawner>)(spawner =>
+        ExecuteOnSpawnerAwake.Add(spawner =>
         {
             if (ContainsZoneName(spawner.gameObject.scene.name, list))
             {
@@ -80,11 +80,11 @@ public static class PrismLibSpawning
                     if (spawner.TryCast<DirectedAnimalSpawner>() != null)
                         AddSpawningSettings(spawner, ident, weight, activeTime, requiredConditions);
             }
-        }));
+        });
 
     }
 
-    internal static List<string> GetSceneNamesFromSpawnerZones(PrismSpawnLocations[] locations)
+    private static List<string> GetSceneNamesFromSpawnerZones(PrismSpawnLocations[] locations)
     {
         List<string> names = new();
         if (locations == null||locations.Length==0) return names;
@@ -235,7 +235,7 @@ public static class PrismLibSpawning
                                     foreach (var m in cons.Slimeset.Members)
                                     {
                                         if (m.IdentType.name.ToLower() != "pink" &&
-                                            !PrismLibSaving.savedIdents.ContainsValue(m.IdentType))
+                                            !PrismLibSaving.SavedIdents.ContainsValue(m.IdentType))
                                         {
                                             hasNonPink = true;
                                             break;

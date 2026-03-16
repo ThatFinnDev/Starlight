@@ -2,29 +2,29 @@ namespace Starlight.Prism.Data;
 
 public class PrismLargoMergeSettings
 {
-    public bool mergeComponents = true;
-    public PrismBFMergeStrategy body;
-    public PrismBFMergeStrategy face;
-    public PrismColorMergeStrategy baseColors;
-    public PrismColorMergeStrategy twinColors;
-    public PrismColorMergeStrategy sloomberColors;
+    public readonly bool MergeComponents = true;
+    public readonly PrismBfMergeStrategy Body;
+    public readonly PrismBfMergeStrategy Face;
+    public readonly PrismColorMergeStrategy BaseColors;
+    public readonly PrismColorMergeStrategy TwinColors;
+    public readonly PrismColorMergeStrategy SloomberColors;
 
     public PrismLargoMergeSettings()
     {
-        body = PrismBFMergeStrategy.Optimal;
-        face = PrismBFMergeStrategy.Optimal;
-        baseColors = PrismColorMergeStrategy.Optimal;
-        twinColors = PrismColorMergeStrategy.Optimal;
-        sloomberColors = PrismColorMergeStrategy.Optimal;
+        Body = PrismBfMergeStrategy.Optimal;
+        Face = PrismBfMergeStrategy.Optimal;
+        BaseColors = PrismColorMergeStrategy.Optimal;
+        TwinColors = PrismColorMergeStrategy.Optimal;
+        SloomberColors = PrismColorMergeStrategy.Optimal;
     }
 
-    public PrismLargoMergeSettings(bool mergeComponents,PrismBFMergeStrategy body, PrismBFMergeStrategy face, PrismColorMergeStrategy baseColors, PrismColorMergeStrategy twinColors, PrismColorMergeStrategy sloomberColors)
+    public PrismLargoMergeSettings(bool mergeComponents,PrismBfMergeStrategy body, PrismBfMergeStrategy face, PrismColorMergeStrategy baseColors, PrismColorMergeStrategy twinColors, PrismColorMergeStrategy sloomberColors)
     {
-        this.mergeComponents=mergeComponents;
-        this.body = body;
-        this.face = face;
-        this.baseColors = baseColors;
-        this.twinColors = twinColors;
-        this.sloomberColors = sloomberColors;
+        this.MergeComponents=mergeComponents;
+        this.Body = body;
+        this.Face = face;
+        this.BaseColors = baseColors;
+        this.TwinColors = twinColors;
+        this.SloomberColors = sloomberColors;
     }
 }   

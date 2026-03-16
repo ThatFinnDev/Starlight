@@ -11,6 +11,21 @@ namespace Starlight.Storage;
 [System.Serializable]
 public class Warp
 {
+    public string sceneGroup = "None";
+    public float x;
+    public float y;
+    public float z;
+
+    internal Vector3 position => new Vector3(x, y, z);
+
+    public float rotX;
+    public float rotY;
+    public float rotZ;
+    public float rotW;
+
+    internal Quaternion rotation => new Quaternion(rotX, rotY, rotZ, rotW);
+    
+    
     public bool IsValid()
     {
         foreach (var g in systemContext.SceneLoader.SceneGroupList.items)
@@ -35,11 +50,15 @@ public class Warp
         if (!inGame) return StarlightError.NotInGame;
         if(!IsValid()) return StarlightError.Invalid;
         if (sceneContext.Player == null) return StarlightError.PlayerNull;
-        TeleportablePlayer p = sceneContext.Player.GetComponent<TeleportablePlayer>();
-        if (p == null) return StarlightError.TeleportablePlayerNull;
-        SRCharacterController cc = sceneContext.Player.GetComponent<SRCharacterController>();
-        if (cc == null) return StarlightError.SRCharacterControllerNull;
+        
+        var p = sceneContext.Player.GetComponent<TeleportablePlayer>();
+        if (!p) return StarlightError.TeleportablePlayerNull;
+        
+        var cc = sceneContext.Player.GetComponent<SRCharacterController>();
+        if (!cc) return StarlightError.SRCharacterControllerNull;
+        
         MenuEUtil.CloseOpenMenu();
+        
         if (IsInCorrectSceneGroup(p.SceneGroup.ReferenceId,sceneGroup))
         {
             cc.Position = position;
@@ -59,7 +78,7 @@ public class Warp
                         sc = g;
                         break;
                     }
-                if(sc==null) return StarlightError.SceneGroupNotSupported;
+                if(!sc) return StarlightError.SceneGroupNotSupported;
                 StarlightWarpManager.warpTo = this;
                 SceneLoaderLoadSceneGroupPatch.isTeleportingPlayer = true;
                 LocationBookmarksUtil.GoToLocationPlayer(sc,position+new Vector3(0,LocationBookmarksUtil.PLAYER_HEIGHT/2,0),rotation.eulerAngles);
@@ -74,19 +93,6 @@ public class Warp
         return StarlightError.NoError;
     }
 
-    public string sceneGroup = "None";
-    public float x;
-    public float y;
-    public float z;
-
-    internal Vector3 position => new Vector3(x, y, z);
-
-    public float rotX;
-    public float rotY;
-    public float rotZ;
-    public float rotW;
-
-    internal Quaternion rotation => new Quaternion(rotX, rotY, rotZ, rotW);
 
     internal LocationBookmarksUtil.LocationBookmark ToNative()
     {
@@ -109,31 +115,24 @@ public class Warp
 
     public static Warp CurrentLocation()
     {
-        try
-        {
-            return FromNative(LocationBookmarksUtil.GetNewPlayerLocationBookmark());
-        }
-        catch
-        {
-            // ignored
-        }
+        try { return FromNative(LocationBookmarksUtil.GetNewPlayerLocationBookmark()); } catch { }
 
         return new Warp();
     }
     public static Warp FromString(string stringed)
     {
         if (!LocationBookmarksUtil.ValidLocationString(stringed)) return null;
-        string[] parts = stringed.Split('|');
+        var parts = stringed.Split('|');
 
-        string[] posParts = parts[1].Split(',');
-        Vector3 position = new Vector3(
+        var posParts = parts[1].Split(',');
+        var position = new Vector3(
             float.Parse(posParts[0], CultureInfo.InvariantCulture),
             float.Parse(posParts[1], CultureInfo.InvariantCulture),
             float.Parse(posParts[2], CultureInfo.InvariantCulture)
         );
 
-        string[] rotParts = parts[2].Split(',');
-        Vector3 rotation = new Vector3(
+        var rotParts = parts[2].Split(',');
+        var rotation = new Vector3(
             float.Parse(rotParts[0], CultureInfo.InvariantCulture),
             float.Parse(rotParts[1], CultureInfo.InvariantCulture),
             float.Parse(rotParts[2], CultureInfo.InvariantCulture)

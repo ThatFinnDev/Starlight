@@ -5514,7 +5514,7 @@ GameObject:
   - component: {fileID: 7006799975199851614}
   - component: {fileID: 3241648956356796266}
   m_Layer: 5
-  m_Name: RepoMenu_SR2E
+  m_Name: RepoMenu_Starlight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

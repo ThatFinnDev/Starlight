@@ -52,11 +52,7 @@ public static class SaveFileEUtil
             var split = gameWithSaveIDName.Split("_");
             if (split.Length != 3) continue;
             var saveID = -1;
-            try { saveID = int.Parse(split[2]); }
-            catch
-            {
-                // ignored
-            }
+            try { saveID = int.Parse(split[2]); } catch { }
 
             if (saveID < 0) continue;
             //If save file names are messed up, prefer current one if the case:
@@ -130,17 +126,9 @@ public static class SaveFileEUtil
                 {
                     autoSaveDirector.DeleteGame(summary.Name);
                     autoSaveDirector._storageProvider.DeleteGameData(summary.SaveName);
-                }
-                catch
-                {
-                    // ignored
-                }
+                } catch { }
             }
-        }
-        catch
-        {
-            // ignored
-        }
+        } catch { }
 
         bool failedSome = false;
         foreach (var pair in sr2ESaveFile.savesData)
@@ -251,11 +239,7 @@ public static class SaveFileEUtil
                             var newDisplayName = slotThatStartWithOne.ToString();
                             var newGameName = sr2ESaveFile.stamp + "_" + newDisplayName;
                             storageProvider.DeleteGameData(newGameName + "_" + pair2.Key);
-                        }
-                        catch
-                        {
-                            // ignored
-                        }
+                        } catch { }
                     }
                     return MainSaveIDFailed;
                 }

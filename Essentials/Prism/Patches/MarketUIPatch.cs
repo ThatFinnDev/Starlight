@@ -6,25 +6,21 @@ using Starlight.Storage;
 namespace Starlight.Prism.Patches;
 
 [PrismPatch()]
-[HarmonyPriority(-9999999)]
-[HarmonyPatch(typeof(MarketUI))]
+[HarmonyPriority(-9999999),HarmonyPatch(typeof(MarketUI))]
 internal static class MarketUIPatch
 {
-    [HarmonyPatch(nameof(MarketUI.Start))]
-    [HarmonyPriority(-9999999)]
-    [HarmonyPrefix]
+    [HarmonyPrefix,HarmonyPriority(-9999999),HarmonyPatch(nameof(MarketUI.Start))]
+    // ReSharper disable once InconsistentNaming
     public static void Prefix(MarketUI __instance)
     {
-        List<PlortEntry> plortEntries = new List<PlortEntry>(__instance._config._plorts);
+        var plortEntries = new List<PlortEntry>(__instance._config._plorts);
         foreach (var entry in __instance._config._plorts)
             foreach (var type in PrismShortcuts.RemoveMarketPlortEntries)
-            {
                 if (entry.IdentType.ReferenceId == type.ReferenceId)
                 {
                     plortEntries.Remove(entry);
                     break;
                 }
-            }
         foreach (var pair in PrismShortcuts.MarketPlortEntries)
             if (!pair.Value)
                 plortEntries.Add(pair.Key);
@@ -34,9 +30,8 @@ internal static class MarketUIPatch
         PrismLibMarket.TryRefreshMarketData();
     }   
     
-    [HarmonyPriority(-9999999)]
-    [HarmonyPatch(nameof(MarketUI.Start))]
-    [HarmonyPostfix]
+    [HarmonyPostfix,HarmonyPriority(-9999999),HarmonyPatch(nameof(MarketUI.Start))]
+    // ReSharper disable once InconsistentNaming
     public static void Postfix(MarketUI __instance)
     {
         __instance._config._plorts = __instance._config._plorts.Take(34).ToArray();

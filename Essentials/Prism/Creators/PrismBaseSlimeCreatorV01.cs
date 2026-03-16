@@ -1,4 +1,3 @@
-using System.Linq;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using Starlight.Prism.Data;
 using Starlight.Prism.Lib;
@@ -12,45 +11,44 @@ public class PrismBaseSlimeCreatorV01
     private PrismBaseSlime _createdSlime;
     
     
-    public string name;
-    public Sprite icon;
-    public LocalizedString localized;
-    public string referenceID => "SlimeDefinition.Modded" + name;
+    public string Name;
+    public Sprite Icon;
+    public LocalizedString Localized;
+    public string referenceID => "SlimeDefinition.Modded" + Name;
 
-    public PrismPlort plort = null;
-    public GameObject customBasePrefab = null;
-    public SlimeAppearance customBaseAppearance = null;
-    public bool disableSinkInShallowWater = false;
-    public bool disableEdibleByTarrs = false;
-    public bool disableVaccable = false;
+    public PrismPlort Plort = null;
+    public GameObject CustomBasePrefab = null;
+    public SlimeAppearance CustomBaseAppearance = null;
+    public bool DisableSinkInShallowWater = false;
+    public bool DisableEdibleByTarrs = false;
+    public bool DisableVaccable = false;
 
-    public PrismLargoMergeSettings customAutoLargoMergeSettings = null;
-    public bool canLargofy = false;
-    public bool createAllLargos = false;
-    public bool disableAutoModdedLargos = false;
-    public Color32 vacColor = new Color32(0,0,0,255);
+    public PrismLargoMergeSettings CustomAutoLargoMergeSettings = null;
+    public bool CanLargofy = false;
+    public bool CreateAllLargos = false;
+    public bool DisableAutoModdedLargos = false;
+    public Color32 VacColor = new Color32(0,0,0,255);
 
     
     
     public PrismBaseSlimeCreatorV01(string name, Sprite icon, LocalizedString localized)
     {
-        this.name = name;
-        this.icon = icon;
-        this.localized = localized;
+        this.Name = name;
+        this.Icon = icon;
+        this.Localized = localized;
     }
     
     public bool IsValid()
     {
-        if (string.IsNullOrWhiteSpace(name)) return false;
-        for (int i = 0; i < name.Length; i++)
-            if (!((name[i] >= 'A' && name[i] <= 'Z') || (name[i] >= 'a' && name[i] <= 'z')))
+        if (string.IsNullOrWhiteSpace(Name)) return false;
+        for (int i = 0; i < Name.Length; i++)
+            if (!((Name[i] >= 'A' && Name[i] <= 'Z') || (Name[i] >= 'a' && Name[i] <= 'z')))
                 return false;
-        if (icon==null) return false;
-        if (localized==null) return false;
-        if (customBasePrefab != null)
+        if (Localized==null) return false;
+        if (CustomBasePrefab != null)
         {
-            if (!customBasePrefab.HasComponent<SlimeAppearanceApplicator>()) return false;
-            if (!customBasePrefab.HasComponent<IdentifiableActor>()) return false;
+            if (!CustomBasePrefab.HasComponent<SlimeAppearanceApplicator>()) return false;
+            if (!CustomBasePrefab.HasComponent<IdentifiableActor>()) return false;
         }
         return true;
     }
@@ -69,16 +67,16 @@ public class PrismBaseSlimeCreatorV01
 
         var slimeDef = Object.Instantiate( PrismNativeBaseSlime.Pink.GetPrismBaseSlime().GetSlimeDefinition());
         slimeDef.hideFlags = HideFlags.DontUnloadUnusedAsset;
-        slimeDef.Name = name;
-        slimeDef.name = name;
+        slimeDef.Name = Name;
+        slimeDef.name = Name;
         slimeDef.AppearancesDefault = new Il2CppReferenceArray<SlimeAppearance>(0);
 
-        var baseAppearance = customBaseAppearance;
+        var baseAppearance = CustomBaseAppearance;
         if (baseAppearance == null) baseAppearance = PrismNativeBaseSlime.Pink.GetPrismBaseSlime().GetSlimeAppearance();
         SlimeAppearance appearance = Object.Instantiate(baseAppearance);
         appearance.hideFlags = HideFlags.DontUnloadUnusedAsset;
-        appearance.name = name+"Default";
-        appearance._icon = icon;
+        appearance.name = Name+"Default";
+        appearance._icon = Icon ?? PrismShortcuts.UnavailableIcon;
         slimeDef.AppearancesDefault = slimeDef.AppearancesDefault.AddToNew(appearance);
         if (slimeDef.AppearancesDefault[0] == null)
         {
@@ -157,9 +155,9 @@ public class PrismBaseSlimeCreatorV01
         }*/
         
         
-        var basePrefab = customBasePrefab;
+        var basePrefab = CustomBasePrefab;
         if (basePrefab == null) basePrefab = PrismNativeBaseSlime.Pink.GetPrismBaseSlime().GetPrefab();
-        slimeDef.prefab = CreatePrefab("slime"+name, basePrefab);
+        slimeDef.prefab = CreatePrefab("slime"+Name, basePrefab);
         if(slimeDef.prefab.HasComponent<SlimeEat>())
             slimeDef.prefab.GetComponent<SlimeEat>().SlimeDefinition = slimeDef; 
         slimeDef.prefab.GetComponent<SlimeAppearanceApplicator>().SlimeDefinition = slimeDef;
@@ -167,37 +165,37 @@ public class PrismBaseSlimeCreatorV01
         
         SlimeDiet slimeDiet = PrismLibDiet.CreateNewDiet();
         slimeDef.Diet = slimeDiet;
-        vacColor.a = 255;
-        slimeDef.color = vacColor;
-        slimeDef.icon = icon;
+        VacColor.a = 255;
+        slimeDef.color = VacColor;
+        slimeDef.icon = Icon;
 
         PrismShortcuts.mainAppearanceDirector.RegisterDependentAppearances(slimeDef, slimeDef.AppearancesDefault[0]);
         PrismShortcuts.mainAppearanceDirector.UpdateChosenSlimeAppearance(slimeDef, slimeDef.AppearancesDefault[0]);
         PrismLibSaving.SetupForSaving(slimeDef,referenceID);
 
-        if(!disableVaccable) 
+        if(!DisableVaccable) 
             slimeDef.Prism_AddToGroup("VaccableBaseSlimeGroup");
         slimeDef.Prism_AddToGroup("SmallSlimeGroup");
-        if(!disableEdibleByTarrs)
+        if(!DisableEdibleByTarrs)
             slimeDef.Prism_AddToGroup("EdibleSlimeGroup");
         slimeDef.Prism_AddToGroup("IdentifiableTypesGroup");
-        if(!disableSinkInShallowWater) slimeDef.Prism_AddToGroup("SlimesSinkInShallowWaterGroup");
+        if(!DisableSinkInShallowWater) slimeDef.Prism_AddToGroup("SlimesSinkInShallowWaterGroup");
         
         
         slimeDef.AppearancesDefault[0]._colorPalette = new SlimeAppearance.Palette
-            { Ammo = vacColor, Bottom = vacColor, Middle = vacColor, Top = vacColor };
-        slimeDef.AppearancesDefault[0]._splatColor = vacColor;
+            { Ammo = VacColor, Bottom = VacColor, Middle = VacColor, Top = VacColor };
+        slimeDef.AppearancesDefault[0]._splatColor = VacColor;
         
-        slimeDef.CanLargofy = canLargofy;
+        slimeDef.CanLargofy = CanLargofy;
         
-        slimeDef.localizedName = localized;
-        slimeDef._pediaPersistenceSuffix = "modded"+name.ToLower()+"_slime";
+        slimeDef.localizedName = Localized;
+        slimeDef._pediaPersistenceSuffix = "modded"+Name.ToLower()+"_slime";
 
-        if (!disableEdibleByTarrs)
+        if (!DisableEdibleByTarrs)
             PrismNativeBaseSlime.Tarr.GetPrismBaseSlime().RefreshEatMap();
-        var prismSlime = new PrismBaseSlime(slimeDef, false,canLargofy,disableAutoModdedLargos);
+        var prismSlime = new PrismBaseSlime(slimeDef, false,CanLargofy,DisableAutoModdedLargos);
         
-        if (canLargofy&&createAllLargos)
+        if (CanLargofy&&CreateAllLargos)
         {
             PrismShortcuts.CreateLargoActions.Add(() =>
             {
@@ -205,15 +203,15 @@ public class PrismBaseSlimeCreatorV01
                 {
                     try
                     {
-                        var otherSlimeDef = slime.TryCast<SlimeDefinition>();
+                        var otherSlimeDef = slime.Cast<SlimeDefinition>();
                         if(otherSlimeDef.ReferenceId==slimeDef.ReferenceId) continue;
                         var otherPrism = otherSlimeDef.GetPrismBaseSlime();
-                        if (otherPrism.allowLargos&& !(disableAutoModdedLargos && !otherPrism.GetIsNative()))
+                        if (otherPrism.AllowLargos&& !(DisableAutoModdedLargos && !otherPrism.GetIsNative()))
                         {
                             var largoCreator = new PrismLargoCreatorV01(prismSlime, otherPrism);
-                            if (customAutoLargoMergeSettings != null)
-                                largoCreator.largoMergeSettings = customAutoLargoMergeSettings;
-                            else largoCreator.largoMergeSettings = new PrismLargoMergeSettings();
+                            if (CustomAutoLargoMergeSettings != null)
+                                largoCreator.LargoMergeSettings = CustomAutoLargoMergeSettings;
+                            else largoCreator.LargoMergeSettings = new PrismLargoMergeSettings();
                             largoCreator.CreateLargo();
                         }
                     }
@@ -228,8 +226,8 @@ public class PrismBaseSlimeCreatorV01
 
         
         
-        if(plort!=null)
-            PrismLibDiet.AddEatProduction(prismSlime, plort);
+        if(Plort!=null)
+            PrismLibDiet.AddEatProduction(prismSlime, Plort);
         
         _createdSlime = prismSlime;
         PrismShortcuts.PrismBaseSlimes.Add(slimeDef.ReferenceId,_createdSlime);

@@ -12,7 +12,7 @@ namespace Starlight.Menus;
 public class StarlightRepoMenu : StarlightMenu
 {
     //Check valid themes for all menus EVERYWHERE
-    public new static MenuIdentifier GetMenuIdentifier() => new ("repomenu",StarlightMenuFont.SR2,StarlightMenuTheme.SR2E,"RepoMenu");
+    public new static MenuIdentifier GetMenuIdentifier() => new ("repomenu",StarlightMenuFont.SR2,StarlightMenuTheme.Starlight,"RepoMenu");
     protected override bool createCommands => true;
     protected override bool inGameOnly => false;
     
@@ -119,11 +119,7 @@ public class StarlightRepoMenu : StarlightMenu
                     if(string.IsNullOrWhiteSpace(repo.Value.description)) desc.gameObject.SetActive(false);
                     else {desc.gameObject.SetActive(true); desc.SetText("Description: "+repo.Value.description);}
                 }));
-            }
-            catch
-            {
-                // ignored
-            }
+            } catch { }
         }
     }
     public void OnBrowseTab()
@@ -197,11 +193,7 @@ public class StarlightRepoMenu : StarlightMenu
                             
                             
                     }));
-                }
-                catch
-                {
-                    // ignored
-                }
+                } catch { }
             }
         }
     }

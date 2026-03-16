@@ -103,7 +103,7 @@ public static class PrismLibMerging
         return PrismThreeMergeStrategy.Merge;
     }
 
-    private static bool logCombineErrors = false;
+    private static readonly bool LogCombineErrors = false;
 
     /// <summary>
     /// Merges two appearance structures together for a largo.
@@ -119,15 +119,15 @@ public static class PrismLibMerging
         var newStructures = new List<SlimeAppearanceStructure>();
         var palettes = GetPalettes(slime1, slime2);
 
-        bool useTwinShader = GetLargoHasTwinEffect(slime1) || GetLargoHasTwinEffect(slime2);
-        bool useBoomShader = GetLargoHasBoomEffect(slime1, slime2);
-        Material boomMat = useBoomShader ? PrismNativeBaseSlime.Boom.GetPrismBaseSlime().GetSlimeDefinition().AppearancesDefault[0]._structures[0].DefaultMaterials[0] : null;
-        bool useHyperShader = GetLargoHasHyperEffect(slime1, slime2);
-        bool useSloomberShader = GetLargoHasSloomberEffect(slime1) || GetLargoHasSloomberEffect(slime2);
-        Material sloomberMat = useSloomberShader ? PrismNativeBaseSlime.Sloomber.GetPrismBaseSlime().GetSlimeDefinition().AppearancesDefault[0]._structures[0].DefaultMaterials[0] : null;
+        var useTwinShader = GetLargoHasTwinEffect(slime1) || GetLargoHasTwinEffect(slime2);
+        var useBoomShader = GetLargoHasBoomEffect(slime1, slime2);
+        var boomMat = useBoomShader ? PrismNativeBaseSlime.Boom.GetPrismBaseSlime().GetSlimeDefinition().AppearancesDefault[0]?._structures[0]?.DefaultMaterials[0] : null;
+        var useHyperShader = GetLargoHasHyperEffect(slime1, slime2);
+        var useSloomberShader = GetLargoHasSloomberEffect(slime1) || GetLargoHasSloomberEffect(slime2);
+        var sloomberMat = useSloomberShader ? PrismNativeBaseSlime.Sloomber.GetPrismBaseSlime().GetSlimeDefinition().AppearancesDefault[0]?._structures[0]?.DefaultMaterials[0] : null;
 
-        bool firstBody = ShouldUseFirstStructure(settings.body, !GetLargoHasDefaultBody(slime1));
-        bool firstFace = ShouldUseFirstStructure(settings.face, !GetLargoHasDefaultFace(slime1));
+        var firstBody = ShouldUseFirstStructure(settings.Body, !GetLargoHasDefaultBody(slime1));
+        var firstFace = ShouldUseFirstStructure(settings.Face, !GetLargoHasDefaultFace(slime1));
 
         var colorMergeStrategies = DetermineColorMergeStrategies(settings, optimalPrioritization, GetLargoHasTwinEffect(slime1), GetLargoHasTwinEffect(slime2), GetLargoHasSloomberEffect(slime1), GetLargoHasSloomberEffect(slime2));
 
@@ -145,13 +145,13 @@ public static class PrismLibMerging
         );
     }
 
-    internal static bool ShouldUseFirstStructure(PrismBFMergeStrategy strategy, bool optimalCondition)
+    internal static bool ShouldUseFirstStructure(PrismBfMergeStrategy strategy, bool optimalCondition)
     {
         switch (strategy)
         {
-            case PrismBFMergeStrategy.KeepFirst: return true;
-            case PrismBFMergeStrategy.KeepSecond: return false;
-            case PrismBFMergeStrategy.Optimal: return optimalCondition;
+            case PrismBfMergeStrategy.KeepFirst: return true;
+            case PrismBfMergeStrategy.KeepSecond: return false;
+            case PrismBfMergeStrategy.Optimal: return optimalCondition;
             default: return false;
         }
     }
@@ -159,17 +159,17 @@ public static class PrismLibMerging
     private static Dictionary<string, bool> DetermineColorMergeStrategies(PrismLargoMergeSettings settings, PrismThreeMergeStrategy optimalPrioritization, bool oneHasTwin, bool twoHasTwin, bool oneHasSloomber, bool twoHasSloomber)
     {
         var strategies = new Dictionary<string, bool>();
-        strategies["pFirst"] = settings.baseColors == PrismColorMergeStrategy.PrioritizeFirst || (settings.baseColors == PrismColorMergeStrategy.Optimal && optimalPrioritization == PrismThreeMergeStrategy.PrioritizeFirst);
-        strategies["pSecond"] = settings.baseColors == PrismColorMergeStrategy.PrioritizeSecond || (settings.baseColors == PrismColorMergeStrategy.Optimal && optimalPrioritization == PrismThreeMergeStrategy.PrioritizeSecond);
-        strategies["pMerge"] = settings.baseColors == PrismColorMergeStrategy.Merge || (settings.baseColors == PrismColorMergeStrategy.Optimal && optimalPrioritization == PrismThreeMergeStrategy.Merge);
+        strategies["pFirst"] = settings.BaseColors == PrismColorMergeStrategy.PrioritizeFirst || (settings.BaseColors == PrismColorMergeStrategy.Optimal && optimalPrioritization == PrismThreeMergeStrategy.PrioritizeFirst);
+        strategies["pSecond"] = settings.BaseColors == PrismColorMergeStrategy.PrioritizeSecond || (settings.BaseColors == PrismColorMergeStrategy.Optimal && optimalPrioritization == PrismThreeMergeStrategy.PrioritizeSecond);
+        strategies["pMerge"] = settings.BaseColors == PrismColorMergeStrategy.Merge || (settings.BaseColors == PrismColorMergeStrategy.Optimal && optimalPrioritization == PrismThreeMergeStrategy.Merge);
 
-        strategies["pTwinFirst"] = settings.twinColors == PrismColorMergeStrategy.PrioritizeFirst || (settings.twinColors == PrismColorMergeStrategy.Optimal && ((oneHasTwin && !twoHasTwin) || optimalPrioritization == PrismThreeMergeStrategy.PrioritizeFirst));
-        strategies["pTwinSecond"] = settings.twinColors == PrismColorMergeStrategy.PrioritizeSecond || (settings.twinColors == PrismColorMergeStrategy.Optimal && ((!oneHasTwin && twoHasTwin) || optimalPrioritization == PrismThreeMergeStrategy.PrioritizeSecond));
-        strategies["pTwinMerge"] = settings.twinColors == PrismColorMergeStrategy.Merge || (settings.twinColors == PrismColorMergeStrategy.Optimal && optimalPrioritization == PrismThreeMergeStrategy.Merge);
+        strategies["pTwinFirst"] = settings.TwinColors == PrismColorMergeStrategy.PrioritizeFirst || (settings.TwinColors == PrismColorMergeStrategy.Optimal && ((oneHasTwin && !twoHasTwin) || optimalPrioritization == PrismThreeMergeStrategy.PrioritizeFirst));
+        strategies["pTwinSecond"] = settings.TwinColors == PrismColorMergeStrategy.PrioritizeSecond || (settings.TwinColors == PrismColorMergeStrategy.Optimal && ((!oneHasTwin && twoHasTwin) || optimalPrioritization == PrismThreeMergeStrategy.PrioritizeSecond));
+        strategies["pTwinMerge"] = settings.TwinColors == PrismColorMergeStrategy.Merge || (settings.TwinColors == PrismColorMergeStrategy.Optimal && optimalPrioritization == PrismThreeMergeStrategy.Merge);
 
-        strategies["pSloomberFirst"] = settings.sloomberColors == PrismColorMergeStrategy.PrioritizeFirst || (settings.sloomberColors == PrismColorMergeStrategy.Optimal && ((oneHasSloomber && !twoHasSloomber) || optimalPrioritization == PrismThreeMergeStrategy.PrioritizeFirst));
-        strategies["pSloomberSecond"] = settings.sloomberColors == PrismColorMergeStrategy.PrioritizeSecond || (settings.sloomberColors == PrismColorMergeStrategy.Optimal && ((!oneHasSloomber && twoHasSloomber) || optimalPrioritization == PrismThreeMergeStrategy.PrioritizeSecond));
-        strategies["pSloomberMerge"] = settings.sloomberColors == PrismColorMergeStrategy.Merge || (settings.sloomberColors == PrismColorMergeStrategy.Optimal && optimalPrioritization == PrismThreeMergeStrategy.Merge);
+        strategies["pSloomberFirst"] = settings.SloomberColors == PrismColorMergeStrategy.PrioritizeFirst || (settings.SloomberColors == PrismColorMergeStrategy.Optimal && ((oneHasSloomber && !twoHasSloomber) || optimalPrioritization == PrismThreeMergeStrategy.PrioritizeFirst));
+        strategies["pSloomberSecond"] = settings.SloomberColors == PrismColorMergeStrategy.PrioritizeSecond || (settings.SloomberColors == PrismColorMergeStrategy.Optimal && ((!oneHasSloomber && twoHasSloomber) || optimalPrioritization == PrismThreeMergeStrategy.PrioritizeSecond));
+        strategies["pSloomberMerge"] = settings.SloomberColors == PrismColorMergeStrategy.Merge || (settings.SloomberColors == PrismColorMergeStrategy.Optimal && optimalPrioritization == PrismThreeMergeStrategy.Merge);
 
         return strategies;
     }
@@ -199,7 +199,7 @@ public static class PrismLibMerging
                         ApplyColors(mat, palettes, colorMergeStrategies);
                         ApplySpecialEffects(mat, useBoomShader, boomMat, useHyperShader, useTwinShader, useSloomberShader, sloomberMat, palettes, colorMergeStrategies);
                     }
-                    catch (Exception e) { if (logCombineErrors) LogError(e); }
+                    catch (Exception e) { if (LogCombineErrors) LogError(e); }
                 }
             }
         }

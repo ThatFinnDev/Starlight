@@ -10,30 +10,29 @@ public class PrismGordoCreatorV01
 {
     private PrismGordo _createdGordo;
     
-    public Sprite icon;
-    public LocalizedString localized;
-    public PrismBaseSlime baseSlime = null;
-    public string referenceID => "IdentifiableType.Modded" + baseSlime.slimeDefinition.name +"Gordo";
+    public Sprite Icon;
+    public LocalizedString Localized;
+    public PrismBaseSlime BaseSlime = null;
+    public string referenceID => "IdentifiableType.Modded" + BaseSlime.SlimeDefinition.name +"Gordo";
 
-    public int customMaxEatCount = 0;
-    public Material customEyesBlink;
-    public Material customEyesNormal;
-    public Material customMouthHappy;
-    public Material customMouthChompOpen;
-    public Material customMouthEating;
+    public int CustomMaxEatCount = 0;
+    public Material CustomEyesBlink;
+    public Material CustomEyesNormal;
+    public Material CustomMouthHappy;
+    public Material CustomMouthChompOpen;
+    public Material CustomMouthEating;
     
     public PrismGordoCreatorV01(PrismBaseSlime baseSlime, Sprite icon, LocalizedString localized)
     {
-        this.baseSlime = baseSlime;
-        this.icon = icon;
-        this.localized = localized;
+        this.BaseSlime = baseSlime;
+        this.Icon = icon;
+        this.Localized = localized;
     }
     
     public bool IsValid()
     {
-        if (baseSlime==null) return false;
-        if (icon==null) return false;
-        if (localized==null) return false;
+        if (BaseSlime==null) return false;
+        if (Localized==null) return false;
         return true;
     }
 
@@ -45,16 +44,16 @@ public class PrismGordoCreatorV01
         if (!IsValid()) return null;
         if (_createdGordo != null) return _createdGordo;
 
-        var baseMaterial = baseSlime.GetBaseMaterial();
+        var baseMaterial = BaseSlime.GetBaseMaterial();
         if (baseMaterial == null) return null;
         if (baseType == null) baseType = Get<IdentifiableType>("PinkGordo");
         if (baseType == null) return null;
         var gordoType = Object.Instantiate(baseType);
-        gordoType.name = baseSlime.slimeDefinition.name.ToLower() + "ModdedGordo";
-        gordoType.icon = icon;
-        gordoType.localizedName = localized;
+        gordoType.name = BaseSlime.SlimeDefinition.name.ToLower() + "ModdedGordo";
+        gordoType.icon = Icon ?? PrismShortcuts.UnavailableIcon;
+        gordoType.localizedName = Localized;
         gordoType.referenceId = referenceID;
-        gordoType._pediaPersistenceSuffix=baseSlime.slimeDefinition.name.ToLower()+"_gordo";
+        gordoType._pediaPersistenceSuffix=BaseSlime.SlimeDefinition.name.ToLower()+"_gordo";
         
         gordoType.Prism_AddToGroup("GordoGroup");
         
@@ -62,23 +61,23 @@ public class PrismGordoCreatorV01
 
         var gordo = baseType.prefab.CopyObject();
         gordo.GetComponent<GordoIdentifiable>().identType = gordoType;
-        gordo.GetComponent<GordoEat>().SlimeDefinition = baseSlime;
-        if(customMaxEatCount!=0)
-            gordo.GetComponent<GordoEat>().TargetCount = customMaxEatCount;
+        gordo.GetComponent<GordoEat>().SlimeDefinition = BaseSlime;
+        if(CustomMaxEatCount!=0)
+            gordo.GetComponent<GordoEat>().TargetCount = CustomMaxEatCount;
         
         gordo.hideFlags = HideFlags.DontUnloadUnusedAsset;
         
         var faceComp = gordo.GetComponent<GordoFaceComponents>();
         
-        var baseAppearance = baseSlime.GetSlimeAppearance();
+        var baseAppearance = BaseSlime.GetSlimeAppearance();
         faceComp.BlinkEyes = baseAppearance.Face.GetExpressionFace(SlimeFace.SlimeExpression.BLINK).Eyes;
         faceComp.StrainEyes = baseAppearance.Face.GetExpressionFace(SlimeFace.SlimeExpression.SCARED).Eyes;
         
-        if (customEyesBlink != null) faceComp.BlinkEyes = customEyesBlink;
-        if (customEyesNormal != null) faceComp.StrainEyes = customEyesNormal;
-        if (customMouthHappy != null) faceComp.HappyMouth = customMouthHappy;
-        if (customMouthChompOpen != null) faceComp.ChompOpenMouth = customMouthChompOpen;
-        if (customMouthEating != null) faceComp.StrainMouth = customMouthEating;
+        if (CustomEyesBlink != null) faceComp.BlinkEyes = CustomEyesBlink;
+        if (CustomEyesNormal != null) faceComp.StrainEyes = CustomEyesNormal;
+        if (CustomMouthHappy != null) faceComp.HappyMouth = CustomMouthHappy;
+        if (CustomMouthChompOpen != null) faceComp.ChompOpenMouth = CustomMouthChompOpen;
+        if (CustomMouthEating != null) faceComp.StrainMouth = CustomMouthEating;
         
         var meshRenderer = gordo.GetObjectRecursively<SkinnedMeshRenderer>("slime_gordo");
         var i = 0;

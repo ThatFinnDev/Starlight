@@ -1,5 +1,3 @@
-using System.Collections;
-using Il2CppMonomiPark.SlimeRancher.Regions;
 using Starlight.Prism.Data.LandPlots;
 using UnityEngine.SceneManagement;
 
@@ -7,14 +5,15 @@ namespace Starlight.Prism.Lib;
 
 public static class PrismLibLandPlots
 {
-    internal static Dictionary<string, PrismLandPlotLocation> customPlots = new ();
-    internal static Dictionary<string, GameObject> rootObjects = new ();
-    internal static List<LandPlotLocation> landPlotLocations = new();
-    internal static GameObject GetNewLandPlotRoot(string sceneName)
+    private static Dictionary<string, PrismLandPlotLocation> _customPlots = new ();
+    private static Dictionary<string, GameObject> _rootObjects = new ();
+    internal static List<LandPlotLocation> LandPlotLocations = new();
+
+    private static GameObject GetNewLandPlotRoot(string sceneName)
     {
-        if(rootObjects.ContainsKey(sceneName))
-            if (rootObjects[sceneName] != null)
-                return rootObjects[sceneName];
+        if(_rootObjects.ContainsKey(sceneName))
+            if (_rootObjects[sceneName] != null)
+                return _rootObjects[sceneName];
         var gameObj = new GameObject("PrismLandPlotRoots-" + sceneName);
         SceneManager.MoveGameObjectToScene(gameObj, SceneManager.GetSceneByName(sceneName));
         var foundACell = false;
@@ -33,7 +32,7 @@ public static class PrismLibLandPlots
             if(anyDir==null) Log("Oh oh... A landplot is outside a CellDirector. Things are about to get sideways");
             else gameObj.transform.SetParent(anyDir.transform);
         }
-        rootObjects[sceneName] = gameObj;
+        _rootObjects[sceneName] = gameObj;
         return gameObj;
     }
     internal static void OnSceneWasLoaded(int buildIndex, string sceneName)
@@ -42,13 +41,13 @@ public static class PrismLibLandPlots
         {
             if (sceneName == "MainMenuUI")
             {
-                landPlotLocations = new();
-                customPlots = new();
-                rootObjects = new();
+                LandPlotLocations = new();
+                _customPlots = new();
+                _rootObjects = new();
             }
-            foreach (var plot in customPlots)
+            foreach (var plot in _customPlots)
             {
-                if (plot.Value.sceneName == sceneName)
+                if (plot.Value.SceneName == sceneName)
                 {
                     try
                     {
@@ -68,25 +67,24 @@ public static class PrismLibLandPlots
     {
         if (!inGame) return;
         if (loc == null || string.IsNullOrWhiteSpace(id)) return;
-        var scene = SceneManager.GetSceneByName(loc.sceneName);
-        if (scene == null) return;
-        if (customPlots.ContainsKey(id)) return;
+        var scene = SceneManager.GetSceneByName(loc.SceneName);
+        if (_customPlots.ContainsKey(id)) return;
          
-        customPlots.Add(id,loc);
+        _customPlots.Add(id,loc);
         if (scene.isLoaded)
             SpawnLandPlot(id, loc);
 
     }
 
-    public static bool HasLandPlotLocation(string id) => customPlots.ContainsKey(id);
+    public static bool HasLandPlotLocation(string id) => _customPlots.ContainsKey(id);
     public static void RemoveLandPlotLocation(string id)
     {
         if (!inGame) return;
         if (string.IsNullOrWhiteSpace(id)) return;
-        if (!customPlots.ContainsKey(id)) return;
-        customPlots.Remove(id);
-        try { GameObject.Destroy(sceneContext.GameModel.landPlots[id].gameObj); } catch { }
-        try { GameObject.Destroy(sceneContext.GameModel.landPlots["plot"+id].gameObj); } catch { }
+        if (!_customPlots.ContainsKey(id)) return;
+        _customPlots.Remove(id);
+        try { Object.Destroy(sceneContext.GameModel.landPlots[id].gameObj); } catch { }
+        try { Object.Destroy(sceneContext.GameModel.landPlots["plot"+id].gameObj); } catch { }
         try { sceneContext.GameModel.UnregisterLandPlot(id); }catch { }
         try { sceneContext.GameModel.UnregisterLandPlot("plot"+id); }catch { }
         if (sceneContext.GameModel.landPlots.ContainsKey(id))
@@ -97,21 +95,21 @@ public static class PrismLibLandPlots
 
     static void SpawnLandPlot(string plotKey, PrismLandPlotLocation loc)
     { 
-        GameObject landplotRoot = GetNewLandPlotRoot(loc.sceneName);
+        var landplotRoot = GetNewLandPlotRoot(loc.SceneName);
         var obj = new GameObject(plotKey);
         var lpl = obj.AddComponent<LandPlotLocation>();
-        landPlotLocations.Add(lpl);
+        LandPlotLocations.Add(lpl);
         lpl._id = "plot" + plotKey;
         obj.transform.SetParent(landplotRoot.transform);
-        obj.transform.position = loc.position;
-        obj.transform.rotation = loc.rotation;
-        obj.transform.localScale = loc.scale;
-        var id = loc.defaultPlot;
+        obj.transform.position = loc.Position;
+        obj.transform.rotation = loc.Rotation;
+        obj.transform.localScale = loc.Scale;
+        var id = loc.DefaultPlot;
         if (id == LandPlot.Id.NONE) id = LandPlot.Id.EMPTY;        
         ExecuteInTicks(() =>
         {
             var prefab = gameContext.LookupDirector.GetPlotPrefab(id);
-            var plotObj = GameObject.Instantiate(prefab, obj.transform);
+            var plotObj = Object.Instantiate(prefab, obj.transform);
             lpl.enabled = true;
             ExecuteInTicks(() =>
             {

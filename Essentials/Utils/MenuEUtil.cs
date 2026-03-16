@@ -32,11 +32,7 @@ public static class MenuEUtil
             if (string.IsNullOrEmpty(ident.saveKey)) return;
             if (StarlightSaveManager.data.fonts.TryAdd(ident.saveKey, ident.defaultFont)) StarlightSaveManager.Save();
              dataFont = StarlightSaveManager.data.fonts[ident.saveKey];
-        }
-        catch
-        {
-            // ignored
-        }
+        } catch { }
 
         TMP_FontAsset fontAsset = null;
         switch (dataFont)
@@ -135,11 +131,7 @@ public static class MenuEUtil
                     return currentTheme;
                 }
             }
-        }
-        catch (Exception e)
-        {
-            // ignored
-        }
+        } catch { }
 
         return StarlightMenuTheme.Default;
     }
@@ -184,11 +176,7 @@ public static class MenuEUtil
                     if (child.activeSelf)
                         if (child.HasComponent<StarlightMenu>())
                             return true;
-            }
-            catch
-            {
-                // ignored
-            }
+            } catch { }
 
             return false;
         }
@@ -205,11 +193,7 @@ public static class MenuEUtil
                     Object.Destroy(child.gameObject);
                 }
             }
-        }
-        catch
-        {
-            // ignored
-        }
+        } catch { }
     }
     public static void CloseOpenMenu()
     {

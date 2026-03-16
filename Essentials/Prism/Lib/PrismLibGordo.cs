@@ -16,8 +16,8 @@ public static class PrismLibGordo
     public static void SetRequiredBait(this PrismGordo gordo, IdentifiableType baitType)
     {
         if (gordo == null) return;
-        if (gordoBaitDict.ContainsKey(baitType.ReferenceId)) gordoBaitDict.Remove(baitType.ReferenceId);
-        gordoBaitDict.Add(baitType.ReferenceId, gordo);
+        GordoBaitDict.Remove(baitType.ReferenceId);
+        GordoBaitDict.Add(baitType.ReferenceId, gordo);
     }
-    internal static Dictionary<string, PrismGordo> gordoBaitDict = new Dictionary<string, PrismGordo>();
+    internal static readonly Dictionary<string, PrismGordo> GordoBaitDict = new ();
 }

@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace SR2E.Components.AssetBundle
+namespace Starlight.Components.AssetBundle
 {
 	[ExecuteInEditMode]
 	[RequireComponent(typeof(RectTransform), typeof(MaskableGraphic))]

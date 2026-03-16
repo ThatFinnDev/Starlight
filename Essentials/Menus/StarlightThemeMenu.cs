@@ -95,7 +95,7 @@ public class StarlightThemeMenu : StarlightMenu
                 { filterMode = FilterMode.Point, wrapMode = TextureWrapMode.Clamp };
                 switch (theme)
                 {
-                    case StarlightMenuTheme.SR2E: if (true) {
+                    case StarlightMenuTheme.Starlight: if (true) {
                             if(ColorUtility.TryParseHtmlString("#303846FF", out var pixel0)) texture.SetPixel(0,0,pixel0);
                             if(ColorUtility.TryParseHtmlString("#2C6EC8FF", out var pixel1)) texture.SetPixel(1,0,pixel1);
                             if(ColorUtility.TryParseHtmlString("#1B1B1DFF", out var pixel2)) texture.SetPixel(2,0,pixel2);

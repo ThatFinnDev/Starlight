@@ -9,7 +9,7 @@ namespace Starlight.Prism.Lib;
 /// </summary>
 public static class PrismLibDiet
 {    
-    internal static Dictionary<SlimeDefinition, Dictionary<SlimeDiet.EatMapEntry, bool>> customEatmaps = new ();
+    internal static readonly Dictionary<SlimeDefinition, Dictionary<SlimeDiet.EatMapEntry, bool>> CustomEatmaps = new ();
 
     /// <summary>
     /// Creates a new <see cref="SlimeDiet.EatMapEntry"/>
@@ -55,11 +55,11 @@ public static class PrismLibDiet
        if (eatmap == null) return false;
        foreach (var entry in list)
        {
-           if (entry.BecomesIdent != entry.BecomesIdent) continue;
-           if (entry.EatsIdent != entry.EatsIdent) continue;
-           if (entry.Driver != entry.Driver) continue;
-           if (entry.MinDrive != entry.MinDrive) continue;
-           if (entry.ProducesIdent != entry.ProducesIdent) continue;
+           if (eatmap.BecomesIdent != entry.BecomesIdent) continue;
+           if (eatmap.EatsIdent != entry.EatsIdent) continue;
+           if (eatmap.Driver != entry.Driver) continue;
+           if (!Mathf.Approximately(eatmap.MinDrive, entry.MinDrive)) continue;
+           if (eatmap.ProducesIdent != entry.ProducesIdent) continue;
            return false;
        } 
        return true;
@@ -73,9 +73,9 @@ public static class PrismLibDiet
     public static void AddEatmapToSlime(this PrismSlime prismSlime, SlimeDiet.EatMapEntry eatmap, bool beCareful = false)
     {
         var eatmaps = new Dictionary<SlimeDiet.EatMapEntry,bool>();
-        if (customEatmaps.TryGetValue(prismSlime, out var dict))
+        if (CustomEatmaps.TryGetValue(prismSlime, out var dict))
             eatmaps = dict;
-        else customEatmaps.Add(prismSlime, eatmaps);
+        else CustomEatmaps.Add(prismSlime, eatmaps);
         eatmaps.Add(eatmap,beCareful);
         if(beCareful)
             if(!_CarefulCheck(prismSlime.GetSlimeDiet().EatMap,eatmap)) 

@@ -38,11 +38,7 @@ internal class NoClipComponent : MonoBehaviour
             playerController.Position = player.position;
             playerMotor.Capsule.enabled = true;
             playerMotor.SetCapsuleCollisionsActivation(true);
-        }
-        catch
-        {
-            // ignore error
-        }
+        } catch { }
     }
 
     private void Awake()

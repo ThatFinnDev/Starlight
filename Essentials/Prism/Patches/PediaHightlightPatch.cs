@@ -14,14 +14,14 @@ internal class PediaHightlightPatch
     {
         
         if (__instance == null) return;
-        if (!PrismLibPedia._additionalFactsMap.ContainsKey(__instance)) return;
+        if (!PrismLibPedia.AdditionalFactsMap.ContainsKey(__instance)) return;
         var modifiedResult = __result.ToList();
-        foreach (var additionalFact in PrismLibPedia._additionalFactsMap[__instance])
+        foreach (var additionalFact in PrismLibPedia.AdditionalFactsMap[__instance])
         {
             var native = additionalFact.ConvertToNativeType();
-            if (native.Label == null) native.Label = PrismShortcuts.EmptyTranslation;
-            if (native.Description == null) native.Description = PrismShortcuts.EmptyTranslation;
-            if (native.Icon == null) native.Icon = PrismShortcuts.UnavailableIcon;
+            native.Label ??= PrismShortcuts.EmptyTranslation;
+            native.Description ??= PrismShortcuts.EmptyTranslation;
+            native.Icon ??= PrismShortcuts.UnavailableIcon;
             modifiedResult.Add(native);
         }
         __result=modifiedResult.ToArray();

@@ -143,31 +143,19 @@ public static class NamingEUtil
         {
             if (addQuotesIfSpaces&&obj.name.Contains(" ")) return "'" + obj.name + "'";
             return obj.name;
-        }
-        catch
-        {
-            // ignored
-        }
+        } catch { }
 
         return null;
     } 
     static string _GCNNonLocalized(Object obj)
     {
-        try { return obj.name.Replace(" ","").Replace("_",""); }
-        catch
-        {
-            // ignored
-        }
+        try { return obj.name.Replace(" ","").Replace("_",""); } catch { }
 
         return null;
     }
     static string _GCUNNonLocalized(Object obj)
     {
-        try { return obj.name.Replace(" ","").Replace("_","").ToUpper(); }
-        catch
-        {
-            // ignored
-        }
+        try { return obj.name.Replace(" ","").Replace("_","").ToUpper(); } catch { }
 
         return null;
     }

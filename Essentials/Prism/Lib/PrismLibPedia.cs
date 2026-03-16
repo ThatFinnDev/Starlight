@@ -1,7 +1,6 @@
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using Il2CppMonomiPark.SlimeRancher.Pedia;
 using Starlight.Prism.Data;
-using UnityEngine.Localization;
 
 namespace Starlight.Prism.Lib;
 
@@ -10,18 +9,18 @@ namespace Starlight.Prism.Lib;
 /// </summary>
 public static class PrismLibPedia
 {
-    internal static Dictionary<PrismPediaCategoryType, PediaCategory> pediaCategories = new();
-    static Dictionary<PrismPediaDetailType, PediaDetailSection> pediaDetailSectionLookup = new Dictionary<PrismPediaDetailType, PediaDetailSection>();
-    static Dictionary<PrismPediaFactSetType, PediaHighlightSet> pediaPrismFactSetLookup = new Dictionary<PrismPediaFactSetType, PediaHighlightSet>() { };
-    internal static Dictionary<PediaEntry, List<PrismPediaAdditionalFact>> _additionalFactsMap = new Dictionary<PediaEntry, List<PrismPediaAdditionalFact>>();
-    internal static IdentifiablePediaEntry _identifiablePediaEntryPrefab = null;
-    internal static FixedPediaEntry _fixedPediaEntryPrefab = null;
-    internal static Dictionary<PrismPediaCategoryType, List<PediaEntry>> pediaEntryLookup = new Dictionary<PrismPediaCategoryType, List<PediaEntry>>()
+    public static IdentifiablePediaEntry IdentifiablePediaEntryPrefab;
+    internal static readonly Dictionary<PrismPediaCategoryType, PediaCategory> PediaCategories = new();
+    internal static readonly Dictionary<PediaEntry, List<PrismPediaAdditionalFact>> AdditionalFactsMap = new ();
+    internal static FixedPediaEntry FixedPediaEntryPrefab;
+    internal static readonly Dictionary<PrismPediaCategoryType, List<PediaEntry>> PediaEntryLookup = new ()
     {
         {PrismPediaCategoryType.Slimes, new List<PediaEntry>()}, {PrismPediaCategoryType.Resources, new List<PediaEntry>()}, {PrismPediaCategoryType.Blueprints, new List<PediaEntry>()},
         {PrismPediaCategoryType.World, new List<PediaEntry>()}, {PrismPediaCategoryType.Weather, new List<PediaEntry>()}, {PrismPediaCategoryType.Toys, new List<PediaEntry>()},
         {PrismPediaCategoryType.Ranch, new List<PediaEntry>()}, {PrismPediaCategoryType.Science, new List<PediaEntry>()}, {PrismPediaCategoryType.Tutorial, new List<PediaEntry>()},
     };
+    private static readonly Dictionary<PrismPediaDetailType, PediaDetailSection> PediaDetailSectionLookup = new ();
+    private static readonly Dictionary<PrismPediaFactSetType, PediaHighlightSet> PediaPrismFactSetLookup = new ();
 
 
 
@@ -32,7 +31,7 @@ public static class PrismLibPedia
     /// <returns>The pedia entries for the given category</returns>
     public static List<PediaEntry> GetPediaEntries(this PrismPediaCategoryType type)
     {
-        if (pediaEntryLookup.ContainsKey(type)) return pediaEntryLookup[type];
+        if (PediaEntryLookup.ContainsKey(type)) return PediaEntryLookup[type];
         return null;
     }
     /// <summary>
@@ -42,8 +41,7 @@ public static class PrismLibPedia
     /// <returns>The pedia highlight set for the given fact set type</returns>
     public static PediaHighlightSet GetPediaHighlightSet(this PrismPediaFactSetType type)
     {
-        if (pediaPrismFactSetLookup.ContainsKey(type)) return pediaPrismFactSetLookup[type];
-        return null;
+        return PediaPrismFactSetLookup.GetValueOrDefault(type);
     }
     /// <summary>
     /// Gets the pedia detail section for a given detail type
@@ -52,15 +50,14 @@ public static class PrismLibPedia
     /// <returns>The pedia detail section for the given detail type</returns>
     public static PediaDetailSection GetPediaDetailSection(this PrismPediaDetailType type)
     {
-        if (pediaDetailSectionLookup.ContainsKey(type)) return pediaDetailSectionLookup[type];
-        return null;
+        return PediaDetailSectionLookup.GetValueOrDefault(type);
     }
     
     internal static PediaEntryHighlight ConvertToNativeType(this PrismPediaAdditionalFact prismPediaAdditionalFact) => new PediaEntryHighlight()
     {
-        Icon = prismPediaAdditionalFact.icon,
-        Description = prismPediaAdditionalFact.description,
-        Label = prismPediaAdditionalFact.title,
+        Icon = prismPediaAdditionalFact.Icon,
+        Description = prismPediaAdditionalFact.Description,
+        Label = prismPediaAdditionalFact.Title,
     };
 
     internal static PediaEntryHighlight ConvertToNativeType(this PrismPediaAdditionalFact? prismPediaAdditionalFact)
@@ -71,10 +68,10 @@ public static class PrismLibPedia
     internal static PediaEntryDetail ConvertToNativeType(this PrismPediaDetail prismPediaDetail) => new PediaEntryDetail()
     {
         Contents = new Il2CppReferenceArray<PediaEntryDetailSubContent>(0),
-        Section = pediaDetailSectionLookup[prismPediaDetail.type],
-        Text = prismPediaDetail.text,
-        TextGamepad = prismPediaDetail.text,
-        TextPS4 = prismPediaDetail.text,
+        Section = PediaDetailSectionLookup[prismPediaDetail.Type],
+        Text = prismPediaDetail.Text,
+        TextGamepad = prismPediaDetail.Text,
+        TextPS4 = prismPediaDetail.Text,
     };
 
     internal static PediaEntryDetail ConvertToNativeType(this PrismPediaDetail? prismPediaDetail)
@@ -85,24 +82,24 @@ public static class PrismLibPedia
     
     internal static void PediaDetailTypesInitialize()
     {
-        pediaDetailSectionLookup.Add(PrismPediaDetailType.Slimeology, Get<PediaDetailSection>("Slimeology"));
-        pediaDetailSectionLookup.Add(PrismPediaDetailType.RancherRisks, Get<PediaDetailSection>("Rancher Risks"));
-        pediaDetailSectionLookup.Add(PrismPediaDetailType.Plortonomics, Get<PediaDetailSection>("Plortonomics"));
-        pediaDetailSectionLookup.Add(PrismPediaDetailType.About, Get<PediaDetailSection>("About"));
-        pediaDetailSectionLookup.Add(PrismPediaDetailType.OnTheRanch, Get<PediaDetailSection>("How To Use"));
-        pediaDetailSectionLookup.Add(PrismPediaDetailType.Instructions, Get<PediaDetailSection>("Instructions"));
+        PediaDetailSectionLookup.Add(PrismPediaDetailType.Slimeology, Get<PediaDetailSection>("Slimeology"));
+        PediaDetailSectionLookup.Add(PrismPediaDetailType.RancherRisks, Get<PediaDetailSection>("Rancher Risks"));
+        PediaDetailSectionLookup.Add(PrismPediaDetailType.Plortonomics, Get<PediaDetailSection>("Plortonomics"));
+        PediaDetailSectionLookup.Add(PrismPediaDetailType.About, Get<PediaDetailSection>("About"));
+        PediaDetailSectionLookup.Add(PrismPediaDetailType.OnTheRanch, Get<PediaDetailSection>("How To Use"));
+        PediaDetailSectionLookup.Add(PrismPediaDetailType.Instructions, Get<PediaDetailSection>("Instructions"));
 
-        pediaPrismFactSetLookup.Add(PrismPediaFactSetType.None, Get<PediaHighlightSet>("TutorialPediaTemplate"));
-        pediaPrismFactSetLookup.Add(PrismPediaFactSetType.Resource, Get<PediaHighlightSet>("ResourceHighlights"));
-        pediaPrismFactSetLookup.Add(PrismPediaFactSetType.Slime, Get<PediaHighlightSet>("SlimeHighlights"));
-        pediaPrismFactSetLookup.Add(PrismPediaFactSetType.Food, Get<PediaHighlightSet>("FoodHightlights")); //yes, there is a typo in there...
+        PediaPrismFactSetLookup.Add(PrismPediaFactSetType.None, Get<PediaHighlightSet>("TutorialPediaTemplate"));
+        PediaPrismFactSetLookup.Add(PrismPediaFactSetType.Resource, Get<PediaHighlightSet>("ResourceHighlights"));
+        PediaPrismFactSetLookup.Add(PrismPediaFactSetType.Slime, Get<PediaHighlightSet>("SlimeHighlights"));
+        PediaPrismFactSetLookup.Add(PrismPediaFactSetType.Food, Get<PediaHighlightSet>("FoodHightlights")); //yes, there is a typo in there...
 
-        _identifiablePediaEntryPrefab = Get<IdentifiablePediaEntry>("Pink");
-        if (_identifiablePediaEntryPrefab == null) _identifiablePediaEntryPrefab = GetAny<IdentifiablePediaEntry>();
-        if (_identifiablePediaEntryPrefab != null) _identifiablePediaEntryPrefab.hideFlags = HideFlags.DontUnloadUnusedAsset; 
+        IdentifiablePediaEntryPrefab = Get<IdentifiablePediaEntry>("Pink");
+        if (IdentifiablePediaEntryPrefab == null) IdentifiablePediaEntryPrefab = GetAny<IdentifiablePediaEntry>();
+        if (IdentifiablePediaEntryPrefab != null) IdentifiablePediaEntryPrefab.hideFlags = HideFlags.DontUnloadUnusedAsset; 
         
-        _fixedPediaEntryPrefab = Get<FixedPediaEntry>("PrismaPlorts");
-        if (_fixedPediaEntryPrefab == null) _fixedPediaEntryPrefab = GetAny<FixedPediaEntry>();
-        if (_fixedPediaEntryPrefab != null) _fixedPediaEntryPrefab.hideFlags = HideFlags.DontUnloadUnusedAsset;
+        FixedPediaEntryPrefab = Get<FixedPediaEntry>("PrismaPlorts");
+        if (FixedPediaEntryPrefab == null) FixedPediaEntryPrefab = GetAny<FixedPediaEntry>();
+        if (FixedPediaEntryPrefab != null) FixedPediaEntryPrefab.hideFlags = HideFlags.DontUnloadUnusedAsset;
     }
 }

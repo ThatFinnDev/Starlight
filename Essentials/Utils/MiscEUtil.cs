@@ -120,10 +120,7 @@ public static class MiscEUtil
                 target.GetIl2CppType().GetField(field.Name, (Il2CppSystem.Reflection.BindingFlags)60).SetValue(target, field.GetValue(source));
             }
             // Errors when encountering `const` or `readonly`!
-            catch
-            {
-                // ignored
-            }
+            catch { }
         }
     }
     

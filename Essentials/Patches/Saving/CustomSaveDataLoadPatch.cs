@@ -83,7 +83,7 @@ internal static class CustomSaveDataLoadPatch
                                 catch (Exception e)
                                 {
                                     LogError(
-                                        $"Failed to save custom save data for expansion {info.name}: {e}");
+                                        $"Failed to save custom save data for expansion {info.Name}: {e}");
                                 }
                                 if(rootSave!=null)
                                     try
