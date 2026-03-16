@@ -15,11 +15,8 @@ internal class TargetingPatch
     {
         var eatStrings = __instance.SlimeEatStrings;
 
-        MelonLogger.Msg("test");
         if (eatStrings == null) return;
-        MelonLogger.Msg("test 2");
         if (eatStrings._foodGroupStringMap == null) return;
-        MelonLogger.Msg("test 3");
         
         foreach (var group in LookupEUtil._identifiableTypeGroupList.items)
             if (group._localizedName != null && group._isFood)
