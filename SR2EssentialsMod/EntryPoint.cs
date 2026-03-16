@@ -297,8 +297,6 @@ public class SR2EEntryPoint : MelonMod
         foreach (var type in types)
         {
             if (type == null) continue;
-            var shouldLog = type.FullName.ToString().Contains("LandPlot");
-            if(shouldLog)MelonLogger.Msg(type.FullName);
             try
             {
                 var isPrismPatch = type.GetCustomAttribute<PrismPatch>() != null;

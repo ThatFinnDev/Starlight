@@ -11,7 +11,7 @@ internal class MaxFpsCommand : SR2ECommand
 
     public override List<string> GetAutoComplete(int argIndex, string[] args)
     {
-        if (argIndex == 0) return new List<string> { "-1", "20","30","60","120","240","480","500","600","700","800","900","1000","2500","5000","10000"};
+        if (argIndex == 0) return new List<string> { "20","30","60","120","240","480","500","600","700","800","900","1000","2500","5000","10000"};
         return null;
     }
 
@@ -20,7 +20,7 @@ internal class MaxFpsCommand : SR2ECommand
         if (!args.IsBetween(1,1)) return SendNoArguments();
         
         int duration = -1;
-        if(args!=null) if(!TryParseInt(args[0], out duration, 0, false)) return false;
+        if(args!=null) if(!TryParseInt(args[0], out duration, 5, true)) return false;
         
         OptionsUIRootApplyPatch.customMaxFPS = duration;
         SendMessage(translation("cmd.maxfps.success",duration));

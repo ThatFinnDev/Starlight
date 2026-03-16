@@ -1,4 +1,5 @@
 using System;
+using Il2CppInterop.Runtime.Attributes;
 using Il2CppMonomiPark.SlimeRancher.DebugTool;
 using Il2CppTMPro;
 using SR2E.Components;
@@ -93,7 +94,7 @@ internal class SR2ENativeDebugUI : SR2EMenu
         Destroy(toClose.gameObject);
         debugUIs[debugUIs.Count-1].gameObject.SetActive(true);
     }
-    public DebugUI OpenEntries(params DebugUIEntry[] buttons)
+    [HideFromIl2Cpp] public DebugUI OpenEntries(params DebugUIEntry[] buttons)
     {
         foreach (var ui in debugUIs) ui.gameObject.SetActive(false);
         var instance = Instantiate(debugUIPrefab, null);
@@ -105,7 +106,7 @@ internal class SR2ENativeDebugUI : SR2EMenu
         
         return debugUI;
     }
-    public void AddButton(DebugUI debugUI,DebugUIEntry entry)
+    [HideFromIl2Cpp] public void AddButton(DebugUI debugUI,DebugUIEntry entry)
     {
         if (entry == null) return;
         var instance = Instantiate(debugUI.buttonPrefab, debugUI.grid.transform);

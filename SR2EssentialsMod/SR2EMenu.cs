@@ -32,7 +32,7 @@ public abstract class SR2EMenu : MonoBehaviour
     //public List<MenuActions> openActions => SR2EEntryPoint.menus[this][nameof(openActions)] as List<MenuActions>;
     //public List<MenuActions> closeActions => SR2EEntryPoint.menus[this][nameof(closeActions)] as List<MenuActions>;
 
-    public MenuActions[] openActions
+    [HideFromIl2Cpp] public MenuActions[] openActions
     {
         get { try { return (SR2EEntryPoint.menus[this][nameof(openActions)] as List<MenuActions>).ToArray(); } catch { return Array.Empty<MenuActions>(); } }
         set
@@ -42,7 +42,7 @@ public abstract class SR2EMenu : MonoBehaviour
             SR2EEntryPoint.menus[this][nameof(openActions)] = value.ToNetList();
         }
     }
-    public MenuActions[] closeActions
+    [HideFromIl2Cpp] public MenuActions[] closeActions
     {
         get { try { return (SR2EEntryPoint.menus[this][nameof(closeActions)] as List<MenuActions>).ToArray(); } catch { return Array.Empty<MenuActions>(); } }
         set
@@ -52,7 +52,7 @@ public abstract class SR2EMenu : MonoBehaviour
             SR2EEntryPoint.menus[this][nameof(closeActions)] = value.ToNetList();
         }
     }
-    public FeatureFlag[] requiredFeatures
+    [HideFromIl2Cpp] public FeatureFlag[] requiredFeatures
     {
         get { try { return (SR2EEntryPoint.menus[this][nameof(requiredFeatures)] as List<FeatureFlag>).ToArray(); } catch { return Array.Empty<FeatureFlag>(); } }
         set
