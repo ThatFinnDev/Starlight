@@ -31,7 +31,6 @@ public class PrismGordoCreatorV01
     public bool IsValid()
     {
         if (baseSlime==null) return false;
-        if (icon==null) return false;
         if (localized==null) return false;
         return true;
     }
