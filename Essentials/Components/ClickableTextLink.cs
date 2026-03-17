@@ -17,7 +17,7 @@ namespace Starlight.Components;
 /// If you want custom actions, use "action:somekey" where somekey is a string of your choice
 /// Add the an action to the dictionary "actions"
 /// </summary>
-[InjectClass]
+[InjectIntoIL]
 public class ClickableTextLink : MonoBehaviour
 {
     private TextMeshProUGUI text;

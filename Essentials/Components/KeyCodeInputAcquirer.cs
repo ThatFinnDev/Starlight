@@ -2,7 +2,7 @@ using Starlight.Storage;
 
 namespace Starlight.Components;
 
-[InjectClass]
+[InjectIntoIL]
 internal class KeyCodeInputAcquirer : MonoBehaviour
 {
     internal static KeyCodeInputAcquirer Instance;

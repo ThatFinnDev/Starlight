@@ -10,7 +10,7 @@ namespace Starlight.Components;
 /// 
 /// Currently bugged...
 /// </summary>
-[InjectClass]
+[InjectIntoIL]
 internal class IdentifiableObjectDragger : MonoBehaviour
 {
     public GameObject draggedObject;

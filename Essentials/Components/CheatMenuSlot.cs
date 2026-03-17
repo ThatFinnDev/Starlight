@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace Starlight.Components;
 
-[InjectClass]
+[InjectIntoIL]
 internal class CheatMenuSlot : MonoBehaviour
 {
     private int slotID;

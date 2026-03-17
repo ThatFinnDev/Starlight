@@ -6,7 +6,7 @@ using MelonLoader.Utils;
 using Starlight.Storage;
 
 namespace Starlight.Components;
-[InjectClass]
+[InjectIntoIL]
 internal class DevConsoleFixer : MonoBehaviour
 {
     private struct Log

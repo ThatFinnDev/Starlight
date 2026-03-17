@@ -355,7 +355,7 @@ public static class StarlightFeatureFlags
         return true;
     }
     
-    public static List<FeatureFlag> featureFlags => _enabledFlags;
+    public static List<FeatureFlag> featureFlags => _enabledFlags.ToArray().ToNetList();
 }
 
 internal class FFR //FeatureFlagRequirement

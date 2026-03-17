@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace Starlight.Components;
 
-[InjectClass]
+[InjectIntoIL]
 internal class CheatMenuRefineryEntry : MonoBehaviour
 {
     internal IdentifiableType item;

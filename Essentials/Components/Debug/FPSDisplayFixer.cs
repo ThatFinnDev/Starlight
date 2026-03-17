@@ -8,7 +8,7 @@ using UnityEngine.InputSystem;
 
 namespace Starlight.Components;
 
-[InjectClass]
+[InjectIntoIL]
 internal class FPSDisplayFixer : MonoBehaviour
 {
     private FPSDisplay display;

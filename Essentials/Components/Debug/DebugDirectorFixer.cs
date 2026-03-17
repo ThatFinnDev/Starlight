@@ -5,7 +5,7 @@ using Starlight.Storage;
 
 namespace Starlight.Components;
 
-[InjectClass]
+[InjectIntoIL]
 public class DebugDirectorFixer : MonoBehaviour
 {
     internal static DebugDirectorFixer Instance;

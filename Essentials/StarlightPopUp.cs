@@ -10,7 +10,7 @@ namespace Starlight;
 /// <summary>
 /// Abstract menu class
 /// </summary>
-[InjectClass]
+[InjectIntoIL]
 public abstract class StarlightPopUp : MonoBehaviour
 {
     internal Transform block;

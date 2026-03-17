@@ -70,7 +70,7 @@ internal class FXPlayCommand : StarlightCommand
     }
 }
 
-[InjectClass]
+[InjectIntoIL]
 internal class FXPlayPauseFunction : MonoBehaviour
 {
     public ParticleSystem sys;

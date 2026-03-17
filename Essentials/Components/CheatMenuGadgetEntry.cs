@@ -1,13 +1,11 @@
 using System;
-using Il2CppMonomiPark.SlimeRancher.Economy;
-using Il2CppMonomiPark.SlimeRancher.UI;
 using Il2CppTMPro;
 using Starlight.Storage;
 using UnityEngine.UI;
 
 namespace Starlight.Components;
 
-[InjectClass()]
+[InjectIntoIL]
 internal class CheatMenuGadgetEntry : MonoBehaviour
 {
     internal IdentifiableType item;

@@ -10,7 +10,7 @@ namespace Starlight.Components.AssetBundle
 	/// It adds rounded corners to the UI element
 	/// Use cornerRadius to adjust the corner size
 	/// </summary>
-	[InjectClass]
+	[InjectIntoIL]
 	public class RoundedUIImage : MonoBehaviour
 	{
 		public float cornerRadius = 10f;

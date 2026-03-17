@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace Starlight.Components;
 
-[InjectClass]
+[InjectIntoIL]
 internal class CheatMenuNewbucks : MonoBehaviour
 {
     private Slider amountSlider;

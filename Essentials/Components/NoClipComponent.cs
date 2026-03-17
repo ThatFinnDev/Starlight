@@ -8,7 +8,7 @@ using UnityEngine.InputSystem;
 
 namespace Starlight.Components;
 
-[InjectClass]
+[InjectIntoIL]
 internal class NoClipComponent : MonoBehaviour
 {
     private float baseSpeed = 15f;

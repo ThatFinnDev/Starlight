@@ -11,7 +11,7 @@ using UnityEngine.Rendering.UI;
 
 namespace Starlight;
 
-[InjectClass]
+[InjectIntoIL]
 internal class StarlightDebugUI : MonoBehaviour
 { 
 	static GameObject player;

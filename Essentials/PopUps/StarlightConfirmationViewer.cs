@@ -7,7 +7,7 @@ using UnityEngine.UI;
 namespace Starlight.Popups;
 
 
-[InjectClass]
+[InjectIntoIL]
 public class StarlightConfirmationViewer : StarlightPopUp
 {
     private string _text;

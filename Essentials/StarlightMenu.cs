@@ -13,7 +13,7 @@ namespace Starlight;
 /// <summary>
 /// Abstract menu class
 /// </summary>
-[InjectClass]
+[InjectIntoIL]
 public abstract class StarlightMenu : MonoBehaviour
 {
     private bool _changedOpenState;

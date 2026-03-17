@@ -4,7 +4,7 @@ using Starlight.Storage;
 
 namespace Starlight.Buttons;
 
-[InjectClass]
+[InjectIntoIL]
 internal class CustomMainMenuSubItemDefinition : SubMenuItemDefinition
 {
     internal SystemAction customAction;

@@ -3,6 +3,6 @@ using System;
 namespace Starlight.Storage;
 
 [AttributeUsage(AttributeTargets.Class, Inherited = false)]
-internal class InjectClass : Attribute
+internal class InjectIntoIL : Attribute
 {
 }

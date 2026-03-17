@@ -339,7 +339,7 @@ public class StarlightEntryPoint : MelonMod
             if (type == null) continue;
             try
             {
-                if (type.GetCustomAttribute<InjectClass>() == null) continue;
+                if (type.GetCustomAttribute<InjectIntoIL>() == null) continue;
                 if (!ClassInjector.IsTypeRegisteredInIl2Cpp(type))
                     ClassInjector.RegisterTypeInIl2Cpp(type, new RegisterTypeOptions() { LogSuccess = false });
             }

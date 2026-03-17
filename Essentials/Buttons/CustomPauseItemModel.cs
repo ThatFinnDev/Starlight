@@ -8,7 +8,7 @@ using Starlight.Storage;
 
 namespace Starlight.Buttons;
 
-[InjectClass]
+[InjectIntoIL]
 internal class CustomPauseItemModel : ResumePauseItemModel
 {
     internal SystemAction action;

@@ -6,7 +6,7 @@ using Starlight.Storage;
 
 namespace Starlight.Buttons.OptionsUI;
 
-[InjectClass]
+[InjectIntoIL]
 internal class CustomOptionsValuesDefinition : ScriptedValuePresetOptionDefinition
 {
     internal CustomOptionsButtonValues button;

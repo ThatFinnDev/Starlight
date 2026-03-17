@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace Starlight.Popups;
 
-[InjectClass]
+[InjectIntoIL]
 public class StarlightGridMenuList : StarlightPopUp
 {
     private Dictionary<string,(string, Sprite)> _entries;

@@ -3,7 +3,7 @@ using Starlight.Storage;
 
 namespace Starlight.Buttons;
 
-[InjectClass]
+[InjectIntoIL]
 internal class CustomMainMenuItemDefinition : LoadGameItemDefinition
 {
     internal SystemAction customAction;

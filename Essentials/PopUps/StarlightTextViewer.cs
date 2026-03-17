@@ -4,7 +4,7 @@ using Starlight.Storage;
 
 namespace Starlight.Popups;
 
-[InjectClass]
+[InjectIntoIL]
 public class StarlightTextViewer : StarlightPopUp
 {
     private string _text;

@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 
 namespace Starlight.Components;
 
-[InjectClass]
+[InjectIntoIL]
 internal class FlingMode : MonoBehaviour
 {
     private void Update()
