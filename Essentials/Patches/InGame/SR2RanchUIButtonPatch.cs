@@ -1,5 +1,4 @@
 ﻿using System;
-using Il2CppMonomiPark.SlimeRancher;
 using Starlight.Buttons;
 using Il2CppMonomiPark.SlimeRancher.UI.RanchHouse;
 
@@ -8,15 +7,15 @@ namespace Starlight.Patches.InGame;
 [HarmonyPatch(typeof(RanchHouseMenuRoot), nameof(RanchHouseMenuRoot.Awake))]
 internal static class SR2RanchUIButtonPatch
 {
-    internal static List<CustomRanchUIButton> buttons = new List<CustomRanchUIButton>();
-    internal static bool safeLock;
-    internal static bool postSafeLock;
+    internal static readonly List<CustomRanchUIButton> Buttons = new ();
+    private static bool _safeLock;
+    internal static bool PostSafeLock;
     internal static void Prefix(RanchHouseMenuRoot __instance)
     {
         if (!InjectRanchUIButtons.HasFlag()) return;
-        if (safeLock) { return; }
-        safeLock = true;
-        foreach (CustomRanchUIButton button in buttons)
+        if (_safeLock) { return; }
+        _safeLock = true;
+        foreach (var button in Buttons)
         {
             if (button.label == null || button.action == null) continue;
             try
@@ -54,6 +53,6 @@ internal static class SR2RanchUIButtonPatch
 
 
         }
-        safeLock = false;
+        _safeLock = false;
     }
 }

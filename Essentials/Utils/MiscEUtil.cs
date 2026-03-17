@@ -16,7 +16,7 @@ public static class MiscEUtil
     
     public static Texture2D CopyWithoutMipmaps(this Texture2D src)
     {
-        Texture2D tex = new Texture2D(src.width, src.height, src.format, mipChain: false);
+        var tex = new Texture2D(src.width, src.height, src.format, mipChain: false);
 
         tex.SetPixels(src.GetPixels());
         tex.Apply(updateMipmaps: false, makeNoLongerReadable: false);
@@ -24,15 +24,15 @@ public static class MiscEUtil
     }
     public static Sprite CopyWithoutMipmaps(this Sprite srcSprite)
     {
-        Texture2D src = srcSprite.texture;
-        Rect r = srcSprite.textureRect;
+        var src = srcSprite.texture;
+        var r = srcSprite.textureRect;
 
         int width  = (int)r.width;
         int height = (int)r.height;
 
-        Texture2D tex = new Texture2D(width, height, src.format, mipChain: false);
+        var tex = new Texture2D(width, height, src.format, mipChain: false);
 
-        Color[] pixels = src.GetPixels((int)r.x, (int)r.y, width, height);
+        var pixels = src.GetPixels((int)r.x, (int)r.y, width, height);
 
         tex.SetPixels(pixels);
         tex.Apply(updateMipmaps: false, makeNoLongerReadable: false);
@@ -45,8 +45,8 @@ public static class MiscEUtil
     public static void AddCustomBouncySprite(Sprite sprite)
     {
         if (sprite == null) return;
-        if(!CompanyLogoScenePatches.customBouncySprites.Contains(sprite))
-            CompanyLogoScenePatches.customBouncySprites.Add(sprite);
+        if(!CompanyLogoScenePatches.CustomBouncySprites.Contains(sprite))
+            CompanyLogoScenePatches.CustomBouncySprites.Add(sprite);
     }
     public static float4 ChangeValue(this float4 float4, int index, float value)
     {
@@ -83,10 +83,9 @@ public static class MiscEUtil
         Camera active = null;
         foreach (var c in Camera.allCameras)
         {
-            if (active == null || c.depth > active.depth)
+            if (!active || c.depth > active.depth)
                 active = c;
         }
-
         return active;
     }
 
@@ -317,4 +316,12 @@ public static class MiscEUtil
     public static bool IsInsideRange(this int number, int rangeMin, int rangeMax) => number >= rangeMin && number <= rangeMax;
 
     public static bool ContainsAny(this string str, params string[] check) => check.Any(str.Contains);
+
+    public static bool StartsWithAny(this string str, params string[] check)
+    {
+        if (check == null || check.Length == 0) return false;
+        if (str == null) return false;
+        foreach (var c in check) if (str.StartsWith(c)) return true;
+        return false;
+    }
 }

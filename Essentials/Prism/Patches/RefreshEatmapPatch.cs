@@ -7,7 +7,6 @@ namespace Starlight.Prism.Patches;
 [HarmonyPatch(typeof(SlimeDiet), nameof(SlimeDiet.RefreshEatMap))]
 internal class RefreshEatmapPatch
 {
-    // ReSharper disable once InconsistentNaming
     public static void Postfix(SlimeDiet __instance, SlimeDefinition definition)
     {
         if (PrismLibDiet.CustomEatmaps.TryGetValue(definition, out var eatMap))

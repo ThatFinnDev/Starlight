@@ -34,7 +34,7 @@ internal class GameContextPatch
             Amount = 99999999, DamageSource = damageSource,
         };
         OptionsUIRootApplyPatch.Postfix();
-        foreach (ParticleSystemRenderer particle in Resources.FindObjectsOfTypeAll<ParticleSystemRenderer>())
+        foreach (var particle in Resources.FindObjectsOfTypeAll<ParticleSystemRenderer>())
         {
             var pname = particle.gameObject.name.Replace(' ', '_');
             if (!LookupEUtil.FXLibrary.ContainsKey(particle.gameObject))
@@ -134,7 +134,7 @@ internal class GameContextPatch
             LookupEUtil.MainGameActions = new Dictionary<string, InputAction>();
             LookupEUtil.PausedActions = new Dictionary<string, InputAction>();
             LookupEUtil.DebugActions = new Dictionary<string, InputAction>();
-            foreach (InputActionMap map in gameContext.InputDirector._inputActions.actionMaps)
+            foreach (var map in gameContext.InputDirector._inputActions.actionMaps)
                 LookupEUtil.ActionMaps.Add(map.name, map);
             foreach (InputAction action in LookupEUtil.ActionMaps["MainGame"].actions)
                 LookupEUtil.MainGameActions.Add(action.name, action);

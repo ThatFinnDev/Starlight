@@ -11,7 +11,6 @@ public static class ContextShortcuts
     public static SystemContext systemContext => SystemContext.Instance;
     public static GameContext gameContext => GameContext.Instance;
     public static SceneContext sceneContext => SceneContext.Instance;
-    // ReSharper disable once InconsistentNaming
     internal static Damage _killDamage;
     public static Damage killDamage => _killDamage;
     public static AutoSaveDirector autoSaveDirector => gameContext.AutoSaveDirector;
@@ -72,7 +71,6 @@ public static class ContextShortcuts
         }
     }
 
-    // ReSharper disable PossibleNullReferenceException
     public static string mlVersion
     {
         get {

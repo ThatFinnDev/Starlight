@@ -12,8 +12,7 @@ internal static class PresetOptionsItemModelPatch
         if (!InjectOptionsButtons.HasFlag()) return __exception;
         if (__instance._presetOptionsItemDefinition!=null)
         {
-            if (__instance._presetOptionsItemDefinition is CustomOptionsValuesDefinition||
-                __instance._presetOptionsItemDefinition._referenceId.StartsWith("setting.sr2eexclude"))
+            if (__instance._presetOptionsItemDefinition is CustomOptionsValuesDefinition|| __instance._presetOptionsItemDefinition._referenceId.StartsWithAny("setting.sr2eexclude","setting.starlightexclude"))
                 return null;
         }
         return __exception;

@@ -1,9 +1,7 @@
 using System.Linq;
-using Il2CppAssets.Script.Util.Extensions;
 using Il2CppMonomiPark.SlimeRancher;
 using Il2CppMonomiPark.SlimeRancher.DataModel;
 using Il2CppMonomiPark.SlimeRancher.Persist;
-using Il2CppMonomiPark.SlimeRancher.UI.Fabricator;
 
 namespace Starlight.Patches.Saving.Fixer;
 

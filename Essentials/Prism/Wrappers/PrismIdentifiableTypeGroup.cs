@@ -1,5 +1,4 @@
 using UnityEngine.Localization;
-// ReSharper disable MemberCanBePrivate.Global
 
 namespace Starlight.Prism.Wrappers;
 

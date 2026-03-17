@@ -1,7 +1,6 @@
 using Il2CppMonomiPark.SlimeRancher.Pedia;
 
 namespace Starlight.Prism.Wrappers;
-// ReSharper disable MemberCanBePrivate.Global
 
 public class PrismIdentifiablePediaEntry : PrismPediaEntry
 {

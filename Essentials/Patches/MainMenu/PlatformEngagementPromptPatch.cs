@@ -1,8 +1,6 @@
 using System.Collections;
-using Il2CppMonomiPark.SlimeRancher.Input;
 using Il2CppMonomiPark.SlimeRancher.UI.MainMenu;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Users;
 using UnityEngine.InputSystem.Utilities;
 
 namespace Starlight.Patches.MainMenu;
@@ -10,24 +8,22 @@ namespace Starlight.Patches.MainMenu;
 [HarmonyPatch(typeof(PlatformEngagementPrompt), nameof(PlatformEngagementPrompt.Start))]
 internal static class PlatformEngagementPromptPatch
 {
-    internal static bool hasRegistered = false;
+    private static bool _hasRegistered = false;
     internal static void Postfix(PlatformEngagementPrompt __instance)
     {
         __instance.EngagementPromptTextUI.SetActive(false);
         __instance.OnInteract(new InputAction.CallbackContext());
         __instance.StartupClick = null;
-        hasRegistered = false;
+        _hasRegistered = false;
         InputSystem.onAnyButtonPress.CallOnce(
             (System.Action<InputControl>)((ee) =>
             {
-                if(hasRegistered) return;
-                hasRegistered = true;
+                if(_hasRegistered) return;
+                _hasRegistered = true;
                 ExecuteInTicks(() =>
                 {
                     if (StarlightEntryPoint.MainMenuLoaded)
-                    {
-                        GetAnyInScene<MainMenuLandingRootUI>().Awake();
-                    }
+                        GetAnyInScene<MainMenuLandingRootUI>()?.Awake();
                 }, 1);
                 
             }));

@@ -15,8 +15,8 @@ public class CustomMainMenuContainerButton : CustomMainMenuButton
 
     public void AddSubButton(CustomMainMenuButton button, bool removeFromCurrent = true)
     {
-        if (removeFromCurrent) MainMenuLandingRootUIInitPatch.buttons[button] = new HashSet<CustomMainMenuContainerButton>();
-        MainMenuLandingRootUIInitPatch.buttons[button].Add(this);
+        if (removeFromCurrent) MainMenuLandingRootUIInitPatch.Buttons[button] = new HashSet<CustomMainMenuContainerButton>();
+        MainMenuLandingRootUIInitPatch.Buttons[button].Add(this);
     }
 
     internal CustomMainMenuContainerButton(int THIS_IS_A_STUB) : base(THIS_IS_A_STUB)

@@ -1,5 +1,4 @@
 using Starlight.Prism.Data;
-// ReSharper disable NotAccessedField.Global
 
 namespace Starlight.Prism.Wrappers;
 

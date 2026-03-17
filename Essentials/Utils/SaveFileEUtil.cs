@@ -4,7 +4,6 @@ using Il2CppSystem.Linq;
 using Starlight.Enums;
 using Starlight.Storage;
 using static Starlight.Enums.StarlightError;
-// ReSharper disable MemberCanBePrivate.Global
 
 namespace Starlight.Utils;
 

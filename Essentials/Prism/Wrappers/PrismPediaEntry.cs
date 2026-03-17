@@ -3,7 +3,6 @@ using Il2CppMonomiPark.SlimeRancher.Pedia;
 using Starlight.Prism.Data;
 using Starlight.Prism.Lib;
 using UnityEngine.Localization;
-// ReSharper disable MemberCanBePrivate.Global
 
 namespace Starlight.Prism.Wrappers;
 

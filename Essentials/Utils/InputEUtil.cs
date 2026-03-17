@@ -11,7 +11,7 @@ public static class InputEUtil
     /// </summary>
     public static bool OnKey(this KeyCode key)
     {
-        if (KeyCodeInputAcquirer.Instance == null) return false;
+        if (!KeyCodeInputAcquirer.Instance) return false;
         return KeyCodeInputAcquirer.Instance.OnKey(key);
     }
     /// <summary>
@@ -19,7 +19,7 @@ public static class InputEUtil
     /// </summary>
     public static bool OnKey(this LKey key)
     {
-        if (LKeyInputAcquirer.Instance == null) return false;
+        if (!LKeyInputAcquirer.Instance) return false;
         return LKeyInputAcquirer.Instance.OnKey(key);
     }
     /// <summary>
@@ -27,7 +27,7 @@ public static class InputEUtil
     /// </summary>
     public static bool OnKey(this LMultiKey multiKey)
     {
-        if (LKeyInputAcquirer.Instance == null) return false;
+        if (!LKeyInputAcquirer.Instance) return false;
         return LKeyInputAcquirer.Instance.OnKey(multiKey);
     }
     
@@ -45,7 +45,7 @@ public static class InputEUtil
     /// </summary>
     public static bool OnKeyDown(this LKey key)
     {
-        if (LKeyInputAcquirer.Instance == null) return false;
+        if (!LKeyInputAcquirer.Instance) return false;
         return LKeyInputAcquirer.Instance.OnKeyDown(key);
     }
     /// <summary>
@@ -53,7 +53,7 @@ public static class InputEUtil
     /// </summary>
     public static bool OnKeyDown(this LMultiKey multiKey)
     {
-        if (LKeyInputAcquirer.Instance == null) return false;
+        if (!LKeyInputAcquirer.Instance) return false;
         return LKeyInputAcquirer.Instance.OnKeyDown(multiKey);
     }
 
@@ -65,7 +65,7 @@ public static class InputEUtil
     /// </summary>
     public static bool OnKeyUp(this KeyCode key)
     {
-        if (KeyCodeInputAcquirer.Instance == null) return false;
+        if (!KeyCodeInputAcquirer.Instance) return false;
         return KeyCodeInputAcquirer.Instance.OnKeyUp(key);
     }
     /// <summary>
@@ -73,7 +73,7 @@ public static class InputEUtil
     /// </summary>
     public static bool OnKeyUp(this LKey key)
     {
-        if (LKeyInputAcquirer.Instance == null) return false;
+        if (!LKeyInputAcquirer.Instance) return false;
         return LKeyInputAcquirer.Instance.OnKeyUp(key);
     }
     /// <summary>
@@ -81,7 +81,7 @@ public static class InputEUtil
     /// </summary>
     public static bool OnKeyUp(this LMultiKey multiKey)
     {
-        if (LKeyInputAcquirer.Instance == null) return false;
+        if (!LKeyInputAcquirer.Instance) return false;
         return LKeyInputAcquirer.Instance.OnKeyUp(multiKey);
     }
     

@@ -16,7 +16,6 @@ using UnityEngine.InputSystem;
 using Button = UnityEngine.UI.Button;
 using Image = UnityEngine.UI.Image;
 using Toggle = UnityEngine.UI.Toggle;
-// ReSharper disable EmptyGeneralCatchClause
 
 namespace Starlight.Menus;
 

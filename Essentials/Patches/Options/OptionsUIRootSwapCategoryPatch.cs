@@ -1,7 +1,5 @@
 using System;
-using Il2CppMonomiPark.SlimeRancher.DataModel;
 using Il2CppMonomiPark.SlimeRancher.Options;
-using Il2CppMonomiPark.SlimeRancher.Persist;
 using Il2CppMonomiPark.SlimeRancher.UI.Options;
 using Starlight.Buttons.OptionsUI;
 using Starlight.Storage;
@@ -15,7 +13,6 @@ internal static class OptionsUIRootSwapCategoryPatch
     {
         if (__instance.optionsItemModels == null) __instance.optionsItemModels = new Il2CppSystem.Collections.Generic.List<IOptionsItemModel>();
         if (!InjectOptionsButtons.HasFlag()) return;
-        //It crashes if you don't use dynamic, don't ask why, probably Interop being Interop
         dynamic c = __instance.categories[categoryIndex];
         OptionsItemCategory category = null;
         if (c.TryCast<OptionsItemCategory>() != null)
@@ -24,7 +21,7 @@ internal static class OptionsUIRootSwapCategoryPatch
         foreach (var def in category.items.ToNetList())
         {
             if (def!=null)
-                if (def is CustomOptionsValuesDefinition customDef && def.ReferenceId.StartsWith("setting.sr2eexclude"))
+                if (def is CustomOptionsValuesDefinition customDef && def.ReferenceId.StartsWithAny("setting.sr2eexclude","setting.starlightexclude"))
                 {
                     IOptionsItemModel model = null;
                     try

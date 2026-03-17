@@ -1,5 +1,4 @@
 using Il2CppMonomiPark.SlimeRancher.Pedia;
-// ReSharper disable MemberCanBePrivate.Global
 
 namespace Starlight.Prism.Wrappers;
 

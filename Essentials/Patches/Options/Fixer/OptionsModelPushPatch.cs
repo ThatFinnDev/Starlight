@@ -15,7 +15,7 @@ internal static class OptionsModelPushPatch
             foreach (var entry in persistence.OptionItems.ToNetList())
             {
                 if(entry!=null)
-                    if (entry.PersistenceKey.StartsWith("setting.sr2eexclude"))
+                    if (entry.PersistenceKey.StartsWithAny("setting.sr2eexclude","setting.starlightexclude"))
                         if(persistence.OptionItems.Contains(entry))
                             persistence.OptionItems.Remove(entry);
             }

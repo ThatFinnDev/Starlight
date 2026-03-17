@@ -5,26 +5,27 @@ namespace Starlight.Patches.Saving;
 [HarmonyPatch(typeof(SystemContext), nameof(SystemContext.GetStorageProvider))]
 internal static class RedirectSaveFilesPatch
 {
-    static StorageProvider _Provider = null;
-    static StorageProvider Provider
+    private static StorageProvider _provider = null;
+
+    private static StorageProvider provider
     {
         get
         {
-            if (_Provider == null)
+            if (_provider == null)
             {
                 var savePath = Path.Combine(StarlightEntryPoint.dataPath, "redirectedSaves");
                 Directory.CreateDirectory(savePath);
                 var prov = new FileStorageProvider(savePath);
                 prov.isInitialized = true;
-                _Provider = prov.TryCast<StorageProvider>();
+                _provider = prov.TryCast<StorageProvider>();
             }
-            return _Provider;
+            return _provider;
         }
     }
     public static bool Prefix(SystemContext __instance, ref StorageProvider __result)
     {
         if (!RedirectSaveFiles.HasFlag()) return true;
-        __result = Provider;
+        __result = provider;
         return false; 
     }
     

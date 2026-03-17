@@ -93,7 +93,6 @@ public static class NativeEUtil
 
     private static float _customTimeScale = 1f;
 
-    // ReSharper disable once InconsistentNaming
     public static float CustomTimeScale
     {
         get => _customTimeScale;
@@ -106,7 +105,6 @@ public static class NativeEUtil
         }
     }
 
-    // ReSharper disable once InconsistentNaming
     public static void TryDisableSR2Input()
     {
         try
@@ -116,7 +114,6 @@ public static class NativeEUtil
         } catch { }
     }
 
-    // ReSharper disable once InconsistentNaming
     public static void TryEnableSR2Input()
     {
         try

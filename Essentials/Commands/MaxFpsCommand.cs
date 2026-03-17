@@ -22,7 +22,7 @@ internal class MaxFpsCommand : StarlightCommand
         int duration = -1;
         if(args!=null) if(!TryParseInt(args[0], out duration, 5, true)) return false;
         
-        OptionsUIRootApplyPatch.customMaxFPS = duration;
+        OptionsUIRootApplyPatch.CustomMaxFPS = duration;
         SendMessage(translation("cmd.maxfps.success",duration));
         OptionsUIRootApplyPatch.Apply();
         return true;

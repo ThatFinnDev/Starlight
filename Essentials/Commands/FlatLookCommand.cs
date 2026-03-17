@@ -14,14 +14,14 @@ internal class FlatLookCommand : StarlightCommand
     public override bool Execute(string[] args)
     {
         if (!args.IsBetween(0, 0)) return SendNoArguments();
-        if(OptionsUIRootApplyPatch.customMasterTextureLimit==-1)
+        if(OptionsUIRootApplyPatch.CustomMasterTextureLimit==-1)
         {
-            OptionsUIRootApplyPatch.customMasterTextureLimit = int.MaxValue;
+            OptionsUIRootApplyPatch.CustomMasterTextureLimit = int.MaxValue;
             SendMessage(translation("cmd.flatlook.success"));
         }
         else
         {
-            OptionsUIRootApplyPatch.customMasterTextureLimit = -1;
+            OptionsUIRootApplyPatch.CustomMasterTextureLimit = -1;
             SendMessage(translation("cmd.flatlook.success2"));
         }
         OptionsUIRootApplyPatch.Apply();

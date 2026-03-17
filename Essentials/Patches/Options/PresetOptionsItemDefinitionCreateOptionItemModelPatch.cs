@@ -1,5 +1,4 @@
 using Il2CppMonomiPark.SlimeRancher.Options;
-using Il2CppMonomiPark.SlimeRancher.UI.Options;
 using Starlight.Buttons.OptionsUI;
 
 namespace Starlight.Patches.Options;
@@ -11,7 +10,7 @@ internal static class PresetOptionsItemDefinitionCreateOptionItemModelPatch
     static Exception Finalizer(PresetOptionsItemDefinition __instance, Exception __exception)
     {
         if (!InjectOptionsButtons.HasFlag()) return __exception;
-        if (__instance is CustomOptionsValuesDefinition && __instance.ReferenceId.StartsWith("setting.sr2eexclude"))
+        if (__instance is CustomOptionsValuesDefinition && __instance.ReferenceId.StartsWithAny("setting.sr2eexclude","setting.starlightexclude"))
             return null;
         return __exception;
     }

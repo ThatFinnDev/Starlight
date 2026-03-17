@@ -7,23 +7,21 @@ internal static class EncodingEUtil
 {
     internal static string CreateMD5(this string input)
     {
-        using (var md5 = MD5.Create())
-        {
-            byte[] inputBytes = Encoding.Unicode.GetBytes(input);
-            byte[] hashBytes = md5.ComputeHash(inputBytes);
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < hashBytes.Length; i++)
-                sb.Append(hashBytes[i].ToString("x2"));
-            return sb.ToString();
-        }
+        using var md5 = MD5.Create();
+        var inputBytes = Encoding.Unicode.GetBytes(input);
+        var hashBytes = md5.ComputeHash(inputBytes);
+        var sb = new StringBuilder();
+        foreach (var t in hashBytes)
+            sb.Append(t.ToString("x2"));
+        return sb.ToString();
     }
     internal static string EncodeToBase128(this byte[] data)
     {
         var result = new StringBuilder((data.Length * 8 + 6) / 7);
-        int storage = 0;
-        int bits = 0;
+        var storage = 0;
+        var bits = 0;
 
-        foreach (byte b in data)
+        foreach (var b in data)
         {
             storage = (storage << 8) | b;
             bits += 8;
@@ -33,20 +31,16 @@ internal static class EncodingEUtil
                 result.Append((char)((storage >> bits) & 0x7F));
             }
         }
-
         if (bits > 0) 
-        {
             result.Append((char)((storage << (7 - bits)) & 0x7F));
-        }
-
         return result.ToString();
     }
 
     internal static byte[] DecodeFromBase128(this string data)
     {
         var result = new List<byte>();
-        int storage = 0;
-        int bits = 0;
+        var storage = 0;
+        var bits = 0;
 
         foreach (char c in data)
         {

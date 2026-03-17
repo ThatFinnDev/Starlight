@@ -18,10 +18,10 @@ public class CustomRanchUIButton
         this.insertIndex = insertIndex;
         this.action = action;
 
-        foreach (CustomRanchUIButton entry in SR2RanchUIButtonPatch.buttons)
+        foreach (CustomRanchUIButton entry in SR2RanchUIButtonPatch.Buttons)
             if (entry.label == this.label) { LogError($"There is already a button with the name {this.label}"); return; }
 
-        SR2RanchUIButtonPatch.buttons.Add(this);
+        SR2RanchUIButtonPatch.Buttons.Add(this);
     }
     
     public void Remove()

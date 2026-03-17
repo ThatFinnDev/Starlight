@@ -1,13 +1,10 @@
 ﻿using Il2CppMonomiPark.SlimeRancher.UI.MainMenu;
 using System;
 using System.Runtime.InteropServices;
-using Il2CppInterop.Common;
-using Il2CppInterop.Runtime.Startup;
 using Il2CppMonomiPark.SlimeRancher.Input;
 using Il2CppMonomiPark.SlimeRancher.UI.Framework.CommonControls;
 using Il2CppMonomiPark.SlimeRancher.UI.Framework.Layout;
 using Il2CppMonomiPark.SlimeRancher.UI.MainMenu.Model;
-using Starlight.Components;
 using Starlight.Enums;
 using Starlight.Popups;
 using Starlight.Storage;
@@ -18,33 +15,30 @@ namespace Starlight.Patches.MainMenu;
 [HarmonyPatch()]
 internal static class SaveGameRootUIPatch
 {
-    static Button exportButton; 
-    static Button iconButton; 
-    static bool addedAction = false;
-    static InputActionReference onPress;
-    private static InputEvent inputEvent;
-    internal static SaveGamesRootUI ui;
+    private static Button _exportButton;
+    private static Button _iconButton;
+    private static bool _addedAction;
+    private static InputActionReference _onPress;
+    private static InputEvent _inputEvent;
+    private static SaveGamesRootUI _ui;
 
-    private static Action<InputEventData> action = (Action<InputEventData>)((data) =>
-    {
-        OnExportButtonPressed();
-    });
+    private static readonly Action<InputEventData> Action = _ => OnExportButtonPressed();
     static void OnExportButtonPressed()
     {
-        if (ui == null) return;
-        if (!exportButton.gameObject.active) return;
-        var dataBehaviours = ui.FetchButtonBehaviorData();
-        var load = dataBehaviours[ui._selectedModelIndex];
+        if (!_ui) return;
+        if (!_exportButton.gameObject.active) return;
+        var dataBehaviours = _ui.FetchButtonBehaviorData();
+        var load = dataBehaviours[_ui._selectedModelIndex];
         var loadGameBehaviorModel = load.TryCast<LoadGameBehaviorModel>();
         if (loadGameBehaviorModel==null)
         {
-            OPENFILENAME ofn = new OPENFILENAME();
+            var ofn = new OPENFILENAME();
             if (GetOpenFileName(ofn))
             {
-                string filePath = ofn.lpstrFile;
+                var filePath = ofn.lpstrFile;
                 if (string.IsNullOrEmpty(filePath)) return;
                 var savefile = StarlightSaveFileV01.Load(File.ReadAllBytes(filePath));
-                var error = SaveFileEUtil.ImportSaveV01(savefile, ui._selectedModelIndex + 1, true);
+                var error = SaveFileEUtil.ImportSaveV01(savefile, _ui._selectedModelIndex + 1, true);
                 if (error != StarlightError.NoError)
                 {
                     Log(translation("messages.save.import.error",error));
@@ -56,10 +50,10 @@ internal static class SaveGameRootUIPatch
         }
         else
         {
-            SAVEFILENAME sfn = new SAVEFILENAME();
+            var sfn = new SAVEFILENAME();
             if (GetSaveFileName(sfn))
             {
-                string filePath = sfn.lpstrFile;
+                var filePath = sfn.lpstrFile;
                 if (string.IsNullOrEmpty(filePath)) return;
                 
                 var error = SaveFileEUtil.ExportSaveV01(loadGameBehaviorModel.GameDataSummary, out StarlightSaveFileV01 savefile);
@@ -75,20 +69,10 @@ internal static class SaveGameRootUIPatch
         }
     }
 
-    /*[HarmonyPostfix, HarmonyPatch(typeof(SaveGamesRootUI), nameof(SaveGamesRootUI.DeInit))]
-    internal static void DeInit()
-    {
-        if(addedAction)
-        {
-            inputEvent.remove_Performed(action);
-            addedAction = false;
-        }
-    }*/
-
 
     static void ScrollTo(ScrollRect scroll,RectTransform target)
     {
-        float minus = 0f;
+        var minus = 0f;
             
         foreach (var child in scroll.content.transform.GetChildren())
         {
@@ -97,15 +81,13 @@ internal static class SaveGameRootUIPatch
             break;
         }
         var siblingBefore = target.parent.GetChild(target.GetSiblingIndex() - 6);
-        float upperBorder = (siblingBefore.gameObject.activeSelf
-            ? Math.Abs(siblingBefore.GetComponent<RectTransform>().offsetMin.y)
-            : 0f)+minus;
+        var upperBorder = (siblingBefore.gameObject.activeSelf ? Math.Abs(siblingBefore.GetComponent<RectTransform>().offsetMin.y) : 0f)+minus;
 
         var siblingAfterIndex = target.GetSiblingIndex() + 0;
         if (target.parent.childCount <= siblingAfterIndex) siblingAfterIndex = target.parent.childCount - 1;
         var siblingAfter = target.parent.GetChild(siblingAfterIndex);
         
-        float lowerBorder = Mathf.Abs(siblingAfter.GetComponent<RectTransform>().offsetMax.y)+minus;
+        var lowerBorder = Mathf.Abs(siblingAfter.GetComponent<RectTransform>().offsetMax.y)+minus;
 
         if (upperBorder > scroll.content.anchoredPosition.y)
             scroll.content.anchoredPosition = new Vector2(scroll.content.anchoredPosition.x,upperBorder);
@@ -118,7 +100,7 @@ internal static class SaveGameRootUIPatch
     {
         try
         {
-            ScrollRect rect = __instance.gameObject.GetObjectRecursively<ScrollRect>("ButtonsScrollView");
+            var rect = __instance.gameObject.GetObjectRecursively<ScrollRect>("ButtonsScrollView");
             if (rect == null) return;
             int activeIndex = 0;
             foreach (var child in rect.content.transform.GetChildren())
@@ -141,36 +123,36 @@ internal static class SaveGameRootUIPatch
     {
         StarlightEntryPoint.BaseUIAddSliders.Add(__instance);
         if (!AllowSaveExport.HasFlag()) return;
-        ui = __instance;
+        _ui = __instance;
         if (__instance.name.Contains("SRLE")) return;
         ExecuteInTicks((() =>
         {
-            RectTransform actionPanel = ui.gameObject.GetObjectRecursively<RectTransform>("ActionPanel");
+            var actionPanel = _ui.gameObject.GetObjectRecursively<RectTransform>("ActionPanel");
             if (actionPanel.GetObjectRecursively<Button>("ExportButton") != null) return;
-            iconButton = actionPanel.GetObjectRecursively<Button>("IconButton");
-            exportButton = GameObject.Instantiate(iconButton, actionPanel);
-            exportButton.name = "ExportButton";
-            exportButton.onClick.RemoveAllListeners();
-            RectTransform exportRectTransform = exportButton.GetComponent<RectTransform>();
+            _iconButton = actionPanel.GetObjectRecursively<Button>("IconButton");
+            _exportButton = GameObject.Instantiate(_iconButton, actionPanel);
+            _exportButton.name = "ExportButton";
+            _exportButton.onClick.RemoveAllListeners();
+            var exportRectTransform = _exportButton.GetComponent<RectTransform>();
             exportRectTransform.anchorMax = new Vector2(1,1);
             exportRectTransform.anchorMin = new Vector2(1,1);
-            exportButton.transform.localPosition = new Vector3(566.4542f, 850.0162f, -16.1379f);
-            exportButton.transform.GetChild(0).GetChild(0).GetComponent<Image>().sprite = EmbeddedResourceEUtil.LoadSprite("Assets.icon.png").CopyWithoutMipmaps();
-            var iconRect = exportButton.transform.GetChild(0).GetChild(0).GetComponent<RectTransform>();
+            _exportButton.transform.localPosition = new Vector3(566.4542f, 850.0162f, -16.1379f);
+            _exportButton.transform.GetChild(0).GetChild(0).GetComponent<Image>().sprite = EmbeddedResourceEUtil.LoadSprite("Assets.icon.png").CopyWithoutMipmaps();
+            var iconRect = _exportButton.transform.GetChild(0).GetChild(0).GetComponent<RectTransform>();
             iconRect.sizeDelta *= 0.85f;
-            if(onPress==null) onPress = Get<InputActionReference>("MainGame/Open Map");
-            if(inputEvent==null) inputEvent = Get<InputEvent>("OpenMap");
-            var inputEventDisplay = exportButton.gameObject.GetObjectRecursively<InputEventDisplay>("KeyIcon");
-            inputEventDisplay._inputEvent = inputEvent;
+            if(_onPress==null) _onPress = Get<InputActionReference>("MainGame/Open Map");
+            if(_inputEvent==null) _inputEvent = Get<InputEvent>("OpenMap");
+            var inputEventDisplay = _exportButton.gameObject.GetObjectRecursively<InputEventDisplay>("KeyIcon");
+            inputEventDisplay._inputEvent = _inputEvent;
             inputEventDisplay.HandleKeysChanged();
-            exportButton.GetComponent<InputEventButton>().InputEvent = inputEvent;
-            exportButton.GetComponent<InputEventButton>().Awake();
-            exportButton.GetComponent<LayoutManager>().ForceTreeRebuild();
-            onPress.action.Enable();
-            if(!addedAction)
+            _exportButton.GetComponent<InputEventButton>().InputEvent = _inputEvent;
+            _exportButton.GetComponent<InputEventButton>().Awake();
+            _exportButton.GetComponent<LayoutManager>().ForceTreeRebuild();
+            _onPress?.action.Enable();
+            if(!_addedAction)
             {
-                inputEvent.add_Performed(action);
-                addedAction = true;
+                _inputEvent?.add_Performed(Action);
+                _addedAction = true;
             }
         }), 2);
     }

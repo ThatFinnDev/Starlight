@@ -14,7 +14,7 @@ internal static class OptionsDirectorPullSettingsPatch
             foreach (var entry in optionsData.OptionItems.ToNetList())
             {
                 if(entry!=null)
-                    if (entry.PersistenceKey.StartsWith("setting.sr2eexclude"))
+                    if (entry.PersistenceKey.StartsWithAny("setting.sr2eexclude","setting.starlightexclude"))
                         if(optionsData.OptionItems.Contains(entry))
                             optionsData.OptionItems.Remove(entry);
             }

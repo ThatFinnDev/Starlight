@@ -4,7 +4,6 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
-// ReSharper disable AssignNullToNotNullAttribute
 
 namespace Starlight.Saving;
 

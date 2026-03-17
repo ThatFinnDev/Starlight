@@ -1,6 +1,5 @@
 using Il2CppMonomiPark.SlimeRancher.UI.ButtonBehavior;
 using Il2CppTMPro;
-using UnityEngine.UI;
 
 namespace Starlight.Patches.MainMenu;
 

@@ -1,12 +1,10 @@
 using Il2CppMonomiPark.SlimeRancher.Audio;
 using Starlight.Enums.Sounds;
-// ReSharper disable MemberCanBePrivate.Global
 
 namespace Starlight.Utils;
 
 public static class AudioEUtil
 {
-    // ReSharper disable once InconsistentNaming
     internal static readonly Dictionary<MenuSound, SECTR_AudioCue> _menuSounds = new Dictionary<MenuSound, SECTR_AudioCue>();
 
     public static Dictionary<MenuSound, SECTR_AudioCue> menuSounds => _menuSounds;

@@ -2,7 +2,6 @@ using Il2CppMonomiPark.SlimeRancher.Economy;
 
 namespace Starlight.Utils;
 
-// ReSharper disable MemberCanBePrivate.Global
 public static class CurrencyEUtil
 {
     public static ICurrency ToICurrency(this CurrencyDefinition currencyDefinition) => currencyDefinition.TryCast<ICurrency>();

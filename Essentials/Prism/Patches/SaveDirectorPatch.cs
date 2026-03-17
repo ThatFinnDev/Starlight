@@ -10,7 +10,6 @@ namespace Starlight.Prism.Patches;
 // Starlight's patch loads it
 internal static class SaveDirectorPatch
 {
-    // ReSharper disable once InconsistentNaming
     internal static void Postfix(AutoSaveDirector __instance)
     {
         PrismShortcuts.EmptyTranslation = AddTranslation("");

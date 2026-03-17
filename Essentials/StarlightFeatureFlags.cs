@@ -5,10 +5,6 @@ using System.Xml;
 using MelonLoader;
 using Starlight.Enums.Features;
 using Starlight.Managers;
-// ReSharper disable InconsistentNaming
-// ReSharper disable ClassNeverInstantiated.Global
-// ReSharper disable MemberCanBePrivate.Global
-// ReSharper disable UnusedMethodReturnValue.Local
 
 namespace Starlight;
 
@@ -147,10 +143,10 @@ public static class StarlightFeatureFlags
 
         try { xmlDoc.Load(flagPath); } catch { }
 
-        XmlElement root = xmlDoc["StarlightFeatureFlags"];
+        var root = xmlDoc["StarlightFeatureFlags"];
         if (root == null) return; 
         
-        XmlElement strings = root["FeatureStringValue"];
+        var strings = root["FeatureStringValue"];
         if (strings != null)
         {
             if(strings["LAST_StarlightVERSION"]!=null)
@@ -164,7 +160,7 @@ public static class StarlightFeatureFlags
                             _featureStrings[stringValue] = stringElement.GetAttribute("value");
         }
 
-        XmlElement flags = root["FeatureFlags"];
+        var flags = root["FeatureFlags"];
         if (flags != null)
             foreach (XmlElement flagElement in flags.ChildNodes)
                 if (Enum.TryParse(flagElement.Name, out FeatureFlag flag))
@@ -173,7 +169,7 @@ public static class StarlightFeatureFlags
                             flag.SetFlag(isEnabled);
                     
                 
-        XmlElement ints = root["FeatureIntegerValues"];
+        var ints = root["FeatureIntegerValues"];
         if (ints != null)
             foreach (XmlElement intElement in ints.ChildNodes)
                 if (Enum.TryParse(intElement.Name, out FeatureIntegerValue intValue))
@@ -205,9 +201,9 @@ public static class StarlightFeatureFlags
             case "beta": addedFlags= extraBetaFlags; break;
         }
         if(addedFlags!=null)
-            foreach (FeatureFlag flag in addedFlags)
+            foreach (var flag in addedFlags)
                 DefaultFlags.Add(flag);
-        foreach (FeatureFlag flag in DefaultFlags)
+        foreach (var flag in DefaultFlags)
             flag.EnableFlag();
         _featureInts = new Dictionary<FeatureIntegerValue, int>(DefaultFeatureInts);
         _featureStrings = new Dictionary<FeatureStringValue, string>(DefaultFeatureStrings);
@@ -220,7 +216,7 @@ public static class StarlightFeatureFlags
 
         string[] launchArgs = Environment.GetCommandLineArgs();
         var usedArgs = new List<string>();
-        foreach (string arg in launchArgs)
+        foreach (var arg in launchArgs)
         {
             if (arg.StartsWith("-starlight.") && arg.Contains("="))
             {
@@ -329,7 +325,7 @@ public static class StarlightFeatureFlags
         if (!RequirementsMap.TryGetValue(featureFlag, out var value)) return true;
         if(value==null) return true;
         if(RequirementsMap[featureFlag].Length==0) return true;
-        foreach (FFR req in RequirementsMap[featureFlag])
+        foreach (var req in RequirementsMap[featureFlag])
         {
             if(req==null) continue;
             if (req is FFRActivated activated)

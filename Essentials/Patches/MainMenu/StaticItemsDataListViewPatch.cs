@@ -1,7 +1,4 @@
-using Il2CppMonomiPark.SlimeRancher.UI.ButtonBehavior;
 using Il2CppMonomiPark.SlimeRancher.UI.Framework.CommonControls;
-using Il2CppMonomiPark.SlimeRancher.UI.MainMenu;
-using Il2CppTMPro;
 
 namespace Starlight.Patches.MainMenu;
 

@@ -1,5 +1,4 @@
 using System.Linq;
-// ReSharper disable MemberCanBePrivate.Global
 
 namespace Starlight.Utils;
 

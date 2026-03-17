@@ -12,7 +12,7 @@ internal static class GetSR2FontPatch
         if (__instance.GetComponent<MainMenuButton>() != null)
         {
             if (StarlightEntryPoint.Sr2FontAsset != null) return;
-            TextMeshProUGUI label = __instance.gameObject.GetObjectRecursively<TextMeshProUGUI>("Button_Label");
+            var label = __instance.gameObject.GetObjectRecursively<TextMeshProUGUI>("Button_Label");
             if (label != null) StarlightEntryPoint.Sr2FontAsset = label.font;
             StarlightEntryPoint.SetupFonts();
         }

@@ -17,20 +17,20 @@ internal static class SR2PauseDirectorPatch
 }
 internal static class SR2PauseMenuButtonPatch
 {
-    internal static List<CustomPauseMenuButton> buttons = new List<CustomPauseMenuButton>();
-    internal static bool safeLock;
-    internal static bool postSafeLock;
+    internal static readonly List<CustomPauseMenuButton> buttons = new ();
+    internal static bool SafeLock;
+    internal static bool PostSafeLock;
     internal static void Prefix(PauseMenuRoot __instance)
     {
         if (!InjectPauseButtons.HasFlag()) return;
-        if (safeLock) { return; }
-        safeLock = true;
+        if (SafeLock) { return; }
+        SafeLock = true;
         try
         {
-            PauseMenuRoot pauseMenuRoot = __instance;
-            PauseItemModelList pauseItemModelList = pauseMenuRoot.pauseItemModelList;
-            Il2CppSystem.Collections.Generic.List<PauseItemModel> items = pauseItemModelList.items;
-            foreach (CustomPauseMenuButton button in buttons)
+            var pauseMenuRoot = __instance;
+            var pauseItemModelList = pauseMenuRoot.pauseItemModelList;
+            var items = pauseItemModelList.items;
+            foreach (var button in buttons)
             {
                 if (button.label == null || button.action == null) continue;
                 try
@@ -69,10 +69,7 @@ internal static class SR2PauseMenuButtonPatch
                         items.Insert(Math.Clamp(button.insertIndex,0,items.Count), button._model);
 
                 }
-                catch (Exception e)
-                {
-                    LogError(e);
-                }
+                catch (Exception e) { LogError(e); }
                 
             }
             
@@ -81,6 +78,6 @@ internal static class SR2PauseMenuButtonPatch
             
         }
         catch (Exception e) { LogError(e);}
-        safeLock = false;
+        SafeLock = false;
     }
 }

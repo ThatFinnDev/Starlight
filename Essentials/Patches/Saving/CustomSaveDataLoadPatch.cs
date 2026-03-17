@@ -12,31 +12,32 @@ namespace Starlight.Patches.Saving;
 [HarmonyPatch(typeof(GameModelPushHelpers), nameof(GameModelPushHelpers.PushGame))]
 internal static class CustomSaveDataLoadPatch
 {
-    static Dictionary<StarlightExpansionV01, (RootSave, LoadingGameSessionData)> rootSaves = new();
-    static Dictionary<StarlightExpansionV01, LoadingGameSessionData> noRootSaves = new();
-    internal static string prefix = "StarlightDataV01";
-    internal static string prefixown = "StarlightOwnDataV01";
+    private static Dictionary<StarlightExpansionV01, (RootSave, LoadingGameSessionData)> _rootSaves = new();
+    private static Dictionary<StarlightExpansionV01, LoadingGameSessionData> _noRootSaves = new();
+    internal const string DataPrefix = "StarlightDataV01";
+    internal const string DataPrefixOwn = "StarlightOwnDataV01";
+
     internal static void ExecSaveDataReceived()
     {
         foreach (var expansion in StarlightEntryPoint.ExpansionV01S)
-            if (rootSaves.ContainsKey(expansion))
-                try { expansion.OnCustomSaveDataReceived(rootSaves[expansion].Item1, rootSaves[expansion].Item2); } 
+            if (_rootSaves.ContainsKey(expansion))
+                try { expansion.OnCustomSaveDataReceived(_rootSaves[expansion].Item1, _rootSaves[expansion].Item2); } 
                 catch (Exception e) { LogError(e); }
-            else if(noRootSaves.ContainsKey(expansion))
-                try { expansion.OnNoCustomSaveDataReceived(noRootSaves[expansion]); }
+            else if(_noRootSaves.ContainsKey(expansion))
+                try { expansion.OnNoCustomSaveDataReceived(_noRootSaves[expansion]); }
                 catch (Exception e) { LogError(e); }
-        rootSaves = new Dictionary<StarlightExpansionV01, (RootSave, LoadingGameSessionData)>();
-        noRootSaves = new Dictionary<StarlightExpansionV01, LoadingGameSessionData>();
+        _rootSaves = new Dictionary<StarlightExpansionV01, (RootSave, LoadingGameSessionData)>();
+        _noRootSaves = new Dictionary<StarlightExpansionV01, LoadingGameSessionData>();
     }
     internal static void Prefix(ActorIdProvider actorIdProvider, ISaveReferenceTranslation saveReferenceTranslation, GameV09 gameState, GameModel gameModel)
     {
         bool hasExecutedOwn = false;
         foreach (var entry in gameState.ZoneIndex.IndexTable)
-            if (entry.StartsWith(prefixown))
+            if (entry.StartsWith(DataPrefixOwn))
             {
                 try
                 {
-                    string remaining = entry.Substring(prefixown.Length);
+                    string remaining = entry.Substring(DataPrefixOwn.Length);
                     var rawBytes = remaining.DecodeFromBase128();
                     var rootSave = RootSave.FromBytes<StarlightOptionsButtonManager.CustomOptionsInGameSave>(rawBytes);
                     var sessionData = new LoadingGameSessionData(actorIdProvider, saveReferenceTranslation, saveReferenceTranslation.ToNonIVariant(), gameState, gameModel);
@@ -52,13 +53,13 @@ internal static class CustomSaveDataLoadPatch
             }catch (Exception e) { LogError(e); }
         
         
-        rootSaves = new Dictionary<StarlightExpansionV01, (RootSave, LoadingGameSessionData)>();
-        noRootSaves = new Dictionary<StarlightExpansionV01, LoadingGameSessionData>();
+        _rootSaves = new Dictionary<StarlightExpansionV01, (RootSave, LoadingGameSessionData)>();
+        _noRootSaves = new Dictionary<StarlightExpansionV01, LoadingGameSessionData>();
         var executedExpansions = new List<StarlightExpansionV01>();
         foreach (var entry in gameState.ZoneIndex.IndexTable)
-            if (entry.StartsWith(prefix))
+            if (entry.StartsWith(DataPrefix))
             {
-                string remaining = entry.Substring(prefix.Length);
+                string remaining = entry.Substring(DataPrefix.Length);
                 
                 if (remaining.Length >= 32)
                 {
@@ -76,14 +77,13 @@ internal static class CustomSaveDataLoadPatch
                                 {
                                     var rawBytes = remaining.Substring(32).DecodeFromBase128();
                                     rootSave = RootSave.FromBytes(rawBytes);
-                                    if (rootSave == null) throw new Exception("Save Data is null!");;
-                                    rootSaves.Add(expansion, (rootSave, sessionData));
+                                    if (rootSave == null) throw new Exception("Save Data is null!");
+                                    _rootSaves.Add(expansion, (rootSave, sessionData));
                                     executedExpansions.Add(expansion);
                                 }
                                 catch (Exception e)
                                 {
-                                    LogError(
-                                        $"Failed to save custom save data for expansion {info.Name}: {e}");
+                                    LogError($"Failed to save custom save data for expansion {info.Name}: {e}");
                                 }
                                 if(rootSave!=null)
                                     try
@@ -101,7 +101,7 @@ internal static class CustomSaveDataLoadPatch
                 try
                 {
                     var sessionData = new LoadingGameSessionData(actorIdProvider, saveReferenceTranslation, saveReferenceTranslation.ToNonIVariant(), gameState, gameModel);
-                    noRootSaves.Add(expansion, sessionData);
+                    _noRootSaves.Add(expansion, sessionData);
 
                     expansion.OnEarlyNoCustomSaveDataReceived(sessionData);
                 }

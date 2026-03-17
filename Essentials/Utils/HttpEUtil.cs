@@ -13,7 +13,8 @@ public static class HttpEUtil
 {
     private static readonly Dictionary<Image,string> OnGoingImages = new ();
     private static readonly Dictionary<RawImage,string> OnGoingRawImages = new ();
-    static Texture2D ResizeTexture(Texture2D source, int newWidth, int newHeight)
+
+    private static Texture2D ResizeTexture(Texture2D source, int newWidth, int newHeight)
     {
         if (newWidth <= 0 || newHeight <= 0) return source;
         var rt = RenderTexture.GetTemporary(newWidth, newHeight);

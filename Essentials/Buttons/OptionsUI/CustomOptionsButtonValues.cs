@@ -35,11 +35,11 @@ internal class CustomOptionsButtonValues : CustomOptionsButton
         
         instance.name = label.GetLocalizedString().Replace(" ", "");
         instance._wrapAround = wrapAround;
-        var partID = "sr2eexclude"+MiscEUtil.GetRandomString(20);
+        var partID = "starlightexclude"+MiscEUtil.GetRandomString(20);
         while (true)
         {
             if (usedIds.Contains(partID))
-                partID = "sr2eexclude" + MiscEUtil.GetRandomString(20);
+                partID = "starlightexclude" + MiscEUtil.GetRandomString(20);
             else break;
         }
 

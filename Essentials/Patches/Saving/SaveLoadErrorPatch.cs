@@ -1,5 +1,4 @@
 using Il2CppMonomiPark.SlimeRancher;
-using Il2CppMonomiPark.SlimeRancher.DataModel;
 
 namespace Starlight.Patches.Saving;
 

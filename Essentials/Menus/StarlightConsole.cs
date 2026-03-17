@@ -8,7 +8,6 @@ using Starlight.Managers;
 using Starlight.Storage;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
-// ReSharper disable EmptyGeneralCatchClause
 
 namespace Starlight.Menus;
 

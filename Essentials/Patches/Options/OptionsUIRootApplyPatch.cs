@@ -5,35 +5,35 @@ namespace Starlight.Patches.Options;
 [HarmonyPatch(typeof(OptionsUIRoot), nameof(OptionsUIRoot.ApplyChanges))]
 internal static class OptionsUIRootApplyPatch
 {
-    internal static int realMasterTextureLimit = 0;
-    internal static int customMasterTextureLimit = -1;
-    internal static int customMaxFPS = -1;
-    private static bool isCheckingFPS = false;
+    internal static int CustomMasterTextureLimit = -1;
+    internal static int CustomMaxFPS = -1;
+    private static int _realMasterTextureLimit = 0;
+    private static bool _isCheckingFPS = false;
 
     public static void Apply()
     {
-        if (customMasterTextureLimit == -1)
-            QualitySettings.masterTextureLimit = realMasterTextureLimit;
+        if (CustomMasterTextureLimit == -1)
+            QualitySettings.masterTextureLimit = _realMasterTextureLimit;
         else
-            QualitySettings.masterTextureLimit = customMasterTextureLimit;
+            QualitySettings.masterTextureLimit = CustomMasterTextureLimit;
         
-        if(!isCheckingFPS) CheckCustomFPS();
+        if(!_isCheckingFPS) CheckCustomFPS();
     }
 
     public static void CheckCustomFPS()
     {
-        if (customMaxFPS != -1)
+        if (CustomMaxFPS != -1)
         {
-            isCheckingFPS = true;
+            _isCheckingFPS = true;
             QualitySettings.vSyncCount = 0;
-            Application.targetFrameRate = customMaxFPS;
+            Application.targetFrameRate = CustomMaxFPS;
             ExecuteInTicks((() => CheckCustomFPS()), 5);
         }
-        else isCheckingFPS = false;
+        else _isCheckingFPS = false;
     }
     public static void Postfix()
     {
-        realMasterTextureLimit = QualitySettings.masterTextureLimit;
+        _realMasterTextureLimit = QualitySettings.masterTextureLimit;
         Apply();
     }
 }

@@ -1,5 +1,4 @@
 using Il2CppMonomiPark.SlimeRancher.DataModel;
-// ReSharper disable MemberCanBePrivate.Global
 
 namespace Starlight.Utils;
 

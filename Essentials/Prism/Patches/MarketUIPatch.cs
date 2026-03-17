@@ -10,7 +10,6 @@ namespace Starlight.Prism.Patches;
 internal static class MarketUIPatch
 {
     [HarmonyPrefix,HarmonyPriority(-9999999),HarmonyPatch(nameof(MarketUI.Start))]
-    // ReSharper disable once InconsistentNaming
     public static void Prefix(MarketUI __instance)
     {
         var plortEntries = new List<PlortEntry>(__instance._config._plorts);
@@ -31,7 +30,6 @@ internal static class MarketUIPatch
     }   
     
     [HarmonyPostfix,HarmonyPriority(-9999999),HarmonyPatch(nameof(MarketUI.Start))]
-    // ReSharper disable once InconsistentNaming
     public static void Postfix(MarketUI __instance)
     {
         __instance._config._plorts = __instance._config._plorts.Take(34).ToArray();

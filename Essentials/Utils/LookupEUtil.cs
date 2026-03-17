@@ -6,8 +6,6 @@ using Il2CppMonomiPark.SlimeRancher.Weather;
 using Il2CppSystem.Linq;
 using Starlight.Enums;
 using UnityEngine.InputSystem;
-// ReSharper disable MemberCanBePrivate.Global
-// ReSharper disable CollectionNeverQueried.Global
 
 namespace Starlight.Utils;
 
@@ -18,7 +16,7 @@ public static class LookupEUtil
     internal static Dictionary<string, InputActionMap> ActionMaps = new ();
     internal static Dictionary<string, InputAction> MainGameActions = new ();
     internal static Dictionary<string, InputAction> PausedActions = new ();
-    public static Dictionary<string, InputAction> DebugActions = new ();
+    internal static Dictionary<string, InputAction> DebugActions = new ();
     internal static IdentifiableTypeGroupList IdentifiableTypeGroupList;
 
     
