@@ -97,7 +97,7 @@ internal class SR2ENativeDebugUI : SR2EMenu
     [HideFromIl2Cpp] public DebugUI OpenEntries(params DebugUIEntry[] buttons)
     {
         foreach (var ui in debugUIs) ui.gameObject.SetActive(false);
-        var instance = Instantiate(debugUIPrefab, null);
+        var instance = Instantiate(debugUIPrefab.gameObject, null as Transform);
         instance.transform.parentInternal = transform;
         var debugUI = instance.GetComponent<DebugUI>();
         debugUIs.Add(debugUI);

@@ -1,4 +1,7 @@
-﻿namespace SR2E.Commands;
+﻿using Il2CppMonomiPark.SlimeRancher.Player;
+using Unity.Mathematics;
+
+namespace SR2E.Commands;
 
 internal class GiveCommand : SR2ECommand
 {
@@ -30,9 +33,44 @@ internal class GiveCommand : SR2ECommand
         int amount = 1;
         if (args.Length == 2) if(!TryParseInt(args[1], out amount,1, true)) return false;
 
+
+
+        var slotID = -1;
+        var i = -1;
+        foreach (var slot in sceneContext.PlayerState.Ammo.Slots)
+        {
+            i++;
+            if (!slot.IsUnlocked) continue;
+            if (slot.Id.ReferenceId != type.ReferenceId) continue;
+            slotID = i;
+            break;
+        }
+        if (slotID == -1)
+        {
+            i = -1;
+            foreach (var slot in sceneContext.PlayerState.Ammo.Slots)
+            {
+                i++;
+                if (!slot.IsUnlocked) continue;
+                if (slot.Count==0) continue;
+                slotID = i;
+                break;
+            }
+        }
+        if (slotID == -1)
+            return SendError(translation("cmd.give.nospace"));    
+        if (type.TryCast<SlimeDefinition>()!=null)
+        {
+            var data = new AmmoSlot.AmmoMetadata();
+            data.Id = type; 
+            data.Emotions = new float4();
+            sceneContext.PlayerState.Ammo.MaybeAddToSpecificSlot(data, slotID, amount, false);
+        }
+        else
+        {
+            sceneContext.PlayerState.Ammo.MaybeAddResource(type, slotID, amount, false);
+        }
         
-        for (int i = 0; i < amount; i++)
-            sceneContext.PlayerState.Ammo.MaybeAddToSlot(type, null,type.GetAppearanceSet());
 
         SendMessage(translation("cmd.give.success",amount,itemName));
         return true;

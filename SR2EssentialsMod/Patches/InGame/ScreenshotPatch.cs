@@ -1,10 +1,14 @@
+/*
+ 
+    BROKE IN 1.2.0 
+ 
 using Il2CppMonomiPark.SlimeRancher.UI.Map;
 using Il2CppMonomiPark.SlimeRancher.UI.Pause;
 using SR2E.Menus;
 
 namespace SR2E.Patches.InGame;
 
-[HarmonyPatch(typeof(GameContext), nameof(GameContext.TakeScreenshot))]
+[HarmonyPatch(typeof(GameContext), nameof(GameContext.))]
 internal static class ScreenshotPatch
 {
     internal static System.Collections.IEnumerator WaitForUnpause()
@@ -24,4 +28,4 @@ internal static class ScreenshotPatch
             MelonCoroutines.Start(WaitForUnpause());
         }
     }
-}
+}*/

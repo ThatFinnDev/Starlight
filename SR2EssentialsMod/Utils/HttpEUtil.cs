@@ -107,7 +107,7 @@ public static class HttpEUtil
         }
 
         Texture2D texture = new Texture2D(2, 2);
-        bool loaded = texture.LoadImage(imageBytes,false);
+        bool loaded = ImageConversion.LoadImage(texture, imageBytes, false);
 
         if (!loaded)
         {

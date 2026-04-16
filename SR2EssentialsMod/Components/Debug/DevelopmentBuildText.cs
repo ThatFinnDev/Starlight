@@ -15,7 +15,7 @@ internal class DevelopmentBuildText : MonoBehaviour
     {
         string text = "Development Build";
 
-        GUIStyle style = new GUIStyle(GUI.skin.label);
+        var style = GUI.skin.label;
         style.fontSize = fontSize;
         style.alignment = TextAnchor.LowerRight;
 

@@ -8,3 +8,4 @@ internal class CustomMainMenuItemDefinition : LoadGameItemDefinition
 {
     internal System.Action customAction;
 }
+

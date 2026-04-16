@@ -15,7 +15,7 @@ internal static class SaveFixerPushActorData
         catch (Exception e) { return true; }
         return false;
     }
-    internal static bool Prefix(GameModel gameModel, ActorDataV02 actorData, ILoadReferenceTranslation loadReferenceTranslation)
+    internal static bool Prefix(GameModel gameModel, ActorDataV04 actorData, ILoadReferenceTranslation loadReferenceTranslation)
     {
         
         if (!SR2EEntryPoint.disableFixSaves)

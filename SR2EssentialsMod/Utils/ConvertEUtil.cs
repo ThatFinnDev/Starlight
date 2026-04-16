@@ -20,14 +20,14 @@ public static class ConvertEUtil
         if (string.IsNullOrEmpty(base64)) return null;
         byte[] bytes = System.Convert.FromBase64String(base64);
         Texture2D texture = new Texture2D(2, 2);
-        if (texture.LoadImage(bytes, false)) return texture;
+        if (ImageConversion.LoadImage(texture, bytes,false)) return texture;
         return null;
     }
     public static Texture2D BytesToTexture2D(byte[] bytes)
     {
         if (bytes==null) return null;
         Texture2D texture = new Texture2D(2, 2);
-        if (texture.LoadImage(bytes, false)) return texture;
+        if (ImageConversion.LoadImage(texture, bytes,false)) return texture;
         return null;
     }
     public static byte[] Texture2DToBytesPNG(Texture2D texture)

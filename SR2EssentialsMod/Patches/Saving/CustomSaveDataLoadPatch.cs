@@ -27,7 +27,7 @@ internal static class CustomSaveDataLoadPatch
         rootSaves = new Dictionary<SR2EExpansionV3, (RootSave, LoadingGameSessionData)>();
         noRootSaves = new Dictionary<SR2EExpansionV3, LoadingGameSessionData>();
     }
-    internal static void Prefix(ActorIdProvider actorIdProvider, ISaveReferenceTranslation saveReferenceTranslation, GameV09 gameState, GameModel gameModel)
+    internal static void Prefix(ActorIdProvider actorIdProvider, ISaveReferenceTranslation saveReferenceTranslation, GameV10 gameState, GameModel gameModel)
     {
         bool hasExecutedOwn = false;
         foreach (var entry in gameState.ZoneIndex.IndexTable)

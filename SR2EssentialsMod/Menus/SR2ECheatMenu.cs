@@ -48,9 +48,9 @@ public class SR2ECheatMenu : SR2EMenu
     SR2ECheatMenuButton infEnergyButton;
     SR2ECheatMenuButton infHealthButton;
     SR2ECheatMenuButton removeFogButton;
-    SR2ECheatMenuButton betterScreenshotButton;
+    //SR2ECheatMenuButton betterScreenshotButton;
     internal static bool removeFog = false;
-    internal static bool betterScreenshot = false;
+    //internal static bool betterScreenshot = false;
     
     protected override void OnClose()
     {
@@ -115,7 +115,7 @@ public class SR2ECheatMenu : SR2EMenu
         if (EnableInfHealth.HasFlag()) infHealthButton.textInstance.text = translation("cheatmenu.cheatbuttons.infhealth" + (InfiniteHealthCommand.infHealth? "on" : "off"));
         if (EnableInfEnergy.HasFlag()) infEnergyButton.textInstance.text = translation("cheatmenu.cheatbuttons.infenergy" + (InfiniteEnergyCommand.infEnergy? "on" : "off"));
         removeFogButton.textInstance.text = translation("cheatmenu.cheatbuttons.removeFog" + (removeFog? "on" : "off"));
-        betterScreenshotButton.textInstance.text = translation("cheatmenu.cheatbuttons.betterScreenshot" + (betterScreenshot? "on" : "off"));
+        //betterScreenshotButton.textInstance.text = translation("cheatmenu.cheatbuttons.betterScreenshot" + (betterScreenshot? "on" : "off"));
 
         
         //Warp Buttons
@@ -238,13 +238,13 @@ public class SR2ECheatMenu : SR2EMenu
                 removeFog = !removeFog;
                 removeFogButton.textInstance.text = translation("cheatmenu.cheatbuttons.removeFog" + (removeFog? "on" : "off"));
             });
-        betterScreenshotButton = new SR2ECheatMenuButton(translation("cheatmenu.cheatbuttons.betterScreenshotoff"),
+        /*betterScreenshotButton = new SR2ECheatMenuButton(translation("cheatmenu.cheatbuttons.betterScreenshotoff"),
             () =>
             {
                 AudioEUtil.PlaySound(MenuSound.Click);
                 betterScreenshot = !betterScreenshot;
                 betterScreenshotButton.textInstance.text = translation("cheatmenu.cheatbuttons.betterScreenshot" + (betterScreenshot? "on" : "off"));
-            });
+            });*/
         noclipButton = new SR2ECheatMenuButton(translation("cheatmenu.cheatbuttons.noclipoff"),
             () =>
             {
