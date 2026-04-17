@@ -21,7 +21,6 @@ public static class FontEUtil
     {
         try
         {
-            return TMP_FontAsset.CreateFontAsset(new Font(name));
             string path = $"C:\\Windows\\Fonts\\{name}.ttf";
             if(!File.Exists(path)) throw new Exception();
             FontEngine.InitializeFontEngine();

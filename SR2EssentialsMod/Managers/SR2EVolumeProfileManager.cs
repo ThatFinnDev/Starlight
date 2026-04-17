@@ -76,7 +76,9 @@ public static class SR2EVolumeProfileManager
                 }
                 catch (Exception e)
                 {
-                    MelonLogger.Error(compData);
+                    if (TryFixingInvalidVolumePresets.HasFlag())
+                        MelonLogger.Error(compData);
+                    else throw e;
                 }
             }
         
@@ -192,6 +194,12 @@ public static class SR2EVolumeProfileManager
                     MelonLogger.Error(e);
                     MelonLogger.Error("Error loading volume profile: "+path);
                 }
+            }
+
+            if (ExportAllVolumePresets.HasFlag())
+            {
+                foreach (var pair in presets)
+                    File.WriteAllBytes(SR2EEntryPoint.DataPath + "/" + pair.Key, SaveProfile(pair.Value));
             }
         } catch (Exception e) { }
         

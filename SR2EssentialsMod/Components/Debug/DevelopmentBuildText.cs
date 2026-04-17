@@ -10,7 +10,8 @@ internal class DevelopmentBuildText : MonoBehaviour
     {
         string text = "Development Build";
 
-        var style = GUI.skin.label;
+        string json = JsonUtility.ToJson(GUI.skin.label);
+        var style = JsonUtility.FromJson<GUIStyle>(json);
         style.fontSize = fontSize;
         style.alignment = TextAnchor.LowerRight;
 

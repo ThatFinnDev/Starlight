@@ -66,7 +66,6 @@ public class SR2EEntryPoint : MelonMod
     internal static List<SR2EExpansionV3> expansionsV3 = new();
     internal static TMP_FontAsset SR2Font;
     internal static TMP_FontAsset normalFont;
-    internal static TMP_FontAsset regularFont;
     internal static TMP_FontAsset boldFont;
     internal static TMP_FontAsset notoSansFont;
     internal static string updateBranch = MiscEUtil.BRANCHES[Branch.Release];
@@ -545,11 +544,8 @@ public class SR2EEntryPoint : MelonMod
     internal static void SetupFonts()
     {
         if (SR2Font == null) SR2Font = FontEUtil.FontFromGame("Runsell Type - HemispheresCaps2");
-        if (regularFont == null) regularFont = FontEUtil.FontFromGame("Lexend-Regular (Latin)"); 
         if (boldFont == null) boldFont = FontEUtil.FontFromGame("Lexend-Bold (Latin)"); 
-        if (normalFont == null) normalFont = FontEUtil.FontFromOS("Tahoma"); 
-        //CheckFallBackFont();
-        //if (normalFont == null) normalFont = notoSansFont; 
+        if (normalFont == null) normalFont = FontEUtil.FontFromGame("Lexend-Regular (Latin)"); 
         foreach (var expansion in expansionsV1V2) try { expansion.OnSR2FontLoad(); }catch (Exception e) { MelonLogger.Error(e); }
         foreach (var pair in menus) pair.Key.ReloadFont();
     }

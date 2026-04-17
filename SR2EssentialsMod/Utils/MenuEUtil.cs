@@ -39,7 +39,6 @@ public static class MenuEUtil
             case SR2EMenuFont.Default: fontAsset = SR2EEntryPoint.normalFont; break;
             case SR2EMenuFont.NotoSans: fontAsset = SR2EEntryPoint.notoSansFont; break;
             case SR2EMenuFont.Bold: fontAsset = SR2EEntryPoint.boldFont; break;
-            case SR2EMenuFont.Regular: fontAsset = SR2EEntryPoint.regularFont; break;
             case SR2EMenuFont.SR2: fontAsset = SR2EEntryPoint.SR2Font; break;
         }
 
@@ -57,7 +56,6 @@ public static class MenuEUtil
             case SR2EMenuFont.Default: fontAsset = SR2EEntryPoint.normalFont; break;
             case SR2EMenuFont.NotoSans: fontAsset = SR2EEntryPoint.notoSansFont; break;
             case SR2EMenuFont.Bold: fontAsset = SR2EEntryPoint.boldFont; break;
-            case SR2EMenuFont.Regular: fontAsset = SR2EEntryPoint.regularFont; break;
             case SR2EMenuFont.SR2: fontAsset = SR2EEntryPoint.SR2Font; break;
         }
 

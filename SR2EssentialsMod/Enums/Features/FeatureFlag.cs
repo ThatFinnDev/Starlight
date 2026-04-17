@@ -250,7 +250,14 @@ public enum FeatureFlag
     /// If it stumbles across an invalid scene, it will be skipped
     /// </summary>
     TryFixingInvalidSceneGroups=410, //
-    
+    /// <summary>
+    /// This force loads volume presets with invalid components
+    /// </summary>
+    TryFixingInvalidVolumePresets=420, //
+    /// <summary>
+    /// This exports all volume presets after loading them
+    /// </summary>
+    ExportAllVolumePresets=430, //
     
 
 }

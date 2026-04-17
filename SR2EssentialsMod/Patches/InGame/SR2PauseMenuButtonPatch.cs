@@ -9,10 +9,11 @@ namespace SR2E.Patches.InGame;
 [HarmonyPatch(typeof(PauseMenuDirector), nameof(PauseMenuDirector.Awake))]
 internal static class SR2PauseDirectorPatch
 {
-    internal static void Postfix(PauseMenuDirector __instance)
+    internal static void Prefix(PauseMenuDirector __instance)
     {
         if (!InjectPauseButtons.HasFlag()) return;
-        SR2PauseMenuButtonPatch.Prefix(Get<PauseMenuRoot>("PauseMenuRoot"));
+        foreach (var menu in GetAll<PauseMenuRoot>())
+            SR2PauseMenuButtonPatch.Postfix(menu);
     }
 }
 internal static class SR2PauseMenuButtonPatch
@@ -20,7 +21,7 @@ internal static class SR2PauseMenuButtonPatch
     internal static List<CustomPauseMenuButton> buttons = new List<CustomPauseMenuButton>();
     internal static bool safeLock;
     internal static bool postSafeLock;
-    internal static void Prefix(PauseMenuRoot __instance)
+    internal static void Postfix(PauseMenuRoot __instance)
     {
         if (!InjectPauseButtons.HasFlag()) return;
         if (safeLock) { return; }

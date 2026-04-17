@@ -16,7 +16,7 @@ using UnityEngine.UI;
 
 
 // Modifies the minimum ML version required (mandatory)
-[assembly: VerifyLoaderVersion(0,7,3, true)]
+[assembly: VerifyLoaderVersion(0,7,2, true)]
 // Sets a color of your melon (mandatory)
 [assembly: MelonColor(255, 35, 255, 35)]
 

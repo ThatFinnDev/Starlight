@@ -15,7 +15,7 @@ namespace SR2E.Menus;
 public class SR2EConsole : SR2EMenu
 {
     public new static MenuIdentifier GetMenuIdentifier() =>
-        new MenuIdentifier("console",SR2EMenuFont.Regular, SR2EMenuTheme.Black, "Console");
+        new MenuIdentifier("console",SR2EMenuFont.Default, SR2EMenuTheme.Black, "Console");
     public override bool createCommands => true;
     public override bool inGameOnly => false;
 
