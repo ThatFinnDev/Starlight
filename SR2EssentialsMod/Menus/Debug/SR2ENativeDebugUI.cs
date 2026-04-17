@@ -3,6 +3,7 @@ using Il2CppInterop.Runtime.Attributes;
 using Il2CppMonomiPark.SlimeRancher.DebugTool;
 using Il2CppTMPro;
 using SR2E.Components;
+using SR2E.Components.Debug;
 using SR2E.Enums;
 using SR2E.Enums.Features;
 using SR2E.Managers;

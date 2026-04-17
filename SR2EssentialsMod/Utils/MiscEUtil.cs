@@ -245,8 +245,6 @@ public static class MiscEUtil
         strArray[i] = str;
         return new Il2CppStringArray(strArray);
     }
-
-    
     
     
     // To DotNet Dictionary

@@ -11,6 +11,7 @@ using SR2E.Enums.Features;
 using SR2E.Enums.Sounds;
 using SR2E.Expansion;
 using SR2E.Managers;
+using SR2E.Patches.Context;
 using SR2E.Popups;
 using SR2E.Storage;
 using UnityEngine.InputSystem;
@@ -144,7 +145,12 @@ public class SR2EModMenu : SR2EMenu
         {
             try
             {
-                var sprite = EmbeddedResourceEUtil.LoadSprite("Assets.icon.png", assembly).CopyWithoutMipmaps();
+                Sprite sprite = null;
+                try
+                {
+                    sprite = EmbeddedResourceEUtil.LoadSprite("Assets.icon.png", assembly).CopyWithoutMipmaps();
+                }
+                catch { }
                 if (sprite == null) throw new Exception();
                 b.transform.GetChild(1).GetComponent<Image>().sprite = sprite;
                 b.transform.GetChild(1).gameObject.SetActive(true);

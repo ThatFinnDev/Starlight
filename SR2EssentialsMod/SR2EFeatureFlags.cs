@@ -17,8 +17,7 @@ public static class SR2EFeatureFlags
         CommandsLoadCommands,CommandsLoadCheat,CommandsLoadBinding,CommandsLoadWarp,
         CommandsLoadCommon,CommandsLoadMenu,CommandsLoadMiscellaneous,CommandsLoadFun, 
         AllowExpansions,AllowExpansionsV1,AllowExpansionsV2,AllowExpansionsV3,
-        EnableModMenu,EnableConsole,EnableIl2CppDetourExceptionReporting,
-        InjectMainMenuButtons,InjectRanchUIButtons,InjectPauseButtons,InjectTranslations,
+        EnableModMenu,EnableConsole, InjectMainMenuButtons,InjectRanchUIButtons,InjectPauseButtons,InjectTranslations,
         AddCheatMenuButton,AddModMenuButton,CheckForUpdates,AllowAutoUpdate,EnableInfHealth,
         EnableInfEnergy,EnableCheatMenu,EnableLocalizedVersionPatch,EnableThemeMenu,
         ChangeSystemContextIsModded,AllowPrism, AllowSaveExport, TryFixingInvalidSceneGroups

@@ -14,6 +14,7 @@ using MelonLoader.Utils;
 using SR2E.Commands;
 using SR2E.Expansion;
 using SR2E.Components;
+using SR2E.Components.Debug;
 using SR2E.Enums;
 using SR2E.Managers;
 using SR2E.Menus;
@@ -547,6 +548,8 @@ public class SR2EEntryPoint : MelonMod
         if (regularFont == null) regularFont = FontEUtil.FontFromGame("Lexend-Regular (Latin)"); 
         if (boldFont == null) boldFont = FontEUtil.FontFromGame("Lexend-Bold (Latin)"); 
         if (normalFont == null) normalFont = FontEUtil.FontFromOS("Tahoma"); 
+        //CheckFallBackFont();
+        //if (normalFont == null) normalFont = notoSansFont; 
         foreach (var expansion in expansionsV1V2) try { expansion.OnSR2FontLoad(); }catch (Exception e) { MelonLogger.Error(e); }
         foreach (var pair in menus) pair.Key.ReloadFont();
     }

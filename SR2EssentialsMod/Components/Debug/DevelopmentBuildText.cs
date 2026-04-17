@@ -1,11 +1,6 @@
-using UnityEngine;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using MelonLoader.Utils;
 using SR2E.Storage;
 
-namespace SR2E.Components;
+namespace SR2E.Components.Debug;
 [InjectClass]
 internal class DevelopmentBuildText : MonoBehaviour
 {

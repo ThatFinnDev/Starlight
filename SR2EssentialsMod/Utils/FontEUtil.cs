@@ -1,3 +1,4 @@
+using System;
 using Il2CppTMPro;
 using SR2E.Enums;
 using SR2E.Managers;
@@ -16,10 +17,11 @@ public static class FontEUtil
         catch { SR2EEntryPoint.SendFontError(name); }
         return null;
     }
-    public static TMP_FontAsset FontFromOS(string name)
+    [Obsolete("Currently broken!")] public static TMP_FontAsset FontFromOS(string name)
     {
         try
-        { 
+        {
+            return TMP_FontAsset.CreateFontAsset(new Font(name));
             string path = $"C:\\Windows\\Fonts\\{name}.ttf";
             if(!File.Exists(path)) throw new Exception();
             FontEngine.InitializeFontEngine();

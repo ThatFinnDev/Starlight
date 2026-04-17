@@ -13,7 +13,7 @@ internal class SystemContextPatch
 {
     internal static bool didStart = false;
     internal static Dictionary<string, Shader> loadedShaders = new ();
-    internal static Il2CppAssetBundle bundle = null;
+    internal static Il2CppAssetBundle Bundle = null;
     internal static Dictionary<string, Type> menusToInit = new ();
     
     static List<Object> assets = new (); //Prefabs are destroyed
@@ -48,10 +48,11 @@ internal class SystemContextPatch
     internal static void Postfix(SystemContext __instance)
     {
         if(ChangeSystemContextIsModded.HasFlag()) SystemContext.IsModded = true;
-        bundle = EmbeddedResourceEUtil.LoadIl2CppBundle("Assets.srtwoessentials.assetbundle");
-        foreach (string path in bundle.GetAllAssetNames())
+        if(Bundle==null)
+            Bundle = EmbeddedResourceEUtil.LoadIl2CppBundle("Assets.srtwoessentials.assetbundle");
+        foreach (string path in Bundle.GetAllAssetNames())
         {
-            var asset = bundle.LoadAsset(path);
+            var asset = Bundle.LoadAsset(path);
             if (asset.TryCast<Shader>()!=null)
             {
                 var shader = asset.Cast<Shader>();
@@ -104,13 +105,13 @@ internal class SystemContextPatch
                                     {
                                         var path = getMenuPath(identifier);
                                         bool assetEmpty = true;
-                                        if (!string.IsNullOrWhiteSpace(path)) assetEmpty = !bundle.Contains(path);
+                                        if (!string.IsNullOrWhiteSpace(path)) assetEmpty = !Bundle.Contains(path);
 
                                         UnityEngine.Object rootObject = type.GetMenuRootObject();
                                         
                                         if (!assetEmpty&&rootObject==null)
                                         {
-                                            rootObject = GameObject.Instantiate(bundle.LoadAsset(path), instance.transform);
+                                            rootObject = GameObject.Instantiate(Bundle.LoadAsset(path), instance.transform);
                                         }
                                         if (rootObject == null)
                                         {

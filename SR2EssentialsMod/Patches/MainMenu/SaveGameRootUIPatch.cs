@@ -9,6 +9,7 @@ using Il2CppMonomiPark.SlimeRancher.UI.Framework.Layout;
 using Il2CppMonomiPark.SlimeRancher.UI.MainMenu.Model;
 using SR2E.Components;
 using SR2E.Enums;
+using SR2E.Patches.Context;
 using SR2E.Popups;
 using SR2E.Storage;
 using UnityEngine.InputSystem;
@@ -155,7 +156,18 @@ internal static class SaveGameRootUIPatch
             exportRectTransform.anchorMax = new Vector2(1,1);
             exportRectTransform.anchorMin = new Vector2(1,1);
             exportButton.transform.localPosition = new Vector3(566.4542f, 850.0162f, -16.1379f);
-            exportButton.transform.GetChild(0).GetChild(0).GetComponent<Image>().sprite = EmbeddedResourceEUtil.LoadSprite("Assets.icon.png").CopyWithoutMipmaps();
+            //exportButton.transform.GetChild(0).GetChild(0).GetComponent<Image>().sprite = EmbeddedResourceEUtil.LoadSprite("Assets.icon.png").CopyWithoutMipmaps();
+            if (true) //temp fix
+            {
+                if(SystemContextPatch.Bundle==null) SystemContextPatch.Bundle = EmbeddedResourceEUtil.LoadIl2CppBundle("Assets.srtwoessentials.assetbundle");
+                //Loading it by path doesn't work
+                foreach (var asset in SystemContextPatch.Bundle.LoadAllAssets())
+                    if (asset.TryCast<Texture2D>() != null && asset.name=="icon")
+                    {
+                        exportButton.transform.GetChild(0).GetChild(0).GetComponent<Image>().sprite = asset.Cast<Texture2D>().Texture2DToSprite();
+                        break;
+                    }
+            }
             var iconRect = exportButton.transform.GetChild(0).GetChild(0).GetComponent<RectTransform>();
             iconRect.sizeDelta *= 0.85f;
             if(onPress==null) onPress = Get<InputActionReference>("MainGame/Open Map");

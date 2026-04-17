@@ -6,6 +6,7 @@ using Il2CppMonomiPark.SlimeRancher.UI;
 using SR2E.Buttons;
 using SR2E.Buttons.OptionsUI;
 using SR2E.Components;
+using SR2E.Components.Debug;
 using SR2E.Enums;
 using SR2E.Enums.Sounds;
 using SR2E.Managers;
@@ -49,7 +50,19 @@ internal class GameContextPatch
             if (AddModMenuButton.HasFlag())
             {
                 LocalizedString label = AddTranslationFromSR2E("buttons.mods.label", "b.button_mods_sr2e", "UI");
-                new CustomMainMenuButton(label, EmbeddedResourceEUtil.LoadSprite("Assets.modsMenuIcon.png").CopyWithoutMipmaps(), 4, (System.Action)(() => { MenuEUtil.GetMenu<SR2EModMenu>().Open(); }));
+                Sprite modsMenuSprite = null;
+                //modsMenuSprite = EmbeddedResourceEUtil.LoadSprite("Assets.modsMenuIcon.png").CopyWithoutMipmaps();
+                if (true) //temp fix
+                {
+                    if(SystemContextPatch.Bundle==null) SystemContextPatch.Bundle = EmbeddedResourceEUtil.LoadIl2CppBundle("Assets.srtwoessentials.assetbundle");
+                    foreach (var asset in SystemContextPatch.Bundle.LoadAllAssets())
+                        if (asset.TryCast<Texture2D>() != null && asset.name=="modsMenuIcon")
+                        {
+                            modsMenuSprite = asset.Cast<Texture2D>().Texture2DToSprite();
+                            break;
+                        }
+                }
+                new CustomMainMenuButton(label,modsMenuSprite , 4, (System.Action)(() => { MenuEUtil.GetMenu<SR2EModMenu>().Open(); }));
                 new CustomPauseMenuButton(label, 3, (System.Action)(() => { MenuEUtil.GetMenu<SR2EModMenu>().Open(); }));
                 
             }

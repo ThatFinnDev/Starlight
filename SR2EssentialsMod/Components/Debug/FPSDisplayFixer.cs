@@ -1,12 +1,8 @@
 using System;
-using Il2CppMonomiPark.SlimeRancher.Player;
 using Il2CppMonomiPark.SlimeRancher.UI;
-using Il2CppSystem.Data;
-using SR2E.Managers;
 using SR2E.Storage;
-using UnityEngine.InputSystem;
 
-namespace SR2E.Components;
+namespace SR2E.Components.Debug;
 
 [InjectClass]
 internal class FPSDisplayFixer : MonoBehaviour

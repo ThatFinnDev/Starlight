@@ -107,7 +107,15 @@ public static class HttpEUtil
         }
 
         Texture2D texture = new Texture2D(2, 2);
-        bool loaded = ImageConversion.LoadImage(texture, imageBytes, false);
+        bool loaded = false;
+        try
+        {
+            loaded = Il2CppImageConversionManager.LoadImage(texture, imageBytes, false);
+        }
+        catch (Exception e)
+        {
+            MelonLogger.Error(e);
+        }
 
         if (!loaded)
         {

@@ -218,11 +218,16 @@ public static class MenuEUtil
         {
             if(_whitePillBg==null)
             {
-                _whitePillBgTex = Get<AssetBundle>("cc50fee78e6b7bdd6142627acdaf89fa.bundle")
-                    .LoadAsset("Assets/UI/Textures/MenuDemo/whitePillBg.png").Cast<Texture2D>();
-                _whitePillBg = Sprite.Create(_whitePillBgTex,
-                    new Rect(0f, 0f, _whitePillBgTex.width, _whitePillBgTex.height),
-                    new Vector2(0.5f, 0.5f), 1f);
+                try
+                {
+                    _whitePillBg = Sprite.Create(whitePillBgTex,
+                        new Rect(0f, 0f, _whitePillBgTex.width, _whitePillBgTex.height),
+                        new Vector2(0.5f, 0.5f), 1f);
+                }
+                catch (Exception e)
+                {
+                    MelonLogger.Error(e);
+                }
             }
 
             return _whitePillBg;
@@ -234,10 +239,23 @@ public static class MenuEUtil
         {
             if(_whitePillBgTex==null)
             {
-                _whitePillBgTex = Get<AssetBundle>("cc50fee78e6b7bdd6142627acdaf89fa.bundle")
-                    .LoadAsset("Assets/UI/Textures/MenuDemo/whitePillBg.png").Cast<Texture2D>();
+                foreach (var bundle in Il2CppAssetBundleManager.GetAllLoadedAssetBundles())
+                    try
+                    {
+                        Texture2D tex = bundle.LoadAsset("Assets/UI/Textures/MenuDemo/whitePillBg.png").Cast<Texture2D>();
+                        if (tex == null) continue;
+                        _whitePillBgTex = tex;
+                    } catch (Exception e) { }
+                /*try
+                {
+                    _whitePillBgTex = Get<AssetBundle>("cc50fee78e6b7bdd6142627acdaf89fa.bundle")
+                        .LoadAsset("Assets/UI/Textures/MenuDemo/whitePillBg.png").Cast<Texture2D>();
+                }
+                catch (Exception e)
+                {
+                    MelonLogger.Error(e);
+                }*/
             }
-
             return _whitePillBgTex;
         }
     }

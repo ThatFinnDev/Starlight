@@ -1,9 +1,7 @@
-using System;
 using Il2CppMonomiPark.SlimeRancher.DebugTool;
-using SR2E.Enums;
 using SR2E.Storage;
 
-namespace SR2E.Components;
+namespace SR2E.Components.Debug;
 
 [InjectClass]
 public class DebugDirectorFixer : MonoBehaviour

@@ -62,15 +62,22 @@ public static class SR2EVolumeProfileManager
 
             foreach (var compData in data.components)
             {
-                var type = Il2CppSystem.Type.GetType(compData.typeName);
-                if (type == null) continue;
+                try
+                {
+                    var type = Il2CppSystem.Type.GetType(compData.typeName);
+                    if (type == null) continue;
             
 
-                var comp = ScriptableObject.CreateInstance(type).TryCast<VolumeComponent>();
-                comp.hideFlags |= HideFlags.DontUnloadUnusedAsset;
-                JsonUtility.FromJsonOverwrite(compData.jsonData, comp);
+                    var comp = ScriptableObject.CreateInstance(type).TryCast<VolumeComponent>();
+                    comp.hideFlags |= HideFlags.DontUnloadUnusedAsset;
+                    JsonUtility.FromJsonOverwrite(compData.jsonData, comp);
 
-                newProfile.components.Add(comp);
+                    newProfile.components.Add(comp);
+                }
+                catch (Exception e)
+                {
+                    MelonLogger.Error(compData);
+                }
             }
         
             newProfile.hideFlags |= HideFlags.DontUnloadUnusedAsset;

@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
@@ -8,23 +9,23 @@ namespace SR2E.Utils;
 
 public static class EmbeddedResourceEUtil
 {
-    public static Sprite LoadSprite(string fileName)
+    [Obsolete("Currently broken!")] public static Sprite LoadSprite(string fileName)
     {
         var method = new StackTrace().GetFrame(1).GetMethod();
         var assembly = method.ReflectedType.Assembly;
         return LoadSprite(fileName,assembly);
     }
-    public static Sprite LoadSprite(string fileName, Assembly assembly) => ConvertEUtil.Texture2DToSprite(LoadTexture2D(fileName,assembly));
+    [Obsolete("Currently broken!")] public static Sprite LoadSprite(string fileName, Assembly assembly) => ConvertEUtil.Texture2DToSprite(LoadTexture2D(fileName,assembly));
     
     
     
-    public static Texture2D LoadTexture2D(string fileName)
+    [Obsolete("Currently broken!")] public static Texture2D LoadTexture2D(string fileName)
     {
         var method = new StackTrace().GetFrame(1).GetMethod();
         var assembly = method.ReflectedType.Assembly;
         return LoadTexture2D(fileName, assembly);
     }
-    public static Texture2D LoadTexture2D(string filename, Assembly assembly)
+    [Obsolete("Currently broken!")] public static Texture2D LoadTexture2D(string filename, Assembly assembly)
     {
         if (assembly == null) return null;
         var realFilename = filename.Replace("/",".");
@@ -35,7 +36,15 @@ public static class EmbeddedResourceEUtil
         stream.Read(array, 0, array.Length);
         
         Texture2D texture2D = new Texture2D(1, 1);
-        ImageConversion.LoadImage(texture2D, array);
+        try
+        {
+            Il2CppImageConversionManager.LoadImage(texture2D, array);
+        }
+        catch (Exception e)
+        {
+            MelonLogger.Error(e);
+            return null;
+        }
         
         texture2D.filterMode = FilterMode.Bilinear;
         
@@ -128,13 +137,13 @@ public static class EmbeddedResourceEUtil
         return Il2CppAssetBundleManager.LoadFromMemory(array);
     }
     
-    public static AssetBundle LoadBundle(string filename)
+    [Obsolete("Currently broken!")] public static AssetBundle LoadBundle(string filename)
     {
         var method = new StackTrace().GetFrame(1).GetMethod();
         var assembly = method.ReflectedType.Assembly;
         return LoadBundle(filename, assembly);
     }
-    public static AssetBundle LoadBundle(string filename, Assembly assembly)
+    [Obsolete("Currently broken!")] public static AssetBundle LoadBundle(string filename, Assembly assembly)
     {
         if(assembly == null) return null;
         filename=filename.Replace("/",".");

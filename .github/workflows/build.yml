@@ -52,9 +52,10 @@ on:
       SR2Ver-MLVer:
         description: 'The MelonLoader version'
         required: true
-        default: '0.7.2'
+        default: '0.7.3'
         type: choice
         options:
+          - '0.7.3'
           - '0.7.2'
           - '0.7.1'
           - '0.7.0'
@@ -67,7 +68,7 @@ env:
   DEP_ZIP_NAME: dependencies.zip
   API_BASE_URL: https://api.sr2e.sr2.dev
   DEFAULT_SR2_VER_MANIFESTID: '1.2.0 [20260326225622-109067] (1249982347421925860)'
-  DEFAULT_SR2_VER_MLVER: '0.7.2'
+  DEFAULT_SR2_VER_MLVER: '0.7.3'
   DEFAULT_VERSION: 'auto'
   DEFAULT_RELEASE_TYPE: 'alpha'
 

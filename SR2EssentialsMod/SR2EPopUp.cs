@@ -39,7 +39,7 @@ public abstract class SR2EPopUp : MonoBehaviour
     }
     protected static void _Open(string identifier,Type type,SR2EMenuTheme theme,List<object> objects)
     {
-        var asset = SystemContextPatch.bundle.LoadAsset(SystemContextPatch.getPopUpPath(identifier,theme));
+        var asset = SystemContextPatch.Bundle.LoadAsset(SystemContextPatch.getPopUpPath(identifier,theme));
         var Object = GameObject.Instantiate(asset, SR2EEntryPoint.SR2EStuff.transform);
         ExecuteInTicks((() =>
         {
