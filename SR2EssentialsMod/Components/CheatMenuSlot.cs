@@ -50,11 +50,11 @@ internal class CheatMenuSlot : MonoBehaviour
             var data = new AmmoSlot.AmmoMetadata();
             data.Id = type;
             data.Emotions = new float4();
-            sceneContext.PlayerState.Ammo.MaybeAddToSpecificSlot(data, slotID, (int)amountSlider.value, false);
+            sceneContext.PlayerState.Ammo.MaybeAddToSpecificSlot(data, slotID, (int)amountSlider.value, true);
         }
         else
         {
-            sceneContext.PlayerState.Ammo.MaybeAddResource(type, slotID, (int)amountSlider.value, false);
+            sceneContext.PlayerState.Ammo.MaybeAddResource(type, slotID, (int)amountSlider.value, true);
         }
     }
     private void Select()
