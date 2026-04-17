@@ -17,18 +17,6 @@ internal static class BootstrapCompanyLogoScenePatch
         GameObject obj = new GameObject("MLIcon", typeof(RectTransform).il2cppTypeof(), typeof(Image).il2cppTypeof());
         Image img = obj.GetComponent<Image>();
         img.sprite = EmbeddedResourceEUtil.LoadSprite("Assets.mlIcon.png").CopyWithoutMipmaps();
-        if (false) //temp fix
-        {
-            
-            if(SystemContextPatch.Bundle==null) SystemContextPatch.Bundle = EmbeddedResourceEUtil.LoadIl2CppBundle("Assets.srtwoessentials.assetbundle");
-            //Loading it by path doesn't work
-            foreach (var asset in SystemContextPatch.Bundle.LoadAllAssets())
-                if (asset.TryCast<Texture2D>() != null && asset.name=="mlIcon")
-                {
-                    img.sprite = asset.Cast<Texture2D>().Texture2DToSprite();
-                    break;
-                }
-        }
         img.preserveAspect = true;
         var rt = obj.GetComponent<RectTransform>();
         rt.SetParent(__instance.transform, false);

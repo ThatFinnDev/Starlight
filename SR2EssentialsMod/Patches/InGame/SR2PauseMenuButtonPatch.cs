@@ -9,7 +9,7 @@ namespace SR2E.Patches.InGame;
 [HarmonyPatch(typeof(PauseMenuDirector), nameof(PauseMenuDirector.Awake))]
 internal static class SR2PauseDirectorPatch
 {
-    internal static void Prefix(PauseMenuDirector __instance)
+    internal static void Postfix(PauseMenuDirector __instance)
     {
         if (!InjectPauseButtons.HasFlag()) return;
         SR2PauseMenuButtonPatch.Prefix(Get<PauseMenuRoot>("PauseMenuRoot"));

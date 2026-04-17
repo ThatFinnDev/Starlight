@@ -16,7 +16,7 @@ using UnityEngine.UI;
 
 
 // Modifies the minimum ML version required (mandatory)
-[assembly: VerifyLoaderVersion(0,7,1, true)]
+[assembly: VerifyLoaderVersion(0,7,3, true)]
 // Sets a color of your melon (mandatory)
 [assembly: MelonColor(255, 35, 255, 35)]
 
@@ -143,7 +143,18 @@ internal class MLEntrypoint : MelonMod
         Sprite pill = null;
         try
         {
-            var pillTex = Resources.FindObjectsOfTypeAll<AssetBundle>().FirstOrDefault((x) => x.name == "cc50fee78e6b7bdd6142627acdaf89fa.bundle").LoadAsset("Assets/UI/Textures/MenuDemo/whitePillBg.png").Cast<Texture2D>();
+            Texture2D pillTex = null;
+            try
+            {
+                foreach (var bundle in Il2CppAssetBundleManager.GetAllLoadedAssetBundles())
+                    try
+                    {
+                        Texture2D tex = bundle.LoadAsset("Assets/UI/Textures/MenuDemo/whitePillBg.png").Cast<Texture2D>();
+                        if (tex == null) continue;
+                        pillTex = tex;
+                    } catch (Exception e) { }
+            }
+            catch { }
             pill = Sprite.Create(pillTex, new Rect(0f, 0f, (float)pillTex.width, (float)pillTex.height), new Vector2(0.5f, 0.5f), 1f);
         }catch { }
         var img = buttonObj.AddComponent<Image>();

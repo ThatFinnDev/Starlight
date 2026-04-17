@@ -9,23 +9,23 @@ namespace SR2E.Utils;
 
 public static class EmbeddedResourceEUtil
 {
-    [Obsolete("Currently broken!")] public static Sprite LoadSprite(string fileName)
+    public static Sprite LoadSprite(string fileName)
     {
         var method = new StackTrace().GetFrame(1).GetMethod();
         var assembly = method.ReflectedType.Assembly;
         return LoadSprite(fileName,assembly);
     }
-    [Obsolete("Currently broken!")] public static Sprite LoadSprite(string fileName, Assembly assembly) => ConvertEUtil.Texture2DToSprite(LoadTexture2D(fileName,assembly));
+    public static Sprite LoadSprite(string fileName, Assembly assembly) => ConvertEUtil.Texture2DToSprite(LoadTexture2D(fileName,assembly));
     
     
     
-    [Obsolete("Currently broken!")] public static Texture2D LoadTexture2D(string fileName)
+    public static Texture2D LoadTexture2D(string fileName)
     {
         var method = new StackTrace().GetFrame(1).GetMethod();
         var assembly = method.ReflectedType.Assembly;
         return LoadTexture2D(fileName, assembly);
     }
-    [Obsolete("Currently broken!")] public static Texture2D LoadTexture2D(string filename, Assembly assembly)
+    public static Texture2D LoadTexture2D(string filename, Assembly assembly)
     {
         if (assembly == null) return null;
         var realFilename = filename.Replace("/",".");
