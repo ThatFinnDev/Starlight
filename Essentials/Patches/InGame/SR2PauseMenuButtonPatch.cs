@@ -6,18 +6,10 @@ using Starlight.Buttons;
 
 namespace Starlight.Patches.InGame;
 
-[HarmonyPatch(typeof(PauseMenuDirector), nameof(PauseMenuDirector.Awake))]
-internal static class SR2PauseDirectorPatch
-{
-    internal static void Prefix(PauseMenuDirector __instance)
-    {
-        if (!InjectPauseButtons.HasFlag()) return;
-        SR2PauseMenuButtonPatch.Prefix(Get<PauseMenuRoot>("PauseMenuRoot"));
-    }
-}
+[HarmonyPatch(typeof(PauseMenuRoot), nameof(PauseMenuRoot.Awake))]
 internal static class SR2PauseMenuButtonPatch
 {
-    internal static readonly List<CustomPauseMenuButton> buttons = new ();
+    internal static List<CustomPauseMenuButton> buttons = new ();
     internal static bool SafeLock;
     internal static bool PostSafeLock;
     internal static void Prefix(PauseMenuRoot __instance)
@@ -28,7 +20,7 @@ internal static class SR2PauseMenuButtonPatch
         try
         {
             var pauseMenuRoot = __instance;
-            var pauseItemModelList = pauseMenuRoot.pauseItemModelList;
+            var pauseItemModelList = pauseMenuRoot._pauseItemModelList;
             var items = pauseItemModelList.items;
             foreach (var button in buttons)
             {
@@ -74,7 +66,7 @@ internal static class SR2PauseMenuButtonPatch
             }
             
             pauseItemModelList.items = items;
-            pauseMenuRoot.pauseItemModelList = pauseItemModelList;
+            pauseMenuRoot._pauseItemModelList = pauseItemModelList;
             
         }
         catch (Exception e) { LogError(e);}

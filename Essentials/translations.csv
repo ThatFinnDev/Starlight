@@ -150,6 +150,7 @@ cmd.fxplayer.invalidfxname,"Invalid FX Name!","Kein gültiger Effekt!"
 cmd.fxplayer.description,"Plays an effect in front of you",Spielt ein Effekt vor dir ab
 cmd.give.success,"Successfully gave $1 $2!",Es wurde(n) erfolgreich $1 $2(s/n/en) in dein Inventar gegeben!
 cmd.give.description,"Gives you items",Gibt dir Items
+cmd.give.nospace,"There is no space left!","Es ist kein Platz mehr übrig!"
 cmd.gadget.successadd,"Successfully added $1 to $2!",Du besitzt nun $1 $2(s/n/en) mehr!
 cmd.gadget.successalladd,"Successfully added $1 to everything!",Du besitzt nun $1 von jedem Gadget mehr!
 cmd.gadget.successremove,"Successfully removed $1 of $2!",Du besitzt nun $1 $2(s/n/en) weniger!

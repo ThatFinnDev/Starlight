@@ -19,9 +19,9 @@ internal class ChangeLanguagePatch
 
         LoadLanguage(code);
 
-        sr2etosrlanguage.Clear();
+        starlighttosrlanguage.Clear();
         addedTranslations.Clear();
-        foreach (var str in sr2eReplaceOnLanguageChange)
+        foreach (var str in starlightReplaceOnLanguageChange)
         {
             var localized = AddTranslation(translation(str.Key), str.Value.Item1, str.Value.Item2);
 

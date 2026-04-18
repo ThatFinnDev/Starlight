@@ -48,7 +48,7 @@ internal class SystemContextPatch
     internal static void Postfix(SystemContext __instance)
     {
         if(ChangeSystemContextIsModded.HasFlag()) SystemContext.IsModded = true;
-        bundle = EmbeddedResourceEUtil.LoadIl2CppBundle("Assets.srtwoessentials.assetbundle");
+        bundle = EmbeddedResourceEUtil.LoadIl2CppBundle("Assets.starlight.bundle");
         foreach (string path in bundle.GetAllAssetNames())
         {
             var asset = bundle.LoadAsset(path);
@@ -97,7 +97,7 @@ internal class SystemContextPatch
                         foreach (var assembly in StarlightPackageManager.GetAllPackageAssemblies())
                         {
                             var exporters = assembly.GetTypes().Where(t => t.IsSubclassOf(typeof(StarlightMenu)) && !t.IsAbstract);
-                            foreach (Type type in exporters)
+                            foreach (var type in exporters)
                                 try
                                 {
                                     var identifier = type.GetMenuIdentifierByType();
@@ -119,7 +119,24 @@ internal class SystemContextPatch
                                             throw new Exception(message);
                                         }
 
-                                        rootObject.Cast<GameObject>().transform.SetParent(instance.transform);
+                                        var gameObj = rootObject.Cast<GameObject>();
+                                        gameObj.transform.SetParent(instance.transform);
+                                        try
+                                        {
+                                            var rectT = gameObj.transform.GetComponent<RectTransform>();
+                                            var setAnchor = false;
+                                            if (rectT.sizeDelta == Vector2.zero)
+                                            {
+                                                rectT.sizeDelta = rectT.GetParentSize();
+                                                setAnchor = true;
+                                            }
+                                            if (rectT.sizeDelta.x < 0)
+                                                rectT.sizeDelta = new Vector2(-rectT.sizeDelta.x, rectT.sizeDelta.y);
+                                            if (rectT.sizeDelta.y < 0)
+                                                rectT.sizeDelta = new Vector2(rectT.sizeDelta.x, -rectT.sizeDelta.y);
+                                            if(setAnchor)
+                                                rectT.anchoredPosition = Vector2.zero;
+                                        } catch { }
                                         menusToInit.Add(rootObject.name, type);
                                         if (!ClassInjector.IsTypeRegisteredInIl2Cpp(type))
                                             ClassInjector.RegisterTypeInIl2Cpp(type,

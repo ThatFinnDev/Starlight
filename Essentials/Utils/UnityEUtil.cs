@@ -124,7 +124,7 @@ public static class UnityEUtil
     
     
     public static T AddComponent<T>(this Component obj) where T : Component => obj.gameObject.AddComponent<T>();
-    public static bool AddComponent<T>(this Transform obj) where T : Component => obj.gameObject.AddComponent<T>();
+    public static T AddComponent<T>(this Transform obj) where T : Component => obj.gameObject.AddComponent<T>();
     public static bool AddComponent(this Transform obj, Il2CppSystem.Type componentType) => obj.gameObject.AddComponent(componentType);
     public static bool AddComponent(this Transform obj, System.Type componentType) => obj.gameObject.AddComponent(componentType.IL2CPPTypeof());
     public static bool AddComponent(this GameObject obj, System.Type componentType) => obj.AddComponent(componentType.IL2CPPTypeof());

@@ -9,7 +9,7 @@ public static class SpawnEUtil
     public static GadgetModel SpawnGadget(this GadgetDefinition def, Vector3 pos, Quaternion rot)
     {
         if (def == null) return null;
-        var modelGadget = sceneContext.GameModel.InstantiateGadgetModel(def, systemContext.SceneLoader.CurrentSceneGroup, pos);
+        var modelGadget = sceneContext.GameModel.InstantiateGadgetModel(def, systemContext.SceneLoader.CurrentSceneGroup, pos,false);
         GadgetDirector.InstantiateGadgetFromModel(modelGadget);
         modelGadget.eulerRotation = rot.ToEuler();
         return modelGadget;

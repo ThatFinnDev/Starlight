@@ -5,7 +5,7 @@ using Starlight.Storage;
 namespace Starlight.Prism.Patches;
 
 [PrismPatch()]
-[HarmonyPatch(typeof(GameV09), nameof(GameV09.LoadSummaryData))]
+[HarmonyPatch(typeof(GameV10), nameof(GameV10.LoadSummaryData))]
 internal static class GameLoadSummaryPatch
 {
     private static void Prefix()

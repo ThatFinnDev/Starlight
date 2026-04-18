@@ -396,7 +396,7 @@ public static class CustomSettingsCreator
     ///
     /// // Category
     /// CustomSettingsCreator.CreateCategory(
-    ///     AddTranslationFromStarlight("setting.categoryname", "l.sr2ecategory", "UI"), StarlightUtils.ConvertToSprite(StarlightUtils.LoadImage("category")),
+    ///     AddTranslationFromStarlight("setting.categoryname", "l.starlightcategory", "UI"), StarlightUtils.ConvertToSprite(StarlightUtils.LoadImage("category")),
     /// options.ToArray());
     /// </code>
     /// </param>

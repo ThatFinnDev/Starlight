@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis; using System.IO; using System.Linq; using System.Reflection; using Il2CppTMPro; using UnityEngine.SceneManagement; using UnityEngine.UI; [assembly: HarmonyDontPatchAll()] [assembly: AssemblyMetadata(Starlight.Expansion.StarlightModInfoAttributes.MinimumStarlightVersion, OptionFileInfo.MinimumStarlightVersion)]
+﻿using System.Diagnostics.CodeAnalysis; using System.IO; using System.Reflection; using Il2CppTMPro; using UnityEngine.SceneManagement; using UnityEngine.UI; [assembly: HarmonyDontPatchAll()] [assembly: AssemblyMetadata(Starlight.Expansion.StarlightModInfoAttributes.MinimumStarlightVersion, OptionFileInfo.MinimumStarlightVersion)]
 
 // This is an optional file V1. You can add into your expansion
 // This will show an error message to the user, if Starlight isn't installed!
@@ -107,9 +107,14 @@ class OptionFileEntrypoint : MelonMod
         Sprite pill = null;
         try
         {
-            var pillTex = Resources.FindObjectsOfTypeAll<AssetBundle>()
-                .FirstOrDefault((x) => x.name == "cc50fee78e6b7bdd6142627acdaf89fa.bundle")
-                .LoadAsset("Assets/UI/Textures/MenuDemo/whitePillBg.png").Cast<Texture2D>();
+            Texture2D pillTex = null;
+            foreach (var bundle in Il2CppAssetBundleManager.GetAllLoadedAssetBundles())
+                try
+                {
+                    Texture2D tex = bundle.LoadAsset("Assets/UI/Textures/MenuDemo/whitePillBg.png").Cast<Texture2D>();
+                    if (tex == null) continue;
+                    pillTex = tex;
+                } catch { }
             pill = Sprite.Create(pillTex, new Rect(0f, 0f, pillTex.width, pillTex.height),
                 new Vector2(0.5f, 0.5f), 1f);
         }

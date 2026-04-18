@@ -1,11 +1,9 @@
-using UnityEngine;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using MelonLoader.Utils;
 using Starlight.Storage;
 
-namespace Starlight.Components;
+namespace Starlight.Components.Debug;
 [InjectIntoIL]
 internal class DevConsoleFixer : MonoBehaviour
 {

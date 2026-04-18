@@ -11,7 +11,7 @@ internal static class StarlightOptionsButtonManager
 {
     internal static Dictionary<NativeOptionsUICategory,HashSet<CustomOptionsButton>> customOptionsUIButtonsInNative = new();
     internal static Dictionary<CustomOptionsUICategory,HashSet<CustomOptionsButton>> customOptionsUICategories = new();
-    static string path => Path.Combine(StarlightEntryPoint.dataPath, "customsettings.sr2ers");
+    static string path => Path.Combine(StarlightEntryPoint.dataPath, "customsettings.starlighters");
     static CustomOptionsSave _save;
     internal static CustomOptionsSave save
     {

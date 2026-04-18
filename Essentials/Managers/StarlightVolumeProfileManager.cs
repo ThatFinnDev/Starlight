@@ -62,15 +62,22 @@ public static class StarlightVolumeProfileManager
 
             foreach (var compData in data.components)
             {
-                var type = Il2CppSystem.Type.GetType(compData.typeName);
-                if (type == null) continue;
-            
+                try
+                {
+                    var type = Il2CppSystem.Type.GetType(compData.typeName);
+                    if (type == null) continue;
+                    var comp = ScriptableObject.CreateInstance(type).TryCast<VolumeComponent>();
+                    comp.hideFlags |= HideFlags.DontUnloadUnusedAsset;
+                    JsonUtility.FromJsonOverwrite(compData.jsonData, comp);
 
-                var comp = ScriptableObject.CreateInstance(type).TryCast<VolumeComponent>();
-                comp.hideFlags |= HideFlags.DontUnloadUnusedAsset;
-                JsonUtility.FromJsonOverwrite(compData.jsonData, comp);
-
-                newProfile.components.Add(comp);
+                    newProfile.components.Add(comp);
+                }
+                catch (Exception e)
+                {
+                    if (TryFixingInvalidVolumePresets.HasFlag())
+                        LogError(e);
+                    else throw e;
+                }
             }
         
             newProfile.hideFlags |= HideFlags.DontUnloadUnusedAsset;
@@ -140,7 +147,7 @@ public static class StarlightVolumeProfileManager
     /// <returns>bool</returns>
     public static void DisableProfile(bool getVolumeHolderIfNull = true)
     {
-        if (volumeHolder==null)
+        if (!volumeHolder)
         {
             if (getVolumeHolderIfNull)
             {
@@ -186,7 +193,12 @@ public static class StarlightVolumeProfileManager
                     LogError("Error loading volume profile: "+path);
                 }
             }
-        } catch (Exception e) { }
+            if (ExportAllVolumePresets.HasFlag())
+            {
+                foreach (var pair in presets)
+                    File.WriteAllBytes(StarlightEntryPoint.dataPath + "/" + pair.Key, SaveProfile(pair.Value));
+            }
+        } catch { }
         
     }
     

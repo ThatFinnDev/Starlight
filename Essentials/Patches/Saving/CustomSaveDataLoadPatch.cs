@@ -29,7 +29,7 @@ internal static class CustomSaveDataLoadPatch
         _rootSaves = new Dictionary<StarlightExpansionV01, (RootSave, LoadingGameSessionData)>();
         _noRootSaves = new Dictionary<StarlightExpansionV01, LoadingGameSessionData>();
     }
-    internal static void Prefix(ActorIdProvider actorIdProvider, ISaveReferenceTranslation saveReferenceTranslation, GameV09 gameState, GameModel gameModel)
+    internal static void Prefix(ActorIdProvider actorIdProvider, ISaveReferenceTranslation saveReferenceTranslation, GameV10 gameState, GameModel gameModel)
     {
         bool hasExecutedOwn = false;
         foreach (var entry in gameState.ZoneIndex.IndexTable)

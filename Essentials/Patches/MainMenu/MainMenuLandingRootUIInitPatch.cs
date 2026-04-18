@@ -29,7 +29,7 @@ internal static class MainMenuLandingRootUIInitPatch
     
     internal static bool SafeLock;
     internal static bool PostSafeLock;
-    internal static void Prefix(MainMenuLandingRootUI instance)
+    internal static void Prefix(MainMenuLandingRootUI __instance)
     {
         if (InjectOptionsButtons.HasFlag()) try { StarlightOptionsButtonManager.GenerateMissingButtons(); }catch (Exception e) { LogError(e); }
         if (!InjectMainMenuButtons.HasFlag()) return;
@@ -54,11 +54,11 @@ internal static class MainMenuLandingRootUIInitPatch
                     }
                     button._definition2._subMenuItems = ScriptableObject.CreateInstance<ButtonBehaviorConfiguration>();
                     button._definition2._subMenuItems.items = list.ToIl2CppList();
-                    if (instance._mainMenuConfig.items.Contains(containerButton._definition2)) continue;
+                    if (__instance._mainMenuConfig.items.Contains(containerButton._definition2)) continue;
                     int offset = 0;
-                    foreach (var item in instance._mainMenuConfig.items) 
+                    foreach (var item in __instance._mainMenuConfig.items) 
                         if(item is LoadGameItemDefinition) if(!(item is CustomMainMenuItemDefinition)) offset=1;
-                    instance._mainMenuConfig.items.Insert(Math.Clamp(containerButton.insertIndex+offset,0,instance._mainMenuConfig.items.Count), containerButton._definition2);
+                    __instance._mainMenuConfig.items.Insert(Math.Clamp(containerButton.insertIndex+offset,0,__instance._mainMenuConfig.items.Count), containerButton._definition2);
                 }
                 catch (Exception e) { LogError(e); }
             }
@@ -68,12 +68,12 @@ internal static class MainMenuLandingRootUIInitPatch
                 {
                     if (button._definition != null)
                     {
-                        if (instance._mainMenuConfig.items.Contains(button._definition))
+                        if (__instance._mainMenuConfig.items.Contains(button._definition))
                             continue;
                         int offset = 0;
-                        foreach (var item in instance._mainMenuConfig.items) 
+                        foreach (var item in __instance._mainMenuConfig.items) 
                             if(item is LoadGameItemDefinition) if(!(item is CustomMainMenuItemDefinition)) offset=1;
-                        instance._mainMenuConfig.items.Insert(Math.Clamp(button.insertIndex+offset,0,instance._mainMenuConfig.items.Count), button._definition);
+                        __instance._mainMenuConfig.items.Insert(Math.Clamp(button.insertIndex+offset,0,__instance._mainMenuConfig.items.Count), button._definition);
                     }
                 }
                 catch (Exception e) { LogError(e); }

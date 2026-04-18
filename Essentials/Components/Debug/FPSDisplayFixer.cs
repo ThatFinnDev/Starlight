@@ -1,12 +1,8 @@
 using System;
-using Il2CppMonomiPark.SlimeRancher.Player;
 using Il2CppMonomiPark.SlimeRancher.UI;
-using Il2CppSystem.Data;
-using Starlight.Managers;
 using Starlight.Storage;
-using UnityEngine.InputSystem;
 
-namespace Starlight.Components;
+namespace Starlight.Components.Debug;
 
 [InjectIntoIL]
 internal class FPSDisplayFixer : MonoBehaviour

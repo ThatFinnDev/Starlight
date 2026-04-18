@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Il2CppInterop.Runtime.Attributes;
 using Il2CppTMPro;
 using Starlight.Commands;
@@ -16,6 +17,8 @@ namespace Starlight;
 [InjectIntoIL]
 public abstract class StarlightMenu : MonoBehaviour
 {
+    public bool IsPermanentlyDisabled() => _inActive;
+    private bool _inActive;
     private bool _changedOpenState;
 
     public static GameObject GetMenuRootObject() => null;
@@ -23,7 +26,7 @@ public abstract class StarlightMenu : MonoBehaviour
 
     private StarlightMenu _menuToOpenOnClose;
     protected virtual bool createCommands => false;
-
+    
     protected virtual bool inGameOnly => false;
 
     [HideFromIl2Cpp] public MenuActions[] openActions
@@ -82,12 +85,17 @@ public abstract class StarlightMenu : MonoBehaviour
             { "openActions", new List<MenuActions> { MenuActions.PauseGame, MenuActions.HideMenus } },
             { "closeActions", new List<MenuActions> { MenuActions.UnPauseGame, MenuActions.UnHideMenus, MenuActions.EnableInput } },
         });
+        if (requiredFeatures.Any(featureFlag => !featureFlag.HasFlag()))
+        {
+            _inActive = true;
+            return;
+        }
         if (createCommands)
         {
             bool error = false;
             try
             {
-                MenuIdentifier identifier = this.GetMenuIdentifier();
+                var identifier = this.GetMenuIdentifier();
                 if (!string.IsNullOrEmpty(identifier.saveKey))
                 {
                     try { StarlightCommandManager.RegisterCommand(new MenuVisibilityCommands.OpenCommand(identifier, this, inGameOnly)); }
@@ -161,9 +169,7 @@ public abstract class StarlightMenu : MonoBehaviour
     {
         _closing = true;
         if (_changedOpenState) return;
-        foreach (FeatureFlag featureFlag in (List<FeatureFlag>)StarlightEntryPoint.Menus[this]["requiredFeatures"])
-            if (!featureFlag.HasFlag())
-                return;
+        if (_inActive) return;
         if (!isOpen) return;
         MenuEUtil.MenuBlock.SetActive(false);
         gameObject.SetActive(false);
@@ -212,7 +218,7 @@ public abstract class StarlightMenu : MonoBehaviour
     public new void Open()
     {
         if (_changedOpenState) return;
-        foreach (FeatureFlag featureFlag in (List<FeatureFlag>)StarlightEntryPoint.Menus[this]["requiredFeatures"]) if (!featureFlag.HasFlag()) return;
+        if (_inActive) return;
         if (MenuEUtil.isAnyMenuOpen) return;
         if(inGameOnly) if (!inGame) return;
         if (StarlightWarpManager.warpTo != null) return;
@@ -232,7 +238,7 @@ public abstract class StarlightMenu : MonoBehaviour
         ExecuteInTicks((() => { gameObject.SetActive(true);}), 1);
         (StarlightEntryPoint.Menus[this]["openActions"] as List<MenuActions>).DoMenuActions();
         try { OnOpen(); }catch (Exception e) { LogError(e); }
-        foreach (var pair in toTranslate) pair.Key.SetText(translation(pair.Value));
+        foreach (var pair in ToTranslate) pair.Key.SetText(translation(pair.Value));
         AudioEUtil.PlaySound(MenuSound.OpenMenu);
     }
     
@@ -241,11 +247,10 @@ public abstract class StarlightMenu : MonoBehaviour
         if (isOpen) Close();
         else Open();
     }
-    
-    public bool isOpen { get {
-        foreach (FeatureFlag featureFlag in (List<FeatureFlag>)StarlightEntryPoint.Menus[this]["requiredFeatures"]) if (!featureFlag.HasFlag()) return false;
-            return gameObject.activeSelf; } }
-    protected readonly Dictionary<TextMeshProUGUI, string> toTranslate = new ();
+
+    public bool isOpen => !_inActive && gameObject.activeSelf;
+
+    protected readonly Dictionary<TextMeshProUGUI, string> ToTranslate = new ();
 
 
     protected Sprite whitePillBg => MenuEUtil.whitePillBg; 

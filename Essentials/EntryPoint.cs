@@ -14,10 +14,13 @@ using MelonLoader;
 using MelonLoader.Utils;
 using Starlight.Expansion;
 using Starlight.Components;
+using Starlight.Components.Debug;
 using Starlight.Enums;
+using Starlight.Enums.Features;
 using Starlight.Managers;
 using Starlight.Menus;
 using Starlight.Menus.Debug;
+using Starlight.Menus.Development;
 using Starlight.Patches.General;
 using Starlight.Patches.InGame;
 using Starlight.Prism;
@@ -72,7 +75,6 @@ public class StarlightEntryPoint : MelonMod
     
     internal static TMP_FontAsset Sr2FontAsset;
     internal static TMP_FontAsset NormalFont;
-    internal static TMP_FontAsset RegularFont;
     internal static TMP_FontAsset BoldFont;
     internal static TMP_FontAsset NotoSansFont;
     
@@ -557,9 +559,8 @@ public class StarlightEntryPoint : MelonMod
     internal static void SetupFonts()
     {
         if (Sr2FontAsset == null) Sr2FontAsset = FontEUtil.FontFromGame("Runsell Type - HemispheresCaps2");
-        if (RegularFont == null) RegularFont = FontEUtil.FontFromGame("Lexend-Regular (Latin)");
         if (BoldFont == null) BoldFont = FontEUtil.FontFromGame("Lexend-Bold (Latin)");
-        if (NormalFont == null) NormalFont = FontEUtil.FontFromOS("Tahoma");
+        if (NormalFont == null) NormalFont = FontEUtil.FontFromGame("Lexend-Regular (Latin)");//FontEUtil.FontFromOS("Tahoma");
 
         foreach (var pair in Menus) pair.Key.ReloadFont();
     }
@@ -727,9 +728,13 @@ public class StarlightEntryPoint : MelonMod
                     catch (Exception e) { LogError(e); }
                 
                 if (RestoreDebugDebugUI.HasFlag())
-                    try { if (StarlightNativeDebugUI.openKey.OnKeyDown()) MenuEUtil.GetMenu<StarlightNativeDebugUI>().Toggle(); }
+                    try { if (StarlightNativeDebugUI.OpenKey.OnKeyDown()) MenuEUtil.GetMenu<StarlightNativeDebugUI>().Toggle(); }
                     catch (Exception e) { LogError(e); }
 
+                if (DevTestMenu.HasFlag())
+                    try { if (StarlightTestDevMenu.OpenKey.OnKeyDown()) MenuEUtil.GetMenu<StarlightTestDevMenu>().Toggle(); }
+                    catch (Exception e) { LogError(e); }
+                
                 foreach (var pair in Menus)
                     try { pair.Key.AlwaysUpdate(); }
                     catch (Exception e) { LogError(e); }

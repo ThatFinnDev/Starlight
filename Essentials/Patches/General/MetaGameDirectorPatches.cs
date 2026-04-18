@@ -12,7 +12,8 @@ public static class MetaGameDirectorChangeGameActivityPatch
         return true;
     }
 }
-[HarmonyPatch(typeof(MetaGameDirector), nameof(MetaGameDirector.SetAchievementProgress))]
+[HarmonyPatch(typeof(MetaGameDirector), nameof(MetaGameDirector.SetAchievementProgress), typeof(MetaGameDirector.AchievementData), typeof(int))]
+[HarmonyPatch(typeof(MetaGameDirector), nameof(MetaGameDirector.SetAchievementProgress), typeof(MetaGameDirector.Achievement), typeof(int))]
 public static class MetaGameDirectorSetAchievementProgressPatch
 {
     public static bool Prefix()

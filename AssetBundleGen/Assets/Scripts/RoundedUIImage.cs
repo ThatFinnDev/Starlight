@@ -49,7 +49,7 @@ namespace Starlight.Components.AssetBundle
 			if (graphic == null) graphic = GetComponent<MaskableGraphic>();
 
 			if (roundedMaterial == null)
-				roundedMaterial = new Material(Shader.Find("UI/SR2E/Rounded"));
+				roundedMaterial = new Material(Shader.Find("UI/Starlight/Rounded"));
 
 			if (graphic != null)
 				graphic.material = roundedMaterial;

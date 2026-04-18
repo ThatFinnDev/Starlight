@@ -46,9 +46,9 @@ public class StarlightCheatMenu : StarlightMenu
     private StarlightCheatMenuButton _infEnergyButton;
     private StarlightCheatMenuButton _infHealthButton;
     private StarlightCheatMenuButton _removeFogButton;
-    private StarlightCheatMenuButton _betterScreenshotButton;
+    //private StarlightCheatMenuButton _betterScreenshotButton;
     internal static bool RemoveFog;
-    internal static bool BetterScreenshot;
+    //internal static bool BetterScreenshot;
     private InputEvent _inputDown;
     private InputEvent _inputUp;
     
@@ -115,7 +115,7 @@ public class StarlightCheatMenu : StarlightMenu
         if (EnableInfHealth.HasFlag()) _infHealthButton.textInstance.text = translation("cheatmenu.cheatbuttons.infhealth" + (InfiniteHealthCommand.infHealth? "on" : "off"));
         if (EnableInfEnergy.HasFlag()) _infEnergyButton.textInstance.text = translation("cheatmenu.cheatbuttons.infenergy" + (InfiniteEnergyCommand.infEnergy? "on" : "off"));
         _removeFogButton.textInstance.text = translation("cheatmenu.cheatbuttons.removeFog" + (RemoveFog? "on" : "off"));
-        _betterScreenshotButton.textInstance.text = translation("cheatmenu.cheatbuttons.betterScreenshot" + (BetterScreenshot? "on" : "off"));
+        //_betterScreenshotButton.textInstance.text = translation("cheatmenu.cheatbuttons.betterScreenshot" + (BetterScreenshot? "on" : "off"));
 
         
         //Warp Buttons
@@ -207,11 +207,11 @@ public class StarlightCheatMenu : StarlightMenu
         var button4 = transform.GetObjectRecursively<Image>("CheatMenuSpawnSelectionButtonRec");
         button4.sprite = whitePillBg;
         button4.GetComponent<Button>().onClick.AddListener(selectCategorySound);
-        toTranslate.Add(button1.transform.GetChild(0).GetComponent<TextMeshProUGUI>(),"cheatmenu.category.main");
-        toTranslate.Add(button2.transform.GetChild(0).GetComponent<TextMeshProUGUI>(),"cheatmenu.category.refinery");
-        toTranslate.Add(button3.transform.GetChild(0).GetComponent<TextMeshProUGUI>(),"cheatmenu.category.gadgets");
-        toTranslate.Add(button4.transform.GetChild(0).GetComponent<TextMeshProUGUI>(),"cheatmenu.category.spawn");
-        toTranslate.Add(transform.GetObjectRecursively<TextMeshProUGUI>("TitleTextRec"),"cheatmenu.title");
+        ToTranslate.Add(button1.transform.GetChild(0).GetComponent<TextMeshProUGUI>(),"cheatmenu.category.main");
+        ToTranslate.Add(button2.transform.GetChild(0).GetComponent<TextMeshProUGUI>(),"cheatmenu.category.refinery");
+        ToTranslate.Add(button3.transform.GetChild(0).GetComponent<TextMeshProUGUI>(),"cheatmenu.category.gadgets");
+        ToTranslate.Add(button4.transform.GetChild(0).GetComponent<TextMeshProUGUI>(),"cheatmenu.category.spawn");
+        ToTranslate.Add(transform.GetObjectRecursively<TextMeshProUGUI>("TitleTextRec"),"cheatmenu.title");
     }
     void CheatButtons()
     {
@@ -236,13 +236,13 @@ public class StarlightCheatMenu : StarlightMenu
                 RemoveFog = !RemoveFog;
                 _removeFogButton.textInstance.text = translation("cheatmenu.cheatbuttons.removeFog" + (RemoveFog? "on" : "off"));
             });
-        _betterScreenshotButton = new StarlightCheatMenuButton(translation("cheatmenu.cheatbuttons.betterScreenshotoff"),
+        /*_betterScreenshotButton = new StarlightCheatMenuButton(translation("cheatmenu.cheatbuttons.betterScreenshotoff"),
             () =>
             {
                 AudioEUtil.PlaySound(MenuSound.Click);
                 BetterScreenshot = !BetterScreenshot;
                 _betterScreenshotButton.textInstance.text = translation("cheatmenu.cheatbuttons.betterScreenshot" + (BetterScreenshot? "on" : "off"));
-            });
+            });*/
         _noclipButton = new StarlightCheatMenuButton(translation("cheatmenu.cheatbuttons.noclipoff"),
             () =>
             {

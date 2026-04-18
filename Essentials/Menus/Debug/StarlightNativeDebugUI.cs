@@ -1,8 +1,8 @@
 using System;
 using Il2CppInterop.Runtime.Attributes;
-using Il2CppMonomiPark.SlimeRancher.DebugTool;
 using Il2CppTMPro;
 using Starlight.Components;
+using Starlight.Components.Debug;
 using Starlight.Enums;
 using Starlight.Enums.Features;
 using Starlight.Managers;
@@ -34,11 +34,11 @@ internal class StarlightNativeDebugUI : StarlightMenu
     }
 
     private GameObject debugUIPrefab => ddf.director._uiDefaultPrefab;
-    private List<DebugUI> debugUIs = new List<DebugUI>();
-    private DebugUI rootDebugUI = null;
+    private List<DebugUI> _debugUIs = new ();
+    private DebugUI _rootDebugUI;
 
-    private DebugUIEntry[] rootEntries = new []
-    {
+    private readonly DebugUIEntry[] _rootEntries =
+    [
         new DebugUIEntry() { text = "TestButton" },
         new DebugUIEntry() { text = "Toggle Noclip", action = () => StarlightCommandManager.ExecuteByString("noclip")},
         new DebugUIEntry() { text = "SubMenu", closesMenu = false,action = () => MenuEUtil.GetMenu<StarlightNativeDebugUI>().OpenEntries(
@@ -49,11 +49,11 @@ internal class StarlightNativeDebugUI : StarlightMenu
                 {
                     new DebugUIEntry() { text = "Subsubbutton" },
                 }) },
-            }) },
-    };
+            }) }
+    ];
     
     // In reality it's tab
-    internal static readonly LKey openKey = LKey.F10;
+    internal static readonly LKey OpenKey = LKey.F10;
     public new static GameObject GetMenuRootObject()
     {
         var obj = new GameObject("NativeDebugUI");
@@ -70,37 +70,39 @@ internal class StarlightNativeDebugUI : StarlightMenu
     protected override void OnOpen()
     {
         GetComponent<RectTransform>().sizeDelta=GetComponent<RectTransform>().GetParentSize();
-        foreach (var debugUI in debugUIs) Destroy(debugUI.gameObject);
-        debugUIs = new();
+        foreach (var debugUI in _debugUIs) Destroy(debugUI.gameObject);
+        _debugUIs = new();
 
-        rootDebugUI = OpenEntries(rootEntries);
+        _rootDebugUI = OpenEntries(_rootEntries);
     }
 
     protected override void OnClose()
     {
-        foreach (var debugUI in debugUIs) Destroy(debugUI.gameObject);
-        debugUIs = new();
+        foreach (var debugUI in _debugUIs) Destroy(debugUI.gameObject);
+        _debugUIs = new();
     }
     public void GoBack()
     {
-        CloseEntries(debugUIs[debugUIs.Count - 1]);
+        if (_debugUIs.Count >= 1) CloseEntries(_debugUIs[_debugUIs.Count - 1]);
+        else Close();
     }
     
     
     public void CloseEntries(DebugUI toClose)
     {
-        foreach (var ui in debugUIs) ui.gameObject.SetActive(false);
-        debugUIs.Remove(toClose);
+        foreach (var ui in _debugUIs) ui.gameObject.SetActive(false);
+        _debugUIs.Remove(toClose);
         Destroy(toClose.gameObject);
-        debugUIs[debugUIs.Count-1].gameObject.SetActive(true);
+        if (_debugUIs.Count >= 1) _debugUIs[_debugUIs.Count-1].gameObject.SetActive(true);
+        else Close();
     }
     [HideFromIl2Cpp] public DebugUI OpenEntries(params DebugUIEntry[] buttons)
     {
-        foreach (var ui in debugUIs) ui.gameObject.SetActive(false);
-        var instance = Instantiate(debugUIPrefab, null);
+        foreach (var ui in _debugUIs) ui.gameObject.SetActive(false);
+        var instance = Instantiate(debugUIPrefab, null as Transform);
         instance.transform.parentInternal = transform;
         var debugUI = instance.GetComponent<DebugUI>();
-        debugUIs.Add(debugUI);
+        _debugUIs.Add(debugUI);
 
         foreach (var b in buttons) if(b!=null) AddButton(debugUI,b);
         
@@ -117,13 +119,13 @@ internal class StarlightNativeDebugUI : StarlightMenu
 
         var b = instance.GetObjectRecursively<Button>("Content");
         if(entry.action!=null) b.onClick.AddListener(entry.action);
-        if(entry.closesMenu) b.onClick.AddListener((Action)(() => CloseEntries(debugUI)));
+        if(entry.closesMenu) b.onClick.AddListener((Action)(() => Close()));
     }
     
     public override void OnCloseUIPressed()
     {
         if (MenuEUtil.isAnyPopUpOpen) return;
-        if(debugUIs.Count>1) GoBack();
+        if(_debugUIs.Count>=1) GoBack();
         else Close();
     }
 }

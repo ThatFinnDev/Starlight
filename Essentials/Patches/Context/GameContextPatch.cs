@@ -1,16 +1,13 @@
-using System;
 using Il2CppMonomiPark.SlimeRancher.Damage;
-using Il2CppMonomiPark.SlimeRancher.DebugTool;
 using Il2CppMonomiPark.SlimeRancher.Input;
 using Il2CppMonomiPark.SlimeRancher.UI;
 using Starlight.Buttons;
 using Starlight.Buttons.OptionsUI;
-using Starlight.Components;
+using Starlight.Components.Debug;
 using Starlight.Enums;
 using Starlight.Enums.Sounds;
 using Starlight.Managers;
 using Starlight.Menus;
-using Starlight.Patches.General;
 using Starlight.Patches.Options;
 using Starlight.Popups;
 using UnityEngine.InputSystem;
@@ -21,7 +18,7 @@ namespace Starlight.Patches.Context;
 [HarmonyPatch(typeof(GameContext), nameof(GameContext.Start))]
 internal class GameContextPatch
 {
-    internal static CustomPauseMenuButton cheatMenuButton;
+    internal static CustomPauseMenuButton CheatMenuButton;
     internal static void Postfix(GameContext __instance)
     {
         StarlightEntryPoint.GameContextStarted = true;
@@ -49,7 +46,7 @@ internal class GameContextPatch
             StarlightEntryPoint.AddedButtons = true;
             if (AddModMenuButton.HasFlag())
             {
-                LocalizedString label = AddTranslationFromStarlight("buttons.mods.label", "b.button_mods_sr2e", "UI");
+                LocalizedString label = AddTranslationFromStarlight("buttons.mods.label", "b.button_mods_starlight", "UI");
                 new CustomMainMenuButton(label, EmbeddedResourceEUtil.LoadSprite("Assets.modsMenuIcon.png").CopyWithoutMipmaps(), 4, (SystemAction)(() => { MenuEUtil.GetMenu<StarlightModMenu>().Open(); }));
                 new CustomPauseMenuButton(label, 3, (SystemAction)(() => { MenuEUtil.GetMenu<StarlightModMenu>().Open(); }));
                 
@@ -73,8 +70,8 @@ internal class GameContextPatch
                 //subsub.AddSubButton(three,false);
 
             }
-            if (AddCheatMenuButton.HasFlag()) cheatMenuButton = new CustomPauseMenuButton(AddTranslationFromStarlight("buttons.cheatmenu.label", "b.button_cheatmenu_sr2e", "UI"), 4, (SystemAction)(() => { MenuEUtil.GetMenu<StarlightCheatMenu>().Open(); }));
-            if (DevMode.HasFlag()||RestoreDebugPlayerDebug.HasFlag()) new CustomPauseMenuButton(AddTranslationFromStarlight("buttons.debugplayer.label", "b.debug_player_sr2e", "UI"), 3, (SystemAction)(() => { StarlightDebugUI.DebugStatsManager.TogglePlayerDebugUI(); }));
+            if (AddCheatMenuButton.HasFlag()) CheatMenuButton = new CustomPauseMenuButton(AddTranslationFromStarlight("buttons.cheatmenu.label", "b.button_cheatmenu_starlight", "UI"), 4, (SystemAction)(() => { MenuEUtil.GetMenu<StarlightCheatMenu>().Open(); }));
+            if (DevMode.HasFlag()||RestoreDebugPlayerDebug.HasFlag()) new CustomPauseMenuButton(AddTranslationFromStarlight("buttons.debugplayer.label", "b.debug_player_starlight", "UI"), 3, (SystemAction)(StarlightDebugUI.DebugStatsManager.TogglePlayerDebugUI));
             if (AddMockOptionsUIButtons.HasFlag())
             {
                 var testCategory1 = new CustomOptionsUICategory(AddTranslation("AllTheTime"), 4,null, OptionsCategoryVisibleState.AllTheTime);
@@ -82,7 +79,7 @@ internal class GameContextPatch
                 var testCategory3 = new CustomOptionsUICategory(AddTranslation("InGameOnly"), 4,null, OptionsCategoryVisibleState.InGameOnly);
                 testCategory1.AddButton(new CustomOptionsButtonValues
                 (AddTranslation("GlobalTest"),AddTranslation("This is an example description"),
-                    "sr2e.mock.global1",1,true,false,false, ((value) =>
+                    "starlight.mock.global1",1,true,false,false, ((value) =>
                     { 
                         Log("It has been changed to "+value);
                     }), OptionsButtonType.OptionsUI,
@@ -90,7 +87,7 @@ internal class GameContextPatch
                     ));
                 testCategory2.AddButton(new CustomOptionsButtonValues
                 (AddTranslation("MainMenuOnlyTest"),AddTranslation("This wraps around!"),
-                    "sr2e.mock.mainmenuonly1",1,true,true,false, ((value) =>
+                    "starlight.mock.mainmenuonly1",1,true,true,false, ((value) =>
                     { 
                         Log("It has been changed to "+value);
                     }), OptionsButtonType.OptionsUI,
@@ -98,7 +95,7 @@ internal class GameContextPatch
                 ));
                 testCategory3.AddButton(new CustomOptionsButtonValues
                 (AddTranslation("InGameOnlyTest"),AddTranslation("This doesn't apply immediately!"),
-                    "sr2e.mock.ingameonly1",1,false,false,false, ((value) =>
+                    "starlight.mock.ingameonly1",1,false,false,false, ((value) =>
                     { 
                         Log("It has been changed to "+value);
                     }), OptionsButtonType.InGameOptionsUIOnly,
@@ -106,7 +103,7 @@ internal class GameContextPatch
                 ));
                 var coolButton = new CustomOptionsButtonValues
                 (AddTranslation("MultiCategoryTest"), AddTranslation("This is in multiple categories! And shouldnt be 2 times in MainMenuOnly!"),
-                    "sr2e.mock.multitest", 1, true, false, false, ((value) =>
+                    "starlight.mock.multitest", 1, true, false, false, ((value) =>
                     {
                         Log("It has been changed to " + value);
                     }), OptionsButtonType.OptionsUI,
@@ -125,7 +122,7 @@ internal class GameContextPatch
         {
             LookupEUtil.CloseInput = Get<InputEvent>("Close");
             if(LookupEUtil.CloseInput != null)
-                LookupEUtil.CloseInput.add_Performed((System.Action<InputEventData>)((data) =>
+                LookupEUtil.CloseInput.add_Performed((System.Action<InputEventData>)((_) =>
                 {
                     var menu = MenuEUtil.GetOpenMenu();
                     if(menu!=null) menu.OnCloseUIPressed();

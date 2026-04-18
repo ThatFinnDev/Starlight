@@ -11,6 +11,10 @@ public enum FeatureFlag
     /// </summary>
     DevMode=10,
     /// <summary>
+    /// Enable test dev menu command
+    /// </summary>
+    DevTestMenu=11,
+    /// <summary>
     /// Shows extra info in into MLLog
     /// </summary>
     DebugLogging=20,
@@ -244,6 +248,14 @@ public enum FeatureFlag
     /// This will force load the main menu, however it will break things and thus is only for developing mods
     /// </summary>
     ForceLoadMainMenu=540, //
+    /// <summary>
+    /// This force loads volume presets with invalid components
+    /// </summary>
+    TryFixingInvalidVolumePresets=550, //
+    /// <summary>
+    /// This exports all volume presets after loading them
+    /// </summary>
+    ExportAllVolumePresets=560, //
     
     
     

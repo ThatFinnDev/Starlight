@@ -38,7 +38,8 @@ public static class EmbeddedResourceEUtil
             var unused=stream.Read(array, 0, array.Length);
 
             var texture2D = new Texture2D(1, 1);
-            ImageConversion.LoadImage(texture2D, array);
+            try { Il2CppImageConversionManager.LoadImage(texture2D, array); }
+            catch (Exception e) { LogError(e); return null; }
         
             texture2D.filterMode = FilterMode.Bilinear;
         

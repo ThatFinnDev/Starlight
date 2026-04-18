@@ -28,29 +28,30 @@ public static class StarlightFeatureFlags
     private static FeatureFlag[] extraDevFlags =>
     [
         DevMode, Experiments, CommandsLoadDevOnly, CommandsLoadExperimental, IgnoreSaveErrors, 
-        ExperimentalKeyCodes, EnableRepoMenu, UseMockRepo //InjectOptionsButtons, AddMockOptionsUIButtons
+        ExperimentalKeyCodes, EnableRepoMenu, UseMockRepo, DevTestMenu
+        //InjectOptionsButtons, AddMockOptionsUIButtons
     ];
     private static FeatureFlag[] extraBetaFlags => [None];
     private static FeatureFlag[] extraAlphaFlags => [None];
     
-    private static List<FeatureFlag> _flagsToForceOff = new List<FeatureFlag>();
-    private static readonly Dictionary<FeatureIntegerValue, int> DefaultFeatureInts = new Dictionary<FeatureIntegerValue, int>()
+    private static List<FeatureFlag> _flagsToForceOff = new ();
+    private static readonly Dictionary<FeatureIntegerValue, int> DefaultFeatureInts = new ()
     {
         {MAX_AUTOCOMPLETE,55},
         {MAX_CONSOLELINES,150},
         {SAVESLOT_COUNT,75},
         {MAX_AUTOCOMPLETEONSCREEN,6}
     };
-    private static readonly Dictionary<FeatureStringValue, string> DefaultFeatureStrings = new Dictionary<FeatureStringValue, string>()
+    private static readonly Dictionary<FeatureStringValue, string> DefaultFeatureStrings = new ()
     {
         {DEFAULT_LANGUAGECODE,"en"}
     };
     
     
     private static CommandType _enabledCmDs;
-    private static Dictionary<FeatureIntegerValue, int> _featureInts = new Dictionary<FeatureIntegerValue, int>();
-    private static Dictionary<FeatureStringValue, string> _featureStrings = new Dictionary<FeatureStringValue, string>();
-    private static List<FeatureFlag> _enabledFlags = new List<FeatureFlag>();
+    private static Dictionary<FeatureIntegerValue, int> _featureInts = new ();
+    private static Dictionary<FeatureStringValue, string> _featureStrings = new ();
+    private static List<FeatureFlag> _enabledFlags = new ();
 
     private static bool _initialized;
     static string flagPath => Path.Combine(StarlightEntryPoint.flagDataPath,StarlightEntryPoint.UpdateBranch+".flags");
@@ -294,6 +295,7 @@ public static class StarlightFeatureFlags
     {
         {CheckForUpdates, [new FFRDeactivated(DevMode)] },
         {AllowAutoUpdate, [new FFRDeactivated(DevMode)] },
+        {DevTestMenu, [new FFRActivated(DevMode)] },
         {EnableConsole, [new FFRMelonUnInstalled("mSRML")] },
         {EnableInfHealth, [new FFRMelonUnInstalled("InfiniteHealth")] },
         {EnableInfEnergy, [new FFRMelonUnInstalled("InfiniteEnergy")] },
@@ -358,35 +360,42 @@ public static class StarlightFeatureFlags
     public static List<FeatureFlag> featureFlags => _enabledFlags.ToArray().ToNetList();
 }
 
+// ReSharper disable once InconsistentNaming
 internal class FFR //FeatureFlagRequirement
 { } 
+// ReSharper disable once InconsistentNaming
 internal class FFRString : FFR //FeatureFlagRequirementString
 { 
     public string String;
 } 
+// ReSharper disable once InconsistentNaming
 internal class FFRFlag : FFR  //FeatureFlagRequirementFlag
 { 
     public FeatureFlag Flag;
 } 
+// ReSharper disable once InconsistentNaming
 internal class FFRDeactivated : FFRFlag //FeatureFlagRequirementDeactivated
 {
-    public FFRDeactivated(FeatureFlag Flag)
-    { this.Flag = Flag; }
+    public FFRDeactivated(FeatureFlag flag)
+    { this.Flag = flag; }
 }
+// ReSharper disable once InconsistentNaming
 internal class FFRActivated : FFRFlag //FeatureFlagRequirementActivated
 {
-    public FFRActivated(FeatureFlag Flag)
-    { this.Flag = Flag; }
+    public FFRActivated(FeatureFlag flag)
+    { this.Flag = flag; }
 }
+// ReSharper disable once InconsistentNaming
 internal class FFRMelonInstalled : FFRString //FeatureFlagRequirementMelonInstalled
 {
-    public FFRMelonInstalled(string MelonName)
-    { this.String = MelonName; }
+    public FFRMelonInstalled(string melonName)
+    { this.String = melonName; }
 }
+// ReSharper disable once InconsistentNaming
 internal class FFRMelonUnInstalled : FFRString //FeatureFlagRequirementMelonInstalled
 {
-    public FFRMelonUnInstalled(string MelonName)
-    { this.String = MelonName; }
+    public FFRMelonUnInstalled(string melonName)
+    { this.String = melonName; }
 }
 
 

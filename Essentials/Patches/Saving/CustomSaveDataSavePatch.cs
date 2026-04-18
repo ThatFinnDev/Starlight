@@ -12,7 +12,7 @@ internal static class CustomSaveDataSavePatch
 {
     internal const string DataPrefix = "StarlightDataV01";
     internal const string DataPrefixOwn = "StarlightOwnDataV01";
-    internal static void Postfix(GameModel gameModel,SavedGameInfoProvider savedGameInfoProvider, ISaveReferenceTranslation saveReferenceTranslation, GameMetadata metadata, ref GameV09 __result )
+    internal static void Postfix(GameModel gameModel,SavedGameInfoProvider savedGameInfoProvider, ISaveReferenceTranslation saveReferenceTranslation, GameMetadata metadata, ref GameV10 __result )
     {
         try
         {

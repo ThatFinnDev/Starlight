@@ -44,6 +44,11 @@ public class StarlightThemeMenu : StarlightMenu
         }
         foreach (var identifier in identifiers)
         {
+            try
+            {
+                if(identifier.GetMenu().IsPermanentlyDisabled()) continue;
+            }
+            catch { }
             var entry = Instantiate(_entryTemplate, _content);
             entry.SetActive(true);
             entry.GetObjectRecursively<TextMeshProUGUI>("Title").text = translation(identifier.translationKey+".title");
@@ -128,14 +133,14 @@ public class StarlightThemeMenu : StarlightMenu
         _buttonTemplate = transform.GetObjectRecursively<GameObject>("ThemeSelectorEntryButtonEntryRec");
         _dropdownTemplate = transform.GetObjectRecursively<GameObject>("ThemeSelectorEntryDropdownEntryRec");
         _warningText = transform.GetObjectRecursively<GameObject>("ThemeMenuRestartWarningRec");
-        toTranslate.Add(_warningText.GetComponent<TextMeshProUGUI>(),"thememenu.warning.restart");
+        ToTranslate.Add(_warningText.GetComponent<TextMeshProUGUI>(),"thememenu.warning.restart");
         _content = transform.GetObjectRecursively<Transform>("ThemeMenuThemeSelectorContentRec");
         
         var button1 = transform.GetObjectRecursively<Image>("ThemeMenuThemeSelectorSelectionButtonRec");
         button1.sprite = whitePillBg;
         
-        toTranslate.Add(button1.transform.GetChild(0).GetComponent<TextMeshProUGUI>(),"thememenu.category.selector");
-        toTranslate.Add(transform.GetObjectRecursively<TextMeshProUGUI>("TitleTextRec"),"thememenu.title");
+        ToTranslate.Add(button1.transform.GetChild(0).GetComponent<TextMeshProUGUI>(),"thememenu.category.selector");
+        ToTranslate.Add(transform.GetObjectRecursively<TextMeshProUGUI>("TitleTextRec"),"thememenu.title");
     }
     public override void OnCloseUIPressed()
     {

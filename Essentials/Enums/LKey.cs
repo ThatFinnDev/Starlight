@@ -37,7 +37,7 @@ public enum LKey
     PageUp = 505, PageDown = 506, Home = 507, End = 508, Insert = 509, Delete = 510,
 
     // Common keys
-    Space = 601, Return = 602, Escape = 603, Tab = 604, Backspace = 605,
+    Space = 601, Return = 602, Enter = 602, Escape = 603, Tab = 604, Backspace = 605,
 
     // Symbols
     Minus = 701, Equals = 702, LeftBracket = 703, RightBracket = 704,

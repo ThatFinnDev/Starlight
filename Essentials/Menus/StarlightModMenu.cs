@@ -225,7 +225,7 @@ public class StarlightModMenu : StarlightMenu
         _entryTemplate = transform.GetObjectRecursively<GameObject>("ModMenuModConfigurationTemplateEntryRec");
         _headerTemplate = transform.GetObjectRecursively<GameObject>("ModMenuModConfigurationTemplateHeaderRec");
         _warningText = transform.GetObjectRecursively<GameObject>("ModMenuModConfigurationRestartWarningRec");
-        toTranslate.Add(_warningText.GetComponent<TextMeshProUGUI>(),"modmenu.warning.restart");
+        ToTranslate.Add(_warningText.GetComponent<TextMeshProUGUI>(),"modmenu.warning.restart");
         _modInfoText = transform.GetObjectRecursively<TextMeshProUGUI>("ModMenuModInfoTextRec");
         _modInfoText.AddComponent<ClickableTextLink>();
         foreach (string stringKey in Enum.GetNames(typeof(Key)))
@@ -282,14 +282,14 @@ public class StarlightModMenu : StarlightMenu
                 StarlightTextViewer.Open(translation("feature.indevelopment"));
             }
         }));
-        toTranslate.Add(button1.transform.GetChild(0).GetComponent<TextMeshProUGUI>(),"modmenu.category.modmenu");
-        toTranslate.Add(button2.transform.GetChild(0).GetComponent<TextMeshProUGUI>(),"modmenu.category.modconfig");
-        toTranslate.Add(button3.transform.GetChild(0).GetComponent<TextMeshProUGUI>(),"modmenu.category.repo");
-        toTranslate.Add(transform.GetObjectRecursively<TextMeshProUGUI>("TitleTextRec"),"modmenu.title");
+        ToTranslate.Add(button1.transform.GetChild(0).GetComponent<TextMeshProUGUI>(),"modmenu.category.modmenu");
+        ToTranslate.Add(button2.transform.GetChild(0).GetComponent<TextMeshProUGUI>(),"modmenu.category.modconfig");
+        ToTranslate.Add(button3.transform.GetChild(0).GetComponent<TextMeshProUGUI>(),"modmenu.category.repo");
+        ToTranslate.Add(transform.GetObjectRecursively<TextMeshProUGUI>("TitleTextRec"),"modmenu.title");
         
         _themeButton = transform.GetObjectRecursively<Button>("ThemeMenuButtonRec");
         _themeButton.onClick.AddListener((SystemAction)(() =>{ AudioEUtil.PlaySound(MenuSound.Click); Close(); MenuEUtil.GetMenu<StarlightThemeMenu>().OpenC(this); }));
-        toTranslate.Add(_themeButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>(),"buttons.thememenu.label");
+        ToTranslate.Add(_themeButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>(),"buttons.thememenu.label");
         foreach (var category in MelonPreferences.Categories)
         {
             var header = Instantiate(_headerTemplate, _modConfigContent);

@@ -1,11 +1,6 @@
-using UnityEngine;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using MelonLoader.Utils;
 using Starlight.Storage;
 
-namespace Starlight.Components;
+namespace Starlight.Components.Debug;
 [InjectIntoIL]
 internal class DevelopmentBuildText : MonoBehaviour
 {
@@ -15,7 +10,8 @@ internal class DevelopmentBuildText : MonoBehaviour
     {
         string text = "Development Build";
 
-        GUIStyle style = new GUIStyle(GUI.skin.label);
+        string json = JsonUtility.ToJson(GUI.skin.label);
+        var style = JsonUtility.FromJson<GUIStyle>(json);
         style.fontSize = fontSize;
         style.alignment = TextAnchor.LowerRight;
 

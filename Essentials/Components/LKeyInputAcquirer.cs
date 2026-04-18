@@ -86,13 +86,16 @@ internal class LKeyInputAcquirer : MonoBehaviour
         {
             bool anyPressed = false;
             foreach (var k in Keyboard.current.allKeys)
-            {
-                if (k.isPressed)
+                try
                 {
-                    anyPressed = true;
-                    break;
+                    if (k.isPressed)
+                    {
+                        anyPressed = true;
+                        break;
+                    }
                 }
-            }
+                catch {}
+            
 
             if (!anyPressed)
             {

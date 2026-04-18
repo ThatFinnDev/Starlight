@@ -39,10 +39,10 @@ public static class SaveFileEUtil
         if(summaries.Count==0) return NoValidSummaries;
         var storageProvider = autoSaveDirector._storageProvider;
         
-        var sr2ESaveFile = new StarlightSaveFileV01(savesData,gameName.Split("_")[0], 0);
-        sr2ESaveFile.stamp = stamp;
-        sr2ESaveFile.StarlightCodeVersion = BuildInfo.CodeVersion;
-        sr2ESaveFile.StarlightDisplayVersion = BuildInfo.DisplayVersion;
+        var starlightSaveFile = new StarlightSaveFileV01(savesData,gameName.Split("_")[0], 0);
+        starlightSaveFile.stamp = stamp;
+        starlightSaveFile.StarlightCodeVersion = BuildInfo.CodeVersion;
+        starlightSaveFile.StarlightDisplayVersion = BuildInfo.DisplayVersion;
         var hasLatest = false;
         foreach (var summary in summaries)
         {
@@ -87,31 +87,31 @@ public static class SaveFileEUtil
             if (summary.SaveName == latestSaveName)
             {
                 hasLatest = true;
-                sr2ESaveFile.latest = saveID;
-                sr2ESaveFile.metaGameIcon = summary.IconId.ReferenceId;
-                sr2ESaveFile.metaFeralEnabled = summary.FeralEnabled;
-                sr2ESaveFile.metaTarrEnabled = summary.TarrEnabled;
-                sr2ESaveFile.metaDisplayName = summary.DisplayName; 
-                sr2ESaveFile.metaGameName = gameName;
-                sr2ESaveFile.metaSaveSlotIndex = summary.SaveSlotIndex;
-                sr2ESaveFile.metaLatestSaveNumber = summary.SaveNumber;
-                sr2ESaveFile.metaSR2Version = summary.Version;
+                starlightSaveFile.latest = saveID;
+                starlightSaveFile.metaGameIcon = summary.IconId.ReferenceId;
+                starlightSaveFile.metaFeralEnabled = summary.FeralEnabled;
+                starlightSaveFile.metaTarrEnabled = summary.TarrEnabled;
+                starlightSaveFile.metaDisplayName = summary.DisplayName; 
+                starlightSaveFile.metaGameName = gameName;
+                starlightSaveFile.metaSaveSlotIndex = summary.SaveSlotIndex;
+                starlightSaveFile.metaLatestSaveNumber = summary.SaveNumber;
+                starlightSaveFile.metaSR2Version = summary.Version;
             }     
         }
         if (savesData.Count == 0) return NoValidSaves;
         if (!hasLatest) return LatestSaveInvalid;
 
-        sr2ESaveFile.savesData = savesData;
-        data = sr2ESaveFile;
+        starlightSaveFile.savesData = savesData;
+        data = starlightSaveFile;
         return NoError;
     }
     
-    public static StarlightError ImportSaveV01(StarlightSaveFileV01 sr2ESaveFile, int slotThatStartWithOne, bool loadMenuMenuOnSuccess)
+    public static StarlightError ImportSaveV01(StarlightSaveFileV01 starlightSaveFile, int slotThatStartWithOne, bool loadMenuMenuOnSuccess)
     {
         if (!AllowSaveExport.HasFlag()) return NeedFlag;
-        if(sr2ESaveFile==null) return SaveInvalidGeneral;
-        if (!sr2ESaveFile.IsValid()) return SaveInvalidGeneral;
-        if(gameContext==null||autoSaveDirector==null||autoSaveDirector._storageProvider==null) return GameNotLoadedYet;
+        if(starlightSaveFile==null) return SaveInvalidGeneral;
+        if (!starlightSaveFile.IsValid()) return SaveInvalidGeneral;
+        if(!gameContext||!autoSaveDirector||autoSaveDirector._storageProvider==null) return GameNotLoadedYet;
         var storageProvider = autoSaveDirector._storageProvider;
         try
         {
@@ -130,21 +130,21 @@ public static class SaveFileEUtil
         } catch { }
 
         bool failedSome = false;
-        foreach (var pair in sr2ESaveFile.savesData)
+        foreach (var pair in starlightSaveFile.savesData)
         {
-            bool isMain = pair.Key == sr2ESaveFile.latest;
+            bool isMain = pair.Key == starlightSaveFile.latest;
             try
             {
                 var stream = new Il2CppSystem.IO.MemoryStream(pair.Value);
-                var gameState = new GameV09();
+                var gameState = new GameV10();
                 gameState.Load(stream);
                 if (stream is { CanRead: true }) stream.Close();
 
                 stream = new Il2CppSystem.IO.MemoryStream();
 
                 var newDisplayName = slotThatStartWithOne.ToString();
-                if (isMain&&sr2ESaveFile.modifiers!=null)
-                    foreach (var modifier in sr2ESaveFile.modifiers)
+                if (isMain&&starlightSaveFile.modifiers!=null)
+                    foreach (var modifier in starlightSaveFile.modifiers)
                     {
                         if (string.IsNullOrWhiteSpace(modifier.Key)) continue;
                         try
@@ -207,7 +207,7 @@ public static class SaveFileEUtil
                             LogError("Error applying modifier: "+modifier.Key);
                         }
                     }
-                var newGameName = sr2ESaveFile.stamp + "_" + newDisplayName;
+                var newGameName = starlightSaveFile.stamp + "_" + newDisplayName;
                 gameState.DisplayName = newDisplayName;
                 gameState.GameName = newGameName;
                 gameState.SaveSlotIndex = slotThatStartWithOne-1;
@@ -231,12 +231,12 @@ public static class SaveFileEUtil
                 }
                 if (isMain)
                 {
-                    foreach (var pair2 in sr2ESaveFile.savesData)
+                    foreach (var pair2 in starlightSaveFile.savesData)
                     {
                         try
                         {
                             var newDisplayName = slotThatStartWithOne.ToString();
-                            var newGameName = sr2ESaveFile.stamp + "_" + newDisplayName;
+                            var newGameName = starlightSaveFile.stamp + "_" + newDisplayName;
                             storageProvider.DeleteGameData(newGameName + "_" + pair2.Key);
                         } catch { }
                     }

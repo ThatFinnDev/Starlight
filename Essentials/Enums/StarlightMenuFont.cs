@@ -11,6 +11,6 @@ public enum StarlightMenuFont
     Default=0,
     SR2=1, 
     Bold=2, 
-    Regular=3,
+    //Regular=3,
     NotoSans=4
 }

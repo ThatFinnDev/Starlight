@@ -10,7 +10,7 @@ namespace Starlight.Patches.Saving.Fixer;
 [HarmonyPatch(typeof(GameModelPushHelpers), nameof(GameModelPushHelpers.PushRanch))]
 internal static class SaveFixerPushRanch
 {
-    internal static void Prefix(GameModel gameModel, RanchV02 ranch, ILoadReferenceTranslation loadReferenceTranslation)
+    internal static void Prefix(GameModel gameModel, RanchV03 ranch, ILoadReferenceTranslation loadReferenceTranslation)
     {
         try
         {

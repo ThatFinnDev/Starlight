@@ -10,8 +10,8 @@ namespace Starlight.Managers;
 public static class StarlightLanguageManger
 {
     internal static Dictionary<string, Dictionary<string, string>> addedTranslations = new ();
-    internal static Dictionary<string, LocalizedString> sr2etosrlanguage = new ();
-    internal static Dictionary<string, (string, string, LocalizedString)> sr2eReplaceOnLanguageChange = new ();
+    internal static Dictionary<string, LocalizedString> starlighttosrlanguage = new ();
+    internal static Dictionary<string, (string, string, LocalizedString)> starlightReplaceOnLanguageChange = new ();
     
     static Dictionary<string, List<Dictionary<string, string>>> languages = new ();
     static Dictionary<string, string> loadedLanguage = new ();
@@ -153,12 +153,12 @@ public static class StarlightLanguageManger
         StringTableEntry stringTableEntry = table2.AddEntry(key, localized);
         return new LocalizedString(table2.SharedData.TableCollectionName, stringTableEntry.SharedEntry.Id);
         }
-    public static LocalizedString AddTranslationFromStarlight(string sr2eTranslationID, string key = null, string table = "Actor")
+    public static LocalizedString AddTranslationFromStarlight(string starlightTranslationID, string key = null, string table = "Actor")
     {
-        LocalizedString localizedString = AddTranslation(translation(sr2eTranslationID), key, table);
+        var localizedString = AddTranslation(translation(starlightTranslationID), key, table);
             
-        sr2etosrlanguage.TryAdd(sr2eTranslationID,localizedString);
-        sr2eReplaceOnLanguageChange.TryAdd(sr2eTranslationID, (key, table, localizedString));
+        starlighttosrlanguage.TryAdd(starlightTranslationID,localizedString);
+        starlightReplaceOnLanguageChange.TryAdd(starlightTranslationID, (key, table, localizedString));
             
         return localizedString;
     }
@@ -171,7 +171,7 @@ public static class StarlightLanguageManger
             
         table2.GetEntry(key).Value = localized;
     }
-    public static void SetTranslationFromStarlight(string sr2eTranslationID, string key, string table) => SetTranslation(translation(sr2eTranslationID), key, table);
+    public static void SetTranslationFromStarlight(string starlightTranslationID, string key, string table) => SetTranslation(translation(starlightTranslationID), key, table);
         
     
     

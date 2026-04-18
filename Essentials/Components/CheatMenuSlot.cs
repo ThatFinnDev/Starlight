@@ -4,6 +4,7 @@ using Il2CppTMPro;
 using Starlight.Enums.Sounds;
 using Starlight.Popups;
 using Starlight.Storage;
+using Unity.Mathematics;
 using UnityEngine.UI;
 
 namespace Starlight.Components;
@@ -44,8 +45,17 @@ internal class CheatMenuSlot : MonoBehaviour
         string itemName = type.GetName().Replace("'","").Replace(" ","");
         entryInput.text = itemName;
         slot.Clear();
-        sceneContext.PlayerState.Ammo.MaybeAddToSpecificSlot(type, null, slotID, 
-            (int)amountSlider.value);
+        if (type is SlimeDefinition)
+        {
+            var data = new AmmoSlot.AmmoMetadata();
+            data.Id = type;
+            data.Emotions = new float4();
+            sceneContext.PlayerState.Ammo.MaybeAddToSpecificSlot(data, slotID, (int)amountSlider.value, true);
+        }
+        else
+        {
+            sceneContext.PlayerState.Ammo.MaybeAddResource(type, slotID, (int)amountSlider.value, true);
+        }
     }
     private void Select()
     {

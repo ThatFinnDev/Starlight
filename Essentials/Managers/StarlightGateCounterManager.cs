@@ -21,11 +21,11 @@ public static class StarlightCounterGateManager
     {
         try
         {
-            if(GameContextPatch.cheatMenuButton!=null)
+            if(GameContextPatch.CheatMenuButton!=null)
                 if(disableCheats) 
-                    GameContextPatch.cheatMenuButton.Remove();
+                    GameContextPatch.CheatMenuButton.Remove();
                 else
-                    GameContextPatch.cheatMenuButton.AddAgain();
+                    GameContextPatch.CheatMenuButton.AddAgain();
         } catch { }
     }
     static void RefreshOcclusionCulling()

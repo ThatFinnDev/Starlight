@@ -1,3 +1,4 @@
+using System;
 using Il2CppTMPro;
 using UnityEngine.TextCore;
 using UnityEngine.TextCore.LowLevel;
@@ -14,7 +15,7 @@ public static class FontEUtil
         catch { StarlightEntryPoint.SendFontError(name); }
         return null;
     }
-    public static TMP_FontAsset FontFromOS(string name)
+    [Obsolete("Currently broken!")] public static TMP_FontAsset FontFromOS(string name)
     {
         try
         { 

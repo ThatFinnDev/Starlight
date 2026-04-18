@@ -56,20 +56,6 @@ public static class ContextShortcuts
         return true;
     }
 
-    private static bool _ml072OrNewer = true;
-
-    public static bool ml072OrNewer
-    {
-        get
-        {
-            if (StarlightEntryPoint.MelonVersion == "undefined")
-            {
-                // This is to execute the getter
-                var unused = mlVersion;
-            }
-            return _ml072OrNewer;
-        }
-    }
 
     public static string mlVersion
     {
@@ -84,39 +70,27 @@ public static class ContextShortcuts
                 }
                 catch
                 {
-                    _ml072OrNewer = false;
+                    //Do this if ML changes MelonLoader.BuildInfo.Version again...
+                    LogError("MelonLoader.BuildInfo.Version changed, if you are using not using the latest ML version, please update," + "otherwise this will be fixed in the next Starlight release!");
                     try
                     {
-                        // This works on ML 0.7.1 and older
-                        var buildInfo = System.Type.GetType("MelonLoader.BuildInfo, MelonLoader");
-                        StarlightEntryPoint.MelonVersion = (string)buildInfo.GetProperty("Version").GetValue(null, null);
-                    }
-                    catch
-                    {
-                        // This works on some version even lower than 0.7.1 and is a fallback for a new version
-                        //Do this if ML changes MelonLoader.BuildInfo.Version again...
-                        LogError("MelonLoader.BuildInfo.Version changed, if you are using not using the latest ML version, please update," +
-                                          "otherwise this will be fixed in the next Starlight release!");
-                        try
+                        string logFilePath = Application.dataPath + "/../MelonLoader/Latest.log";
+                        using (var logFileStream = new System.IO.FileStream(logFilePath, System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.ReadWrite))
+                        using (var logFileReader = new System.IO.StreamReader(logFileStream))
                         {
-                            string logFilePath = Application.dataPath + "/../MelonLoader/Latest.log";
-                            using (var logFileStream = new System.IO.FileStream(logFilePath, System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.ReadWrite))
-                            using (var logFileReader = new System.IO.StreamReader(logFileStream))
-                            {
-                                string text = logFileReader.ReadToEnd();
-                                var split = text.Split("\n");
-                                if (string.IsNullOrWhiteSpace(split[0])) StarlightEntryPoint.MelonVersion = split[2].Split("v")[1].Split(" ")[0];
-                                else StarlightEntryPoint.MelonVersion = split[1].Split("v")[1].Split(" ")[0];
-                            }
-                            
+                            string text = logFileReader.ReadToEnd();
+                            var split = text.Split("\n");
+                            if (string.IsNullOrWhiteSpace(split[0])) StarlightEntryPoint.MelonVersion = split[2].Split("v")[1].Split(" ")[0];
+                            else StarlightEntryPoint.MelonVersion = split[1].Split("v")[1].Split(" ")[0];
                         }
-                        catch { StarlightEntryPoint.MelonVersion = "unknown"; }
+                            
                     }
+                    catch { StarlightEntryPoint.MelonVersion = "unknown"; }
                 }
 
                 var v = StarlightEntryPoint.MelonVersion;
-                if(v=="0.6.0"||v=="0.6.1"||v=="0.6.2"||v=="0.6.3"||v=="0.6.4"||v=="0.6.5"||v=="0.6.6"||v=="0.7.0")
-                    LogBigError("Starlight-WARNING","Your MelonLoader version is lower than 0.7.1! Problems will occur! Do not report issues to Starlight if you face issues! Please update the MelonLoader!");
+                if(v=="0.6.0"||v=="0.6.1"||v=="0.6.2"||v=="0.6.3"||v=="0.6.4"||v=="0.6.5"||v=="0.6.6"||v=="0.7.0"||v=="0.7.1"||v=="0.7.2")
+                    LogBigError("Starlight-WARNING","Your MelonLoader version is lower than 0.7.3! Problems will occur! Do not report issues to Starlight if you face issues! Please update the MelonLoader!");
             }
             return StarlightEntryPoint.MelonVersion;
         }

@@ -100,7 +100,7 @@ internal static class StarlightSaveManager
 
     internal static void Save() { File.WriteAllText(configPath,JsonConvert.SerializeObject(data, Formatting.Indented)); }
     
-    static string configPath => Path.Combine(StarlightEntryPoint.dataPath, "sr2e.data");
+    static string configPath => Path.Combine(StarlightEntryPoint.dataPath, "starlight.data");
     
     
     static string oldpath2 = Path.Combine(Application.persistentDataPath, "Starlight.data");

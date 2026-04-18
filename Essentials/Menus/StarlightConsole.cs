@@ -13,7 +13,7 @@ namespace Starlight.Menus;
 
 public class StarlightConsole : StarlightMenu
 {
-    public new static MenuIdentifier GetMenuIdentifier() => new ("console",StarlightMenuFont.Regular, StarlightMenuTheme.Black, "Console");
+    public new static MenuIdentifier GetMenuIdentifier() => new ("console",StarlightMenuFont.Default, StarlightMenuTheme.Black, "Console");
 
     protected override bool createCommands => true;
     protected override bool inGameOnly => false;
@@ -243,7 +243,7 @@ public class StarlightConsole : StarlightMenu
 
         }
 
-        if (LKey.KeypadEnter.OnKeyDown())
+        if (LKey.Enter.OnKeyDown())
             if (_commandInput.text != "")
                 Execute();
 
