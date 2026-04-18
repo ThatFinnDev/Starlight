@@ -1,27 +1,17 @@
 ﻿using System;
 using Il2CppMonomiPark.SlimeRancher.Script.UI.Pause;
 using Il2CppMonomiPark.SlimeRancher.UI;
-using Il2CppMonomiPark.SlimeRancher.UI.Pause;
 using SR2E.Buttons;
 
 namespace SR2E.Patches.InGame;
 
-[HarmonyPatch(typeof(PauseMenuDirector), nameof(PauseMenuDirector.Awake))]
-internal static class SR2PauseDirectorPatch
-{
-    internal static void Prefix(PauseMenuDirector __instance)
-    {
-        if (!InjectPauseButtons.HasFlag()) return;
-        foreach (var menu in GetAll<PauseMenuRoot>())
-            SR2PauseMenuButtonPatch.Postfix(menu);
-    }
-}
+[HarmonyPatch(typeof(PauseMenuRoot), nameof(PauseMenuRoot.Awake))]
 internal static class SR2PauseMenuButtonPatch
 {
-    internal static List<CustomPauseMenuButton> buttons = new List<CustomPauseMenuButton>();
+    internal static List<CustomPauseMenuButton> buttons = new ();
     internal static bool safeLock;
     internal static bool postSafeLock;
-    internal static void Postfix(PauseMenuRoot __instance)
+    internal static void Prefix(PauseMenuRoot __instance)
     {
         if (!InjectPauseButtons.HasFlag()) return;
         if (safeLock) { return; }

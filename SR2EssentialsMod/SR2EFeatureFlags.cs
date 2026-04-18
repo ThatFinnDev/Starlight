@@ -28,6 +28,7 @@ public static class SR2EFeatureFlags
         DevMode, Experiments, CommandsLoadDevOnly, CommandsLoadExperimental, IgnoreSaveErrors, 
         ExperimentalKeyCodes, EnableRepoMenu, UseMockRepo, 
         
+        //RestoreDebugAbilities, RestoreDebugDebugUI, RestoreDebugDevConsole, RestoreDebugFPSViewer, RestoreDebugPlayerDebug,
         //InjectOptionsButtons, AddMockOptionsUIButtons
     };
     private static FeatureFlag[] extraBetaFlags => new []{None};

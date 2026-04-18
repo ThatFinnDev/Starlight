@@ -84,7 +84,8 @@ internal class SR2ENativeDebugUI : SR2EMenu
     }
     public void GoBack()
     {
-        CloseEntries(debugUIs[debugUIs.Count - 1]);
+        if (debugUIs.Count >= 1) CloseEntries(debugUIs[debugUIs.Count - 1]);
+        else Close();
     }
     
     
@@ -93,7 +94,8 @@ internal class SR2ENativeDebugUI : SR2EMenu
         foreach (var ui in debugUIs) ui.gameObject.SetActive(false);
         debugUIs.Remove(toClose);
         Destroy(toClose.gameObject);
-        debugUIs[debugUIs.Count-1].gameObject.SetActive(true);
+        if (debugUIs.Count >= 1) debugUIs[debugUIs.Count-1].gameObject.SetActive(true);
+        else Close();
     }
     [HideFromIl2Cpp] public DebugUI OpenEntries(params DebugUIEntry[] buttons)
     {
@@ -118,13 +120,13 @@ internal class SR2ENativeDebugUI : SR2EMenu
 
         var b = instance.GetObjectRecursively<Button>("Content");
         if(entry.action!=null) b.onClick.AddListener(entry.action);
-        if(entry.closesMenu) b.onClick.AddListener((Action)(() => CloseEntries(debugUI)));
+        if(entry.closesMenu) b.onClick.AddListener((Action)(() => Close()));
     }
     
     public override void OnCloseUIPressed()
     {
         if (MenuEUtil.isAnyPopUpOpen) return;
-        if(debugUIs.Count>1) GoBack();
+        if(debugUIs.Count>=1) GoBack();
         else Close();
     }
 }

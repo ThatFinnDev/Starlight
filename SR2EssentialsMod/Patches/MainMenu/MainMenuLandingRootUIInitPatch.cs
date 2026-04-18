@@ -108,9 +108,7 @@ internal static class MainMenuLandingRootUIInitPatch
     private static void Postfix()
     {
         ChangeVersionLabel();
-        ExecuteInTicks((() => { ChangeVersionLabel();}), 1);
-        ExecuteInTicks((() => { ChangeVersionLabel();}), 3);
-        ExecuteInTicks((() => { ChangeVersionLabel();}), 10);            
+        ExecuteInTicks((() => { ChangeVersionLabel();}), 1);          
     }
 
     public static bool alreadyLoadedOptions = false;

@@ -15,7 +15,8 @@ internal class GiveCommand : SR2ECommand
             return LookupEUtil.GetVaccableStringListByPartialName(args == null ? null : args[0], true,MAX_AUTOCOMPLETE.Get());
         if (argIndex == 1)
             return new List<string> { "1", "5", "10", "20", "30", "50" };
-
+        if (argIndex == 2)
+            return new List<string> { "true", "false" };
         return null;
     }
 
@@ -42,7 +43,7 @@ internal class GiveCommand : SR2ECommand
         {
             i++;
             if (!slot.IsUnlocked) continue;
-            if (slot.Id!=null&&slot.Id.ReferenceId != type.ReferenceId) continue;
+            if (slot.Id&&slot.Id.ReferenceId != type.ReferenceId) continue;
             slotID = i;
             break;
         }
