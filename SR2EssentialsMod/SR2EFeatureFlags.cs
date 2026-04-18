@@ -20,13 +20,13 @@ public static class SR2EFeatureFlags
         EnableModMenu,EnableConsole, InjectMainMenuButtons,InjectRanchUIButtons,InjectPauseButtons,InjectTranslations,
         AddCheatMenuButton,AddModMenuButton,CheckForUpdates,AllowAutoUpdate,EnableInfHealth,
         EnableInfEnergy,EnableCheatMenu,EnableLocalizedVersionPatch,EnableThemeMenu,
-        ChangeSystemContextIsModded,AllowPrism, AllowSaveExport, TryFixingInvalidSceneGroups
-        
+        ChangeSystemContextIsModded,AllowPrism, AllowSaveExport, TryFixingInvalidSceneGroups,
     };
 
     private static FeatureFlag[] extraDevFlags => new[] {
         DevMode, Experiments, CommandsLoadDevOnly, CommandsLoadExperimental, IgnoreSaveErrors, 
-        ExperimentalKeyCodes, EnableRepoMenu, UseMockRepo, 
+        ExperimentalKeyCodes, EnableRepoMenu, UseMockRepo, DebugLogging,
+        ShowWorldPopulatorErrors, IgnoreWorldPopulatorErrors
         
         //RestoreDebugAbilities, RestoreDebugDebugUI, RestoreDebugDevConsole, RestoreDebugFPSViewer, RestoreDebugPlayerDebug,
         //InjectOptionsButtons, AddMockOptionsUIButtons
