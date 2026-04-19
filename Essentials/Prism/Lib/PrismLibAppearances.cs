@@ -3,8 +3,9 @@ using Starlight.Prism.Data;
 using Starlight.Prism.Wrappers;
 
 namespace Starlight.Prism.Lib;
+
 /// <summary>
-/// A library of helper functions for dealing with slime appearances
+/// A library of helper functions for dealing with slime appearances.
 /// </summary>
 public static class PrismLibAppearances
 {
@@ -29,414 +30,236 @@ public static class PrismLibAppearances
     private const string EnableVortex = "_EnableVortex";
     private const string VortexDistortionSize = "_VortexDistortionSize";
     private const string TwinVortexOffset = "_TwinVortexOffset";
+    private const string TwinEffectOn = "_ENABLETWINEFFECT_ON";
+    private const string BodyColoringSloomber = "_BODYCOLORING_SLOOMBER";
+
+    #region Structure Management
 
     /// <summary>
-    /// Sets the color of a slime appearance structure
+    /// Gets a structure from a slime by index.
     /// </summary>
-    /// <param name="structure">The structure to set the color of</param>
-    /// <param name="id">The id of the color to set</param>
-    /// <param name="color">The color to set</param>
-    public static void SetStructColor(SlimeAppearanceStructure structure, int id, Color color)
+    public static SlimeAppearanceStructure GetStructure(this PrismSlime slime, int structureIndex, int appearanceIndex = 0)
     {
-        structure.DefaultMaterials[0]?.SetColor(id, color);
+        var app = slime.GetSlimeDefinition().AppearancesDefault[appearanceIndex];
+        if (app == null || structureIndex < 0 || structureIndex >= app.Structures.Count) return null;
+        return app.Structures[structureIndex];
     }
 
     /// <summary>
-    /// Adds a structure to a slime appearance
+    /// Gets a structure from a slime by element type.
     /// </summary>
-    /// <param name="appearance">The appearance to add the structure to</param>
-    /// <param name="structure">The structure to add</param>
-    public static void AddStructure(SlimeAppearance appearance, SlimeAppearanceStructure structure)
+    public static SlimeAppearanceStructure GetStructure(this PrismSlime slime, SlimeAppearanceElement.ElementType type, int appearanceIndex = 0)
     {
-        appearance.Structures=appearance.Structures.AddToNew(structure);
+        var app = slime.GetSlimeDefinition().AppearancesDefault[appearanceIndex];
+        if (app == null) return null;
+        foreach (var s in app.Structures)
+            if (s.Element.Type == type) return s;
+        return null;
     }
+
     /// <summary>
-    /// Adds a structure to a slime appearance
+    /// Replaces structures of a certain type across all default appearances.
     /// </summary>
-    /// <param name="app">The appearance to add the structure to</param>
-    /// <param name="mesh">The mesh of the structure</param>
-    /// <param name="rootBone">The root bone of the structure</param>
-    /// <param name="parentBone">The parent bone of the structure</param>
-    /// <param name="elementName">The name of the element</param>
-    /// <returns>The new structure</returns>
-    public static SlimeAppearanceStructure AddStructure(SlimeAppearance app, Mesh mesh, SlimeAppearance.SlimeBone rootBone, SlimeAppearance.SlimeBone parentBone, string elementName)
+    public static void SetStructure(this PrismSlime slime, SlimeAppearanceStructure structure, SlimeAppearanceElement.ElementType type)
     {
-        var structPrefab = app._structures[0]?.Element.Prefabs[0]?.gameObject.CopyObject();
-        if (structPrefab == null) return null;
-        structPrefab.GetComponent<SkinnedMeshRenderer>().sharedMesh = mesh;
+        foreach (var app in slime.GetSlimeDefinition().AppearancesDefault)
+            for (int i = 0; i < app.Structures.Count; i++)
+                if (app.Structures[i].Element.Type == type)
+                {
+                    app._structures = app._structures.ReplaceToNew(structure, i);
+                    break;
+                }
+    }
+
+    /// <summary>
+    /// Adds a structure to all default appearances.
+    /// </summary>
+    public static void AddStructure(this PrismSlime slime, SlimeAppearanceStructure structure)
+    {
+        foreach (var app in slime.GetSlimeDefinition().AppearancesDefault)
+            app._structures = app._structures.AddToNew(structure);
         
-        var structObj = structPrefab.GetComponent<SlimeAppearanceObject>();
-        structObj.IgnoreLODIndex = true;
-        structObj.RootBone = rootBone;
-        structObj.ParentBone = parentBone;
-        structObj.AttachedBones = new Il2CppStructArray<SlimeAppearance.SlimeBone>(0);
-        
-        var structure = new SlimeAppearanceStructure(app._structures[0]);
-        structure.Element = ScriptableObject.CreateInstance<SlimeAppearanceElement>();
-        structure.Element.CastsShadows = true;
-        structure.Element.Name = elementName;
-        structure.Element.Prefabs = new Il2CppReferenceArray<SlimeAppearanceObject>(new[]
+    }
+
+    /// <summary>
+    /// Adds a new structure with a mesh to all default appearances.
+    /// </summary>
+    public static void AddStructure(this PrismSlime slime, Mesh mesh, SlimeAppearance.SlimeBone rootBone, SlimeAppearance.SlimeBone parentBone, string elementName)
+    {
+        var def = slime.GetSlimeDefinition();
+        foreach (var app in def.AppearancesDefault)
         {
-            structObj
-        });
-        
-        app._structures = app._structures.AddToNew(structure);
-        return structure;
+            var baseStruct = app._structures[0];
+            var structPrefab = baseStruct?.Element.Prefabs[0]?.gameObject.CopyObject();
+            if (structPrefab == null) continue;
+
+            var smr = structPrefab.GetComponent<SkinnedMeshRenderer>();
+            if (smr != null) smr.sharedMesh = mesh;
+            
+            var structObj = structPrefab.GetComponent<SlimeAppearanceObject>();
+            structObj.IgnoreLODIndex = true;
+            structObj.RootBone = rootBone;
+            structObj.ParentBone = parentBone;
+            structObj.AttachedBones = new Il2CppStructArray<SlimeAppearance.SlimeBone>(0);
+            
+            var structure = new SlimeAppearanceStructure(baseStruct);
+            structure.Element = ScriptableObject.CreateInstance<SlimeAppearanceElement>();
+            structure.Element.CastsShadows = true;
+            structure.Element.Name = elementName;
+            structure.Element.Prefabs = new Il2CppReferenceArray<SlimeAppearanceObject>(new[] { structObj });
+            
+            app._structures = app._structures.AddToNew(structure);
+        }
     }
+
+    #endregion
+
+    #region Coloring (PrismBaseSlime)
+
     /// <summary>
-    /// Sets the base colors of a plort
+    /// Sets a color on a structure's material by structure index.
     /// </summary>
-    /// <param name="prismPlort">The plort to set the colors of</param>
-    /// <param name="top">The top color</param>
-    /// <param name="middle">The middle color</param>
-    /// <param name="bottom">The bottom color</param>
-    public static void SetPlortBaseColors(this PrismPlort prismPlort, Color32 top, Color32 middle, Color32 bottom)
+    public static void SetColor(this PrismBaseSlime slime, string property, Color color, int structureIndex = 0, int materialIndex = 0)
     {
-        var material = prismPlort.GetPrefab().GetComponent<MeshRenderer>().material;
+        var s = slime.GetStructure(structureIndex, 0);
+        if (s == null || materialIndex < 0 || materialIndex >= s.DefaultMaterials.Count) return;
+        s.DefaultMaterials[materialIndex]?.SetColor(property, color);
+    }
+
+    /// <summary>
+    /// Sets a color on a structure's material by element type.
+    /// </summary>
+    public static void SetColor(this PrismBaseSlime slime, string property, Color color, SlimeAppearanceElement.ElementType type, int materialIndex = 0)
+    {
+        var s = slime.GetStructure(type, 0);
+        if (s == null || materialIndex < 0 || materialIndex >= s.DefaultMaterials.Count) return;
+        s.DefaultMaterials[materialIndex]?.SetColor(property, color);
+    }
+
+    // Individual colors
+    public static void SetTopColor(this PrismBaseSlime slime, Color color, int structureIndex = 0, int materialIndex = 0) => slime.SetColor(TopColor, color, structureIndex, materialIndex);
+    public static void SetMiddleColor(this PrismBaseSlime slime, Color color, int structureIndex = 0, int materialIndex = 0) => slime.SetColor(MiddleColor, color, structureIndex, materialIndex);
+    public static void SetBottomColor(this PrismBaseSlime slime, Color color, int structureIndex = 0, int materialIndex = 0) => slime.SetColor(BottomColor, color, structureIndex, materialIndex);
+    public static void SetSpecColor(this PrismBaseSlime slime, Color color, int structureIndex = 0, int materialIndex = 0) => slime.SetColor(SpecColor, color, structureIndex, materialIndex);
+
+    public static void SetTwinTopColor(this PrismBaseSlime slime, Color color, int structureIndex = 0, int materialIndex = 0) => slime.SetColor(TwinTopColor, color, structureIndex, materialIndex);
+    public static void SetTwinMiddleColor(this PrismBaseSlime slime, Color color, int structureIndex = 0, int materialIndex = 0) => slime.SetColor(TwinMiddleColor, color, structureIndex, materialIndex);
+    public static void SetTwinBottomColor(this PrismBaseSlime slime, Color color, int structureIndex = 0, int materialIndex = 0) => slime.SetColor(TwinBottomColor, color, structureIndex, materialIndex);
+    public static void SetTwinSpecColor(this PrismBaseSlime slime, Color color, int structureIndex = 0, int materialIndex = 0) => slime.SetColor(TwinSpecColor, color, structureIndex, materialIndex);
+
+    public static void SetSloomberTopColor(this PrismBaseSlime slime, Color color, int structureIndex = 0, int materialIndex = 0) => slime.SetColor(SloomberTopColor, color, structureIndex, materialIndex);
+    public static void SetSloomberMiddleColor(this PrismBaseSlime slime, Color color, int structureIndex = 0, int materialIndex = 0) => slime.SetColor(SloomberMiddleColor, color, structureIndex, materialIndex);
+    public static void SetSloomberBottomColor(this PrismBaseSlime slime, Color color, int structureIndex = 0, int materialIndex = 0) => slime.SetColor(SloomberBottomColor, color, structureIndex, materialIndex);
+
+    // Group Color setters
+    public static void SetBaseColors(this PrismBaseSlime slime, Color top, Color middle, Color bottom, Color? specular = null, int structureIndex = 0, int materialIndex = 0)
+    {
+        slime.SetTopColor(top, structureIndex, materialIndex);
+        slime.SetMiddleColor(middle, structureIndex, materialIndex);
+        slime.SetBottomColor(bottom, structureIndex, materialIndex);
+        slime.SetSpecColor(specular ?? middle, structureIndex, materialIndex);
+    }
+
+    public static void SetTwinColors(this PrismBaseSlime slime, Color top, Color middle, Color bottom, Color? specular = null, int structureIndex = 0, int materialIndex = 0)
+    {
+        slime.SetTwinTopColor(top, structureIndex, materialIndex);
+        slime.SetTwinMiddleColor(middle, structureIndex, materialIndex);
+        slime.SetTwinBottomColor(bottom, structureIndex, materialIndex);
+        slime.SetTwinSpecColor(specular ?? middle, structureIndex, materialIndex);
+    }
+
+    public static void SetSloomberColors(this PrismBaseSlime slime, Color top, Color middle, Color bottom, int structureIndex = 0, int materialIndex = 0)
+    {
+        slime.SetSloomberTopColor(top, structureIndex, materialIndex);
+        slime.SetSloomberMiddleColor(middle, structureIndex, materialIndex);
+        slime.SetSloomberBottomColor(bottom, structureIndex, materialIndex);
+    }
+
+    #endregion
+
+    #region Effects
+
+    public static void EnableTwinEffect(this PrismSlime slime, bool applyTextures = true)
+    {
+        var twinMat = PrismNativeBaseSlime.Twin.GetPrismBaseSlime()?.GetSlimeAppearance()?._structures[0]?.DefaultMaterials[0];
+        foreach (var app in slime.GetSlimeDefinition().AppearancesDefault)
+        {
+            var mat = app.Structures[0]?.DefaultMaterials[0];
+            if (mat == null) continue;
+            mat.EnableKeyword(TwinEffectOn);
+            if (applyTextures && twinMat != null) mat.SetTexture(NoiseEdge, twinMat.GetTexture(NoiseEdge));
+        }
+        slime.AdjustTwinEffect();
+    }
+
+    public static void EnableSloomberEffect(this PrismSlime slime, bool applyTextures = true)
+    {
+        var sloomberMat = PrismNativeBaseSlime.Sloomber.GetPrismBaseSlime()?.GetSlimeAppearance()?._structures[0]?.DefaultMaterials[0];
+        foreach (var app in slime.GetSlimeDefinition().AppearancesDefault)
+        {
+            var mat = app.Structures[0]?.DefaultMaterials[0];
+            if (mat == null) continue;
+            mat.EnableKeyword(BodyColoringSloomber);
+            if (applyTextures && sloomberMat != null)
+            {
+                mat.SetTexture(SloomberStarMask, sloomberMat.GetTexture(SloomberStarMask));
+                mat.SetTexture(SloomberColorOverlay, sloomberMat.GetTexture(SloomberColorOverlay));
+            }
+        }
+        slime.AdjustSloomberSparkles();
+    }
+
+    public static void AdjustSloomberSparkles(this PrismSlime slime, float size = 3.26f, float intensity = 1)
+    {
+        foreach (var app in slime.GetSlimeDefinition().AppearancesDefault)
+        {
+            var mat = app.Structures[0]?.DefaultMaterials[0];
+            if (mat == null) continue;
+            mat.SetFloat(StarTiling, size);
+            mat.SetFloat(StarMaskIntensityBodycoloringSloomber, intensity);
+        }
+    }
+
+    public static void AdjustTwinEffect(this PrismSlime slime, float size = 1f, float intensity = 0.8f, bool vortex = true, float vortexDistortion = 12f, Vector4? vortexOffset = null)
+    {
+        Vector4 offset = vortexOffset ?? new Vector4(0, -0.5f, 0, 0);
+        foreach (var app in slime.GetSlimeDefinition().AppearancesDefault)
+        {
+            var mat = app.Structures[0]?.DefaultMaterials[0];
+            if (mat == null) continue;
+            mat.SetFloat(TwinEffectSize, size);
+            mat.SetFloat(TwinLineDivisionIntensity, intensity);
+            mat.SetFloat(EnableVortex, vortex ? 1f : 0f);
+            mat.SetFloat(VortexDistortionSize, vortexDistortion);
+            mat.SetVector(TwinVortexOffset, offset);
+        }
+    }
+
+    public static void DisableTwinEffect(this PrismSlime slime)
+    {
+        foreach (var app in slime.GetSlimeDefinition().AppearancesDefault)
+            app.Structures[0]?.DefaultMaterials[0]?.DisableKeyword(TwinEffectOn);
+    }
+
+    #endregion
+
+    #region Plorts
+
+    public static void SetBaseColors(this PrismPlort plort, Color top, Color middle, Color bottom)
+    {
+        var material = plort.GetPrefab().GetComponent<MeshRenderer>().sharedMaterial;
         material.SetColor(TopColor, top);
         material.SetColor(MiddleColor, middle);
         material.SetColor(BottomColor, bottom);
-        
     }
 
-    /// <summary>
-    /// Sets the twin colors of a plort
-    /// </summary>
-    /// <param name="prismPlort">The plort to set the colors of</param>
-    /// <param name="top">The top color</param>
-    /// <param name="middle">The middle color</param>
-    /// <param name="bottom">The bottom color</param>
-    public static void SetPlortTwinColors(this PrismPlort prismPlort, Color32 top, Color32 middle, Color32 bottom)
+    public static void SetTwinColors(this PrismPlort plort, Color top, Color middle, Color bottom)
     {
-        var material = prismPlort.GetPrefab().GetComponent<MeshRenderer>().material;
+        var material = plort.GetPrefab().GetComponent<MeshRenderer>().sharedMaterial;
         material.SetColor(TwinTopColor, top);
         material.SetColor(TwinMiddleColor, middle);
         material.SetColor(TwinBottomColor, bottom);
     }
-    /// <summary>
-    /// Sets the base colors of a slime
-    /// </summary>
-    /// <param name="prismSlime">The slime to set the colors of</param>
-    /// <param name="top">The top color</param>
-    /// <param name="middle">The middle color</param>
-    /// <param name="bottom">The bottom color</param>
-    /// <param name="special">The special color</param>
-    /// <param name="index">The index of the appearance</param>
-    /// <param name="index2">The index of the material</param>
-    /// <param name="isSs">Whether the appearance is a secret style</param>
-    /// <param name="structure">The index of the structure</param>
-    public static void SetSlimeBaseColorsSpecific(this PrismSlime prismSlime, Color32 top, Color32 middle, Color32 bottom, Color32 special, int index, int index2, bool isSs, int structure)
-    {
-        var slimeDef = prismSlime.GetSlimeDefinition();
-        var mat = isSs ? slimeDef.AppearancesDynamic.ToArray()[index].Structures[structure]?.DefaultMaterials[index2] : slimeDef.AppearancesDefault[index]?.Structures[structure]?.DefaultMaterials[index2];
 
-        mat?.SetColor(TopColor, top);
-        mat?.SetColor(MiddleColor, middle);
-        mat?.SetColor(BottomColor, bottom);
-        mat?.SetColor(SpecColor, special);
-    }
-
-    /// <summary>
-    /// Sets the base colors of a slime
-    /// </summary>
-    /// <param name="prismSlime">The slime to set the colors of</param>
-    /// <param name="top">The top color</param>
-    /// <param name="middle">The middle color</param>
-    /// <param name="bottom">The bottom color</param>
-    public static void SetSlimeBaseColors(this PrismSlime prismSlime, Color32 top, Color32 middle, Color32 bottom)
-    {
-        var slimeDef = prismSlime.GetSlimeDefinition();
-        for (int i = 0; i < slimeDef.AppearancesDefault[0]?.Structures.Count - 1; i++)
-        {
-            var a = slimeDef.AppearancesDefault[0].Structures[i];
-            var mat = a?.DefaultMaterials[0];
-            mat?.SetColor(TopColor, top);
-            mat?.SetColor(MiddleColor, middle);
-            mat?.SetColor(BottomColor, bottom);
-            mat?.SetColor(SpecColor, middle);
-        }
-    }
-
-    /// <summary>
-    /// Sets the twin colors of a slime
-    /// </summary>
-    /// <param name="prismSlime">The slime to set the colors of</param>
-    /// <param name="top">The top color</param>
-    /// <param name="middle">The middle color</param>
-    /// <param name="bottom">The bottom color</param>
-    public static void SetSlimeTwinColors(this PrismSlime prismSlime, Color32 top, Color32 middle, Color32 bottom)
-    {
-        var slimeDef = prismSlime.GetSlimeDefinition();
-        for (int i = 0; i < slimeDef.AppearancesDefault[0]?.Structures.Count - 1; i++)
-        {
-            var a = slimeDef.AppearancesDefault[0]?.Structures[i];
-            var mat = a?.DefaultMaterials[0];
-            mat?.SetColor(TwinTopColor, top);
-            mat?.SetColor(TwinMiddleColor, middle);
-            mat?.SetColor(TwinBottomColor, bottom);
-            mat?.SetColor(TwinSpecColor, middle);
-        }
-    }
-    /// <summary>
-    /// Sets the sloomber colors of a slime
-    /// </summary>
-    /// <param name="prismSlime">The slime to set the colors of</param>
-    /// <param name="top">The top color</param>
-    /// <param name="middle">The middle color</param>
-    /// <param name="bottom">The bottom color</param>
-    public static void SetSlimeSloomberColors(this PrismSlime prismSlime, Color32 top, Color32 middle, Color32 bottom)
-    {
-        var slimeDef = prismSlime.GetSlimeDefinition();
-        for (int i = 0; i < slimeDef.AppearancesDefault[0]?.Structures.Count - 1; i++)
-        {
-            var a = slimeDef.AppearancesDefault[0]?.Structures[i];
-            var mat = a?.DefaultMaterials[0];
-
-            mat?.SetColor(SloomberTopColor, top);
-            mat?.SetColor(SloomberMiddleColor, middle);
-            mat?.SetColor(SloomberBottomColor, bottom);
-        }
-    }
-    
-    /// <summary>
-    /// Sets the twin colors of a slime
-    /// </summary>
-    /// <param name="prismSlime">The slime to set the colors of</param>
-    /// <param name="top">The top color</param>
-    /// <param name="middle">The middle color</param>
-    /// <param name="bottom">The bottom color</param>
-    /// <param name="index">The index of the appearance</param>
-    /// <param name="index2">The index of the material</param>
-    /// <param name="isSs">Whether the appearance is a secret style</param>
-    /// <param name="structure">The index of the structure</param>
-    public static void SetSlimeTwinColorsSpecific(this PrismSlime prismSlime, Color32 top, Color32 middle, Color32 bottom, int index, int index2, bool isSs, int structure)
-    {
-        var slimeDef = prismSlime.GetSlimeDefinition();
-        var mat = isSs ? slimeDef.AppearancesDynamic.ToArray()[index].Structures[structure]?.DefaultMaterials[index2] : slimeDef.AppearancesDefault[index]?.Structures[structure]?.DefaultMaterials[index2];
-
-        mat?.SetColor(TwinTopColor, top);
-        mat?.SetColor(TwinMiddleColor, middle);
-        mat?.SetColor(TwinBottomColor, bottom);
-    }
-
-    /// <summary>
-    /// Sets the sloomber colors of a slime
-    /// </summary>
-    /// <param name="prismSlime">The slime to set the colors of</param>
-    /// <param name="top">The top color</param>
-    /// <param name="middle">The middle color</param>
-    /// <param name="bottom">The bottom color</param>
-    /// <param name="index">The index of the appearance</param>
-    /// <param name="index2">The index of the material</param>
-    /// <param name="isSs">Whether the appearance is a secret style</param>
-    /// <param name="structure">The index of the structure</param>
-    public static void SetSlimeSloomberColorsSpecific(this PrismSlime prismSlime, Color32 top, Color32 middle, Color32 bottom, int index, int index2, bool isSs, int structure)
-    {
-        var slimeDef = prismSlime.GetSlimeDefinition();
-        var mat = isSs ? slimeDef.AppearancesDynamic.ToArray()[index].Structures[structure]?.DefaultMaterials[index2] : slimeDef.AppearancesDefault[index]?.Structures[structure]?.DefaultMaterials[index2];
-
-        mat?.SetColor(SloomberTopColor, top);
-        mat?.SetColor(SloomberMiddleColor, middle);
-        mat?.SetColor(SloomberBottomColor, bottom);
-    }
-    
-    /// <summary>
-    /// Enables the twin effect on a slime
-    /// </summary>
-    /// <param name="prismSlime">The slime to enable the effect on</param>
-    /// <param name="index">The index of the appearance</param>
-    /// <param name="index2">The index of the material</param>
-    /// <param name="isSs">Whether the appearance is a secret style</param>
-    /// <param name="structure">The index of the structure</param>
-    /// <param name="applyTextures">Whether or not to automatically apply textures</param>
-    public static void EnableTwinEffectSpecific(this PrismSlime prismSlime, int index, int index2, bool isSs, int structure, bool applyTextures = true)
-    {
-        var slimeDef = prismSlime.GetSlimeDefinition();
-        var twinMat = PrismNativeBaseSlime.Twin.GetPrismBaseSlime().GetSlimeAppearance()._structures[0]?.DefaultMaterials[0];
-        var mat = isSs ? slimeDef.AppearancesDynamic.ToArray()[index].Structures[structure]?.DefaultMaterials[index2] : slimeDef.AppearancesDefault[index]?.Structures[structure]?.DefaultMaterials[index2];
-
-        mat?.EnableKeyword("_ENABLETWINEFFECT_ON");
-        
-        if (applyTextures)
-            mat?.SetTexture(NoiseEdge, twinMat?.GetTexture(NoiseEdge));
-    }
-
-    // todo: automatically set the effect textures from the actual twin slime
-    /// <summary>
-    /// Enables the twin effect on a slime
-    /// </summary>
-    /// <param name="prismSlime">The slime to enable the effect on</param>
-    public static void EnableTwinEffect(this PrismSlime prismSlime)
-    {
-        var slimeDef = prismSlime.GetSlimeDefinition();
-        var twinMat = PrismNativeBaseSlime.Twin.GetPrismBaseSlime().GetSlimeAppearance()._structures[0]?.DefaultMaterials[0];
-        for (int i = 0; i < slimeDef.AppearancesDefault[0]?.Structures.Count - 1; i++)
-        {
-            var a = slimeDef.AppearancesDefault[0]?.Structures[i];
-            var mat = a?.DefaultMaterials[0];
-            
-            mat?.EnableKeyword("_ENABLETWINEFFECT_ON");
-            mat?.SetTexture(NoiseEdge, twinMat?.GetTexture(NoiseEdge));
-        }
-        
-        prismSlime.AdjustTwinEffect();
-    }
-    /// <summary>
-    /// Enables the twin effect on a slime without automatically setting the textures
-    /// </summary>
-    /// <param name="prismSlime">The slime to enable the effect on</param>
-    public static void EnableTwinEffectTextureless(this PrismSlime prismSlime)
-    {
-        var slimeDef = prismSlime.GetSlimeDefinition();
-
-        for (int i = 0; i < slimeDef.AppearancesDefault[0]?.Structures.Count - 1; i++)
-        {
-            var a = slimeDef.AppearancesDefault[0]?.Structures[i];
-            var mat = a?.DefaultMaterials[0];
-            
-            mat?.EnableKeyword("_ENABLETWINEFFECT_ON");
-        }
-    }
-
-    /// <summary>
-    /// Enables the sloomber effect on a slime
-    /// </summary>
-    /// <param name="prismSlime">The slime to enable the effect on</param>
-    public static void EnableSloomberEffect(this PrismSlime prismSlime)
-    {
-        var slimeDef = prismSlime.GetSlimeDefinition();
-        var sloomberMat = PrismNativeBaseSlime.Sloomber.GetPrismBaseSlime().GetSlimeAppearance()._structures[0]?.DefaultMaterials[0];
-        for (int i = 0; i < slimeDef.AppearancesDefault[0]?.Structures.Count - 1; i++)
-        {
-            var a = slimeDef.AppearancesDefault[0]?.Structures[i];
-            var mat = a?.DefaultMaterials[0];
-            
-            mat?.EnableKeyword("_BODYCOLORING_SLOOMBER");
-            
-            mat?.SetTexture(SloomberStarMask, sloomberMat?.GetTexture(SloomberStarMask));
-            mat?.SetTexture(SloomberColorOverlay, sloomberMat?.GetTexture(SloomberColorOverlay));
-        }
-        
-        prismSlime.AdjustSloomberSparkles();
-    }
-    
-    /// <summary>
-    /// Adjusts the settings for the sloomber sparkle effect
-    /// <br/><br/>
-    /// The default values for the parameters are the default for the sloomber slime.
-    /// </summary>
-    /// <param name="prismSlime">The slime to enable the effect on</param>
-    /// <param name="size">The size for tiling.</param>
-    /// <param name="intensity">The strength of the texture.</param>
-    public static void AdjustSloomberSparkles(this PrismSlime prismSlime, float size = 3.26f, float intensity = 1)
-    {
-        var slimeDef = prismSlime.GetSlimeDefinition();
-
-        for (int i = 0; i < slimeDef.AppearancesDefault[0]?.Structures.Count - 1; i++)
-        {
-            var a = slimeDef.AppearancesDefault[0]?.Structures[i];
-            var mat = a?.DefaultMaterials[0];
-            
-            mat?.SetFloat(StarTiling, size);
-            mat?.SetFloat(StarMaskIntensityBodycoloringSloomber, intensity);
-        }
-    }
-    
-    /// <summary>
-    /// Adjusts the settings for the sloomber sparkle effect
-    /// <br/><br/>
-    /// The default values for the parameters are the default for the sloomber slime.
-    /// </summary>
-    /// <param name="prismSlime">The slime to enable the effect on</param>
-    /// <param name="size">The size for the effect</param>
-    /// <param name="intensity">The strength of the effect.</param>
-    /// <param name="vortex">Whether or not to enable the vortex</param>
-    /// <param name="vortexDistortion">The vortex distortion size</param>
-    /// <param name="vortexOffset">The vortex offset (use null for default)</param>
-    public static void AdjustTwinEffect(this PrismSlime prismSlime, float size = 1f, float intensity = 0.8f, bool vortex = true, float vortexDistortion = 12f, Vector4? vortexOffset = null)
-    {
-        Vector4 vortexOffset2;
-        if (vortexOffset == null) vortexOffset2 = new Vector4(0, -0.5f, 0, 0);
-        else vortexOffset2 = (Vector4)vortexOffset;
-        
-        var slimeDef = prismSlime.GetSlimeDefinition();
-
-        for (int i = 0; i < slimeDef.AppearancesDefault[0]?.Structures.Count - 1; i++)
-        {
-            var a = slimeDef.AppearancesDefault[0]?.Structures[i];
-            var mat = a?.DefaultMaterials[0];
-            
-            mat?.SetFloat(TwinEffectSize, size);
-            mat?.SetFloat(TwinLineDivisionIntensity, intensity);
-            mat?.SetFloat(EnableVortex, vortex ? 1f : 0f);
-            mat?.SetFloat(VortexDistortionSize, vortexDistortion);
-            mat?.SetVector(TwinVortexOffset, vortexOffset2);
-        }
-    }
-    /// <summary>
-    /// Enables the sloomber effect on a slime but without automatically setting the texture
-    /// </summary>
-    /// <param name="prismSlime">The slime to enable the effect on</param>
-    public static void EnableSloomberEffectTextureless(this PrismSlime prismSlime)
-    {
-        var slimeDef = prismSlime.GetSlimeDefinition();
-        for (int i = 0; i < slimeDef.AppearancesDefault[0]?.Structures.Count - 1; i++)
-        {
-            var a = slimeDef.AppearancesDefault[0].Structures[i];
-            var mat = a?.DefaultMaterials[0];
-            
-            mat?.EnableKeyword("_BODYCOLORING_SLOOMBER");
-        }
-    }
-
-    /// <summary>
-    /// Disables the twin effect on a slime
-    /// </summary>
-    /// <param name="prismSlime">The slime to disable the effect on</param>
-    /// <param name="index">The index of the appearance</param>
-    /// <param name="index2">The index of the material</param>
-    /// <param name="isSs">Whether the appearance is a secret style</param>
-    /// <param name="structure">The index of the structure</param>
-    public static void DisableTwinEffect(this PrismSlime prismSlime, int index, int index2, bool isSs, int structure)
-    {
-        var slimeDef = prismSlime.GetSlimeDefinition();
-        Material mat;
-        mat = isSs ? slimeDef.AppearancesDynamic.ToArray()[index].Structures[structure]?.DefaultMaterials[index2] : slimeDef.AppearancesDefault[index]?.Structures[structure]?.DefaultMaterials[index2];
-
-        mat?.DisableKeyword("_ENABLETWINEFFECT_ON");
-    }
-
-    /*
-    
-       public static void SetPalette(this SlimeAppearance app, Material slimeMaterial, SlimeDefinition definition)
-       {
-           app._colorPalette = new SlimeAppearance.Palette
-           {
-               Ammo = definition.color,
-               Bottom = slimeMaterial.GetColor("_BottomColor"),
-               Middle = slimeMaterial.GetColor("_MiddleColor"),
-               Top = slimeMaterial.GetColor("_TopColor"),
-           };
-       }
-     public static void SetSlimeMatTopColor(this Material mat, Color color) => mat.SetColor("_TopColor", color);
-    public static void SetSlimeMatMiddleColor(this Material mat, Color color) => mat.SetColor("_MiddleColor", color);
-
-    public static void SetSlimeMatBottomColor(this Material mat, Color color) => mat.SetColor("_BottomColor", color);
-
-    public static void SetSlimeMatColors(this Material material, Color32 Top, Color32 Middle, Color32 Bottom,
-        Color32 Specular)
-    {
-        material.SetColor("_TopColor", Top);
-        material.SetColor("_MiddleColor", Middle);
-        material.SetColor("_BottomColor", Bottom);
-        material.SetColor("_SpecColor", Specular);
-    }
-
-    public static void SetSlimeMatColors(this Material material, Color32 Top, Color32 Middle, Color32 Bottom)
-    {
-        material.SetColor("_TopColor", Top);
-        material.SetColor("_MiddleColor", Middle);
-        material.SetColor("_BottomColor", Bottom);
-    }*/
-
+    #endregion
 }
