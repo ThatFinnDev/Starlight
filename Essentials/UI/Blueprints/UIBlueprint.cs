@@ -1,3 +1,5 @@
+using Starlight.Components.AssetBundle;
+
 namespace Starlight.UI.Blueprints;
 
 public abstract class UIBlueprint
@@ -8,7 +10,7 @@ public abstract class UIBlueprint
     public Vector2 Rotation = new ();
     public Vector4 Anchors = new (0.5f, 0.5f, 0.5f, 0.5f);
     public UIBlueprint[] Children;
-
+    public float CornerRadius = 0f;
     protected RectTransform CustomChildHolder;
     public RectTransform Render(UITheme theme, Transform parent)
     {
@@ -21,6 +23,7 @@ public abstract class UIBlueprint
         rectT.anchorMin = new Vector2(Anchors.x, Anchors.y);
         rectT.anchorMax = new Vector2(Anchors.z, Anchors.w);
         try { OnRender(theme, rectT); } catch (Exception e) { LogError(e); }
+        obj.AddComponent<RoundedUIImage>().CornerRadius = CornerRadius;
         
         if (Children != null)
             foreach (var child in Children)

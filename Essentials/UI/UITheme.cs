@@ -12,6 +12,4 @@ public class UITheme
     public Color AccentColor = Color.blue;
     public Color TextColor = Color.white;
     public TMP_FontAsset DefaultFont;
-
-    public Sprite BackgroundPanelSprite;
 }

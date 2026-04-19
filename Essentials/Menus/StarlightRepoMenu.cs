@@ -43,18 +43,18 @@ public class StarlightRepoMenu : StarlightMenu
     {
         
         var button1 = transform.GetObjectRecursively<Image>("RepoMenuBrowseSelectionButtonRec");
-        button1.sprite = whitePillBg;
+        //button1.sprite = whitePillBg;
         button1.GetComponent<Button>().onClick.AddListener(selectCategorySound);
         button1.GetComponent<Button>().onClick.AddListener((SystemAction)OnBrowseTab);
         var button2 = transform.GetObjectRecursively<Image>("RepoMenuSourcesSelectionButtonRec");
-        button2.sprite = whitePillBg;
+        //button2.sprite = whitePillBg;
         button2.GetComponent<Button>().onClick.AddListener(selectCategorySound);
         button2.GetComponent<Button>().onClick.AddListener((SystemAction)OnRepoTab);
         var button3 = transform.GetObjectRecursively<Image>("RepoMenuInstalledSelectionButtonRec");
-        button3.sprite = whitePillBg;
+        //button3.sprite = whitePillBg;
         button3.GetComponent<Button>().onClick.AddListener(selectCategorySound);
         var button4 = transform.GetObjectRecursively<Image>("RepoMenuSettingsSelectionButtonRec");
-        button4.sprite = whitePillBg;
+        //button4.sprite = whitePillBg;
         button4.GetComponent<Button>().onClick.AddListener(selectCategorySound);
         _repoPanel = transform.GetObjectRecursively<Transform>("RepoViewPanelRec");
         _modPanel = transform.GetObjectRecursively<Transform>("ModViewPanelRec");

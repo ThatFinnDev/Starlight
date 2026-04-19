@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Il2CppMonomiPark.SlimeRancher.Economy;
 using Il2CppMonomiPark.SlimeRancher.Input;
 using Il2CppMonomiPark.SlimeRancher.UI;
 using Il2CppSystem.Linq;
@@ -33,7 +34,6 @@ public class StarlightCheatMenu : StarlightMenu
     internal static readonly List<StarlightCheatMenuButton> cheatButtons = new();
     private readonly List<CheatMenuRefineryEntry> _refineryEntries = new();
     private readonly List<CheatMenuGadgetEntry> _gadgetEntries = new();
-    private readonly List<CheatMenuSlot> _cheatSlots = new();
     private Transform _cheatButtonContent;
     private Transform _refineryContent;
     private Transform _gadgetsContent;
@@ -139,12 +139,30 @@ public class StarlightCheatMenu : StarlightMenu
 
         //Cheat Slots
         int i = -1;
-        foreach (CheatMenuSlot slot in _cheatSlots)
+        var cheatSlots = transform.GetObjectRecursively<Transform>("CheatMenuSlotsContentRec");
+        cheatSlots.DestroyAllChildren();
+        var cheatSlotPrefab = transform.GetObjectRecursively<Transform>("CheatMenuStatsSlotTemplateEntry");
+        foreach (var slot in sceneContext.PlayerState.Ammo.Slots)
         {
-            i++;
-            slot.gameObject.SetActive(sceneContext.PlayerState.Ammo.Slots[i].IsUnlocked);
-            slot.OnOpen();
+            i += 1;
+            if (slot == null) continue;
+            if (!slot.IsUnlocked) continue;
+            var instance = Instantiate(cheatSlotPrefab, cheatSlots);
+            instance.gameObject.SetActive(true);
+            var cSlot = instance.AddComponent<CheatMenuSlot>();
+            cSlot.OnOpen(i);
         }
+        var currencyPrefab = transform.GetObjectRecursively<Transform>("CheatMenuStatsCurrencyRec");
+        foreach (var curr in gameContext.LookupDirector.CurrencyList._currencies)
+        {
+            if (!curr) continue;
+            var instance = Instantiate(currencyPrefab, cheatSlots);
+            instance.gameObject.SetActive(true);
+            var cSlot = instance.AddComponent<CheatMenuCurrency>();
+            cSlot.OnOpen(curr.ReferenceId);
+        }
+
+        i = 0;
     }
     public override void OnCloseUIPressed()
     {
@@ -186,26 +204,19 @@ public class StarlightCheatMenu : StarlightMenu
         _gadgetsEntryTemplate = transform.GetObjectRecursively<GameObject>("CheatMenuGadgetsTemplateEntry");
         
         CheatButtons();
-        _cheatSlots.Add(transform.GetObjectRecursively<GameObject>("CheatMenuStatsSlot1Rec").AddComponent<CheatMenuSlot>());
-        _cheatSlots.Add(transform.GetObjectRecursively<GameObject>("CheatMenuStatsSlot2Rec").AddComponent<CheatMenuSlot>());
-        _cheatSlots.Add(transform.GetObjectRecursively<GameObject>("CheatMenuStatsSlot3Rec").AddComponent<CheatMenuSlot>());
-        _cheatSlots.Add(transform.GetObjectRecursively<GameObject>("CheatMenuStatsSlot4Rec").AddComponent<CheatMenuSlot>());
-        _cheatSlots.Add(transform.GetObjectRecursively<GameObject>("CheatMenuStatsSlot5Rec").AddComponent<CheatMenuSlot>());
-        _cheatSlots.Add(transform.GetObjectRecursively<GameObject>("CheatMenuStatsSlot6Rec").AddComponent<CheatMenuSlot>());
 
-        transform.GetObjectRecursively<GameObject>("CheatMenuStatsNewbucksRec").AddComponent<CheatMenuNewbucks>();
         
         var button1 = transform.GetObjectRecursively<Image>("CheatMenuMainSelectionButtonRec");
-        button1.sprite = whitePillBg;
+        //button1.sprite = whitePillBg;
         button1.GetComponent<Button>().onClick.AddListener(selectCategorySound);
         var button2 = transform.GetObjectRecursively<Image>("CheatMenuRefinerySelectionButtonRec");
-        button2.sprite = whitePillBg;
+        //button2.sprite = whitePillBg;
         button2.GetComponent<Button>().onClick.AddListener(selectCategorySound);
         var button3 = transform.GetObjectRecursively<Image>("CheatMenuGadgetsSelectionButtonRec");
-        button3.sprite = whitePillBg;
+        //button3.sprite = whitePillBg;
         button3.GetComponent<Button>().onClick.AddListener(selectCategorySound);
         var button4 = transform.GetObjectRecursively<Image>("CheatMenuSpawnSelectionButtonRec");
-        button4.sprite = whitePillBg;
+        //button4.sprite = whitePillBg;
         button4.GetComponent<Button>().onClick.AddListener(selectCategorySound);
         ToTranslate.Add(button1.transform.GetChild(0).GetComponent<TextMeshProUGUI>(),"cheatmenu.category.main");
         ToTranslate.Add(button2.transform.GetChild(0).GetComponent<TextMeshProUGUI>(),"cheatmenu.category.refinery");

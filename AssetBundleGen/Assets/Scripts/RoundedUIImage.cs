@@ -9,7 +9,7 @@ namespace Starlight.Components.AssetBundle
 	public class RoundedUIImage : MonoBehaviour
 	{
 		[Tooltip("Radius for all corners")]
-		[Min(0)] public float cornerRadius = 10f;
+		[UnityEngine.SerializeField] [Min(0)] public float cornerRadius = 10f;
 
 		private RectTransform rectTransform;
 		private MaskableGraphic graphic;

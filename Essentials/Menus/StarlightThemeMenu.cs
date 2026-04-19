@@ -137,7 +137,7 @@ public class StarlightThemeMenu : StarlightMenu
         _content = transform.GetObjectRecursively<Transform>("ThemeMenuThemeSelectorContentRec");
         
         var button1 = transform.GetObjectRecursively<Image>("ThemeMenuThemeSelectorSelectionButtonRec");
-        button1.sprite = whitePillBg;
+        //button1.sprite = whitePillBg;
         
         ToTranslate.Add(button1.transform.GetChild(0).GetComponent<TextMeshProUGUI>(),"thememenu.category.selector");
         ToTranslate.Add(transform.GetObjectRecursively<TextMeshProUGUI>("TitleTextRec"),"thememenu.title");

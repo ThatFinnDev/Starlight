@@ -62,6 +62,7 @@ public static class MiscEUtil
         {
             LayerMask mask = ~0;
             mask &= ~(1 << Layers.GadgetPlacement);
+            mask &= ~(1 << Layers.EnergyBeamBlocker);
             return mask;
         }
     }

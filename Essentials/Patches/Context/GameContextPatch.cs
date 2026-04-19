@@ -1,8 +1,10 @@
 using Il2CppMonomiPark.SlimeRancher.Damage;
+using Il2CppMonomiPark.SlimeRancher.Economy;
 using Il2CppMonomiPark.SlimeRancher.Input;
 using Il2CppMonomiPark.SlimeRancher.UI;
 using Starlight.Buttons;
 using Starlight.Buttons.OptionsUI;
+using Starlight.Commands;
 using Starlight.Components.Debug;
 using Starlight.Enums;
 using Starlight.Enums.Sounds;
@@ -180,6 +182,15 @@ internal class GameContextPatch
         foreach (var pair in StarlightCommandManager.commands)
             try { pair.Value.AfterGameContext(__instance); }
             catch (Exception e) { LogError(e); }
+
+        foreach (var def in GetAny<CurrencyList>()._currencies.ToNetArray())
+        {
+            var cmd = new CurrencyCommand();
+            cmd.refID = def.ReferenceId.Replace("CurrencyDefinition.","");
+            cmd.name = def.ReferenceId.Replace("CurrencyDefinition.","");
+            if(cmd.name.EndsWith("s")) cmd.name=cmd.name.Substring(0, cmd.name.Length - 1);
+            StarlightCommandManager.RegisterCommand(cmd);
+        }
     }
 
 

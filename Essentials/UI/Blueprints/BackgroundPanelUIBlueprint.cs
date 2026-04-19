@@ -12,6 +12,5 @@ public class BackgroundPanelUIBlueprint : UIBlueprint
     {
         var image = obj.AddComponent<Image>();
         image.color = theme.PrimaryColor;
-        image.sprite = theme.BackgroundPanelSprite;
     }
 }

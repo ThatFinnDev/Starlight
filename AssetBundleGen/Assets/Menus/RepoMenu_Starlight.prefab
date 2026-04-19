@@ -559,6 +559,8 @@ GameObject:
   - component: {fileID: 8547364856951520611}
   - component: {fileID: 6180972498053020827}
   - component: {fileID: 2651109125417905131}
+  - component: {fileID: 1703985965368901222}
+  - component: {fileID: 7032991847809685448}
   m_Layer: 5
   m_Name: RepoMenuSettingsSelectionButtonRec
   m_TagString: Untagged
@@ -764,6 +766,31 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+--- !u!114 &1703985965368901222
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 442519607668532305}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad67f29b35d464b428584f224a2873de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cornerRadius: 35
+--- !u!210 &7032991847809685448
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 442519607668532305}
+  m_Enabled: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 35
+  m_SortAtRoot: 0
 --- !u!1 &568432443747506576
 GameObject:
   m_ObjectHideFlags: 0
@@ -1207,6 +1234,8 @@ GameObject:
   - component: {fileID: 8295868501968173077}
   - component: {fileID: 3016362743475847387}
   - component: {fileID: 3711596699763425740}
+  - component: {fileID: 1066081459762192507}
+  - component: {fileID: 871217814359244809}
   m_Layer: 5
   m_Name: Icon
   m_TagString: Untagged
@@ -1271,6 +1300,31 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &1066081459762192507
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 901525253861218024}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad67f29b35d464b428584f224a2873de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cornerRadius: 10
+--- !u!210 &871217814359244809
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 901525253861218024}
+  m_Enabled: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 10
+  m_SortAtRoot: 0
 --- !u!1 &1103219403041975436
 GameObject:
   m_ObjectHideFlags: 0
@@ -2091,7 +2145,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
-  m_ActiveFontFeatures: 00000000
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -4073,6 +4127,7 @@ GameObject:
   - component: {fileID: 2732889532481782131}
   - component: {fileID: 8060720594947018350}
   - component: {fileID: 6309184424627814907}
+  - component: {fileID: 7405956560214167133}
   m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
@@ -4150,6 +4205,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cornerRadius: 20
+--- !u!210 &7405956560214167133
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4346907230889020791}
+  m_Enabled: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 20
+  m_SortAtRoot: 0
 --- !u!1 &4371590198267155168
 GameObject:
   m_ObjectHideFlags: 0
@@ -4835,6 +4902,8 @@ GameObject:
   - component: {fileID: 9075772236734001522}
   - component: {fileID: 8711107132780174095}
   - component: {fileID: 4071979487357256782}
+  - component: {fileID: 8059124923147788334}
+  - component: {fileID: 2626032695426992699}
   m_Layer: 5
   m_Name: RepoMenuSourcesSelectionButtonRec
   m_TagString: Untagged
@@ -5040,6 +5109,31 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &8059124923147788334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5370105484745333645}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad67f29b35d464b428584f224a2873de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cornerRadius: 35
+--- !u!210 &2626032695426992699
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5370105484745333645}
+  m_Enabled: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 35
+  m_SortAtRoot: 0
 --- !u!1 &5443384044981385267
 GameObject:
   m_ObjectHideFlags: 0
@@ -5052,6 +5146,8 @@ GameObject:
   - component: {fileID: 5834305651805520217}
   - component: {fileID: 3621468085329914137}
   - component: {fileID: 3164861496887079470}
+  - component: {fileID: 9141457787126268860}
+  - component: {fileID: 7858680728493817912}
   m_Layer: 5
   m_Name: RepoMenuInstalledSelectionButtonRec
   m_TagString: Untagged
@@ -5257,6 +5353,31 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &9141457787126268860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5443384044981385267}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad67f29b35d464b428584f224a2873de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cornerRadius: 35
+--- !u!210 &7858680728493817912
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5443384044981385267}
+  m_Enabled: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 35
+  m_SortAtRoot: 0
 --- !u!1 &5793282918253361637
 GameObject:
   m_ObjectHideFlags: 0
@@ -5371,7 +5492,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
-  m_ActiveFontFeatures: 00000000
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -7564,6 +7685,8 @@ GameObject:
   - component: {fileID: 6139755109760512980}
   - component: {fileID: 4772898131025416960}
   - component: {fileID: 5474759911309143979}
+  - component: {fileID: 4914484600931355903}
+  - component: {fileID: 4990688724695451506}
   m_Layer: 5
   m_Name: RepoMenuBrowseSelectionButtonRec
   m_TagString: Untagged
@@ -7769,6 +7892,31 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &4914484600931355903
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8775839362072000868}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad67f29b35d464b428584f224a2873de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cornerRadius: 35
+--- !u!210 &4990688724695451506
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8775839362072000868}
+  m_Enabled: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 35
+  m_SortAtRoot: 0
 --- !u!1 &8825357803823065146
 GameObject:
   m_ObjectHideFlags: 0

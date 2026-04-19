@@ -12,93 +12,106 @@ namespace Starlight.Components;
 [InjectIntoIL]
 internal class CheatMenuSlot : MonoBehaviour
 {
-    private int slotID;
-    private Button applyButton;
-    private Button selectButton;
-    private Slider amountSlider;
-    private TextMeshProUGUI handleText;
-    private TMP_InputField entryInput;
-    private bool didStartRan = false;
-    private void Start()
-    {
-        if (didStartRan) return;
-        didStartRan = true;
-        slotID = int.Parse(gameObject.GetObjectRecursively<TextMeshProUGUI>("Text").text.Replace(" ", "").Replace(":", "").Replace("Slot", ""))-1;
-        applyButton = gameObject.GetObjectRecursively<Button>("Apply");
-        selectButton = gameObject.GetObjectRecursively<Button>("Select");
-        amountSlider = gameObject.GetObjectRecursively<Slider>("Slider");
-        handleText = amountSlider.gameObject.GetObjectRecursively<TextMeshProUGUI>("Text");
-        entryInput = gameObject.GetObjectRecursively<TMP_InputField>("EntryInput");
-        applyButton.onClick.AddListener((Action)(() =>{Apply();}));
-        selectButton.onClick.AddListener((Action)(() =>{Select();}));
-        amountSlider.onValueChanged.AddListener((Action<float>)((value) => { handleText.SetText(((int)value).ToString()); }));
-    }
+    private Button _applyButton;
+    private Button _selectButton;
+    private Button _typeButton;
+    private Slider _amountSlider;
+    private TextMeshProUGUI _handleText;
+    private TextMeshProUGUI _typeButtonText;
+    private TMP_InputField _entryInput;
+    private bool _radiant = false;
+    private int _slotID;
 
     private void Apply()
     {
-        if (amountSlider.value == 0) { entryInput.text = ""; slot.Clear(); AudioEUtil.PlaySound(MenuSound.Error); return; }
+        var slot = sceneContext.PlayerState.Ammo.Slots[_slotID];
+        if (_amountSlider.value == 0) { _entryInput.text = ""; slot.Clear(); AudioEUtil.PlaySound(MenuSound.Error); return; }
         
-        IdentifiableType type = LookupEUtil.GetIdentifiableTypeByName(entryInput.text);
-        if (type == null) { entryInput.text = ""; slot.Clear(); amountSlider.value = 0; AudioEUtil.PlaySound(MenuSound.Error); return; }
-        
+        var type = LookupEUtil.GetIdentifiableTypeByName(_entryInput.text);
+        if (!type) { _entryInput.text = ""; slot.Clear(); _amountSlider.value = 0; AudioEUtil.PlaySound(MenuSound.Error); return; }
+        if(_radiant&&!AllowRadiant(type))
+            ChangeType();
         AudioEUtil.PlaySound(MenuSound.Apply);
         string itemName = type.GetName().Replace("'","").Replace(" ","");
-        entryInput.text = itemName;
+        _entryInput.text = itemName;
         slot.Clear();
-        if (type is SlimeDefinition)
+        sceneContext.PlayerState.Ammo.MaybeAddResource(type, _slotID, (int)_amountSlider.value, true);
+        slot.Radiant = _radiant;
+        if (type.TryCast<SlimeDefinition>() && _radiant)
         {
-            var data = new AmmoSlot.AmmoMetadata();
-            data.Id = type;
-            data.Emotions = new float4();
-            sceneContext.PlayerState.Ammo.MaybeAddToSpecificSlot(data, slotID, (int)amountSlider.value, true);
+            //Refresh the appearance in the slot
+            var count = slot.Count;
+            slot._count++;
+            slot.Count = count;
+            ExecuteInTicks(() =>
+            {
+                var execGetter = slot.Count;
+            },1);
         }
-        else
-        {
-            sceneContext.PlayerState.Ammo.MaybeAddResource(type, slotID, (int)amountSlider.value, true);
-        }
+        slot.Metadata.Radiant = _radiant;
     }
     private void Select()
     {
+        var slot = sceneContext.PlayerState.Ammo.Slots[_slotID];
         AudioEUtil.PlaySound(MenuSound.Click);
         var dict = new Dictionary<string, (string, Sprite)>();
-        foreach (IdentifiableType identType in LookupEUtil.vaccableTypes)
+        var remove = slot.Definition.SlotBlockList;
+        foreach (var identType in slot.Definition.SlotTypeGroup.GetAllMembersList())
         {
-            if (identType.IsGadget()) continue;
-            if (identType.ReferenceId.ToLower() == "none" || identType.ReferenceId.ToLower() == "player") continue;
-            try
-            {if (identType.LocalizedName != null)
-                {
-                    string localizedString = identType.LocalizedName.GetLocalizedString();
-                    if(localizedString.StartsWith("!")) continue;
-                    dict.Add(identType.GetName().Replace("'","").Replace(" ",""), (localizedString, identType.icon));
-                }
-            }catch { }
+            if(!remove.Contains(identType))
+                dict.Add(identType.GetName().Replace("'","").Replace(" ",""), (identType.GetName(), identType.icon));
         }
-        StarlightGridMenuList.Open(dict, (Action<string>)((value) =>
+        StarlightGridMenuList.Open(dict, (value) =>
         {
-            if (amountSlider.value == 0)
-                amountSlider.value = 1;
-            entryInput.SetText(value);
-        }));
+            if (_amountSlider.value == 0)
+                _amountSlider.value = 1;
+            _entryInput.SetText(value);
+            if(_radiant&&!AllowRadiant(value))
+                ChangeType();
+        });
     }
-    private AmmoSlot slot {
-        get
-        {
-            try { return sceneContext.PlayerState.Ammo.Slots[slotID]; }
-            catch { return null; }
-        }
-    }
-    internal void OnOpen()
+    private bool AllowRadiant(IdentifiableType type)
     {
-        if(!didStartRan) Start();
+        if(type)
+            if (type.TryCast<SlimeDefinition>())
+                foreach (var appearance in type.Cast<SlimeDefinition>().AppearancesDefault)
+                    if (appearance.name.EndsWith("Radiant"))
+                        return true;
+        return false;
+    }
+    private bool AllowRadiant(string input)
+    {
+        return AllowRadiant(LookupEUtil.GetIdentifiableTypeByName(input));
+    }
+    private void ChangeType()
+    {
+        _radiant = !_radiant;
+        _typeButtonText.SetText(_radiant?"Radiant":"Default");
+    }
+    internal void OnOpen(int id)
+    {
+        _slotID = id;
+        gameObject.GetObjectRecursively<TextMeshProUGUI>("Text").SetText(" Slot "+(id+1)+":");
+        _applyButton = gameObject.GetObjectRecursively<Button>("Apply");
+        _selectButton = gameObject.GetObjectRecursively<Button>("Select");
+        _typeButton = gameObject.GetObjectRecursively<Button>("Type");
+        _typeButtonText = _typeButton.gameObject.GetObjectRecursively<TextMeshProUGUI>("Text");
+        _amountSlider = gameObject.GetObjectRecursively<Slider>("Slider");
+        _handleText = _amountSlider.gameObject.GetObjectRecursively<TextMeshProUGUI>("Text");
+        _entryInput = gameObject.GetObjectRecursively<TMP_InputField>("EntryInput");
+        _applyButton.onClick.AddListener((SystemAction)(Apply));
+        _typeButton.onClick.AddListener((SystemAction)(ChangeType));
+        _selectButton.onClick.AddListener((SystemAction)(Select));
+        _amountSlider.onValueChanged.AddListener((Action<float>)((value) => { _handleText.SetText(((int)value).ToString()); }));
         
+        var slot = sceneContext.PlayerState.Ammo.Slots[_slotID];
         if (slot == null) return;
-
-        amountSlider.maxValue = slot.MaxCount;
-        amountSlider.value = slot.Count;
+        if(slot.Radiant) ChangeType();
+        _amountSlider.maxValue = slot.MaxCount;
+        _amountSlider.value = slot.Count;
         string identName = "";
-        if (slot.Id != null) identName = slot.Id.GetName().Replace("'","").Replace(" ","");
+        if (slot.Id) identName = slot.Id.GetName().Replace("'","").Replace(" ","");
         
-        entryInput.text = identName;
+        _entryInput.text = identName;
     }
 }

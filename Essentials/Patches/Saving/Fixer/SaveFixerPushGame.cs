@@ -14,6 +14,20 @@ internal static class SaveFixerPushGame
         catch (Exception e) { return true; }
         return false;
     }
+    static bool needsRemoving2(ActorDataV04 gadget,ILoadReferenceTranslation r)
+    {
+        try
+        {
+            var ident = r.GetIdentifiableType(gadget.TypeId);
+            if (ident == null) return true;
+            
+            if(ident.IsGadget())
+                return true;
+        }
+        catch (Exception e) { return true; }
+
+        return false;
+    }
     internal static void Prefix(ActorIdProvider actorIdProvider, ISaveReferenceTranslation saveReferenceTranslation, GameV10 gameState, GameModel gameModel)
     {
         if (!StarlightEntryPoint.disableFixSaves)
@@ -24,6 +38,15 @@ internal static class SaveFixerPushGame
                     try {
                         if (NeedsRemoving(id,loadTranslation))
                             gameState.Drone.Cloud.IDs.Remove(id);
+                    }
+                    catch (Exception e) { LogError(e); }
+                }
+                // Gadgets in the actors array are still there from early modded SR2 and break the WorldPopulator
+                foreach (var gadget in gameState.Actors.ToArray())
+                {
+                    try {
+                        if (needsRemoving2(gadget,loadTranslation))
+                            gameState.Actors.Remove(gadget);
                     }
                     catch (Exception e) { LogError(e); }
                 }

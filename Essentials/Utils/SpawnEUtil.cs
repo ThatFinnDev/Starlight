@@ -20,7 +20,7 @@ public static class SpawnEUtil
     {
         if (ident == null) return null;
         if (ident.TryCast<GadgetDefinition>()!=null) return SpawnGadget(ident.TryCast<GadgetDefinition>(), pos, rot).GetGameObject();
-        return InstantiationHelpers.InstantiateActor(ident.prefab, sceneContext.RegionRegistry.CurrentSceneGroup, pos, rot);
+        return InstantiationHelpers.InstantiateActorFromModel(sceneContext.GameModel.InstantiateActorModel(ident, sceneContext.RegionRegistry.CurrentSceneGroup, pos, rot, false));
     }
     public static GameObject SpawnDynamic(this GameObject obj, Vector3 pos, Quaternion rot)
     {

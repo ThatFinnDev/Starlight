@@ -118,6 +118,8 @@ cmd.bind.description,"Binds a key to a specific command",Bindet einen Befehl/meh
 cmd.bind.extendeddescription,"Binds a key to a specific command, you can even bind multiple. To remove the binding, use the 'unbind' command",Bindet einen Befehl/mehrere Befehle zu einer Taste. Benütze bitte den Befehl namens 'unbind' um alle Bindungen mit einer Taste zu entfernen.
 cmd.clear.success,"Successfully cleared the console!",Die Konsole wurde erfolgreich entleert!
 cmd.clear.description,"Clears the console",Leert die Konsole
+cmd.appearance.success,"Successfully rotated the appearance!","Das Aussehen wurde erfolgreich rotiert!"
+cmd.appearance.description,"Rotates the appearance","Rotates the appearance"
 cmd.clearinv.success,"Successfully cleared your inventory!",Dein Inventar wurde erfolgreich entleert!
 cmd.clearinv.successsingle,"Successfully cleared slot number $1!",Der $1te Slot wurde erfolgreich entleert!
 cmd.clearinv.error.slotdoesntexist,"There are only $1 number of slots!",Es gibt nur $1 Slots!
@@ -221,9 +223,9 @@ cmd.position.description,"Moves an actor","Bewegt einen Charakter"
 cmd.scale.success,"Successfully changed the scale of the actor!","Die Charaktergröße wurde erfolgreich verändert"
 cmd.scale.description,"Changes the scale of an actor","Verändert die Größe eines Charakters"
 cmd.scale.usegordocmd,"Gordos only have a base scale, please use the 'gordo' command to scale the gordo!","Gordos haben leider nur eine veränderbare Basisgröße, bitte benütze den Befehl names 'gordo' um die Gordogröße zu verändern!"
-cmd.newbucks.success,"Successfully added $1 newbucks!","Du hast nun $1 Newbucks mehr!"
-cmd.newbucks.error,"There was an error adding newbucks!","Es ist ein Fehler aufgetreten beider Newbucksveränderung!"
-cmd.newbucks.description,"Adds or removes newbucks","Gibt oder entfernt Newbucks"
+cmd.currency.success,"Successfully added $1 $2s!","Du hast nun $1 $2s mehr!"
+cmd.currency.error,"There was an error adding $1s!","Es ist ein Fehler aufgetreten beider $1sveränderung!"
+cmd.currency.description,"Adds or removes $1s","Gibt oder entfernt $1s"
 cmd.noclip.success,"Successfully activated noclip!","Noclip wurde erfolgreich aktiviert"
 cmd.noclip.success2,"Successfully deactivated noclip!","Noclip wurde erfolgreich deaktiviert"
 cmd.noclip.error,"Noclip couldn't be toggled!","Der Noclipstatus konnte nicht verändert werden!"

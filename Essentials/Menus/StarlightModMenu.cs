@@ -254,9 +254,9 @@ public class StarlightModMenu : StarlightMenu
                 }
         var button1 = transform.GetObjectRecursively<Image>("ModMenuModMenuSelectionButtonRec");
         button1.GetComponent<Button>().onClick.AddListener(selectCategorySound);
-        button1.sprite = whitePillBg;
+        //button1.sprite = whitePillBg;
         var button2 = transform.GetObjectRecursively<Image>("ModMenuConfigurationSelectionButtonRec");
-        button2.sprite = whitePillBg;
+        //button2.sprite = whitePillBg;
         button2.GetComponent<Button>().onClick.AddListener(selectCategorySound);
         button2.GetComponent<Button>().onClick.AddListener((SystemAction)(() =>
         {
@@ -268,7 +268,7 @@ public class StarlightModMenu : StarlightMenu
             }),1);
         }));
         var button3 = transform.GetObjectRecursively<Image>("ModMenuRepoSelectionButtonRec");
-        button3.sprite = whitePillBg;
+        //button3.sprite = whitePillBg;
         button3.GetComponent<Button>().onClick.AddListener(selectCategorySound);
         button3.GetComponent<Button>().onClick.AddListener((SystemAction)(() =>
         {

@@ -1,6 +1,6 @@
 using Starlight.Patches.Context;
 using Starlight.Storage;
-using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 namespace Starlight.Components.AssetBundle
@@ -13,7 +13,7 @@ namespace Starlight.Components.AssetBundle
 	[InjectIntoIL]
 	public class RoundedUIImage : MonoBehaviour
 	{
-		public float cornerRadius = 10f;
+		public float CornerRadius;
 
 		private RectTransform rectTransform;
 		private MaskableGraphic graphic;
@@ -24,8 +24,18 @@ namespace Starlight.Components.AssetBundle
 		private static readonly int ShaderHalfSizeID = Shader.PropertyToID("_HalfSize");
 		private static readonly int ShaderOuterUVID = Shader.PropertyToID("_OuterUV");
 
+		private void Start()
+		{
+			var group = GetComponent<SortingGroup>();
+			if (group != null)
+			{
+				CornerRadius = group.sortingOrder;
+				group.enabled = false;
+			}
+		}
 		private void OnEnable()
 		{
+			Start();
 			Initialize();
 			UpdateMaterial();
 		}
@@ -68,7 +78,7 @@ namespace Starlight.Components.AssetBundle
 
 			Vector2 halfSize = rectTransform.rect.size * 0.5f;
 			roundedMaterial.SetVector(ShaderHalfSizeID, halfSize);
-			roundedMaterial.SetFloat(ShaderRadiusID, cornerRadius);
+			roundedMaterial.SetFloat(ShaderRadiusID, CornerRadius);
 			roundedMaterial.SetVector(ShaderOuterUVID, textureUV);
 		}
 	}

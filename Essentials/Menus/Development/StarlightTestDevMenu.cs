@@ -1,5 +1,4 @@
 using Starlight.Enums;
-using Starlight.Enums.Features;
 using Starlight.Storage;
 using Starlight.UI;
 using Starlight.UI.Blueprints;
@@ -22,8 +21,10 @@ internal class StarlightTestDevMenu : StarlightMenu
 
     private readonly BackgroundPanelUIBlueprint _blueprint = new ()
     {
+        CornerRadius = 90f,
         Children =
         [
+            
             new TextUIBlueprint()
             {
                 Content = "TestLabel"
@@ -49,7 +50,7 @@ internal class StarlightTestDevMenu : StarlightMenu
     private RectTransform _openThing;
     protected override void OnOpen()
     {
-        _openThing = _blueprint.Render(new UITheme(){BackgroundPanelSprite = EmbeddedResourceEUtil.LoadSprite("Assets.MenuBG.png")}, transform);
+        _openThing = _blueprint.Render(new UITheme(){}, transform);
     }
 
     protected override void OnClose()
