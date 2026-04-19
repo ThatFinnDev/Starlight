@@ -75,7 +75,7 @@ internal class CheatMenuSlot : MonoBehaviour
         if(type)
             if (type.TryCast<SlimeDefinition>())
                 foreach (var appearance in type.Cast<SlimeDefinition>().AppearancesDefault)
-                    if (appearance.name.EndsWith("Radiant"))
+                    if (appearance.name.Contains("Radiant"))
                         return true;
         return false;
     }

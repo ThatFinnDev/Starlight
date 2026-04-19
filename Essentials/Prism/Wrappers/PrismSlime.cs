@@ -29,7 +29,7 @@ public class PrismSlime
     public SlimeAppearance GetSlimeAppearanceRadiant()
     {
         foreach (var appearance in SlimeDefinition.AppearancesDefault)
-            if (appearance.name.EndsWith("Radiant"))
+            if (appearance.name.Contains("Radiant"))
                 return appearance;
         return null;
     }

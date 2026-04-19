@@ -30,37 +30,6 @@ public static class PrismLibAppearances
     private const string VortexDistortionSize = "_VortexDistortionSize";
     private const string TwinVortexOffset = "_TwinVortexOffset";
 
-    /*
-    /// <summary>
-    /// Switches the appearances of two slimes
-    /// </summary>
-    /// <param name="slimeOneDef">The first slime to switch</param>
-    /// <param name="slimeTwoDef">The second slime to switch</param>
-    public static void SwitchSlimeAppearances(SlimeDefinition slimeOneDef, SlimeDefinition slimeTwoDef)
-    {
-        var appearanceOne = slimeOneDef.AppearancesDefault[0]._structures;
-        slimeOneDef.AppearancesDefault[0]._structures = slimeTwoDef.AppearancesDefault[0]._structures;
-        slimeTwoDef.AppearancesDefault[0]._structures = appearanceOne;
-        var appearanceSplatOne = slimeOneDef.AppearancesDefault[0]._splatColor;
-        slimeOneDef.AppearancesDefault[0]._splatColor = slimeTwoDef.AppearancesDefault[0]._splatColor;
-        slimeTwoDef.AppearancesDefault[0]._splatColor = appearanceSplatOne;
-
-        var colorPalate = slimeOneDef.AppearancesDefault[0]._colorPalette;
-        slimeOneDef.AppearancesDefault[0]._colorPalette = slimeTwoDef.AppearancesDefault[0]._colorPalette;
-        slimeTwoDef.AppearancesDefault[0]._colorPalette = colorPalate;
-
-        var structureIcon = slimeOneDef.AppearancesDefault[0]._icon;
-        slimeOneDef.AppearancesDefault[0]._icon = slimeTwoDef.AppearancesDefault[0]._icon;
-        slimeTwoDef.AppearancesDefault[0]._icon = structureIcon;
-        var icon = slimeOneDef.icon;
-        slimeOneDef.icon = slimeTwoDef.icon;
-        slimeTwoDef.icon = icon;
-
-        var debugIcon = slimeOneDef.debugIcon;
-        slimeOneDef.debugIcon = slimeTwoDef.debugIcon;
-        slimeTwoDef.debugIcon = debugIcon;
-
-    }*/
     /// <summary>
     /// Sets the color of a slime appearance structure
     /// </summary>

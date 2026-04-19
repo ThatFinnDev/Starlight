@@ -38,7 +38,7 @@ public class AppearanceCommand: StarlightCommand
                 var newAppearance = def.AppearancesDefault[currentIndex];
                 if(slimeRadiant)
                 {
-                    if (newAppearance.name.EndsWith("Radiant"))
+                    if (newAppearance.name.Contains("Radiant"))
                     {
                         slimeRadiant.SetRadiant();
                         slimeRadiant.SetRadiantAppearance();
