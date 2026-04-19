@@ -306,7 +306,7 @@ public class StarlightEntryPoint : MelonMod
     }
 
 
-    // Original logging code from Atmudia, heavily adapted
+    // Adapted logging code from Atmudia
     private static void AppLogUnity(string message, string trace, LogType type)
     {
         if (!ShowUnityErrors.HasFlag()) return;

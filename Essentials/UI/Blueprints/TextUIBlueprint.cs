@@ -4,6 +4,7 @@ namespace Starlight.UI.Blueprints;
 
 public class TextUIBlueprint : UIBlueprint
 {
+    public UIColor color = UIColor.Text;
     public string Content;
     public bool DisableAutoTranslation = false;
     public TMP_FontAsset CustomFont;
@@ -14,7 +15,7 @@ public class TextUIBlueprint : UIBlueprint
 
         txt.text = DisableAutoTranslation?Content:translation(Content);
         txt.font = CustomFont ?? theme.DefaultFont;
-        txt.color = theme.TextColor;
+        txt.color = theme.GetColor(color);;
 
     }
 }

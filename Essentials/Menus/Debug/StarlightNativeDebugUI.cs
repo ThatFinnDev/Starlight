@@ -39,15 +39,15 @@ internal class StarlightNativeDebugUI : StarlightMenu
 
     private readonly DebugUIEntry[] _rootEntries =
     [
-        new DebugUIEntry() { text = "TestButton" },
-        new DebugUIEntry() { text = "Toggle Noclip", action = () => StarlightCommandManager.ExecuteByString("noclip")},
-        new DebugUIEntry() { text = "SubMenu", closesMenu = false,action = () => MenuEUtil.GetMenu<StarlightNativeDebugUI>().OpenEntries(
-            new []
+        new() { text = "TestButton" },
+        new() { text = "Toggle Noclip", action = () => StarlightCommandManager.ExecuteByString("noclip")},
+        new() { text = "SubMenu", closesMenu = false,action = () => MenuEUtil.GetMenu<StarlightNativeDebugUI>().OpenEntries(
+            new DebugUIEntry[]
             {
-                new DebugUIEntry() { text = "SubButton" },
-                new DebugUIEntry() { text = "SubMenu", closesMenu = false, action = () => MenuEUtil.GetMenu<StarlightNativeDebugUI>().OpenEntries(new []
+                new() { text = "SubButton" },
+                new() { text = "SubMenu", closesMenu = false, action = () => MenuEUtil.GetMenu<StarlightNativeDebugUI>().OpenEntries(new DebugUIEntry[]
                 {
-                    new DebugUIEntry() { text = "Subsubbutton" },
+                    new() { text = "SubSubButton" },
                 }) },
             }) }
     ];
@@ -65,6 +65,7 @@ internal class StarlightNativeDebugUI : StarlightMenu
         rect.localScale = Vector3.one;
         rect.localPosition = Vector2.zero;
         rect.sizeDelta = rect.GetParentSize();
+        rect.anchoredPosition=Vector2.zero;
         return obj;
     }
     protected override void OnOpen()

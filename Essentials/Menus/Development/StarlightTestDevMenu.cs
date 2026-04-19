@@ -14,17 +14,25 @@ internal class StarlightTestDevMenu : StarlightMenu
     protected override bool inGameOnly => false;
     protected override void OnAwake()
     {
+        GetComponent<RectTransform>().localPosition = Vector2.zero;
         requiredFeatures = [DevTestMenu];
         openActions = [MenuActions.PauseGameFalse];
         closeActions = [MenuActions.UnPauseGameFalse, MenuActions.EnableInput];
     }
 
-    private readonly BackgroundPanelUIBlueprint _blueprint = new ()
+    private readonly PanelUIBlueprint _blueprint = new ()
     {
-        CornerRadius = 90f,
+        color = UIColor.Primary, CornerRadius = 90, Size = new Vector2(1330, 840),
         Children =
         [
-            
+            new PanelUIBlueprint()
+            {
+                color = UIColor.Secondary, CornerRadius = 0, Size = new Vector2(1330,580),
+                Children = [
+                    new PanelUIBlueprint() { color = UIColor.Accent, CornerRadius = 0, Size = new Vector2(1330,10), Position = new Vector2(0,-290f) },
+                    new PanelUIBlueprint() { color = UIColor.Accent, CornerRadius = 0, Size = new Vector2(1330,10), Position = new Vector2(0,290f) },
+                ]
+            },
             new TextUIBlueprint()
             {
                 Content = "TestLabel"
@@ -32,7 +40,6 @@ internal class StarlightTestDevMenu : StarlightMenu
         ]
     };
     
-    // In reality it's tab
     internal static readonly LKey OpenKey = LKey.F8;
     public new static GameObject GetMenuRootObject()
     {
@@ -43,14 +50,17 @@ internal class StarlightTestDevMenu : StarlightMenu
         rect.offsetMin = Vector2.zero; 
         rect.offsetMax = Vector2.zero;
         rect.localScale = Vector3.one;
-        rect.localPosition = Vector2.zero;
         return obj;
     }
 
     private RectTransform _openThing;
     protected override void OnOpen()
     {
-        _openThing = _blueprint.Render(new UITheme(){}, transform);
+        var theme = new UITheme();
+        if(ColorUtility.TryParseHtmlString("#1B1B1DFF", out var color)) theme.PrimaryColor = color;
+        if(ColorUtility.TryParseHtmlString("#303846FF", out var color2)) theme.SecondaryColor = color2;
+        if(ColorUtility.TryParseHtmlString("#2C6EC8FF", out var color3)) theme.AccentColor = color3;
+        _openThing = _blueprint.Render(theme, transform);
     }
 
     protected override void OnClose()
