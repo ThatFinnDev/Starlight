@@ -59,9 +59,60 @@ public class PrismLargoCreatorV01
         if (!CustomBasePrefab.HasComponent<IdentifiableActor>()) return false;
         return true;
     }
-    
-    
-    
+
+
+    private void Duplicate(SlimeAppearance appearance, SlimeDefinition largoDef, SlimeAppearance firstSlimeAppearance, SlimeAppearance secondSlimeAppearance)
+    {
+        bool firstFace = PrismLibMerging.ShouldUseFirstStructure(LargoMergeSettings.Face, !PrismLibMerging.GetLargoHasDefaultFace(FirstSlime.GetSlimeAppearance()));
+        if (firstFace)
+            appearance._face = Object.Instantiate(firstSlimeAppearance._face);
+        else appearance._face = Object.Instantiate(secondSlimeAppearance._face);
+        var optimalPriortization = PrismLibMerging.GetOptimalV01(FirstSlime,SecondSlime);
+        if (LargoMergeSettings.BaseColors==PrismColorMergeStrategy.Merge||
+            (LargoMergeSettings.BaseColors == PrismColorMergeStrategy.Optimal && optimalPriortization==PrismThreeMergeStrategy.Merge))
+        {
+            var firstPalette = firstSlimeAppearance._colorPalette;
+            var secondPalette = secondSlimeAppearance._colorPalette;
+            appearance._splatColor = Color.Lerp(firstSlimeAppearance._splatColor, secondSlimeAppearance._splatColor, 0.5f);
+            largoDef.color = Color.Lerp(FirstSlime.GetSlimeDefinition().color, SecondSlime.GetSlimeDefinition().color, 0.5f);
+            appearance._colorPalette = new SlimeAppearance.Palette()
+            {
+                Ammo = Color.Lerp(firstPalette.Ammo, secondPalette.Ammo, 0.5f),
+                Bottom = Color.Lerp(firstPalette.Bottom, secondPalette.Bottom, 0.5f),
+                Middle = Color.Lerp(firstPalette.Middle, secondPalette.Middle, 0.5f),
+                Top = Color.Lerp(firstPalette.Top, secondPalette.Top, 0.5f),
+            };
+        }
+        else
+        {
+            SlimeAppearance prioritizedAppearance = null;
+            switch (optimalPriortization)
+            {
+                case PrismThreeMergeStrategy.PrioritizeSecond :
+                    prioritizedAppearance = secondSlimeAppearance;
+                    largoDef.color = FirstSlime.GetSlimeDefinition().color;
+                    break;
+                default:
+                    prioritizedAppearance = firstSlimeAppearance;
+                    largoDef.color = SecondSlime.GetSlimeDefinition().color;
+                    break;
+            }
+            appearance._splatColor = prioritizedAppearance._splatColor;
+            appearance._colorPalette = new SlimeAppearance.Palette()
+            {
+                Ammo = prioritizedAppearance._colorPalette.Ammo,
+                Bottom = prioritizedAppearance._colorPalette.Bottom, 
+                Middle = prioritizedAppearance._colorPalette.Middle,
+                Top = prioritizedAppearance._colorPalette.Top,
+            };
+        }
+        appearance._structures = PrismLibMerging.MergeStructuresV01(firstSlimeAppearance, secondSlimeAppearance, LargoMergeSettings,optimalPriortization);
+        appearance._dependentAppearances = new[]
+        {
+            // Dependent is always the default one. Don't ask why
+            FirstSlime.GetSlimeAppearance(), SecondSlime.GetSlimeAppearance()
+        };
+    }
     
     
     public PrismLargo CreateLargo()
@@ -178,62 +229,27 @@ public class PrismLargoCreatorV01
         if(!firstSlimeDef.prefab.HasComponent<DamagePlayerOnTouch>()&&!secondSlimeDef.prefab.HasComponent<DamagePlayerOnTouch>())
             largoDef.prefab.RemoveComponent<DamagePlayerOnTouch>();
 
-        SlimeAppearance appearance = Object.Instantiate(baseLargo.AppearancesDefault[0]);
-        largoDef.AppearancesDefault[0] = appearance;
+        largoDef.AppearancesDefault = new Il2CppReferenceArray<SlimeAppearance>(0);
+        
+        var appearance = Object.Instantiate(baseLargo.AppearancesDefault[0]);
         appearance.hideFlags = HideFlags.DontUnloadUnusedAsset;
-        appearance.name = firstSlimeDef.AppearancesDefault[0].name + secondSlimeDef.AppearancesDefault[0].name;
+        appearance.name = FirstSlime.GetSlimeAppearance().name + SecondSlime.GetSlimeAppearance().name;
+        largoDef.AppearancesDefault = largoDef.AppearancesDefault.AddToNew(appearance);
+        Duplicate(appearance,largoDef,FirstSlime.GetSlimeAppearance(),SecondSlime.GetSlimeAppearance());
 
-        appearance._dependentAppearances = new[]
-        {
-            firstSlimeDef.AppearancesDefault[0], secondSlimeDef.AppearancesDefault[0]
-        };
-
-        bool firstFace = PrismLibMerging.ShouldUseFirstStructure(LargoMergeSettings.Face, !PrismLibMerging.GetLargoHasDefaultFace(FirstSlime.GetSlimeAppearance()));
-        if (firstFace)
-            appearance._face = Object.Instantiate(FirstSlime.GetSlimeAppearance()._face);
-        else appearance._face = Object.Instantiate(SecondSlime.GetSlimeAppearance()._face);
-        var optimalPriortization = PrismLibMerging.GetOptimalV01(firstSlimeDef,secondSlimeDef);
-        if (LargoMergeSettings.BaseColors==PrismColorMergeStrategy.Merge||
-            (LargoMergeSettings.BaseColors == PrismColorMergeStrategy.Optimal && optimalPriortization==PrismThreeMergeStrategy.Merge))
-        {
-            var firstPalette = FirstSlime.GetSlimeAppearance()._colorPalette;
-            var secondPalette = SecondSlime.GetSlimeAppearance()._colorPalette;
-            appearance._splatColor = Color.Lerp(FirstSlime.GetSlimeAppearance()._splatColor, SecondSlime.GetSlimeAppearance()._splatColor, 0.5f);
-            largoDef.color = Color.Lerp(firstSlimeDef.color, secondSlimeDef.color, 0.5f);
-            appearance._colorPalette = new SlimeAppearance.Palette()
-            {
-                Ammo = Color.Lerp(firstPalette.Ammo, secondPalette.Ammo, 0.5f),
-                Bottom = Color.Lerp(firstPalette.Bottom, secondPalette.Bottom, 0.5f),
-                Middle = Color.Lerp(firstPalette.Middle, secondPalette.Middle, 0.5f),
-                Top = Color.Lerp(firstPalette.Top, secondPalette.Top, 0.5f),
-            };
-        }
-        else
-        {
-            SlimeAppearance prioritizedAppearance = null;
-            switch (optimalPriortization)
-            {
-                case PrismThreeMergeStrategy.PrioritizeSecond :
-                    prioritizedAppearance = SecondSlime.GetSlimeAppearance();
-                    largoDef.color = secondSlimeDef.color;
-                    break;
-                default:
-                    prioritizedAppearance = FirstSlime.GetSlimeAppearance();
-                    largoDef.color = firstSlimeDef.color;
-                    break;
-            }
-            appearance._splatColor = prioritizedAppearance._splatColor;
-            appearance._colorPalette = new SlimeAppearance.Palette()
-            {
-                Ammo = prioritizedAppearance._colorPalette.Ammo,
-                Bottom = prioritizedAppearance._colorPalette.Bottom, 
-                Middle = prioritizedAppearance._colorPalette.Middle,
-                Top = prioritizedAppearance._colorPalette.Top,
-            };
-        }
-        appearance._structures = PrismLibMerging.MergeStructuresV01(appearance._dependentAppearances[0],
-            appearance._dependentAppearances[1], LargoMergeSettings,optimalPriortization);
-
+        
+        var appearance2 = Object.Instantiate(baseLargo.AppearancesDefault[1]);
+        appearance2.hideFlags = HideFlags.DontUnloadUnusedAsset;
+        appearance2.name = FirstSlime.GetSlimeAppearanceRadiant().name + SecondSlime.GetSlimeAppearance().name;
+        largoDef.AppearancesDefault = largoDef.AppearancesDefault.AddToNew(appearance2);
+        Duplicate(appearance2,largoDef,FirstSlime.GetSlimeAppearanceRadiant(),SecondSlime.GetSlimeAppearance());
+        
+        var appearance3 = Object.Instantiate(baseLargo.AppearancesDefault[2]);
+        appearance3.hideFlags = HideFlags.DontUnloadUnusedAsset;
+        appearance3.name = FirstSlime.GetSlimeAppearance().name + SecondSlime.GetSlimeAppearanceRadiant().name;
+        largoDef.AppearancesDefault = largoDef.AppearancesDefault.AddToNew(appearance3);
+        Duplicate(appearance3,largoDef,FirstSlime.GetSlimeAppearance(),SecondSlime.GetSlimeAppearanceRadiant());
+        
         try
         {
             largoDef.Diet = PrismLibMerging.MergeDiet(firstSlimeDef.Diet, secondSlimeDef.Diet);
@@ -254,7 +270,9 @@ public class PrismLargoCreatorV01
                     break;
             }
         }
-
+        
+        PrismShortcuts.mainAppearanceDirector.RegisterDependentAppearances(largoDef, largoDef.AppearancesDefault[1]);
+        PrismShortcuts.mainAppearanceDirector.UpdateChosenSlimeAppearance(largoDef, largoDef.AppearancesDefault[1]);
         PrismShortcuts.mainAppearanceDirector.RegisterDependentAppearances(largoDef, largoDef.AppearancesDefault[0]);
         PrismShortcuts.mainAppearanceDirector.UpdateChosenSlimeAppearance(largoDef, largoDef.AppearancesDefault[0]);
 

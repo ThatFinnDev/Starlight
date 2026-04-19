@@ -21,7 +21,6 @@ public class PrismSlime
     public SlimeDefinition GetSlimeDefinition() => SlimeDefinition;
     public string GetReferenceID() => SlimeDefinition.ReferenceId;
     public string GetName() => SlimeDefinition.name;
-    public Sprite GetIcon() => SlimeDefinition.icon;
     public LocalizedString GetLocalized() => SlimeDefinition.LocalizedName;
     public Color32 GetVacColor() => SlimeDefinition.color;
     public GameObject GetPrefab() => SlimeDefinition.prefab;

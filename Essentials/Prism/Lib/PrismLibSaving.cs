@@ -39,7 +39,7 @@ public class PrismLibSaving
         t._identifiableTypeToPersistenceId._reverseIndex.TryAdd(refID,
             t._identifiableTypeToPersistenceId._reverseIndex.Count);
 
-        if (ident is SlimeDefinition)
+        if (ident.TryCast<SlimeDefinition>())
         {
             gameContext.SlimeDefinitions._slimeDefinitionsByIdentifiable.TryAdd(ident, ident.Cast<SlimeDefinition>());
             if (!gameContext.SlimeDefinitions.Slimes.Contains(ident.Cast<SlimeDefinition>()))

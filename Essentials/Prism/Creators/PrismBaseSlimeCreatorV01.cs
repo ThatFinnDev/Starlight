@@ -13,6 +13,7 @@ public class PrismBaseSlimeCreatorV01
     
     public string Name;
     public Sprite Icon;
+    public Sprite RadiantIcon;
     public LocalizedString Localized;
     public string referenceID => "SlimeDefinition.Modded" + Name;
 
@@ -53,36 +54,11 @@ public class PrismBaseSlimeCreatorV01
         return true;
     }
 
-    
-    
-    
-    
-    
-    
-    
-    public PrismBaseSlime CreateSlime()
+
+
+
+    private void Duplicate(SlimeAppearance appearance, SlimeAppearance baseAppearance)
     {
-        if (!IsValid()) return null;
-        if (_createdSlime != null) return _createdSlime;
-
-        var slimeDef = Object.Instantiate( PrismNativeBaseSlime.Pink.GetPrismBaseSlime().GetSlimeDefinition());
-        slimeDef.hideFlags = HideFlags.DontUnloadUnusedAsset;
-        slimeDef.Name = Name;
-        slimeDef.name = Name;
-        slimeDef.AppearancesDefault = new Il2CppReferenceArray<SlimeAppearance>(0);
-
-        var baseAppearance = CustomBaseAppearance;
-        if (baseAppearance == null) baseAppearance = PrismNativeBaseSlime.Pink.GetPrismBaseSlime().GetSlimeAppearance();
-        SlimeAppearance appearance = Object.Instantiate(baseAppearance);
-        appearance.hideFlags = HideFlags.DontUnloadUnusedAsset;
-        appearance.name = Name+"Default";
-        appearance._icon = Icon ?? PrismShortcuts.UnavailableIcon;
-        slimeDef.AppearancesDefault = slimeDef.AppearancesDefault.AddToNew(appearance);
-        if (slimeDef.AppearancesDefault[0] == null)
-        {
-            slimeDef.AppearancesDefault[0] = appearance;
-        }
-
         var newSlimeAppearanceStructure = new List<SlimeAppearanceStructure>();
         foreach (var slimeAppearanceStructure in baseAppearance.Structures)
         {
@@ -140,19 +116,46 @@ public class PrismBaseSlimeCreatorV01
         if (baseAppearance._vineAppearance != null) appearance._vineAppearance = Object.Instantiate(baseAppearance._vineAppearance);
         if (baseAppearance._wingFlapAnimationOverride != null) appearance._wingFlapAnimationOverride = Object.Instantiate(baseAppearance._wingFlapAnimationOverride);
         if (baseAppearance._biteAnimationOverride != null) appearance._biteAnimationOverride = Object.Instantiate(baseAppearance._biteAnimationOverride);
-            
+    }
+    
+    
+    
+    public PrismBaseSlime CreateSlime()
+    {
+        if (!IsValid()) return null;
+        if (_createdSlime != null) return _createdSlime;
+
+        var slimeDef = Object.Instantiate( PrismNativeBaseSlime.Pink.GetPrismBaseSlime().GetSlimeDefinition());
+        slimeDef.hideFlags = HideFlags.DontUnloadUnusedAsset;
+        slimeDef.Name = Name;
+        slimeDef.name = Name;
+        slimeDef.AppearancesDefault = new Il2CppReferenceArray<SlimeAppearance>(0);
+
+        var baseAppearance = CustomBaseAppearance;
+        if (baseAppearance == null) baseAppearance = PrismNativeBaseSlime.Pink.GetPrismBaseSlime().GetSlimeAppearance();
+        var appearance = Object.Instantiate(baseAppearance);
+        appearance.hideFlags = HideFlags.DontUnloadUnusedAsset;
+        appearance.name = Name+"Default";
+        appearance._icon = Icon ?? PrismShortcuts.UnavailableIcon;
+        slimeDef.AppearancesDefault = slimeDef.AppearancesDefault.AddToNew(appearance);
+        if (slimeDef.AppearancesDefault[0] == null)
+            slimeDef.AppearancesDefault[0] = appearance;
+
+        Duplicate(appearance, baseAppearance);
         
+        var baseRadiantAppearance = CustomBaseAppearance;
+        if (baseRadiantAppearance == null) baseRadiantAppearance = PrismNativeBaseSlime.Pink.GetPrismBaseSlime().GetSlimeAppearanceRadiant();
+        var radiantAppearance = Object.Instantiate(baseRadiantAppearance);
+        baseRadiantAppearance.hideFlags = HideFlags.DontUnloadUnusedAsset;
+        baseRadiantAppearance.name = Name+"Default";
+        baseRadiantAppearance._icon = RadiantIcon ?? Icon;
+        baseRadiantAppearance._icon ??= PrismShortcuts.UnavailableIcon;
+        slimeDef.AppearancesDefault = slimeDef.AppearancesDefault.AddToNew(baseRadiantAppearance);
+        if (slimeDef.AppearancesDefault[1] == null)
+            slimeDef.AppearancesDefault[1] = appearance;
         
-        /*for (int i = 0; i < slimeDef.AppearancesDefault[0].Structures.Count - 1; i++)
-        {
-            SlimeAppearanceStructure a = slimeDef.AppearancesDefault[0].Structures[i];
-            var a2 = new SlimeAppearanceStructure(a);
-            slimeDef.AppearancesDefault[0].Structures[i] = a2;
-            for (int j = 0; j < a2.DefaultMaterials.Count; j++)
-            {
-                a2.DefaultMaterials[j] = Object.Instantiate(a.DefaultMaterials[j]);
-            }
-        }*/
+        Duplicate(radiantAppearance, baseRadiantAppearance);
+        
         
         
         var basePrefab = CustomBasePrefab;
@@ -163,7 +166,7 @@ public class PrismBaseSlimeCreatorV01
         slimeDef.prefab.GetComponent<SlimeAppearanceApplicator>().SlimeDefinition = slimeDef;
         slimeDef.prefab.GetComponent<IdentifiableActor>().identType = slimeDef;
         
-        SlimeDiet slimeDiet = PrismLibDiet.CreateNewDiet();
+        var slimeDiet = PrismLibDiet.CreateNewDiet();
         slimeDef.Diet = slimeDiet;
         VacColor.a = 255;
         slimeDef.color = VacColor;

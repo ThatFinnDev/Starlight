@@ -4,6 +4,8 @@ namespace Starlight.Prism.Wrappers;
 
 public class PrismBaseSlime : PrismSlime
 {
+    public Sprite GetIcon() => GetSlimeAppearance()._icon;
+    public Sprite GetRadiantIcon() => GetSlimeAppearanceRadiant()._icon;
     internal readonly bool AllowLargos;
     internal bool DisableAutoModdedLargos;
     public static implicit operator PrismBaseSlime(PrismNativeBaseSlime nativeBaseSlime)
