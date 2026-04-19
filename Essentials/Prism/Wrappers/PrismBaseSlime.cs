@@ -4,6 +4,13 @@ namespace Starlight.Prism.Wrappers;
 
 public class PrismBaseSlime : PrismSlime
 {
+    public SlimeAppearance GetSlimeAppearanceRadiant()
+    {
+        foreach (var appearance in SlimeDefinition.AppearancesDefault)
+            if (appearance.name.Contains("Radiant"))
+                return appearance;
+        return null;
+    }
     public Sprite GetIcon() => GetSlimeAppearance()._icon;
     public Sprite GetRadiantIcon() => GetSlimeAppearanceRadiant()._icon;
     internal readonly bool AllowLargos;

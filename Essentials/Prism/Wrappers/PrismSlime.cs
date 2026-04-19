@@ -25,14 +25,6 @@ public class PrismSlime
     public Color32 GetVacColor() => SlimeDefinition.color;
     public GameObject GetPrefab() => SlimeDefinition.prefab;
     public SlimeAppearance GetSlimeAppearance() => SlimeDefinition.AppearancesDefault[0];
-
-    public SlimeAppearance GetSlimeAppearanceRadiant()
-    {
-        foreach (var appearance in SlimeDefinition.AppearancesDefault)
-            if (appearance.name.Contains("Radiant"))
-                return appearance;
-        return null;
-    }
     public SlimeDiet GetSlimeDiet() => SlimeDefinition.Diet;
     public bool GetIsNative() => IsNative;
     
