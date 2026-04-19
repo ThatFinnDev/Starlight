@@ -77,7 +77,6 @@ internal class WorldPopulatorErrorPatchPopulateGadgets
 {
     public static void Prefix(WorldPopulator._PopulateGadgets_d__4 __instance)
     {
-        MelonLogger.Msg("AAFSDFGET");
         if (!ShowWorldPopulatorErrors.HasFlag()) return;
         if(IgnoreWorldPopulatorErrors.HasFlag())
             __instance.onFail = new System.Action<Il2CppSystem.Exception>((exception) =>

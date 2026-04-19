@@ -115,6 +115,8 @@ cmd.bind.description,"Binds a key to a specific command",Bindet einen Befehl/meh
 cmd.bind.extendeddescription,"Binds a key to a specific command, you can even bind multiple. To remove the binding, use the 'unbind' command",Bindet einen Befehl/mehrere Befehle zu einer Taste. Benütze bitte den Befehl namens 'unbind' um alle Bindungen mit einer Taste zu entfernen.
 cmd.clear.success,"Successfully cleared the console!",Die Konsole wurde erfolgreich entleert!
 cmd.clear.description,"Clears the console",Leert die Konsole
+cmd.appearance.success,"Successfully rotated the appearance!","Das Aussehen wurde erfolgreich rotiert!"
+cmd.appearance.description,"Rotates the appearance","Rotates the appearance"
 cmd.clearinv.success,"Successfully cleared your inventory!",Dein Inventar wurde erfolgreich entleert!
 cmd.clearinv.successsingle,"Successfully cleared slot number $1!",Der $1te Slot wurde erfolgreich entleert!
 cmd.clearinv.error.slotdoesntexist,"There are only $1 number of slots!",Es gibt nur $1 Slots!
