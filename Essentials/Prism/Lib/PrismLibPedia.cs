@@ -16,9 +16,9 @@ public static class PrismLibPedia
     internal static FixedPediaEntry FixedPediaEntryPrefab;
     internal static readonly Dictionary<PrismPediaCategoryType, List<PediaEntry>> PediaEntryLookup = new ()
     {
-        {PrismPediaCategoryType.Slimes, new List<PediaEntry>()}, {PrismPediaCategoryType.Resources, new List<PediaEntry>()}, {PrismPediaCategoryType.Blueprints, new List<PediaEntry>()},
-        {PrismPediaCategoryType.World, new List<PediaEntry>()}, {PrismPediaCategoryType.Weather, new List<PediaEntry>()}, {PrismPediaCategoryType.Toys, new List<PediaEntry>()},
-        {PrismPediaCategoryType.Ranch, new List<PediaEntry>()}, {PrismPediaCategoryType.Science, new List<PediaEntry>()}, {PrismPediaCategoryType.Tutorial, new List<PediaEntry>()},
+        {PrismPediaCategoryType.Slimes, new List<PediaEntry>()}, {PrismPediaCategoryType.RadiantSlimes, new List<PediaEntry>()}, {PrismPediaCategoryType.Resources, new List<PediaEntry>()}, {PrismPediaCategoryType.Blueprints, new List<PediaEntry>()},
+        {PrismPediaCategoryType.World, new List<PediaEntry>()}, {PrismPediaCategoryType.Weather, new List<PediaEntry>()}, {PrismPediaCategoryType.Toys, new List<PediaEntry>()}, {PrismPediaCategoryType.Ranch, new List<PediaEntry>()}, 
+        {PrismPediaCategoryType.Science, new List<PediaEntry>()}, {PrismPediaCategoryType.Tutorial, new List<PediaEntry>()},
     };
     private static readonly Dictionary<PrismPediaDetailType, PediaDetailSection> PediaDetailSectionLookup = new ();
     private static readonly Dictionary<PrismPediaFactSetType, PediaHighlightSet> PediaPrismFactSetLookup = new ();

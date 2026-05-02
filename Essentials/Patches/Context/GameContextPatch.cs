@@ -6,7 +6,6 @@ using Il2CppMonomiPark.SlimeRancher.UI;
 using Il2CppMonomiPark.SlimeRancher.UI.Options;
 using Il2CppMonomiPark.SlimeRancher.UI.Popup;
 using Starlight.Buttons;
-using Starlight.Buttons.OptionsUI;
 using Starlight.Commands;
 using Starlight.Components.Debug;
 using Starlight.Enums;

@@ -100,21 +100,21 @@ public class StarlightCheatMenu : StarlightMenu
         {
             GameObject button = Instantiate(_buttonTemplate, _cheatButtonContent);
             button.SetActive(true);
-            button.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = cheatButton.label;
+            button.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = cheatButton.Label;
             button.GetComponent<Button>().onClick.AddListener((Action)(() =>
             {
-                cheatButton.action.Invoke();
+                cheatButton.Action.Invoke();
             }));
-            cheatButton.textInstance = button.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
-            cheatButton.buttonInstance = button.GetComponent<Button>();
+            cheatButton.TextInstance = button.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+            cheatButton.ButtonInstance = button.GetComponent<Button>();
         }
 
 
-        _noclipButton.textInstance.text = Tr("cheatmenu.cheatbuttons.noclip" + (sceneContext.Camera.GetComponent<NoClipComponent>() == null ? "off" : "on"));
-        _refillButton.textInstance.text = Tr("cheatmenu.cheatbuttons.refillinv");
-        if (EnableInfHealth.HasFlag()) _infHealthButton.textInstance.text = Tr("cheatmenu.cheatbuttons.infhealth" + (InfiniteHealthCommand.infHealth? "on" : "off"));
-        if (EnableInfEnergy.HasFlag()) _infEnergyButton.textInstance.text = Tr("cheatmenu.cheatbuttons.infenergy" + (InfiniteEnergyCommand.infEnergy? "on" : "off"));
-        _removeFogButton.textInstance.text = Tr("cheatmenu.cheatbuttons.removeFog" + (RemoveFog? "on" : "off"));
+        _noclipButton.TextInstance.text = Tr("cheatmenu.cheatbuttons.noclip" + (sceneContext.Camera.GetComponent<NoClipComponent>() == null ? "off" : "on"));
+        _refillButton.TextInstance.text = Tr("cheatmenu.cheatbuttons.refillinv");
+        if (EnableInfHealth.HasFlag()) _infHealthButton.TextInstance.text = Tr("cheatmenu.cheatbuttons.infhealth" + (InfiniteHealthCommand.infHealth? "on" : "off"));
+        if (EnableInfEnergy.HasFlag()) _infEnergyButton.TextInstance.text = Tr("cheatmenu.cheatbuttons.infenergy" + (InfiniteEnergyCommand.infEnergy? "on" : "off"));
+        _removeFogButton.TextInstance.text = Tr("cheatmenu.cheatbuttons.removeFog" + (RemoveFog? "on" : "off"));
         //_betterScreenshotButton.textInstance.text = translation("cheatmenu.cheatbuttons.betterScreenshot" + (BetterScreenshot? "on" : "off"));
 
         
@@ -231,21 +231,21 @@ public class StarlightCheatMenu : StarlightMenu
         {
             AudioEUtil.PlaySound(MenuSound.Click);
             StarlightCommandManager.ExecuteByString("infenergy", true,true);
-            _infEnergyButton.textInstance.text = Tr("cheatmenu.cheatbuttons.infenergy" + (InfiniteEnergyCommand.infEnergy? "on" : "off"));
+            _infEnergyButton.TextInstance.text = Tr("cheatmenu.cheatbuttons.infenergy" + (InfiniteEnergyCommand.infEnergy? "on" : "off"));
         });
         if (EnableInfHealth.HasFlag()) _infHealthButton = new StarlightCheatMenuButton(Tr("cheatmenu.cheatbuttons.infhealthoff"),
             () =>
         {
             AudioEUtil.PlaySound(MenuSound.Click);
             StarlightCommandManager.ExecuteByString("infhealth", true,true);
-            _infHealthButton.textInstance.text = Tr("cheatmenu.cheatbuttons.infhealth" + (InfiniteHealthCommand.infHealth? "on" : "off"));
+            _infHealthButton.TextInstance.text = Tr("cheatmenu.cheatbuttons.infhealth" + (InfiniteHealthCommand.infHealth? "on" : "off"));
             });
         _removeFogButton = new StarlightCheatMenuButton(Tr("cheatmenu.cheatbuttons.removeFogoff"),
             () =>
             {
                 AudioEUtil.PlaySound(MenuSound.Click);
                 RemoveFog = !RemoveFog;
-                _removeFogButton.textInstance.text = Tr("cheatmenu.cheatbuttons.removeFog" + (RemoveFog? "on" : "off"));
+                _removeFogButton.TextInstance.text = Tr("cheatmenu.cheatbuttons.removeFog" + (RemoveFog? "on" : "off"));
             });
         /*_betterScreenshotButton = new StarlightCheatMenuButton(translation("cheatmenu.cheatbuttons.betterScreenshotoff"),
             () =>
@@ -259,7 +259,7 @@ public class StarlightCheatMenu : StarlightMenu
             {
                 AudioEUtil.PlaySound(MenuSound.Click);
                 StarlightCommandManager.ExecuteByString("noclip", true,true);
-                _noclipButton.textInstance.text = Tr("cheatmenu.cheatbuttons.noclip" + (sceneContext.Camera.GetComponent<NoClipComponent>()!=null ? "on" : "off"));
+                _noclipButton.TextInstance.text = Tr("cheatmenu.cheatbuttons.noclip" + (sceneContext.Camera.GetComponent<NoClipComponent>()!=null ? "on" : "off"));
             });
         _refillButton = new StarlightCheatMenuButton(Tr("cheatmenu.cheatbuttons.refillinv"), () =>
         {

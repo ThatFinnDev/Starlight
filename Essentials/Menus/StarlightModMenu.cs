@@ -375,7 +375,7 @@ internal class StarlightModMenu : StarlightMenu
         _openThing = blueprint.Render(currentTheme, currentFontTheme, transform);
         try
         {
-            _openThing.GetObjectRecursively<ScrollRect>("ModMenuModsScrollRec").content.transform.GetChild(0).gameObject.GetComponent<Button>().onClick.Invoke();
+            _openThing.GetObjectRecursively<ScrollRect>("ModMenuModsScrollRec").content.transform.GetChild(0).gameObject.GetComponent<Button>().Press();
         } catch { }
         _openThing.GetObjectRecursively<GameObject>("ModMenuModConfigWarningRec").SetActive(false);
     }

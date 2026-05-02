@@ -5,6 +5,7 @@ using Il2CppMonomiPark.SlimeRancher.UI.MainMenu;
 using Il2CppMonomiPark.SlimeRancher.UI.MainMenu.Definition;
 using Il2CppTMPro;
 using Starlight.Buttons;
+using Starlight.Buttons.Definitions;
 using Starlight.Managers;
 using Starlight.Storage;
 
@@ -41,24 +42,24 @@ internal static class MainMenuLandingRootUIInitPatch
             {
                 try
                 {
-                    if (containerButton._definition2 == null) continue;
+                    if (containerButton.Definition2 == null) continue;
                     
                     var list = new List<ButtonBehaviorDefinition>();
                     foreach (var pair2 in Buttons)
                     {
                         if(pair2.Value.Contains(containerButton))
                         {
-                            if (pair2.Key._definition != null) list.Add(pair2.Key._definition);
-                            else if (pair2.Key._definition2!=null) list.Add(pair2.Key._definition2);
+                            if (pair2.Key.Definition != null) list.Add(pair2.Key.Definition);
+                            else if (pair2.Key.Definition2!=null) list.Add(pair2.Key.Definition2);
                         }
                     }
-                    button._definition2._subMenuItems = ScriptableObject.CreateInstance<ButtonBehaviorConfiguration>();
-                    button._definition2._subMenuItems.items = list.ToIl2CppList();
-                    if (__instance._mainMenuConfig.items.Contains(containerButton._definition2)) continue;
+                    button.Definition2._subMenuItems = ScriptableObject.CreateInstance<ButtonBehaviorConfiguration>();
+                    button.Definition2._subMenuItems.items = list.ToIl2CppList();
+                    if (__instance._mainMenuConfig.items.Contains(containerButton.Definition2)) continue;
                     int offset = 0;
                     foreach (var item in __instance._mainMenuConfig.items) 
                         if(item is LoadGameItemDefinition) if(!(item is CustomMainMenuItemDefinition)) offset=1;
-                    __instance._mainMenuConfig.items.Insert(Math.Clamp(containerButton.insertIndex+offset,0,__instance._mainMenuConfig.items.Count), containerButton._definition2);
+                    __instance._mainMenuConfig.items.Insert(Math.Clamp(containerButton.InsertIndex+offset,0,__instance._mainMenuConfig.items.Count), containerButton.Definition2);
                 }
                 catch (Exception e) { LogError(e); }
             }
@@ -66,14 +67,14 @@ internal static class MainMenuLandingRootUIInitPatch
             {
                 try
                 {
-                    if (button._definition != null)
+                    if (button.Definition != null)
                     {
-                        if (__instance._mainMenuConfig.items.Contains(button._definition))
+                        if (__instance._mainMenuConfig.items.Contains(button.Definition))
                             continue;
                         int offset = 0;
                         foreach (var item in __instance._mainMenuConfig.items) 
                             if(item is LoadGameItemDefinition) if(!(item is CustomMainMenuItemDefinition)) offset=1;
-                        __instance._mainMenuConfig.items.Insert(Math.Clamp(button.insertIndex+offset,0,__instance._mainMenuConfig.items.Count), button._definition);
+                        __instance._mainMenuConfig.items.Insert(Math.Clamp(button.InsertIndex+offset,0,__instance._mainMenuConfig.items.Count), button.Definition);
                     }
                 }
                 catch (Exception e) { LogError(e); }

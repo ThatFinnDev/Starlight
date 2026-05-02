@@ -29,7 +29,7 @@ public static class StarlightFeatureFlags
     [
         DevMode, Experiments, CommandsLoadDevOnly, CommandsLoadExperimental, IgnoreSaveErrors, 
         ExperimentalKeyCodes, EnableRepoManagement, EnableRepoMenu, UseMockRepo, DevTestMenu,
-        EnableStudioMenu
+        EnableStudioMenu,
         //InjectOptionsButtons, AddMockOptionsUIButtons
     ];
     private static FeatureFlag[] extraBetaFlags => [None];

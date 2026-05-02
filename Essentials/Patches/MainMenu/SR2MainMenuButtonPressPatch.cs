@@ -1,5 +1,6 @@
 using Il2CppMonomiPark.SlimeRancher.UI.MainMenu.Model;
 using Starlight.Buttons;
+using Starlight.Buttons.Definitions;
 
 namespace Starlight.Patches.MainMenu;
 
@@ -11,12 +12,12 @@ internal class SR2MainMenuButtonPressPatch
     {
         if (__instance.Definition is CustomMainMenuItemDefinition definition)
         {
-            if(definition.customAction!=null) definition.customAction.Invoke();
+            if(definition.CustomAction!=null) definition.CustomAction.Invoke();
             return false;
         }
         if (__instance.Definition is CustomMainMenuSubItemDefinition definition2)
         {
-            if(definition2.customAction!=null) definition2.customAction.Invoke();
+            if(definition2.CustomAction!=null) definition2.CustomAction.Invoke();
             return false;
         }
 

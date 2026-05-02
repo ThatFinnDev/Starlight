@@ -1,48 +1,48 @@
 using Il2CppMonomiPark.SlimeRancher.Options;
+using Starlight.Buttons.Definitions;
 using Starlight.Enums;
-using Starlight.Patches.MainMenu;
-using Starlight.Storage;
+using Starlight.Managers;
 using UnityEngine.Localization;
 
 namespace Starlight.Buttons;
 // Make it public on release
 internal class CustomOptionsUICategory
 {
-    private HashSet<CustomOptionsButton> buttons = new ();
-    public LocalizedString label;
-    public int insertIndex;
-    internal OptionsItemCategory _category;
-    public Sprite icon;
-    public OptionsCategoryVisibleState visibleState;
-    public bool enabled = true;
+    private HashSet<CustomAbstractOptionsButton> _buttons = new ();
+    public LocalizedString Label;
+    public int InsertIndex;
+    internal OptionsItemCategory Category;
+    public Sprite Icon;
+    public OptionsCategoryVisibleState VisibleState;
+    public bool Enabled = true;
 
     public CustomOptionsUICategory(LocalizedString label, int insertIndex, Sprite icon, OptionsCategoryVisibleState visibleState)
     {
-        this.label = label; 
-        this.insertIndex = insertIndex;
-        this.icon = icon;
-        this.visibleState = visibleState;
+        this.Label = label; 
+        this.InsertIndex = insertIndex;
+        this.Icon = icon;
+        this.VisibleState = visibleState;
 
-        StarlightOptionsButtonManager.customOptionsUICategories.Add(this,new HashSet<CustomOptionsButton>());
+        StarlightOptionsButtonManager.customOptionsUICategories.Add(this,new HashSet<CustomAbstractOptionsButton>());
     }
     
 
-    public void AddButton(CustomOptionsButton button)
+    public void AddButton(CustomAbstractOptionsButton button)
     { 
         if(!StarlightOptionsButtonManager.customOptionsUICategories[this].Contains(button))
             StarlightOptionsButtonManager.customOptionsUICategories[this].Add(button);
     }
-    public void RemoveButton(CustomOptionsButton button)
+    public void RemoveButton(CustomAbstractOptionsButton button)
     { 
         if(StarlightOptionsButtonManager.customOptionsUICategories[this].Contains(button))
             StarlightOptionsButtonManager.customOptionsUICategories[this].Remove(button);
     }
     public void Remove()
     {
-        enabled = false;
+        Enabled = false;
     }
     public void AddAgain()
     {
-        enabled = true;
+        Enabled = true;
     }
 }

@@ -1,5 +1,5 @@
 using Il2CppMonomiPark.SlimeRancher.DataModel;
-using Starlight.Buttons.OptionsUI;
+using Starlight.Buttons.Definitions;
 
 namespace Starlight.Patches.Options;
 
@@ -17,6 +17,4 @@ internal static class PresetOptionsItemModelPatch
         }
         return __exception;
     }
-
-    
 }

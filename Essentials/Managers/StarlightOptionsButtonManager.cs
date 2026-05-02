@@ -2,15 +2,17 @@ using System;
 using System.IO;
 using Il2CppMonomiPark.SlimeRancher.Options;
 using Starlight.Buttons;
+using Starlight.Buttons.Definitions;
 using Starlight.Enums;
 using Starlight.Saving;
+using Starlight.Storage;
 
-namespace Starlight.Storage;
+namespace Starlight.Managers;
 // Make it public on release
 internal static class StarlightOptionsButtonManager
 {
-    internal static Dictionary<NativeOptionsUICategory,HashSet<CustomOptionsButton>> customOptionsUIButtonsInNative = new();
-    internal static Dictionary<CustomOptionsUICategory,HashSet<CustomOptionsButton>> customOptionsUICategories = new();
+     static readonly Dictionary<NativeOptionsUICategory,HashSet<CustomAbstractOptionsButton>> customOptionsUIButtonsInNative = new();
+    internal static Dictionary<CustomOptionsUICategory,HashSet<CustomAbstractOptionsButton>> customOptionsUICategories = new();
     static string path => Path.Combine(StarlightEntryPoint.dataPath, "customsettings.starlighters");
     static CustomOptionsSave _save;
     internal static CustomOptionsSave save
@@ -150,34 +152,34 @@ internal static class StarlightOptionsButtonManager
                 {
                     var def = button.GetOptionsItemDef();
                     if (!categoryObj.items.Contains(def))
-                        categoryObj.items.Insert(Math.Clamp(button.insertIndex,0,configuration.items.Count),def);
+                        categoryObj.items.Insert(Math.Clamp(button.InsertIndex,0,configuration.items.Count),def);
                 }
             }
         foreach (var category in customOptionsUICategories)
         {
-            var categoryObj = category.Key._category;
-            if (category.Key.visibleState != OptionsCategoryVisibleState.AllTheTime)
+            var categoryObj = category.Key.Category;
+            if (category.Key.VisibleState != OptionsCategoryVisibleState.AllTheTime)
             {
-                if (!inGame && category.Key.visibleState == OptionsCategoryVisibleState.InGameOnly) continue;
-                if (!StarlightEntryPoint.MainMenuLoaded && category.Key.visibleState == OptionsCategoryVisibleState.MainMenuOnly) continue;
+                if (!inGame && category.Key.VisibleState == OptionsCategoryVisibleState.InGameOnly) continue;
+                if (!StarlightEntryPoint.MainMenuLoaded && category.Key.VisibleState == OptionsCategoryVisibleState.MainMenuOnly) continue;
             }
             if(categoryObj==null)
             {
                 categoryObj = ScriptableObject.CreateInstance<OptionsItemCategory>();
-                categoryObj._title = category.Key.label;
-                categoryObj.name = category.Key.label.GetCompactLocalized();
-                categoryObj._icon = category.Key.icon;
+                categoryObj._title = category.Key.Label;
+                categoryObj.name = category.Key.Label.GetCompactLocalized();
+                categoryObj._icon = category.Key.Icon;
                 categoryObj.items = new Il2CppSystem.Collections.Generic.List<OptionsItemDefinition>();
                 categoryObj._showRebindButton = false;
-                category.Key._category = categoryObj;
+                category.Key.Category = categoryObj;
             }
             if (!configuration.items.Contains(categoryObj))
-                configuration.items.Insert(Math.Clamp(category.Key.insertIndex,0,configuration.items.Count),categoryObj);
+                configuration.items.Insert(Math.Clamp(category.Key.InsertIndex,0,configuration.items.Count),categoryObj);
             foreach (var button in category.Value)
             {
                 var def = button.GetOptionsItemDef();
                 if (!categoryObj.items.Contains(def))
-                    categoryObj.items.Insert(Math.Clamp(button.insertIndex,0,configuration.items.Count),def);
+                    categoryObj.items.Insert(Math.Clamp(button.InsertIndex,0,configuration.items.Count),def);
             }
 
         }

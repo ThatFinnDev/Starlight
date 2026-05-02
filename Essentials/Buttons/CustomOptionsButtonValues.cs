@@ -5,15 +5,16 @@ using Il2CppMonomiPark.SlimeRancher.DataModel;
 using Il2CppMonomiPark.SlimeRancher.Input;
 using Il2CppMonomiPark.SlimeRancher.Options;
 using Il2CppMonomiPark.SlimeRancher.Platform;
+using Starlight.Buttons.Definitions;
 using Starlight.Enums;
-using Starlight.Storage;
+using Starlight.Managers;
 using UnityEngine.Localization;
 using QualityLevel = Il2CppMonomiPark.ScriptedValue.QualityLevel;
 
-namespace Starlight.Buttons.OptionsUI;
+namespace Starlight.Buttons;
 
 // Make it public on release
-internal class CustomOptionsButtonValues : CustomOptionsButton
+internal class CustomOptionsButtonValues : CustomAbstractOptionsButton
 {
     public LocalizedString label;
     public LocalizedString detailsText;
@@ -29,7 +30,7 @@ internal class CustomOptionsButtonValues : CustomOptionsButton
     protected override OptionsItemDefinition GenerateOptionsItemDefinition()
     {
         if(!string.IsNullOrWhiteSpace(saveid))
-            StarlightOptionsButtonManager.InitializeValuesButton(type,saveid, defaultValueIndex);
+            StarlightOptionsButtonManager.InitializeValuesButton(Type,saveid, defaultValueIndex);
         if(info==null) info = GetAny<ScriptedValuePresetOptionDefinition>();
         var instance = ScriptableObject.CreateInstance<CustomOptionsValuesDefinition>();
         
@@ -38,7 +39,7 @@ internal class CustomOptionsButtonValues : CustomOptionsButton
         var partID = "starlightexclude"+MiscEUtil.GetRandomString(20);
         while (true)
         {
-            if (usedIds.Contains(partID))
+            if (UsedIds.Contains(partID))
                 partID = "starlightexclude" + MiscEUtil.GetRandomString(20);
             else break;
         }
@@ -51,7 +52,7 @@ internal class CustomOptionsButtonValues : CustomOptionsButton
         instance._requireConfirmation = requireConfirmation;
         instance._defaultValueIndex = defaultValueIndex;
         if(!string.IsNullOrWhiteSpace(saveid))
-            instance.SetTempPresetIndex(StarlightOptionsButtonManager.GetValuesButton(type,saveid, defaultValueIndex));
+            instance.SetTempPresetIndex(StarlightOptionsButtonManager.GetValuesButton(Type,saveid, defaultValueIndex));
         instance._optionsItemModels = new Il2CppSystem.Collections.Generic.List<PresetOptionsItemModel>();
         instance.SupportedInputDeviceAssets = new Il2CppSystem.Collections.Generic.List<InputDeviceAsset>();
         instance.SupportedPlatforms = new Il2CppSystem.Collections.Generic.List<StoreAndPlatform>();
@@ -158,7 +159,7 @@ internal class CustomOptionsButtonValues : CustomOptionsButton
         this.wrapAround = wrapAround;
         this.requireConfirmation = requireConfirmation;
         this.onModify = onModify;
-        this.type = type;
+        this.Type = type;
         this.values = values;
     }
     

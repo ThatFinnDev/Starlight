@@ -5,8 +5,6 @@ namespace Starlight.Buttons;
 
 public class CustomMainMenuContainerButton : CustomMainMenuButton
 {
-    private HashSet<CustomMainMenuButton> _customMainMenuButtons = new ();
-
     public void AddSubButton(CustomMainMenuButton button, bool removeFromCurrent = true)
     {
         if (removeFromCurrent) MainMenuLandingRootUIInitPatch.Buttons[button] = new HashSet<CustomMainMenuContainerButton>();

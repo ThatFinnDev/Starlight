@@ -17,37 +17,37 @@ internal static class SR2RanchUIButtonPatch
         _safeLock = true;
         foreach (var button in Buttons)
         {
-            if (button.label == null || button.action == null) continue;
+            if (button.Label == null || button.Action == null) continue;
             try
             {
-                if (!button.enabled)
+                if (!button.Enabled)
                 {
-                    if (__instance._menuItems.Contains(button._model))
-                        __instance._menuItems.Remove(button._model);
+                    if (__instance._menuItems.Contains(button.Model))
+                        __instance._menuItems.Remove(button.Model);
                     continue;
                 }
-                if (button._model != null)
+                if (button.Model != null)
                 {
-                    if (__instance._menuItems.Contains(button._model))
+                    if (__instance._menuItems.Contains(button.Model))
                         continue;
-                    if (!__instance._menuItems.Contains(button._model))
-                        __instance._menuItems.Insert(Math.Clamp(button.insertIndex,0,__instance._menuItems.Count), button._model);
+                    if (!__instance._menuItems.Contains(button.Model))
+                        __instance._menuItems.Insert(Math.Clamp(button.InsertIndex,0,__instance._menuItems.Count), button.Model);
                     continue;
                 }
-                button._model = ScriptableObject.CreateInstance<RanchHouseMenuItemModel>();
-                button._model._onClick.AddListener(button.action);
-                button._model.label = button.label;
-                button._model.name = button.label.GetLocalizedString();
-                button._model.hideFlags |= HideFlags.HideAndDontSave;
+                button.Model = ScriptableObject.CreateInstance<RanchHouseMenuItemModel>();
+                button.Model._onClick.AddListener(button.Action);
+                button.Model.label = button.Label;
+                button.Model.name = button.Label.GetLocalizedString();
+                button.Model.hideFlags |= HideFlags.HideAndDontSave;
 
-                if (!button.enabled)
+                if (!button.Enabled)
                 {
-                    if (__instance._menuItems.Contains(button._model))
-                        __instance._menuItems.Remove(button._model);
+                    if (__instance._menuItems.Contains(button.Model))
+                        __instance._menuItems.Remove(button.Model);
                     continue;
                 }
-                if (!__instance._menuItems.Contains(button._model))
-                    __instance._menuItems.Insert(Math.Clamp(button.insertIndex,0,__instance._menuItems.Count), button._model);
+                if (!__instance._menuItems.Contains(button.Model))
+                    __instance._menuItems.Insert(Math.Clamp(button.InsertIndex,0,__instance._menuItems.Count), button.Model);
             }
             catch (Exception e) { LogError(e); }
 

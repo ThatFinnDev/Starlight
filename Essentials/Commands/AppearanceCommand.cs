@@ -1,7 +1,7 @@
 using Il2CppMonomiPark.SlimeRancher.Slime;
 using Il2CppMonomiPark.SlimeRancher.UI;
 
-namespace Starlight.Commands.Dev;
+namespace Starlight.Commands;
 
 public class AppearanceCommand: StarlightCommand
 {

@@ -1,19 +1,17 @@
-﻿using Il2CppMonomiPark.SlimeRancher.UI.ButtonBehavior;
-using Il2CppMonomiPark.SlimeRancher.UI.MainMenu;
-using Il2CppMonomiPark.SlimeRancher.UI.MainMenu.Definition;
-using Il2CppMonomiPark.SlimeRancher.UI.MainMenu.Definition.ButtonBehavior;
+﻿using Il2CppMonomiPark.SlimeRancher.UI.MainMenu;
+using Starlight.Buttons.Definitions;
 using UnityEngine.Localization;
 using Starlight.Patches.MainMenu;
 namespace Starlight.Buttons;
 
 public class CustomMainMenuButton
 {
-    public LocalizedString label;
-    public Sprite icon;
-    public int insertIndex;
-    internal CustomMainMenuItemDefinition _definition;
-    internal CustomMainMenuSubItemDefinition _definition2;
-    public SystemAction action;
+    public LocalizedString Label;
+    public Sprite Icon;
+    public int InsertIndex;
+    internal CustomMainMenuItemDefinition Definition;
+    internal CustomMainMenuSubItemDefinition Definition2;
+    public SystemAction Action;
 
     internal CustomMainMenuButton(int THIS_IS_A_STUB)
     {
@@ -21,31 +19,31 @@ public class CustomMainMenuButton
     }
     public CustomMainMenuButton(LocalizedString label, Sprite icon, int insertIndex, SystemAction action)
     {
-        this.label = label;
-        this.icon = icon;
-        this.insertIndex = insertIndex;
-        this.action = action;
+        this.Label = label;
+        this.Icon = icon;
+        this.InsertIndex = insertIndex;
+        this.Action = action;
 
         MainMenuLandingRootUIInitPatch.Buttons.Add(this,new HashSet<CustomMainMenuContainerButton>(){MainMenuLandingRootUIInitPatch.rootStub});
 
         if (this is CustomMainMenuContainerButton)
         {
-            _definition = null;
-            _definition2 = ScriptableObject.CreateInstance<CustomMainMenuSubItemDefinition>();
-            _definition2._label = label;
-            _definition2.name = label.TableEntryReference.Key;
-            _definition2._icon = icon;
-            _definition2.hideFlags |= HideFlags.HideAndDontSave;
-            _definition2.customAction = action;
+            Definition = null;
+            Definition2 = ScriptableObject.CreateInstance<CustomMainMenuSubItemDefinition>();
+            Definition2._label = label;
+            Definition2.name = label.TableEntryReference.Key;
+            Definition2._icon = icon;
+            Definition2.hideFlags |= HideFlags.HideAndDontSave;
+            Definition2.CustomAction = action;
         }
         else
         {
-            _definition = ScriptableObject.CreateInstance<CustomMainMenuItemDefinition>();
-            _definition._label = label;
-            _definition.name = label.TableEntryReference.Key;
-            _definition._icon = icon;
-            _definition.hideFlags |= HideFlags.HideAndDontSave;
-            _definition.customAction = action;
+            Definition = ScriptableObject.CreateInstance<CustomMainMenuItemDefinition>();
+            Definition._label = label;
+            Definition.name = label.TableEntryReference.Key;
+            Definition._icon = icon;
+            Definition.hideFlags |= HideFlags.HideAndDontSave;
+            Definition.CustomAction = action;
         }
         if (StarlightEntryPoint.MainMenuLoaded)
         {

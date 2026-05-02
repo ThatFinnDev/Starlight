@@ -1,20 +1,20 @@
 using Il2CppMonomiPark.SlimeRancher.Options;
 using Starlight.Enums;
 
-namespace Starlight.Buttons;
+namespace Starlight.Buttons.Definitions;
 // Make it public on release
-internal abstract class CustomOptionsButton
+internal abstract class CustomAbstractOptionsButton
 {
-    public OptionsButtonType type = OptionsButtonType.OptionsUI;
-    internal static List<string> usedIds = new List<string>();
-    public int insertIndex;
+    public OptionsButtonType Type = OptionsButtonType.OptionsUI;
+    internal static List<string> UsedIds = new ();
+    public int InsertIndex;
     private OptionsItemDefinition _definition;
     protected virtual OptionsItemDefinition GenerateOptionsItemDefinition()
     {
         return null;
     }
 
-    internal CustomOptionsButton()
+    internal CustomAbstractOptionsButton()
     {
         
     }

@@ -1,10 +1,9 @@
-using Il2CppMonomiPark.SlimeRancher.DataModel;
 using Il2CppMonomiPark.SlimeRancher.Options;
-using Il2CppMonomiPark.SlimeRancher.UI.Pause;
 using Starlight.Enums;
+using Starlight.Managers;
 using Starlight.Storage;
 
-namespace Starlight.Buttons.OptionsUI;
+namespace Starlight.Buttons.Definitions;
 
 [InjectIntoIL]
 internal class CustomOptionsValuesDefinition : ScriptedValuePresetOptionDefinition
@@ -13,7 +12,7 @@ internal class CustomOptionsValuesDefinition : ScriptedValuePresetOptionDefiniti
     public override void ApplyPresetSelection(int index)
     {
         if(!string.IsNullOrWhiteSpace(button.saveid))
-            StarlightOptionsButtonManager.SetValuesButton(button.type,button.saveid, index);
+            StarlightOptionsButtonManager.SetValuesButton(button.Type,button.saveid, index);
         try { button.onModify.Invoke(index); }catch (Exception e) { LogError(e); }
     }
 
@@ -22,13 +21,13 @@ internal class CustomOptionsValuesDefinition : ScriptedValuePresetOptionDefiniti
     public override int GetDefaultPresetIndex()
     {
         if (!string.IsNullOrWhiteSpace(button.saveid))
-            return StarlightOptionsButtonManager.GetValuesButton(button.type,button.saveid, _defaultValueIndex);
+            return StarlightOptionsButtonManager.GetValuesButton(button.Type,button.saveid, _defaultValueIndex);
         return _defaultValueIndex;
     }
 
     public override bool ShouldDisplay()
     {
-        switch (button.type)
+        switch (button.Type)
         {
             case OptionsButtonType.OptionsUI: return true;
             case OptionsButtonType.InGameOptionsUIOnly: return inGame;

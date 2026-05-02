@@ -1,5 +1,5 @@
 using Il2CppMonomiPark.SlimeRancher.Options;
-using Starlight.Buttons.OptionsUI;
+using Starlight.Buttons.Definitions;
 
 namespace Starlight.Patches.Options;
 

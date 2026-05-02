@@ -1,8 +1,8 @@
 using System;
 using Il2CppMonomiPark.SlimeRancher.Options;
 using Il2CppMonomiPark.SlimeRancher.UI.Options;
-using Starlight.Buttons.OptionsUI;
-using Starlight.Storage;
+using Starlight.Buttons.Definitions;
+using Starlight.Managers;
 
 namespace Starlight.Patches.Options;
 
@@ -13,7 +13,7 @@ internal static class OptionsUIRootSwapCategoryPatch
     {
         if (__instance.optionsItemModels == null) __instance.optionsItemModels = new Il2CppSystem.Collections.Generic.List<IOptionsItemModel>();
         if (!InjectOptionsButtons.HasFlag()) return;
-        dynamic c = __instance.categories[categoryIndex];
+        var c = __instance.categories[categoryIndex];
         OptionsItemCategory category = null;
         if (c.TryCast<OptionsItemCategory>() != null)
             category = c.Cast<OptionsItemCategory>();
@@ -32,7 +32,7 @@ internal static class OptionsUIRootSwapCategoryPatch
                     
                     if (!string.IsNullOrWhiteSpace(customDef.button.saveid))
                     {
-                        var value = StarlightOptionsButtonManager.GetValuesButton(customDef.button.type,customDef.button.saveid, customDef.button.defaultValueIndex);
+                        var value = StarlightOptionsButtonManager.GetValuesButton(customDef.button.Type,customDef.button.saveid, customDef.button.defaultValueIndex);
                         try
                         {
                             customDef.SetTempPresetIndex(value);
@@ -46,7 +46,7 @@ internal static class OptionsUIRootSwapCategoryPatch
                     if(model!=null)
                         if (!__instance.optionsItemModels.Contains(model))
                         {
-                            __instance.optionsItemModels.Insert(Math.Clamp(customDef.button.insertIndex,0,__instance.optionsItemModels.Count),model);
+                            __instance.optionsItemModels.Insert(Math.Clamp(customDef.button.InsertIndex,0,__instance.optionsItemModels.Count),model);
                         }
                 }
         }

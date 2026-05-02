@@ -6,17 +6,17 @@ namespace Starlight.Buttons;
 
 public class StarlightCheatMenuButton
 {
-    public string label;
-    public SystemAction action;
-    public Button buttonInstance;
-    public TextMeshProUGUI textInstance;
+    public string Label;
+    public SystemAction Action;
+    public Button ButtonInstance;
+    public TextMeshProUGUI TextInstance;
     public StarlightCheatMenuButton(string label, SystemAction action)
     {
-        this.label = label;
-        this.action = action;
+        this.Label = label;
+        this.Action = action;
 
         foreach (StarlightCheatMenuButton entry in StarlightCheatMenu.cheatButtons)
-            if (entry.label == this.label) { LogError($"There is already a button with the name {this.label}"); return; }
+            if (entry.Label == this.Label) { LogError($"There is already a button with the name {this.Label}"); return; }
 
         StarlightCheatMenu.cheatButtons.Add(this);
     }

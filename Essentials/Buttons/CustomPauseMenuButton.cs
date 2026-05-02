@@ -1,33 +1,34 @@
-﻿using Starlight.Patches.InGame;
+﻿using Starlight.Buttons.Definitions;
+using Starlight.Patches.InGame;
 using UnityEngine.Localization;
 
 namespace Starlight.Buttons;
 
 public class CustomPauseMenuButton
 {
-    public LocalizedString label;
-    public int insertIndex;
-    internal CustomPauseItemModel _model;
-    public SystemAction action;
-    public bool enabled = true;
+    public LocalizedString Label;
+    public int InsertIndex;
+    internal CustomPauseItemModel Model;
+    public SystemAction Action;
+    public bool Enabled = true;
     public CustomPauseMenuButton(LocalizedString label, int insertIndex, SystemAction action)
     {
-        this.label = label; ;
-        this.insertIndex = insertIndex;
-        this.action = action;
+        this.Label = label; ;
+        this.InsertIndex = insertIndex;
+        this.Action = action;
 
         foreach (CustomPauseMenuButton entry in SR2PauseMenuButtonPatch.buttons)
-            if (entry.label == this.label) { LogError($"There is already a button with the name {this.label}"); return; }
+            if (entry.Label == this.Label) { LogError($"There is already a button with the name {this.Label}"); return; }
 
         SR2PauseMenuButtonPatch.buttons.Add(this);
     }
 
     public void Remove()
     {
-        enabled = false;
+        Enabled = false;
     }
     public void AddAgain()
     {
-        enabled = true;
+        Enabled = true;
     }
 }

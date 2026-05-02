@@ -17,7 +17,7 @@
   <ItemGroup>
     <EmbeddedResource Include="*.csv" />
     <EmbeddedResource Include="Assets\**">
-      <LogicalName>$(RootNamespace).Assets.%(RecursiveDir)%(FileName)%(Extension)</LogicalName>
+      <LogicalName>$([System.String]::Copy('$(RootNamespace).Assets.%(RecursiveDir)%(FileName)%(Extension)').Replace('\', '.').Replace('/', '.'))</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

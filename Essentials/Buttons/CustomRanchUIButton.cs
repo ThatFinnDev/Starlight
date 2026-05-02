@@ -6,30 +6,30 @@ namespace Starlight.Buttons;
 
 public class CustomRanchUIButton
 {
-    public LocalizedString label;
-    public int insertIndex;
-    internal RanchHouseMenuItemModel _model;
-    public SystemAction action;
-    public bool enabled = true;
+    public LocalizedString Label;
+    public int InsertIndex;
+    internal RanchHouseMenuItemModel Model;
+    public SystemAction Action;
+    public bool Enabled = true;
 
     public CustomRanchUIButton(LocalizedString label, int insertIndex, SystemAction action)
     {
-        this.label = label; ;
-        this.insertIndex = insertIndex;
-        this.action = action;
+        this.Label = label; ;
+        this.InsertIndex = insertIndex;
+        this.Action = action;
 
         foreach (CustomRanchUIButton entry in SR2RanchUIButtonPatch.Buttons)
-            if (entry.label == this.label) { LogError($"There is already a button with the name {this.label}"); return; }
+            if (entry.Label == this.Label) { LogError($"There is already a button with the name {this.Label}"); return; }
 
         SR2RanchUIButtonPatch.Buttons.Add(this);
     }
     
     public void Remove()
     {
-        enabled = false;
+        Enabled = false;
     }
     public void AddAgain()
     {
-        enabled = true;
+        Enabled = true;
     }
 }
