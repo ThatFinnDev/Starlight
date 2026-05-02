@@ -1,6 +1,6 @@
 # ![logo](https://github.com/ThatFinnDev/SR2E/blob/experimental/.readme/logo.png?raw=true)
-(short SR2E)<br />
-A mod for SlimeRancher 2 that adds a mod menu to the main menu and an in-game console with commands (expandable by other mods/expansions). This includes cheats, etc.
+(short SCE)<br />
+A mod for Slime Rancher 2 that adds a mod menu to the main menu and an in-game console with commands (expandable by other mods/expansions). This includes cheats, etc.
 
 # Installation guides
 Windows: [Click Here](https://sr2e.sr2.dev/docs/installation/windows-installation-guide)<br />
@@ -15,7 +15,7 @@ Please let me know on Discord or in GitHub Issues!<br />
 Discord: https://discord.gg/YBghgrSTA9
 
 # Expansions
-If you want to make expansion for SR2E, check out these links.<br />
+If you want to make expansion for Starlight, check out these links.<br />
 Guide: https://sr2e.sr2.dev/dev <br />
 Examples: https://github.com/ThatFinnDev/SR2E-Expansion-Examples
 
