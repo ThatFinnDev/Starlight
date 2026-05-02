@@ -40,4 +40,4 @@ Link: https://github.com/LavaGang/MelonLoader
 ![Screenshot 6](https://github.com/ThatFinnDev/SR2E/blob/experimental/.readme//Screenshot6.png?raw=true)
 ![Screenshot 7](https://github.com/ThatFinnDev/SR2E/blob/experimental/.readme//Screenshot7.png?raw=true)
 ![Screenshot 8](https://github.com/ThatFinnDev/SR2E/blob/experimental/.readme//Screenshot8.png?raw=true)
-![Screenshot 9](https://github.com/ThatFinnDev/SR2E/blob/experimental/.readme//Screenshot9.png?raw=true)
+
