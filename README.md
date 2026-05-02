@@ -1,5 +1,5 @@
 # ![logo](https://github.com/ThatFinnDev/SR2E/blob/experimental/.readme/logo-new.png?raw=true)
-(short Starlight, formally known as SR2E)<br />
+(short for "Starlight," formally known as SR2E)<br />
 A mod for Slime Rancher 2 that adds a mod menu to the main menu and an in-game console with commands (expandable by other mods/expansions). This includes cheats, etc.
 
 # Installation guides
