@@ -13,7 +13,7 @@ public class StarlightThemeMenu : StarlightMenu
 {
     //Check valid themes for all menus EVERYWHERE
     public new static MenuIdentifier GetMenuIdentifier() => new ("thememenu",StarlightMenuFont.Native,StarlightMenuTheme.Native,"ThemeMenu");
-    protected override bool createCommands => false;
+    protected override bool createCommands => true;
     protected override bool inGameOnly => false;
     
     private GameObject _entryTemplate;

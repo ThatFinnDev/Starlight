@@ -24,7 +24,7 @@ internal class SystemContextPatch
     {
         //now, currentTheme exists
         string extraTheme = "";
-        if (currentTheme != StarlightMenuTheme.Starlight) extraTheme = "_"+currentTheme.ToString().Split(".")[0];
+        if (currentTheme != StarlightMenuTheme.Native) extraTheme = "_"+currentTheme.ToString().Split(".")[0];
         return $"{popUpPath}{identifier}{extraTheme}{prefabSuffix}";
     }
     internal static string getMenuPath(MenuIdentifier menuIdentifier)
