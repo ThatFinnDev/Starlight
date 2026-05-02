@@ -55,7 +55,7 @@ internal static class StarlightSaveManager
     internal static void Load()
     {
 
-        if (string.IsNullOrWhiteSpace(configPath)) data = new StarlightSaveData();
+        if (!File.Exists(configPath)) data = new StarlightSaveData();
         else try
             {
                 data = JsonConvert.DeserializeObject<StarlightSaveData>(File.ReadAllText(configPath), JsonSerializerSettings);
