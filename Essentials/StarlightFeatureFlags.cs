@@ -32,8 +32,7 @@ public static class StarlightFeatureFlags
         EnableStudioMenu,
         //InjectOptionsButtons, AddMockOptionsUIButtons
     ];
-    private static FeatureFlag[] extraBetaFlags => [None];
-    private static FeatureFlag[] extraAlphaFlags => [None];
+    private static FeatureFlag[] extraNightlyFlags => [None];
     
     private static List<FeatureFlag> _flagsToForceOff = new ();
     private static readonly Dictionary<FeatureIntegerValue, int> DefaultFeatureInts = new ()
@@ -199,8 +198,7 @@ public static class StarlightFeatureFlags
         switch (StarlightEntryPoint.UpdateBranch)
         {
             case "dev": addedFlags = extraDevFlags; break;
-            case "alpha": addedFlags = extraAlphaFlags; break;
-            case "beta": addedFlags= extraBetaFlags; break;
+            case "nightly": addedFlags = extraNightlyFlags; break;
         }
         if(addedFlags!=null)
             foreach (var flag in addedFlags)

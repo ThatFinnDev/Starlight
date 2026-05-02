@@ -18,8 +18,7 @@ on:
         type: choice
         options:
           - 'dev'
-          - 'alpha'
-          - 'beta'
+          - 'nightly'
           - 'release'
       SR2Ver-ManifestID:
         description: 'The SR2 version'
@@ -70,7 +69,7 @@ env:
   DEFAULT_SR2_VER_MANIFESTID: '1.2.0 [20260326225622-109067] (1249982347421925860)'
   DEFAULT_SR2_VER_MLVER: '0.7.3'
   DEFAULT_VERSION: 'auto'
-  DEFAULT_RELEASE_TYPE: 'alpha'
+  DEFAULT_RELEASE_TYPE: 'nightly'
 
 jobs:
   build:
@@ -158,7 +157,7 @@ jobs:
               DISPLAY_VERSION="$CODE_VERSION"
           elif [[ "$RELEASE_TYPE" == "dev" ]]; then
               DISPLAY_VERSION="$CODE_VERSION-dev"
-          elif [[ "$RELEASE_TYPE" == "alpha" || "$RELEASE_TYPE" == "beta" ]]; then
+          elif [[ "$RELEASE_TYPE" == "nightly" ]]; then
               echo "Fetching next build ID for $RELEASE_TYPE release..."
 
               # Construct the API URL for the build ID endpoint, including the mandatory version parameter

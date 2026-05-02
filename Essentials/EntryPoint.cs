@@ -48,8 +48,7 @@ public static class BuildInfo
 
     /// <summary>
     /// Should be the same as CodeVersion unless this is non release build.<br />
-    /// For alpha versions, add "-alpha.buildnumber" e.g 3.0.0-alpha.5<br />
-    /// For beta versions, add "-beta.buildnumber" e.g 3.0.0-beta.12<br />
+    /// For nightly versions, add "-nightly.buildnumber" e.g 3.0.0-nightly.12<br />
     /// For dev versions, use "-dev". Do not add a build number!<br />
     /// Add "+metadata" only in dev builds!
     /// </summary>
@@ -59,8 +58,7 @@ public static class BuildInfo
     internal static readonly Dictionary<string, (bool, string)> PreInfo = new()
     {
         { "release", (false, "https://api.starlight.sr2.dev/branch/release") },
-        { "alpha", (false, "https://api.starlight.sr2.dev/branch/alpha") },
-        { "beta", (false, "https://api.starlight.sr2.dev/branch/beta") },
+        { "nightly", (false, "https://api.starlight.sr2.dev/branch/nightly") },
         { "dev", (true, "") }
     };
 }
