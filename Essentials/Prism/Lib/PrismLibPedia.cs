@@ -1,0 +1,111 @@
+using Il2CppInterop.Runtime.InteropTypes.Arrays;
+using Il2CppMonomiPark.SlimeRancher.Pedia;
+using Starlight.Prism.Data;
+
+namespace Starlight.Prism.Lib;
+
+/// <summary>
+/// A library of helper functions for dealing with the pedia
+/// </summary>
+public static class PrismLibPedia
+{
+    public static IdentifiablePediaEntry IdentifiablePediaEntryPrefab;
+    public static RadiantSlimePediaEntry RadiantSlimePediaEntryPrefab;
+    internal static readonly Dictionary<PrismPediaCategoryType, PediaCategory> PediaCategories = new();
+    internal static readonly Dictionary<PediaEntry, List<PrismPediaAdditionalFact>> AdditionalFactsMap = new ();
+    internal static FixedPediaEntry FixedPediaEntryPrefab;
+    internal static readonly Dictionary<PrismPediaCategoryType, List<PediaEntry>> PediaEntryLookup = new ()
+    {
+        {PrismPediaCategoryType.Slimes, new List<PediaEntry>()}, {PrismPediaCategoryType.Resources, new List<PediaEntry>()}, {PrismPediaCategoryType.Blueprints, new List<PediaEntry>()},
+        {PrismPediaCategoryType.World, new List<PediaEntry>()}, {PrismPediaCategoryType.Weather, new List<PediaEntry>()}, {PrismPediaCategoryType.Toys, new List<PediaEntry>()},
+        {PrismPediaCategoryType.Ranch, new List<PediaEntry>()}, {PrismPediaCategoryType.Science, new List<PediaEntry>()}, {PrismPediaCategoryType.Tutorial, new List<PediaEntry>()},
+    };
+    private static readonly Dictionary<PrismPediaDetailType, PediaDetailSection> PediaDetailSectionLookup = new ();
+    private static readonly Dictionary<PrismPediaFactSetType, PediaHighlightSet> PediaPrismFactSetLookup = new ();
+
+
+
+    /// <summary>
+    /// Gets the pedia entries for a given category
+    /// </summary>
+    /// <param name="type">The category to get the entries for</param>
+    /// <returns>The pedia entries for the given category</returns>
+    public static List<PediaEntry> GetPediaEntries(this PrismPediaCategoryType type)
+    {
+        if (PediaEntryLookup.ContainsKey(type)) return PediaEntryLookup[type];
+        return null;
+    }
+    /// <summary>
+    /// Gets the pedia highlight set for a given fact set type
+    /// </summary>
+    /// <param name="type">The fact set type to get the highlight set for</param>
+    /// <returns>The pedia highlight set for the given fact set type</returns>
+    public static PediaHighlightSet GetPediaHighlightSet(this PrismPediaFactSetType type)
+    {
+        return PediaPrismFactSetLookup.GetValueOrDefault(type);
+    }
+    /// <summary>
+    /// Gets the pedia detail section for a given detail type
+    /// </summary>
+    /// <param name="type">The detail type to get the detail section for</param>
+    /// <returns>The pedia detail section for the given detail type</returns>
+    public static PediaDetailSection GetPediaDetailSection(this PrismPediaDetailType type)
+    {
+        return PediaDetailSectionLookup.GetValueOrDefault(type);
+    }
+    
+    internal static PediaEntryHighlight ConvertToNativeType(this PrismPediaAdditionalFact prismPediaAdditionalFact) => new PediaEntryHighlight()
+    {
+        Icon = prismPediaAdditionalFact.Icon,
+        Description = prismPediaAdditionalFact.Description,
+        Label = prismPediaAdditionalFact.Title,
+    };
+
+    internal static PediaEntryHighlight ConvertToNativeType(this PrismPediaAdditionalFact? prismPediaAdditionalFact)
+    {
+        if (prismPediaAdditionalFact == null) return null;
+        return ConvertToNativeType(prismPediaAdditionalFact.Value);
+    }
+    internal static PediaEntryDetail ConvertToNativeType(this PrismPediaDetail prismPediaDetail) => new PediaEntryDetail()
+    {
+        Contents = new Il2CppReferenceArray<PediaEntryDetailSubContent>(0),
+        Section = PediaDetailSectionLookup[prismPediaDetail.Type],
+        Text = prismPediaDetail.Text,
+        TextGamepad = prismPediaDetail.Text,
+        TextPS4 = prismPediaDetail.Text,
+    };
+
+    internal static PediaEntryDetail ConvertToNativeType(this PrismPediaDetail? prismPediaDetail)
+    {
+        if (prismPediaDetail == null) return null;
+        return ConvertToNativeType(prismPediaDetail.Value);
+    }
+    
+    internal static void PediaDetailTypesInitialize()
+    {
+        PediaDetailSectionLookup.Add(PrismPediaDetailType.Slimeology, Get<PediaDetailSection>("Slimeology"));
+        PediaDetailSectionLookup.Add(PrismPediaDetailType.RancherRisks, Get<PediaDetailSection>("Rancher Risks"));
+        PediaDetailSectionLookup.Add(PrismPediaDetailType.Plortonomics, Get<PediaDetailSection>("Plortonomics"));
+        PediaDetailSectionLookup.Add(PrismPediaDetailType.About, Get<PediaDetailSection>("About"));
+        PediaDetailSectionLookup.Add(PrismPediaDetailType.OnTheRanch, Get<PediaDetailSection>("How To Use"));
+        PediaDetailSectionLookup.Add(PrismPediaDetailType.Instructions, Get<PediaDetailSection>("Instructions"));
+
+        PediaPrismFactSetLookup.Add(PrismPediaFactSetType.None, Get<PediaHighlightSet>("TutorialPediaTemplate"));
+        PediaPrismFactSetLookup.Add(PrismPediaFactSetType.Resource, Get<PediaHighlightSet>("ResourceHighlights"));
+        PediaPrismFactSetLookup.Add(PrismPediaFactSetType.Slime, Get<PediaHighlightSet>("SlimeHighlights"));
+        PediaPrismFactSetLookup.Add(PrismPediaFactSetType.Food, Get<PediaHighlightSet>("FoodHightlights")); //yes, there is a typo in there...
+
+        IdentifiablePediaEntryPrefab = Get<IdentifiablePediaEntry>("Pink");
+        if (IdentifiablePediaEntryPrefab == null) IdentifiablePediaEntryPrefab = GetAny<IdentifiablePediaEntry>();
+        if (IdentifiablePediaEntryPrefab != null) IdentifiablePediaEntryPrefab.hideFlags = HideFlags.DontUnloadUnusedAsset; 
+        
+        
+        RadiantSlimePediaEntryPrefab = Get<RadiantSlimePediaEntry>("RadiantPink");
+        if (RadiantSlimePediaEntryPrefab == null) RadiantSlimePediaEntryPrefab = GetAny<RadiantSlimePediaEntry>();
+        if (RadiantSlimePediaEntryPrefab != null) RadiantSlimePediaEntryPrefab.hideFlags = HideFlags.DontUnloadUnusedAsset; 
+        
+        FixedPediaEntryPrefab = Get<FixedPediaEntry>("PrismaPlorts");
+        if (FixedPediaEntryPrefab == null) FixedPediaEntryPrefab = GetAny<FixedPediaEntry>();
+        if (FixedPediaEntryPrefab != null) FixedPediaEntryPrefab.hideFlags = HideFlags.DontUnloadUnusedAsset;
+    }
+}

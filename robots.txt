@@ -1,0 +1,33 @@
+# === AI TRAINING BOTS (BLOCKED) ===
+# Blocks OpenAI's training crawler
+User-agent: GPTBot
+Disallow: /
+
+# Blocks Google's AI training (Gemini/Vertex)
+User-agent: Google-Extended
+Disallow: /
+
+# Blocks Anthropic's crawler (Claude)
+User-agent: ClaudeBot
+Disallow: /
+
+# Blocks Common Crawl (used by many open-source AI models)
+User-agent: CCBot
+Disallow: /
+
+# Blocks Meta's AI crawler
+User-agent: Meta-ExternalAgent
+Disallow: /
+
+# === AI SEARCH BOTS (ALLOWED) ===
+# This allows AI to "see" your site for citations/search results
+# but prevents them from scraping the whole thing for training.
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+# === GENERAL SEARCH ENGINES ===
+User-agent: *
+Allow: /

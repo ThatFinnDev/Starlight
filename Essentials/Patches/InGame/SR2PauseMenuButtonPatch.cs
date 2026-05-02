@@ -1,0 +1,75 @@
+﻿using System;
+using Il2CppMonomiPark.SlimeRancher.Script.UI.Pause;
+using Il2CppMonomiPark.SlimeRancher.UI;
+using Il2CppMonomiPark.SlimeRancher.UI.Pause;
+using Starlight.Buttons;
+
+namespace Starlight.Patches.InGame;
+
+[HarmonyPatch(typeof(PauseMenuRoot), nameof(PauseMenuRoot.Awake))]
+internal static class SR2PauseMenuButtonPatch
+{
+    internal static List<CustomPauseMenuButton> buttons = new ();
+    internal static bool SafeLock;
+    internal static bool PostSafeLock;
+    internal static void Prefix(PauseMenuRoot __instance)
+    {
+        if (!InjectPauseButtons.HasFlag()) return;
+        if (SafeLock) { return; }
+        SafeLock = true;
+        try
+        {
+            var pauseMenuRoot = __instance;
+            var pauseItemModelList = pauseMenuRoot._pauseItemModelList;
+            var items = pauseItemModelList.items;
+            foreach (var button in buttons)
+            {
+                if (button.label == null || button.action == null) continue;
+                try
+                {
+                    if (button._model != null)
+                    {
+                        if (!button.enabled)
+                        {
+                            if (items.Contains(button._model))
+                                items.Remove(button._model);
+                            continue;
+                        }
+
+                        if (items.Contains(button._model))
+                            continue;
+                        if (!items.Contains(button._model))
+                            items.Insert(Math.Clamp(button.insertIndex,0,items.Count), button._model);
+                        continue;
+                    }
+
+                    button._model = ScriptableObject.CreateInstance<CustomPauseItemModel>();
+                    button._model.action = button.action;
+                    button._model.label = button.label;
+                    button._model.name = button.label.GetLocalizedString();
+                    button._model.hideFlags |= HideFlags.HideAndDontSave;
+                    //button._model.prefabToSpawn = button._prefabToSpawn;
+
+                    if (!button.enabled)
+                    {
+                        if (items.Contains(button._model))
+                            items.Remove(button._model);
+                        continue;
+                    }
+
+                    if (!items.Contains(button._model))
+                        items.Insert(Math.Clamp(button.insertIndex,0,items.Count), button._model);
+
+                }
+                catch (Exception e) { LogError(e); }
+                
+            }
+            
+            pauseItemModelList.items = items;
+            pauseMenuRoot._pauseItemModelList = pauseItemModelList;
+            
+        }
+        catch (Exception e) { LogError(e);}
+        SafeLock = false;
+    }
+}

@@ -1,4 +1,4 @@
-name: SR2E Compilation
+name: Starlight Compilation
 
 on:
   push:
@@ -132,7 +132,7 @@ jobs:
               RELEASE_TYPE="${{ env.DEFAULT_RELEASE_TYPE }}"
           fi
 
-          FILE_PATH="SR2EssentialsMod/EntryPoint.cs"
+          FILE_PATH="Essentials/EntryPoint.cs"
           SKIP_CODE_VERSION_WRITE=false
 
           # Determine CODE_VERSION: use input or extract from file if 'auto'

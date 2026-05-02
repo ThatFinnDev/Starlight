@@ -6,6 +6,6 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
     <ItemGroup>
-      <ProjectReference Include="..\SR2EssentialsMod\SR2EssentialsMod.csproj" />
+        <ProjectReference Include="..\Essentials\Essentials.csproj" />
     </ItemGroup>
 </Project>

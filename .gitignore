@@ -130,13 +130,13 @@ MigrationBackup/
 # =========================
 # Unity specific
 # =========================
-SR2AssetBundleUnityProj/[Ll]ibrary/
-SR2AssetBundleUnityProj/[Tt]emp/
-SR2AssetBundleUnityProj/[Oo]bj/
-SR2AssetBundleUnityProj/[Bb]uild*/
-SR2AssetBundleUnityProj/[Ll]ogs/
-SR2AssetBundleUnityProj/[Uu]serSettings/
-SR2AssetBundleUnityProj/Assets/AssetStoreTools*
+AssetBundleGen/[Ll]ibrary/
+AssetBundleGen/[Tt]emp/
+AssetBundleGen/[Oo]bj/
+AssetBundleGen/[Bb]uild*/
+AssetBundleGen/[Ll]ogs/
+AssetBundleGen/[Uu]serSettings/
+AssetBundleGen/Assets/AssetStoreTools*
 *.apk
 *.unitypackage
 *.unityproj
@@ -144,7 +144,6 @@ SR2AssetBundleUnityProj/Assets/AssetStoreTools*
 # =========================
 # MelonLoader / mods / custom libs
 # =========================
-**/Libs/
 **/.vs/
 start.bat
 start.sh
@@ -170,3 +169,6 @@ XMLToMD/*.md
 # Exceptions (track these)
 # =========================
 !*.sln
+Libs/
+Libs2/
+!Libs/PLACE_YOUR_DLLS_HERE

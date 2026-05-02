@@ -5,32 +5,31 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
-using SR2E;
+using Starlight;
 
 class Program
 {
     //Install tool via:
     //dotnet tool install -g XMLDoc2Markdown
-    private static string docGen = "xmldoc2md \"bin/Debug/net6.0/SR2E.dll\" --output ../XMLToMD/ --member-accessibility-level public"; 
+    private static string docGen = "xmldoc2md \"bin/Debug/net6.0/Starlight.dll\" --output ../XMLToMD/ --member-accessibility-level public"; 
     static void Main(string[] args)
     {
         Console.WriteLine("Hello World! The converting has begun!");
-        DirectoryInfo SR2EWeb = null;
-        DirectoryInfo apiDev = null;
-        DirectoryInfo api = null;
-        DirectoryInfo XMLToMD = null;
-        string rootDir = "";
+        DirectoryInfo starlightWeb;
+        DirectoryInfo apiDev;
+        DirectoryInfo api;
+        DirectoryInfo xmlToMD;
         string gitDir = "";
         string apiDir = "api-"+BuildInfo.DisplayVersion;
         try
         {
-            rootDir = new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.Parent.Parent.Parent.FullName;
+            var rootDir = new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.Parent.Parent.Parent.FullName;
             gitDir = new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.Parent.Parent.FullName;
-            string sr2eWebDir = Path.Combine(rootDir, "sr2e-web");
-            SR2EWeb = new DirectoryInfo(sr2eWebDir);
+            string starlightWebDir = Path.Combine(rootDir, "starlight-web");
+            starlightWeb = new DirectoryInfo(starlightWebDir);
             string xmltomdDir = Path.Combine(gitDir, "XMLToMD");
-            XMLToMD = new DirectoryInfo(xmltomdDir);
-            string devDir = Path.Combine(sr2eWebDir, "dev");
+            xmlToMD = new DirectoryInfo(xmltomdDir);
+            string devDir = Path.Combine(starlightWebDir, "dev");
             string apiDevDir = Path.Combine(devDir, "api");
             apiDev = new DirectoryInfo(apiDevDir);
             api = new DirectoryInfo(Path.Combine(apiDevDir, apiDir));
@@ -39,20 +38,20 @@ class Program
         {
             Console.WriteLine("Setup is wrong");
             Console.WriteLine("Are you running this program in the ide?");
-            Console.WriteLine("Is the sr2e-web cloned next to this git repo?");
-            Console.WriteLine("Does dev/api exist in sr2e-web?");
+            Console.WriteLine("Is the starlight-web cloned next to this git repo?");
+            Console.WriteLine("Does dev/api exist in starlight-web?");
             Console.WriteLine("Is the XMLToMD folder in this git repo?");
             Console.WriteLine("Please check everything?");
             return;
         }
-        if (!SR2EWeb.Exists) { Console.WriteLine("sr2e-web missing?"); return; }
-        if (!XMLToMD.Exists) { Console.WriteLine("XMLToMD missing?"); XMLToMD.Create(); return; }
+        if (!starlightWeb.Exists) { Console.WriteLine("starlight-web missing?"); return; }
+        if (!xmlToMD.Exists) { Console.WriteLine("XMLToMD missing?"); xmlToMD.Create(); return; }
         if (!apiDev.Exists) { Console.WriteLine("dev/api missing?"); return; }
         if (!api.Exists) { api.Create();}
 
-        string sourceDir = XMLToMD.FullName;
+        string sourceDir = xmlToMD.FullName;
         string workingDir = api.FullName;
-        if(!ExecuteCommand(docGen, gitDir+"/SR2EssentialsMod")) return;
+        if(!ExecuteCommand(docGen, gitDir+"/Essentials")) return;
         
         
         if (!Directory.Exists(workingDir)) { Directory.CreateDirectory(workingDir); }
@@ -144,10 +143,10 @@ class Program
     {
         string categoryContent = 
             "{" + "\n" +
-            "\"label\": \"SR2E "+SR2E.BuildInfo.DisplayVersion+"\"," + "\n" +
+            "\"label\": \"Starlight "+Starlight.BuildInfo.DisplayVersion+"\"," + "\n" +
             "\"link\": {" + "\n" +
             "\"type\": \"generated-index\"," + "\n" +
-            "\"description\": \"An API of SR2E and its expansions!\"" + "\n" +
+            "\"description\": \"An API of Starlight and its expansions!\"" + "\n" +
             "}" + "\n" +
             "}";
 
