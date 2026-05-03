@@ -11,7 +11,18 @@ internal class LandPlotRemoveCommand : StarlightCommand
     public override List<string> GetAutoComplete(int argIndex, string[] args)
     {
         if (argIndex == 0)
-            try { if (inGame) return StarlightSaveManager.inGameData.CustomPlots.Keys.ToNetList(); } catch  { }
+        {
+            try {
+                if (inGame)
+                {
+                    var plots = new List<string>();
+                    foreach (var pair in StarlightSaveManager.inGameData.CustomPlots) 
+                        if(pair.Key.StartsWith("starlightown."))
+                            plots.Add(pair.Key.Substring("starlightown.".Length));
+                    return plots;
+                }
+            } catch  { }
+        }
 
         return null;
     }
@@ -36,24 +47,21 @@ internal class LandPlotRemoveCommand : StarlightCommand
                     obj = obj.transform.parent.gameObject;
                 }
 
-                if (loc == null) return SendNotLookingAtValidObject();
+                if (!loc) return SendNotLookingAtValidObject();
                 var _id = loc._id.Substring(loc.IdPrefix().Length);
                 SendMessage(_id);
-                if (!StarlightSaveManager.inGameData.CustomPlots.ContainsKey(_id)) return SendErrorTr("cmd.dellandplot.native");
-                StarlightSaveManager.inGameData.CustomPlots.Remove(_id);
+                if (!SpawnEUtil.HasCustomLandPlot(_id)) return SendErrorTr("cmd.landplotremove.native");
                 SpawnEUtil.RemoveCustomLandPlot(_id);
-                SendMessageTr("cmd.dellandplot.success");
+                SendMessageTr("cmd.landplotremove.success");
                 return true;
             }
             return SendNotLookingAtAnything();
         }
 
         var id = "starlightown." + args[0];
-        if (!StarlightSaveManager.inGameData.CustomPlots.ContainsKey(id)) return SendErrorTr("cmd.dellandplot.no", args[0]); 
-        StarlightSaveManager.inGameData.CustomPlots.Remove(id);
-        if(!SpawnEUtil.HasCustomLandPlot(id)) return SendErrorTr("cmd.dellandplot.no",args[0]);
+        if(!SpawnEUtil.HasCustomLandPlot(id)) return SendErrorTr("cmd.landplotremove.no",args[0]);
         SpawnEUtil.RemoveCustomLandPlot(id);
-        SendMessageTr("cmd.dellandplot.success");
+        SendMessageTr("cmd.landplotremove.success");
         return true;
     }
 }

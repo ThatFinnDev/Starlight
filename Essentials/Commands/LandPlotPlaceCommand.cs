@@ -14,7 +14,7 @@ public class LandPlotPlaceCommand : StarlightCommand
         if (!args.IsBetween(1,1)) return SendUsage();
         if (!inGame) return SendLoadASaveFirst();
         
-        Camera cam = MiscEUtil.GetActiveCamera(); if (cam == null) return SendNoCamera(); 
+        var cam = MiscEUtil.GetActiveCamera(); if (!cam) return SendNoCamera(); 
         if (Physics.Raycast(new Ray(cam.transform.position, cam.transform.forward), out var hit,Mathf.Infinity,MiscEUtil.defaultMask))
         {
             var scene = hit.transform.gameObject.scene;
@@ -23,7 +23,6 @@ public class LandPlotPlaceCommand : StarlightCommand
                 return SendErrorTr("cmd.landplotplace.already",args[0]);
 
             var loc = new StarlightLandPlotLocation(hit.point, scene.name, LandPlot.Id.EMPTY);
-            StarlightSaveManager.inGameData.CustomPlots.Add(id, loc);
             SpawnEUtil.AddCustomLandPlot(id,loc);
             SendMessageTr("cmd.landplotplace.success");
             return true;
