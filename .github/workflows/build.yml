@@ -10,7 +10,7 @@ on:
       Version:
         description: 'CodeVersion'
         required: true
-        default: '3.4.2'
+        default: '4.0.0'
       ReleaseType:
         description: 'Release type'
         required: true
@@ -34,7 +34,7 @@ on:
           - '1.0.1 [202509261170751-103784] (8994333395097988684)'
           - '1.0.0 [20250722233305-102214] (8022624175545882077)'
           - '0.6.3 [20250317221806-98961] (8566855247446655920)'
-          - '0.6.2 [2025011013847-97426 (6069982423152242796)'
+          - '0.6.2 [2025011013847-97426] (6069982423152242796)'
           - '0.6.1 [20241213004310-97197] (189273010166514367)'
           - '0.6.0 [20241127011752-96587] (1414082704721132799)'
           - '0.5.2 [20240710202452-92414] (6260598103574271172)'
@@ -90,9 +90,6 @@ jobs:
             echo "Commit description starts with !nobuild! — exiting workflow."
             exit 78
           fi
-      - name: Create Signing Key
-        run: |
-          echo "${{ secrets.SIGNING_CERT_BASE64 }}" | base64 -d > starlight.pfx
 
       - name: Install osslsigncode
         run: sudo apt-get update && sudo apt-get install -y osslsigncode
@@ -109,7 +106,6 @@ jobs:
         id: manifest_lookup
         shell: bash
         run: |
-          # Use input if workflow_dispatch, otherwise use default for push
           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
               CHOICE="${{ github.event.inputs.SR2Ver-ManifestID }}"
           else
@@ -127,7 +123,6 @@ jobs:
       - name: 0. Update Versions in EntryPoint
         shell: bash
         run: |
-          # Determine inputs based on trigger type
           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
               MOD_VERSION="${{ github.event.inputs.Version }}"
               RELEASE_TYPE="${{ github.event.inputs.ReleaseType }}"
@@ -139,10 +134,9 @@ jobs:
           FILE_PATH="Essentials/EntryPoint.cs"
           SKIP_CODE_VERSION_WRITE=false
 
-          # Determine CODE_VERSION: use input or extract from file if 'auto'
           if [[ "$MOD_VERSION" == "auto" ]]; then
               echo "Input 'Version' is 'auto'. Reading existing CodeVersion from file..."
-              # Extract existing CodeVersion from the file
+
               CODE_VERSION=$(grep 'const string CodeVersion' "$FILE_PATH" | sed 's/.*"\(.*\)".*/\1/')
 
               if [ -z "$CODE_VERSION" ]; then
@@ -151,13 +145,13 @@ jobs:
               fi
 
               echo "  - Extracted CodeVersion: $CODE_VERSION"
-              # Set flag to skip rewriting the CODE_VERSION line later
+
               SKIP_CODE_VERSION_WRITE=true
           else
               CODE_VERSION="$MOD_VERSION"
           fi
 
-          # Continue with DisplayVersion calculation based on CODE_VERSION
+
           if [[ "$RELEASE_TYPE" == "release" ]]; then
               DISPLAY_VERSION="$CODE_VERSION"
           elif [[ "$RELEASE_TYPE" == "dev" ]]; then
@@ -165,10 +159,8 @@ jobs:
           elif [[ "$RELEASE_TYPE" == "nightly" ]]; then
               echo "Fetching next build ID for $RELEASE_TYPE release..."
 
-              # Construct the API URL for the build ID endpoint, including the mandatory version parameter
               BUILD_ID_URL="${{ env.API_BASE_URL }}/nextbuildid/$RELEASE_TYPE?version=$CODE_VERSION"
 
-              # Use curl to get the next build ID, passing the required headers
               BUILD_ID=$(curl -s -L -X GET \
                   -H "User: ${{ secrets.API_USER }}" \
                   -H "Password: ${{ secrets.API_PASSWORD }}" \
@@ -187,14 +179,12 @@ jobs:
           echo "  CodeVersion (used for API/calc): $CODE_VERSION"
           echo "  DisplayVersion: $DISPLAY_VERSION"
 
-          # Conditionally write CodeVersion
           if [ "$SKIP_CODE_VERSION_WRITE" = false ]; then
               sed -i "s|const string CodeVersion.*|const string CodeVersion = \"$CODE_VERSION\";|" "$FILE_PATH"
           else
               echo "  - Keeping existing 'const string CodeVersion' line in file."
           fi
 
-          # Write DisplayVersion (always written as it contains release type/build number)
           ESCAPED_DISPLAY_VERSION=$(echo "$DISPLAY_VERSION" | sed 's/\./\\\./g')
           sed -i "s|public const string DisplayVersion.*|public const string DisplayVersion = \"$ESCAPED_DISPLAY_VERSION\";|" "$FILE_PATH"
 
@@ -205,7 +195,6 @@ jobs:
       - name: 1. Download Dependencies
         shell: bash
         run: |
-          # Determine inputs based on trigger type
           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
               SR2VER_MLVER_INPUT="${{ github.event.inputs.SR2Ver-MLVer }}"
           else
@@ -245,6 +234,7 @@ jobs:
           WORKER_API_USER: ${{ secrets.API_USER }}
           WORKER_API_PASS: ${{ secrets.API_PASSWORD }}
           SIGNING_PFX_PASSWORD: ${{ secrets.PFX_PASSWORD }}
+          SIGNING_PFX_BASE64: ${{ secrets.SIGNING_CERT_BASE64 }}
           SR2VER_MANIFESTID: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.SR2Ver-ManifestID || env.DEFAULT_SR2_VER_MANIFESTID }}
           SR2VER_MLVER: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.SR2Ver-MLVer || env.DEFAULT_SR2_VER_MLVER }}
 
