@@ -28,6 +28,8 @@ using Starlight.Prism.Lib;
 using Starlight.Storage;
 using Starlight.UI;
 using Starlight.UI.Blueprints;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Users;
 
 namespace Starlight;
 
@@ -117,6 +119,7 @@ public class StarlightEntryPoint : MelonMod
     internal static float noclipAdjustSpeed => _prefs.GetEntry<float>("noclipAdjustSpeed").Value;
     internal static float noclipSpeedMultiplier => _prefs.GetEntry<float>("noclipSpeedMultiplier").Value;
     internal static bool enableDebugDirector => _prefs.GetEntry<bool>("enableDebugDirector").Value;
+    internal static bool allowAllDevicesAtOnce => _prefs.GetEntry<bool>("allowAllDevicesAtOnce").Value;
     public override void OnEarlyInitializeMelon()
     {
         Instance = this;
@@ -297,6 +300,8 @@ public class StarlightEntryPoint : MelonMod
             {
                 StarlightDebugUI.isEnabled = enableDebugDirector;
             });
+        if (!_prefs.HasEntry("allowAllDevicesAtOnce"))
+            _prefs.CreateEntry("allowAllDevicesAtOnce", false, "[Experimental] Allow all input devices at once", false).AddNullAction();
         if (!_prefs.HasEntry("mLLogToStarlightLog"))
             _prefs.CreateEntry("mLLogToStarlightLog", false, "Send MLLogs to console", false).AddNullAction();
         if (!_prefs.HasEntry("StarlightLogToMLLog"))
@@ -810,6 +815,20 @@ public class StarlightEntryPoint : MelonMod
         }
         catch (Exception e) { LogError(e); }
 
+        if(allowAllDevicesAtOnce)
+            try
+            {
+                var allHardware = InputSystem.devices;
+                foreach (var user in InputUser.all)
+                    if (user.pairedDevices.Count != allHardware.Count)
+                    {
+                        user.UnpairDevices();
+                        foreach (var device in allHardware)
+                            InputUser.PerformPairingWithDevice(device, user);
+                    }
+            }
+            catch (Exception e) { LogError(e); }
+        
         foreach (var expansion in ExpansionV01S)
             try { expansion.OnUpdate(); }
             catch (Exception e) { LogError(e); }
