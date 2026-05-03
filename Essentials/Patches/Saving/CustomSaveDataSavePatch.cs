@@ -11,13 +11,12 @@ namespace Starlight.Patches.Saving;
 internal static class CustomSaveDataSavePatch
 {
     internal const string DataPrefix = "StarlightDataV01";
-    internal const string DataPrefixOwn = "StarlightOwnDataV01";
+    internal const string DataPrefixOwn = "StarlightCoreDataV01";
     internal static void Postfix(GameModel gameModel,SavedGameInfoProvider savedGameInfoProvider, ISaveReferenceTranslation saveReferenceTranslation, GameMetadata metadata, ref GameV10 __result )
     {
         try
         {
-            var rootSave = StarlightOptionsButtonManager.OnInGameSave(new SavingGameSessionData(saveReferenceTranslation,
-                saveReferenceTranslation.ToNonIVariant(), __result, gameModel,metadata,savedGameInfoProvider));
+            var rootSave = StarlightSaveManager.OnInGameSave(new SavingGameSessionData(saveReferenceTranslation, saveReferenceTranslation.ToNonIVariant(), __result, gameModel,metadata,savedGameInfoProvider));
             if (rootSave != null)
             {
                 var base128 = rootSave.ToBytes().EncodeToBase128();

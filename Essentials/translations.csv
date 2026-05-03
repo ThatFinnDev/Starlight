@@ -317,6 +317,17 @@ cmd.emotions.sleepiness.edit,"The sleepiness of $1 is now $2!","Der Schläfrigke
 cmd.recentercamera.description,"Recenters your camera to look at the center of an object you're looking at","Zentriert die Kamera neu, damit du in die Mitte des Objekts vor dir anschaust"
 cmd.recentercamera.success,"Successfully recentered the camera! Make sure to screenshot before unpausing.","Die Kamera wurder erfolgreich neu zentriert. Mache ein Bildschirmfoto bevor du das Spiel fortsetzt"
 cmd.recentercamera.nocamera,"There was no main camera found!","Es wurde keine Hauptkamera gefunden!"
+cmd.landplotplace.success,"Successfully placed a custom landplot!",Ein eigenes Landplot wurde erfolgreich platziert!
+cmd.landplotplace.description,"Places a custom landplot","Platziert einen eigenes Landplot"
+cmd.landplotplace.already,"There is already a custom landplot with the name: $1!",Es gibt schon einen eigenen Landplot namens '$1'!
+cmd.landplotremove.no,"There is no custom landplot with the name: $1!",Es gibt keinen eigenen Landplot namens '$1'!
+cmd.landplotremove.success,"Successfully removed a custom landplot!",Ein eigenes Landplot wurde erfolgreich entfernt!
+cmd.landplotremove.description,"Removes a custom landplot","Entfernt einen Landplot"
+cmd.landplotremove.native,"You can only remove custom landplots!","Du kannst nur eigene Landplots entfernen!"
+cmd.landplotlist.success,"<color=blue>List of all custom landplots:</color>","<color=blue>Alle eigene Landplots:</color>"
+cmd.landplotlist.successdesc,"'$1' in scene '$2' at ($3,$4,$5)","'$1' bei Szene '$2' bei ($3,$4,$5)"
+cmd.landplotlist.error,"There aren't any custom landplots yet!","Du hast noch keine eigenen Landplots gesetzt!"
+cmd.landplotlist.description,"Displays all custom landplots","Zeigt alle eigenen Landplots an"
 setting.skipintro,"Skip Intro","Intro überspringen"
 setting.skipintro.desc,"Whether or not to skip the intro cutscene when you begin the world.","Ob die Introeinführungssequenz übersprungen werden soll"
 setting.allowcheats,"Allow Cheating","Schummeln erlauben"

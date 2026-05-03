@@ -7,9 +7,9 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AssemblyName>Starlight</AssemblyName>
     <Nullable>disable</Nullable>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <DebugSymbols>true</DebugSymbols>
-    <DebugType>embedded</DebugType>
+    <DebugType>full</DebugType>
     <DocumentationFile>bin\Debug\net6.0\Starlight.xml</DocumentationFile>
     <WarningLevel>0</WarningLevel>
     <LangVersion>latest</LangVersion>

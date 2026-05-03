@@ -98,7 +98,11 @@ public enum FeatureFlag
     /// Load fun commands
     /// </summary>
     CommandsLoadFun=200, //
-
+    /// <summary>
+    /// Load landplot commands
+    /// </summary>
+    CommandsLoadLandPlot=201, //
+    
     //Cheats and Mods
     /// <summary>
     /// Disable everything related to cheats

@@ -438,14 +438,15 @@ public class StarlightEntryPoint : MelonMod
                 var settings = Get<TMP_Settings>("TMP Settings");
                 if (!settings) return;
                 var tempPath = Path.Combine(tmpDataPath, "tmpFallbackFont.ttf");
-                var bytes = EmbeddedResourceEUtil.LoadResource("Assets.NotoSans.zip");
+                /*var bytes = EmbeddedResourceEUtil.LoadResource("Assets.NotoSans.zip");
                 using var zipStream = new MemoryStream(bytes);
                 using var archive = new ZipArchive(zipStream, ZipArchiveMode.Read);
                 var entry = archive.Entries[0];
                 using var entryStream = entry.Open();
                 using var ms = new MemoryStream();
                 entryStream.CopyTo(ms);
-                File.WriteAllBytes(tempPath, ms.ToArray());
+                File.WriteAllBytes(tempPath, ms.ToArray());*/
+                File.WriteAllBytes(tempPath, EmbeddedResourceEUtil.LoadResource("Assets.NotoSans.ttf"));
                 var tempFont = new Font(tempPath);
                 NotoSansFont = TMP_FontAsset.CreateFontAsset(tempFont);
                 //settings.m_fallbackFontAssets.Add(fallBackFont);, creates issues for some reason :(
@@ -577,8 +578,7 @@ public class StarlightEntryPoint : MelonMod
 
         StarlightCommandManager.OnSceneWasLoaded(buildIndex, sceneName);
         StarlightCounterGateManager.OnSceneWasLoaded(buildIndex, sceneName);
-        if (isPrismInUse)
-            PrismLibLandPlots.OnSceneWasLoaded(buildIndex, sceneName);
+        SpawnEUtil.OnSceneWasLoaded(buildIndex, sceneName);
     }
 
     internal static void CheckForTime()
@@ -617,7 +617,7 @@ public class StarlightEntryPoint : MelonMod
 
         if (sceneName == "MainMenuUI")
         {
-            StarlightOptionsButtonManager.inGameSave = null;
+            StarlightSaveManager.inGameData = null;
             MainMenuLoaded = true;
         }
 

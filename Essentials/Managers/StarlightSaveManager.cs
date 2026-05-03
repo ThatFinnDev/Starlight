@@ -10,6 +10,17 @@ namespace Starlight.Managers;
 
 internal static class StarlightSaveManager
 {
+    internal static StarlightCustomInGameData inGameData;
+    internal static void OnInGameLoad(StarlightCustomInGameData loadedSave, LoadingGameSessionData sessionData)
+    {
+        if (loadedSave == null) inGameData = new StarlightCustomInGameData();
+        else inGameData = loadedSave;
+        inGameData.OptionsSave = new StarlightOptionsButtonManager.CustomOptionsInGameSave();
+    }
+
+    internal static StarlightCustomInGameData OnInGameSave(SavingGameSessionData sessionData) => inGameData;
+    
+    
     internal static StarlightSaveData data = null;
     internal static void Start()
     {

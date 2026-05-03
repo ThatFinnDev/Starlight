@@ -15,7 +15,7 @@ internal static class CustomSaveDataLoadPatch
     private static Dictionary<StarlightExpansionV01, (RootSave, LoadingGameSessionData)> _rootSaves = new();
     private static Dictionary<StarlightExpansionV01, LoadingGameSessionData> _noRootSaves = new();
     internal const string DataPrefix = "StarlightDataV01";
-    internal const string DataPrefixOwn = "StarlightOwnDataV01";
+    internal const string DataPrefixOwn = "StarlightCoreDataV01";
 
     internal static void ExecSaveDataReceived()
     {
@@ -39,17 +39,17 @@ internal static class CustomSaveDataLoadPatch
                 {
                     string remaining = entry.Substring(DataPrefixOwn.Length);
                     var rawBytes = remaining.DecodeFromBase128();
-                    var rootSave = RootSave.FromBytes<StarlightOptionsButtonManager.CustomOptionsInGameSave>(rawBytes);
+                    var rootSave = RootSave.FromBytes<StarlightCustomInGameData>(rawBytes);
                     var sessionData = new LoadingGameSessionData(actorIdProvider, saveReferenceTranslation, saveReferenceTranslation.ToNonIVariant(), gameState, gameModel);
                     hasExecutedOwn = true;
-                    StarlightOptionsButtonManager.OnInGameLoad(rootSave,sessionData);
+                    StarlightSaveManager.OnInGameLoad(rootSave,sessionData);
                 }catch (Exception e) { LogError(e); }
             }
         if(!hasExecutedOwn)
             try
             {
                 var sessionData = new LoadingGameSessionData(actorIdProvider, saveReferenceTranslation, saveReferenceTranslation.ToNonIVariant(), gameState, gameModel);
-                StarlightOptionsButtonManager.OnInGameLoad(null,sessionData);
+                StarlightSaveManager.OnInGameLoad(null,sessionData);
             }catch (Exception e) { LogError(e); }
         
         

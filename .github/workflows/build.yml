@@ -90,7 +90,12 @@ jobs:
             echo "Commit description starts with !nobuild! — exiting workflow."
             exit 78
           fi
+      - name: Create Signing Key
+        run: |
+          echo "${{ secrets.SIGNING_CERT_BASE64 }}" | base64 -d > starlight.pfx
 
+      - name: Install osslsigncode
+        run: sudo apt-get update && sudo apt-get install -y osslsigncode
 
       - name: Checkout Repository Code
         uses: actions/checkout@v4
@@ -239,7 +244,7 @@ jobs:
         env:
           WORKER_API_USER: ${{ secrets.API_USER }}
           WORKER_API_PASS: ${{ secrets.API_PASSWORD }}
-          # Use conditional expressions to pass the correct value to the worker script
+          SIGNING_PFX_PASSWORD: ${{ secrets.PFX_PASSWORD }}
           SR2VER_MANIFESTID: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.SR2Ver-ManifestID || env.DEFAULT_SR2_VER_MANIFESTID }}
           SR2VER_MLVER: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.SR2Ver-MLVer || env.DEFAULT_SR2_VER_MLVER }}
 

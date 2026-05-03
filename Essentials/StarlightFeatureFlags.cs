@@ -8,15 +8,12 @@ using Starlight.Managers;
 
 namespace Starlight;
 
-
-
-
 public static class StarlightFeatureFlags
 {
     
     static readonly List<FeatureFlag> DefaultFlags =
     [
-        CommandsLoadCommands, CommandsLoadCheat, CommandsLoadBinding, CommandsLoadWarp,
+        CommandsLoadCommands, CommandsLoadCheat, CommandsLoadLandPlot, CommandsLoadBinding, CommandsLoadWarp,
         CommandsLoadCommon, CommandsLoadMenu, CommandsLoadMiscellaneous, CommandsLoadFun,
         AllowExpansions, AllowExpansionsV1, EnableModMenu, EnableConsole,
         InjectMainMenuButtons, InjectRanchUIButtons, InjectPauseButtons, InjectTranslations,
@@ -239,6 +236,7 @@ public static class StarlightFeatureFlags
         if (CommandsLoadDevOnly.HasFlag()) _enabledCmDs |= CommandType.DevOnly;
         if (CommandsLoadExperimental.HasFlag()) _enabledCmDs |= CommandType.Experimental;
         if (CommandsLoadCheat.HasFlag()) _enabledCmDs |= CommandType.Cheat;
+        if (CommandsLoadLandPlot.HasFlag()) _enabledCmDs |= CommandType.LandPlot;
         if (CommandsLoadBinding.HasFlag()) _enabledCmDs |= CommandType.Binding;
         if (CommandsLoadWarp.HasFlag()) _enabledCmDs |= CommandType.Warp;
         if (CommandsLoadCommon.HasFlag()) _enabledCmDs |= CommandType.Common;
@@ -302,6 +300,7 @@ public static class StarlightFeatureFlags
         {CommandsLoadDevOnly, [new FFRActivated(CommandsLoadCommands), new FFRActivated(DevMode)] },
         {CommandsLoadCheat, [new FFRActivated(CommandsLoadCommands),new FFRDeactivated(DisableCheats)] },
         {CommandsLoadBinding, [new FFRActivated(CommandsLoadCommands)] },
+        {CommandsLoadLandPlot, [new FFRActivated(CommandsLoadCommands)] },
         {CommandsLoadWarp, [new FFRActivated(CommandsLoadCommands)] },
         {CommandsLoadCommon, [new FFRActivated(CommandsLoadCommands)] },
         {CommandsLoadMenu, [new FFRActivated(CommandsLoadCommands)] },

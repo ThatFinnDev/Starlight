@@ -31,7 +31,6 @@ internal static class StarlightOptionsButtonManager
             return _save;
         }
     }
-    internal static CustomOptionsInGameSave inGameSave;
     static void Save()
     {
         try
@@ -52,12 +51,12 @@ internal static class StarlightOptionsButtonManager
         switch (type)
         {
             case OptionsButtonType.OptionsUI:
-                save.valueButtons[saveID] = value;
+                save.ValueButtons[saveID] = value;
                 Save();
                 return true;
             case OptionsButtonType.InGameOptionsUIOnly:
-                if (inGameSave == null) return false;
-                inGameSave.valueButtons[saveID] = value;
+                if (StarlightSaveManager.inGameData.OptionsSave == null) return false;
+                StarlightSaveManager.inGameData.OptionsSave.ValueButtons[saveID] = value;
                 Save();
                 return true;
         }
@@ -75,12 +74,12 @@ internal static class StarlightOptionsButtonManager
         switch (type)
         {
             case OptionsButtonType.OptionsUI:
-                if (save.valueButtons.ContainsKey(saveID))
-                    return save.valueButtons[saveID];
+                if (save.ValueButtons.ContainsKey(saveID))
+                    return save.ValueButtons[saveID];
                 break;
             case OptionsButtonType.InGameOptionsUIOnly:
-                if (inGameSave!=null&&inGameSave.valueButtons.ContainsKey(saveID))
-                    return inGameSave.valueButtons[saveID];
+                if (StarlightSaveManager.inGameData.OptionsSave!=null&&StarlightSaveManager.inGameData.OptionsSave.ValueButtons.ContainsKey(saveID))
+                    return StarlightSaveManager.inGameData.OptionsSave.ValueButtons[saveID];
                 break;
         }
         return defaultValue;
@@ -91,16 +90,16 @@ internal static class StarlightOptionsButtonManager
         switch (type)
         {
             case OptionsButtonType.OptionsUI:
-                if(!save.valueButtons.ContainsKey(saveID))
+                if(!save.ValueButtons.ContainsKey(saveID))
                 {
-                    save.valueButtons.Add(saveID, value);
+                    save.ValueButtons.Add(saveID, value);
                     Save();
                 }
                 break;
             case OptionsButtonType.InGameOptionsUIOnly:
-                if(inGameSave!=null&&!inGameSave.valueButtons.ContainsKey(saveID))
+                if(StarlightSaveManager.inGameData.OptionsSave!=null&&!StarlightSaveManager.inGameData.OptionsSave.ValueButtons.ContainsKey(saveID))
                 {
-                    inGameSave.valueButtons.Add(saveID, value);
+                    StarlightSaveManager.inGameData.OptionsSave.ValueButtons.Add(saveID, value);
                     Save();
                 }
                 break;
@@ -109,16 +108,6 @@ internal static class StarlightOptionsButtonManager
 
 
 
-    internal static void OnInGameLoad(CustomOptionsInGameSave loadedSave, LoadingGameSessionData sessionData)
-    {
-        if (loadedSave == null)
-        {
-            inGameSave = new CustomOptionsInGameSave();
-        }
-        else inGameSave = loadedSave;
-    }
-
-    internal static CustomOptionsInGameSave OnInGameSave(SavingGameSessionData sessionData) => inGameSave;
     internal static void GenerateMissingButtons()
     {
         if (!InjectOptionsButtons.HasFlag()) return;
@@ -186,10 +175,10 @@ internal static class StarlightOptionsButtonManager
     }
     internal class CustomOptionsSave : RootSave
     {
-        [StoreInSave] internal Dictionary<string, int> valueButtons = new();
+        [StoreInSave] internal Dictionary<string, int> ValueButtons = new();
     }
-    internal class CustomOptionsInGameSave : RootSave
+    internal class CustomOptionsInGameSave : SubSave
     {
-        [StoreInSave] internal Dictionary<string, int> valueButtons = new();
+        [StoreInSave] internal Dictionary<string, int> ValueButtons = new();
     }
 }

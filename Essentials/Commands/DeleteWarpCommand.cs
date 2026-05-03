@@ -13,12 +13,7 @@ internal class DeleteWarpCommand : StarlightCommand
     public override List<string> GetAutoComplete(int argIndex, string[] args)
     {
         if (argIndex == 0)
-        {
-            List<string> warps = new List<string>();
-            foreach (KeyValuePair<string, Warp> pair in StarlightSaveManager.data.warps) warps.Add(pair.Key);
-            return warps;
-        }
-
+            return StarlightSaveManager.data.warps.Keys.ToNetList();
         return null;
     }
 

@@ -15,5 +15,6 @@ public enum CommandType
     Menu = 1 << 7,
     Miscellaneous = 1 << 8,
     Fun = 1 << 9,
-    Experimental = 1 << 10
+    Experimental = 1 << 10,
+    LandPlot = 1 << 11,
 }

@@ -1,8 +1,8 @@
 using Starlight.Saving;
 
-namespace Starlight.Prism.Data.LandPlots;
+namespace Starlight.Storage;
 
-public class PrismLandPlotLocation : SubSave
+public class StarlightLandPlotLocation : SubSave
 {
     [StoreInSave] public Vector3 Position;
     [StoreInSave] public Quaternion Rotation;
@@ -10,14 +10,14 @@ public class PrismLandPlotLocation : SubSave
     [StoreInSave] public string SceneName;
     [StoreInSave] public LandPlot.Id DefaultPlot;
 
-    public PrismLandPlotLocation(Vector3 position, string sceneName, LandPlot.Id defaultPlot)
+    public StarlightLandPlotLocation(Vector3 position, string sceneName, LandPlot.Id defaultPlot)
     {
         this.Position = position;
         this.Scale = new Vector3(1,1,1);
         this.SceneName = sceneName;
         this.DefaultPlot = defaultPlot;
     }
-    public PrismLandPlotLocation(Vector3 position, Quaternion rotation, string sceneName, LandPlot.Id defaultPlot)
+    public StarlightLandPlotLocation(Vector3 position, Quaternion rotation, string sceneName, LandPlot.Id defaultPlot)
     {
         this.Position = position;
         this.Rotation = rotation;
@@ -25,7 +25,7 @@ public class PrismLandPlotLocation : SubSave
         this.SceneName = sceneName;
         this.DefaultPlot = defaultPlot;
     }
-    public PrismLandPlotLocation(Vector3 position, Quaternion rotation, Vector3 scale, string sceneName, LandPlot.Id defaultPlot)
+    public StarlightLandPlotLocation(Vector3 position, Quaternion rotation, Vector3 scale, string sceneName, LandPlot.Id defaultPlot)
     {
         this.Position = position;
         this.Rotation = rotation;
@@ -33,5 +33,5 @@ public class PrismLandPlotLocation : SubSave
         this.SceneName = sceneName;
         this.DefaultPlot = defaultPlot;
     }
-    public PrismLandPlotLocation() {}
+    public StarlightLandPlotLocation() {}
 }
