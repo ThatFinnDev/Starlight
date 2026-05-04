@@ -120,6 +120,7 @@ public class StarlightEntryPoint : MelonMod
     internal static float noclipSpeedMultiplier => _prefs.GetEntry<float>("noclipSpeedMultiplier").Value;
     internal static bool enableDebugDirector => _prefs.GetEntry<bool>("enableDebugDirector").Value;
     internal static bool allowAllDevicesAtOnce => _prefs.GetEntry<bool>("allowAllDevicesAtOnce").Value;
+    internal static bool enableMarketViewer => _prefs.GetEntry<bool>("enableMarketViewer").Value;
     public override void OnEarlyInitializeMelon()
     {
         Instance = this;
@@ -300,6 +301,8 @@ public class StarlightEntryPoint : MelonMod
             {
                 StarlightDebugUI.isEnabled = enableDebugDirector;
             });
+        if (!_prefs.HasEntry("enableMarketViewer"))
+            _prefs.CreateEntry("enableMarketViewer", true, "Show Market Viewer next to Market", false);
         if (!_prefs.HasEntry("allowAllDevicesAtOnce"))
             _prefs.CreateEntry("allowAllDevicesAtOnce", false, "[Experimental] Allow all input devices at once", false).AddNullAction();
         if (!_prefs.HasEntry("mLLogToStarlightLog"))
@@ -624,6 +627,7 @@ public class StarlightEntryPoint : MelonMod
         {
             StarlightSaveManager.inGameData = null;
             MainMenuLoaded = true;
+            UIDisplayInteractableOnInteractPatch.takeOverNextUI = false;
         }
 
         switch (sceneName)
@@ -828,7 +832,7 @@ public class StarlightEntryPoint : MelonMod
                     }
             }
             catch (Exception e) { LogError(e); }
-        
+
         foreach (var expansion in ExpansionV01S)
             try { expansion.OnUpdate(); }
             catch (Exception e) { LogError(e); }

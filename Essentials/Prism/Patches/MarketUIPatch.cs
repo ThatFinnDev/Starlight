@@ -29,9 +29,4 @@ internal static class MarketUIPatch
         PrismLibMarket.TryRefreshMarketData();
     }   
     
-    [HarmonyPostfix,HarmonyPriority(-9999999),HarmonyPatch(nameof(MarketUI.Start))]
-    public static void Postfix(MarketUI __instance)
-    {
-        __instance._config._plorts = __instance._config._plorts.Take(34).ToArray();
-    }
 }
