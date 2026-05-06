@@ -1,6 +1,7 @@
 ﻿using Il2CppMonomiPark.SlimeRancher.Player.CharacterController.Abilities;
 using Il2CppMonomiPark.SlimeRancher.UI;
 using Il2CppMonomiPark.UnitPropertySystem;
+using Starlight.Managers;
 
 namespace Starlight.Commands;
 
@@ -24,10 +25,10 @@ internal class InfiniteEnergyCommand : StarlightCommand
         bool shouldDisableThrusterHeight = false;
         if (args != null) if (!TryParseBool(args[0], out shouldDisableThrusterHeight)) return false;
 
-        if (infEnergy)
+        if (StarlightSaveManager.inGameData.InfiniteEnergyActive)
         {
-            infEnergy = false;
-            if (energyMeter == null) energyMeter = GetInScene<EnergyMeter>("Energy Meter");
+            StarlightSaveManager.inGameData.InfiniteEnergyActive = false;
+            if (!energyMeter) energyMeter = GetInScene<EnergyMeter>("Energy Meter");
             energyMeter.transform.GetChild(0).gameObject.SetActive(true);
 
             if (jetpackAbilityData == null) jetpackAbilityData = Get<JetpackAbilityData>("Jetpack");
@@ -41,8 +42,8 @@ internal class InfiniteEnergyCommand : StarlightCommand
         }
         else
         {
-            infEnergy = true;
-            if (energyMeter == null) energyMeter = GetInScene<EnergyMeter>("Energy Meter");
+            StarlightSaveManager.inGameData.InfiniteEnergyActive = true;
+            if (!energyMeter) energyMeter = GetInScene<EnergyMeter>("Energy Meter");
             energyMeter.transform.GetChild(0).gameObject.SetActive(false);
 
             if (jetpackAbilityData == null) jetpackAbilityData = Get<JetpackAbilityData>("Jetpack");
@@ -68,20 +69,24 @@ internal class InfiniteEnergyCommand : StarlightCommand
     {
         try
         {
-            if (infEnergy)
-                if (sceneContext != null)
-                    if (sceneContext.PlayerState != null)
-                        sceneContext.PlayerState.SetEnergy(int.MaxValue);
+            if (inGame && StarlightSaveManager.inGameData.InfiniteEnergyActive) 
+                sceneContext.PlayerState.SetEnergy(int.MaxValue);
         }
         catch { }
     }
 
-    public override void OnMainMenuUILoad() => infEnergy = false;
     public override void OnPlayerCoreLoad() => jetpackAbilityData = Get<JetpackAbilityData>("Jetpack");
-    public override void OnUICoreLoad() => energyMeter = GetInScene<EnergyMeter>("Energy Meter");
+    public override void OnUICoreLoad()
+    {
+        ExecuteInTicks(() =>
+        {
+            energyMeter = GetInScene<EnergyMeter>("Energy Meter");
+            if(StarlightSaveManager.inGameData.InfiniteEnergyActive)
+                energyMeter.gameObject.active = false;
+        },1);
+    }
     
 
-    public static bool infEnergy = false;
     static float normalEnergy = 100;
     static float normalHoverHeight = 0;
     static float normalMaxUpwardThrustForce = 0;

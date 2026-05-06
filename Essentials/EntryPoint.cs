@@ -628,6 +628,25 @@ public class StarlightEntryPoint : MelonMod
             StarlightSaveManager.inGameData = null;
             MainMenuLoaded = true;
             UIDisplayInteractableOnInteractPatch.takeOverNextUI = false;
+            try //Fixes compatibility with UE
+            {
+                foreach (var category in MelonPreferences.Categories)
+                    if (category.DisplayName == "UnityExplorer Settings" && category.Identifier == "UnityExplorer")
+                    {
+                        foreach (var entry in category.Entries)
+                            if (entry.DisplayName == "Disable EventSystem override" && entry.Identifier == "Disable EventSystem override")
+                            {
+                                entry.BoxedEditedValue = true;
+                                entry.BoxedValue = true;
+                                category.SaveToFile(false);
+                                break;
+                            }
+                        break;
+                    }
+            }
+            catch (Exception e) { LogError(e); }
+            
+                
         }
 
         switch (sceneName)
@@ -753,8 +772,8 @@ public class StarlightEntryPoint : MelonMod
                     rect.vertical = true;
                     var scrollBar = new VScrollbarUIBlueprintV01()
                         {
-                            anchors = new Vector4(1,0,1,1),
-                            size = new (35,500)
+                            Anchors = new Vector4(1,0,1,1),
+                            Size = new (35,500)
                         }
                         .Render(UITheme.GetTheme(StarlightMenuTheme.Native),
                             FontTheme.GetTheme(StarlightMenuFont.Native), rect.transform)

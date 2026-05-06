@@ -29,9 +29,9 @@ public class NavigationUIBlueprintV01 : UIBlueprint
         _activeTab = 0;
         var panelContainer = new GameObject("Panels");
         panelContainer.transform.SetParent(obj);
-        customChildHolder = panelContainer.AddComponent<RectTransform>();
-        customChildHolder.sizeDelta = tabSize;
-        customChildHolder.anchoredPosition = Vector2.zero;
+        CustomChildHolder = panelContainer.AddComponent<RectTransform>();
+        CustomChildHolder.sizeDelta = tabSize;
+        CustomChildHolder.anchoredPosition = Vector2.zero;
         
         var buttonContainer = new GameObject("Tabs");
         var bcRect = buttonContainer.AddComponent<RectTransform>();
@@ -40,7 +40,7 @@ public class NavigationUIBlueprintV01 : UIBlueprint
         bcLayout.childControlHeight = true;
         bcLayout.childControlWidth = true;
         bcLayout.spacing = buttonSpacing;
-        bcLayout.padding = new RectOffset((int)(horizontalPaddingPercentage/100f * size.x * ScaleFactor), (int)(horizontalPaddingPercentage/100f * size.x * ScaleFactor), (int)(topPadding * ScaleFactor), 0);
+        bcLayout.padding = new RectOffset((int)(horizontalPaddingPercentage/100f * Size.x * ScaleFactor), (int)(horizontalPaddingPercentage/100f * Size.x * ScaleFactor), (int)(topPadding * ScaleFactor), 0);
         buttonContainer.transform.SetParent(obj);
         bcRect.anchorMin = new Vector2(0, 1);
         bcRect.anchorMax = new Vector2(1, 1);
@@ -54,30 +54,30 @@ public class NavigationUIBlueprintV01 : UIBlueprint
                 var tabIndex = i;
                 var buttonUIBlueprint = new ButtonUIBlueprintV01()
                 {
-                    onClick = (() => SetActiveTab(tabIndex)),
-                    cornerRadius = buttonCornerRadius,
-                    buttonColors = buttonColorBlock,
-                    children =
+                    OnClick = (() => SetActiveTab(tabIndex)),
+                    CornerRadius = buttonCornerRadius,
+                    ButtonColors = buttonColorBlock,
+                    Children =
                     [
                         new TextUIBlueprintV01()
                         {
                             color = buttonTextColor,
-                            textContent = tabs[i].name,
+                            textContent = tabs[i].Name,
                             disableAutoTranslation = buttonDisableAutoTranslation,
                             alignment = TextAlignmentOptions.Center,
                             fontStyle = buttonFontStyle,
                             fontSize = 40,
-                            anchors = new Vector4(0,0,1,1),
+                            Anchors = new Vector4(0,0,1,1),
                         }
                     ]
                 };
                 _buttons.Add(buttonUIBlueprint.Render(theme, fontTheme, bcRect));
-                tabs[i].anchors = new Vector4(customChildHolder.anchorMin.x, customChildHolder.anchorMin.y,customChildHolder.anchorMax.x,customChildHolder.anchorMax.y);
-                tabs[i].size = customChildHolder.sizeDelta;
+                tabs[i].Anchors = new Vector4(CustomChildHolder.anchorMin.x, CustomChildHolder.anchorMin.y,CustomChildHolder.anchorMax.x,CustomChildHolder.anchorMax.y);
+                tabs[i].Size = CustomChildHolder.sizeDelta;
                 RectTransform panel = null;
                 try
                 {
-                    panel = tabs[i].Render(theme, fontTheme, customChildHolder);
+                    panel = tabs[i].Render(theme, fontTheme, CustomChildHolder);
                     panel.gameObject.SetActive(i == _activeTab);
                 } catch (Exception e) { LogError(e); } 
                 _panels.Add(panel); 

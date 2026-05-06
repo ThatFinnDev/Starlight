@@ -41,7 +41,7 @@ public class SliderUIBlueprintV01 : UIBlueprint
         var background = new GameObject("Background");
         var backgroundRect = background.AddComponent<RectTransform>();
         background.transform.SetParent(obj, false);
-        backgroundRect.sizeDelta = new Vector2(size.x*ScaleFactor, size.y*ScaleFactor / 2.5f);
+        backgroundRect.sizeDelta = new Vector2(Size.x*ScaleFactor, Size.y*ScaleFactor / 2.5f);
         backgroundRect.anchoredPosition = Vector2.zero;
         var backgroundImage = background.AddComponent<Image>();
         backgroundImage.color = bColor;

@@ -110,7 +110,7 @@ internal class GameContextPatch
 
             }
             if (AddCheatMenuButton.HasFlag()) CheatMenuButton = new CustomPauseMenuButton(AddTranslationFromStarlight("buttons.cheatmenu.label", "b.button_cheatmenu_starlight", "UI"), 4, (SystemAction)(() => { MenuEUtil.GetMenu<StarlightCheatMenu>().Open(); }));
-            if (DevMode.HasFlag()||RestoreDebugPlayerDebug.HasFlag()) new CustomPauseMenuButton(AddTranslationFromStarlight("buttons.debugplayer.label", "b.debug_player_starlight", "UI"), 3, (SystemAction)(StarlightDebugUI.DebugStatsManager.TogglePlayerDebugUI));
+            new CustomPauseMenuButton(AddTranslationFromStarlight("buttons.debugplayer.label", "b.debug_player_starlight", "UI"), 3, (SystemAction)(StarlightDebugUI.DebugStatsManager.TogglePlayerDebugUI));
             if (AddMockOptionsUIButtons.HasFlag())
             {
                 var testCategory1 = new CustomOptionsUICategory(AddTranslation("AllTheTime"), 4,null, OptionsCategoryVisibleState.AllTheTime);

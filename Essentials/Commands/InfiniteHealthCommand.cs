@@ -1,5 +1,6 @@
 ﻿using Il2CppMonomiPark.SlimeRancher.DataModel;
 using Il2CppMonomiPark.SlimeRancher.UI;
+using Starlight.Managers;
 
 namespace Starlight.Commands;
 
@@ -14,32 +15,40 @@ internal class InfiniteHealthCommand : StarlightCommand
         if (!args.IsBetween(0,0)) return SendNoArguments();
         if (!inGame) return SendLoadASaveFirst();
 
-        if (infHealth)
+        if (StarlightSaveManager.inGameData.InfiniteHealthActive)
         {
-            infHealth = false;
-            if (healthMeter == null) healthMeter = GetInScene<HealthMeter>("Health Meter");
-            healthMeter.gameObject.active = true;
+            StarlightSaveManager.inGameData.InfiniteHealthActive = false;
+            if (!_healthMeter) _healthMeter = GetInScene<HealthMeter>("Health Meter");
+            _healthMeter.gameObject.active = true;
             SendMessage(Tr("cmd.infhealth.successnolonger"));
         }
         else
         {
-            infHealth = true;;
-            if (healthMeter == null) healthMeter = GetInScene<HealthMeter>("Health Meter");
-            healthMeter.gameObject.active = false;
+            StarlightSaveManager.inGameData.InfiniteHealthActive = true;;
+            if (!_healthMeter) _healthMeter = GetInScene<HealthMeter>("Health Meter");
+            _healthMeter.gameObject.active = false;
             SendMessage(Tr("cmd.infhealth.success"));
         }
 
         return true;
     }
-
-    public override void OnMainMenuUILoad() => infHealth = false;
-    public static bool infHealth = false;
-    private static HealthMeter healthMeter;
-    public override void OnUICoreLoad() => healthMeter = GetInScene<HealthMeter>("Health Meter");
+    private static HealthMeter _healthMeter;
+    public override void OnUICoreLoad()
+    {
+        ExecuteInTicks(() =>
+        {
+            _healthMeter = GetInScene<HealthMeter>("Health Meter");
+            if (StarlightSaveManager.inGameData.InfiniteHealthActive)
+                _healthMeter.gameObject.active = false;
+        },1);;
+    }
     [HarmonyPatch(typeof(PlayerModel), nameof(PlayerModel.LoseHealth))]
     internal class PlayerModelLoseHealthPatch
     {
-        public static bool Prefix(PlayerState __instance, float health) => !infHealth;
+        public static bool Prefix(PlayerState __instance, float health) {
+            try { return !StarlightSaveManager.inGameData.InfiniteHealthActive; } catch { }
+            return true;
+        }
     }
 
 }

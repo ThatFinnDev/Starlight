@@ -46,9 +46,6 @@ public class StarlightCheatMenu : StarlightMenu
     private StarlightCheatMenuButton _infEnergyButton;
     private StarlightCheatMenuButton _infHealthButton;
     private StarlightCheatMenuButton _removeFogButton;
-    //private StarlightCheatMenuButton _betterScreenshotButton;
-    internal static bool RemoveFog;
-    //internal static bool BetterScreenshot;
     private InputEvent _inputDown;
     private InputEvent _inputUp;
     
@@ -112,9 +109,9 @@ public class StarlightCheatMenu : StarlightMenu
 
         _noclipButton.TextInstance.text = Tr("cheatmenu.cheatbuttons.noclip" + (sceneContext.Camera.GetComponent<NoClipComponent>() == null ? "off" : "on"));
         _refillButton.TextInstance.text = Tr("cheatmenu.cheatbuttons.refillinv");
-        if (EnableInfHealth.HasFlag()) _infHealthButton.TextInstance.text = Tr("cheatmenu.cheatbuttons.infhealth" + (InfiniteHealthCommand.infHealth? "on" : "off"));
-        if (EnableInfEnergy.HasFlag()) _infEnergyButton.TextInstance.text = Tr("cheatmenu.cheatbuttons.infenergy" + (InfiniteEnergyCommand.infEnergy? "on" : "off"));
-        _removeFogButton.TextInstance.text = Tr("cheatmenu.cheatbuttons.removeFog" + (RemoveFog? "on" : "off"));
+        if (EnableInfHealth.HasFlag()) _infHealthButton.TextInstance.text = Tr("cheatmenu.cheatbuttons.infhealth" + (StarlightSaveManager.inGameData.InfiniteHealthActive? "on" : "off"));
+        if (EnableInfEnergy.HasFlag()) _infEnergyButton.TextInstance.text = Tr("cheatmenu.cheatbuttons.infenergy" + (StarlightSaveManager.inGameData.InfiniteEnergyActive? "on" : "off"));
+        _removeFogButton.TextInstance.text = Tr("cheatmenu.cheatbuttons.removeFog" + (StarlightSaveManager.inGameData.RemoveFogActive? "on" : "off"));
         //_betterScreenshotButton.textInstance.text = translation("cheatmenu.cheatbuttons.betterScreenshot" + (BetterScreenshot? "on" : "off"));
 
         
@@ -231,21 +228,21 @@ public class StarlightCheatMenu : StarlightMenu
         {
             AudioEUtil.PlaySound(MenuSound.Click);
             StarlightCommandManager.ExecuteByString("infenergy", true,true);
-            _infEnergyButton.TextInstance.text = Tr("cheatmenu.cheatbuttons.infenergy" + (InfiniteEnergyCommand.infEnergy? "on" : "off"));
+            _infEnergyButton.TextInstance.text = Tr("cheatmenu.cheatbuttons.infenergy" + (StarlightSaveManager.inGameData.InfiniteEnergyActive? "on" : "off"));
         });
         if (EnableInfHealth.HasFlag()) _infHealthButton = new StarlightCheatMenuButton(Tr("cheatmenu.cheatbuttons.infhealthoff"),
             () =>
         {
             AudioEUtil.PlaySound(MenuSound.Click);
             StarlightCommandManager.ExecuteByString("infhealth", true,true);
-            _infHealthButton.TextInstance.text = Tr("cheatmenu.cheatbuttons.infhealth" + (InfiniteHealthCommand.infHealth? "on" : "off"));
+            _infHealthButton.TextInstance.text = Tr("cheatmenu.cheatbuttons.infhealth" + (StarlightSaveManager.inGameData.InfiniteHealthActive? "on" : "off"));
             });
         _removeFogButton = new StarlightCheatMenuButton(Tr("cheatmenu.cheatbuttons.removeFogoff"),
             () =>
             {
                 AudioEUtil.PlaySound(MenuSound.Click);
-                RemoveFog = !RemoveFog;
-                _removeFogButton.TextInstance.text = Tr("cheatmenu.cheatbuttons.removeFog" + (RemoveFog? "on" : "off"));
+                StarlightSaveManager.inGameData.RemoveFogActive = !StarlightSaveManager.inGameData.RemoveFogActive;
+                _removeFogButton.TextInstance.text = Tr("cheatmenu.cheatbuttons.removeFog" + (StarlightSaveManager.inGameData.RemoveFogActive? "on" : "off"));
             });
         /*_betterScreenshotButton = new StarlightCheatMenuButton(translation("cheatmenu.cheatbuttons.betterScreenshotoff"),
             () =>

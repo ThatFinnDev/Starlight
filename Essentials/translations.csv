@@ -1,7 +1,7 @@
 KEYS,en,de
 buttons.mods.label,"Mods",Modifikationen
 buttons.cheatmenu.label,"Cheat Menu",Schummelmenü
-buttons.debugplayer.label,"Debug Player",Debuginformationen
+buttons.debugplayer.label,"Debug Info",Debuginformationen
 buttons.thememenu.label,"Theme Menu",Designmenü
 console.title,"Console","Konsole"
 console.helloworld,"Hello World! :)","Hallo Welt! :)"

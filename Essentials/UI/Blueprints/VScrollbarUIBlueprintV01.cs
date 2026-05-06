@@ -20,7 +20,7 @@ public class VScrollbarUIBlueprintV01 : UIBlueprint
         var backgroundArea = new GameObject("Background");
         var backgroundAreaRect = backgroundArea.AddComponent<RectTransform>();
         backgroundArea.transform.SetParent(obj);
-        backgroundAreaRect.sizeDelta = new Vector2(size.x*ScaleFactor / 5, 0);
+        backgroundAreaRect.sizeDelta = new Vector2(Size.x*ScaleFactor / 5, 0);
         backgroundAreaRect.anchoredPosition = Vector2.zero;
         backgroundAreaRect.anchorMin = new Vector2(0.5f, 0);
         backgroundAreaRect.anchorMax = new Vector2(0.5f, 1);

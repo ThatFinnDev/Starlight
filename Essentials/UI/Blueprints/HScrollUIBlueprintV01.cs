@@ -19,7 +19,7 @@ public class HScrollUIBlueprintV01 : UIBlueprint
         var backgroundArea = new GameObject("Background");
         var backgroundAreaRect = backgroundArea.AddComponent<RectTransform>();
         backgroundArea.transform.SetParent(obj);
-        backgroundAreaRect.sizeDelta = new Vector2(0, size.y*ScaleFactor/5);
+        backgroundAreaRect.sizeDelta = new Vector2(0, Size.y*ScaleFactor/5);
         backgroundAreaRect.anchoredPosition = Vector2.zero;
         backgroundAreaRect.anchorMin = new Vector2(0,0.5f);
         backgroundAreaRect.anchorMax = new Vector2(1,0.5f);

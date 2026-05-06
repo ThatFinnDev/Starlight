@@ -6,26 +6,27 @@ namespace Starlight.UI.Blueprints;
 
 public class ButtonUIBlueprintV01 : UIBlueprint
 {
-    public Sprite sprite;
-    public UIColor color = UIColor.None;
-    public UIColorBlock buttonColors = UIColorBlock.Buttons;
-    public SystemAction onClick = null;
-    public bool interactable = true;
-    public bool useClickSound = true;
-    public MenuSound clickSound = MenuSound.Click;
+    public Sprite Sprite;
+    public UIColor Color = UIColor.None;
+    public UIColorBlock ButtonColors = UIColorBlock.Buttons;
+    public SystemAction OnClick = null;
+    public bool Interactable = true;
+    public bool UseClickSound = true;
+    public MenuSound ClickSound = MenuSound.Click;
 
     protected override void OnRender(UITheme theme, FontTheme fontTheme, RectTransform obj)
     {
         var image = obj.AddComponent<Image>();
-        image.sprite = sprite;
-        image.color = theme.GetColor(color);
+        image.sprite = Sprite;
+        image.color = theme.GetColor(Color);
         var button = obj.AddComponent<Button>();
-        button.interactable = interactable;
-        button.colors = theme.GetColorBlock(buttonColors);
+        button.interactable = Interactable;
+        button.colors = theme.GetColorBlock(ButtonColors);
+        button.targetGraphic = image;
         button.onClick = new Button.ButtonClickedEvent();
-        if(onClick!=null)
-            button.onClick.AddListener(onClick);
-        if(useClickSound)
-            button.onClick.AddListener((SystemAction)(()=> AudioEUtil.PlaySound(clickSound)));
+        if (OnClick != null)
+            button.onClick.AddListener(OnClick);
+        if (UseClickSound)
+            button.onClick.AddListener((SystemAction)(() => AudioEUtil.PlaySound(ClickSound)));
     }
 }

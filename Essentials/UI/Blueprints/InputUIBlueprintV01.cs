@@ -26,15 +26,15 @@ public class InputUIBlueprintV01 : UIBlueprint
     public System.Action<string> onDeselect = null;
     protected override void OnRender(UITheme theme, FontTheme fontTheme, RectTransform obj)
     {
-        ignoreCorners = true;
+        IgnoreCorners = true;
         var inputObject = TMP_DefaultControls.CreateInputField(new TMP_DefaultControls.Resources());
         inputObject.transform.SetParent(obj);
-        if(cornerRadius>0)
+        if(CornerRadius>0)
         {
             var sortGroup = inputObject.AddComponent<SortingGroup>();
             sortGroup.enabled = false;
-            sortGroup.sortingOrder = Mathf.FloorToInt(cornerRadius * ScaleFactor);
-            inputObject.AddComponent<RoundedUIImage>().CornerRadius = cornerRadius * ScaleFactor;
+            sortGroup.sortingOrder = Mathf.FloorToInt(CornerRadius * ScaleFactor);
+            inputObject.AddComponent<RoundedUIImage>().CornerRadius = CornerRadius * ScaleFactor;
         }
         var inputRect = inputObject.GetComponent<RectTransform>();
         inputRect.anchorMin = Vector2.zero;

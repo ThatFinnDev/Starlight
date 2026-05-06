@@ -75,29 +75,29 @@ internal class StarlightModMenu : StarlightMenu
 
     [HideFromIl2Cpp] private PanelUIBlueprintV01 blueprint => new ()
     {
-        color = UIColor.Primary, cornerRadius = 90, size = new Vector2(1330, 840),
-        children =
+        color = UIColor.Primary, CornerRadius = 90, Size = new Vector2(1330, 840),
+        Children =
         [
-            new PanelUIBlueprintV01 { color = UIColor.Accent, cornerRadius = 0, size = new Vector2(1330,10), position = new Vector2(0,-265f) },
-            new PanelUIBlueprintV01 { color = UIColor.Accent, cornerRadius = 0, size = new Vector2(1330,10), position = new Vector2(0,265f) },
+            new PanelUIBlueprintV01 { color = UIColor.Accent, CornerRadius = 0, Size = new Vector2(1330,10), Position = new Vector2(0,-265f) },
+            new PanelUIBlueprintV01 { color = UIColor.Accent, CornerRadius = 0, Size = new Vector2(1330,10), Position = new Vector2(0,265f) },
             new NavigationUIBlueprintV01
             {
-                cornerRadius = 90, size = new Vector2(1330, 840),
+                CornerRadius = 90, Size = new Vector2(1330, 840),
                 tabSize = new Vector2(1330,520),
                 tabs = [
                     new PanelUIBlueprintV01
                     {
-                        name = "modmenu.category.modmenu",
-                        children = [
+                        Name = "modmenu.category.modmenu",
+                        Children = [
                             new VScrollUIBlueprintV01
                             {
-                                size = new Vector2(660,520), position = new Vector2(-332.5f,0), name="ModMenuModsScrollRec",
-                                children = GetAllModButtons()
+                                Size = new Vector2(660,520), Position = new Vector2(-332.5f,0), Name="ModMenuModsScrollRec",
+                                Children = GetAllModButtons()
                             },
-                            new PanelUIBlueprintV01 { color = UIColor.Accent, size = new Vector2(10,520) },
+                            new PanelUIBlueprintV01 { color = UIColor.Accent, Size = new Vector2(10,520) },
                             new TextUIBlueprintV01
                             {
-                                size = new Vector2(660,520), cornerRadius = 10, position = new Vector2(332.5f,0), name="ModMenuInfoTextRec",
+                                Size = new Vector2(660,520), CornerRadius = 10, Position = new Vector2(332.5f,0), Name="ModMenuInfoTextRec",
                                 textContent = "nada", fontSize = 17, clickableLinks = true,
                                 margins= new Vector4(10,10,10,10),
                             }
@@ -105,26 +105,26 @@ internal class StarlightModMenu : StarlightMenu
                     },
                     new PanelUIBlueprintV01
                     {
-                        name = "modmenu.category.modconfig",
-                        children = [
+                        Name = "modmenu.category.modconfig",
+                        Children = [
                             new VScrollUIBlueprintV01
                             {
-                                size = new Vector2(1330,520), position = new Vector2(0f,0), name="ModMenuModConfigScrollRec",
-                                children = GetAllModConfigs()
+                                Size = new Vector2(1330,520), Position = new Vector2(0f,0), Name="ModMenuModConfigScrollRec",
+                                Children = GetAllModConfigs()
                             },
                             new TextUIBlueprintV01
                             {
-                                size = new Vector2(1330,50), position  =new (0,-320), name ="ModMenuModConfigWarningRec",
+                                Size = new Vector2(1330,50), Position  =new (0,-320), Name ="ModMenuModConfigWarningRec",
                                 textContent="modmenu.warning.restart", color = UIColor.TextWarning, fontSize = 30,
                                 alignment = TextAlignmentOptions.Center
                             }
                         ]
                     }
                 ],
-                childrenWithButtons = [
+                /*childrenWithButtons = [
                     new ButtonUIBlueprintV01()
                     {
-                        onClick = () =>
+                        OnClick = () =>
                             {
                                 if (EnableRepoMenu.HasFlag())
                                 {
@@ -150,15 +150,15 @@ internal class StarlightModMenu : StarlightMenu
                             }
                         ]
                     }
-                ]
+                ]*/
             },
             new PanelUIBlueprintV01
             {
-                color = UIColor.Badge, cornerRadius = 50, size = new Vector2(530,90), position = new Vector2(0,-420f),
-                children = [
+                color = UIColor.Badge, CornerRadius = 50, Size = new Vector2(530,90), Position = new Vector2(0,-420f),
+                Children = [
                     new TextUIBlueprintV01
                     {
-                        textContent = "modmenu.title", size = new Vector2(530,90), fontSize = 50, 
+                        textContent = "modmenu.title", Size = new Vector2(530,90), fontSize = 50, 
                         color = UIColor.TextButton, alignment = TextAlignmentOptions.Center,
                     }
                 ]
@@ -185,13 +185,13 @@ internal class StarlightModMenu : StarlightMenu
             } catch {}
             list.Add(new PanelUIBlueprintV01()
             {
-                size = new Vector2(800,60), color = UIColor.Transparent,
-                children = [
+                Size = new Vector2(800,60), color = UIColor.Transparent,
+                Children = [
                     new TextUIBlueprintV01()
                     {
                         textContent = displayName, margins = new Vector4(1,1,1,1), 
                         color = UIColor.TextCategory, fontSize = 40, fontAutoSizeMax = 40, enableAutoSizing = true,
-                        size = new Vector2(0,0), anchors = new Vector4(0,0,1,1), alignment = TextAlignmentOptions.Left,
+                        Size = new Vector2(0,0), Anchors = new Vector4(0,0,1,1), alignment = TextAlignmentOptions.Left,
                     }
                 ]
             });
@@ -212,15 +212,15 @@ internal class StarlightModMenu : StarlightMenu
                 } catch { }
                 var blueprint = new PanelUIBlueprintV01()
                 {
-                    size = new Vector2(800, 50), color = UIColor.Transparent,
-                    components = [typeof(ModConfigSizingFixer).IL2CPPTypeof()],
-                    children =
+                    Size = new Vector2(800, 50), color = UIColor.Transparent,
+                    Components = [typeof(ModConfigSizingFixer).IL2CPPTypeof()],
+                    Children =
                     [
                         new TextUIBlueprintV01()
                         {
-                            name = "NameAndDescription",
-                            textContent = final, margins = new Vector4(1, 1, 500, 1), fontSize = 24, size = new Vector2(0, 0),
-                            anchors = new Vector4(0, 0, 1, 1), alignment = TextAlignmentOptions.Left
+                            Name = "NameAndDescription",
+                            textContent = final, margins = new Vector4(1, 1, 500, 1), fontSize = 24, Size = new Vector2(0, 0),
+                            Anchors = new Vector4(0, 0, 1, 1), alignment = TextAlignmentOptions.Left
                         }
                     ]
                 };
@@ -272,32 +272,32 @@ internal class StarlightModMenu : StarlightMenu
     {
         var button = new ButtonUIBlueprintV01
         {
-            size = new Vector2(595, 60),
-            cornerRadius = 30,
-            children = [
+            Size = new Vector2(595, 60),
+            CornerRadius = 30,
+            Children = [
                 new TextUIBlueprintV01
                 {
                     textContent = info.Name, alignment = TextAlignmentOptions.Center, fontSize = 26, fontAutoSizeMax = 26, enableAutoSizing = true,
                     margins = new Vector4(110,5,110,5),
-                    color = UIColor.TextButton, anchors = new Vector4( 0,0,1,1)
+                    color = UIColor.TextButton, Anchors = new Vector4( 0,0,1,1)
                 }
             ]
         };
-        if (info.type == PackageType.Expansion) button.buttonColors = UIColorBlock.AlternativeButtons;
-        if (isRotten) button.buttonColors = UIColorBlock.GrayButtons;
+        if (info.type == PackageType.Expansion) button.ButtonColors = UIColorBlock.AlternativeButtons;
+        if (isRotten) button.ButtonColors = UIColorBlock.GrayButtons;
 
         if (info.icon)
         {
-            button.children.Add(new PanelUIBlueprintV01()
+            button.Children.Add(new PanelUIBlueprintV01()
             {
-                size=new Vector2(50,50), position = new Vector2(-266,0),
+                Size=new Vector2(50,50), Position = new Vector2(-266,0),
                 color=UIColor.None,sprite = info.icon,
-                cornerRadius = 10
+                CornerRadius = 10
                 //anchors = new Vector4(0,0.5f,0,0.5f),
             });
         }
 
-        button.onClick = () =>
+        button.OnClick = () =>
         {
             AudioEUtil.PlaySound(MenuSound.Click);
             //_themeButton.gameObject.SetActive(info.Name==BuildInfo.Name);
@@ -424,10 +424,10 @@ internal class StarlightModMenu : StarlightMenu
 
     private static void ApplyIntFeatures(MelonPreferences_Entry entry, UIBlueprint blueprint, MelonPreferences_Category category)
     {
-        blueprint.children.Add(new InputUIBlueprintV01()
+        blueprint.Children.Add(new InputUIBlueprintV01()
         {
-            size = new (480, 45), position = new (410, 0), defaultValue = entry.GetEditedValueAsString(), restoreOriginalTextOnEscape = false,
-            contentType = TMP_InputField.ContentType.IntegerNumber, placeHolderContent = "modmenu.modconfig.enterint", cornerRadius = 10,
+            Size = new (480, 45), Position = new (410, 0), defaultValue = entry.GetEditedValueAsString(), restoreOriginalTextOnEscape = false,
+            contentType = TMP_InputField.ContentType.IntegerNumber, placeHolderContent = "modmenu.modconfig.enterint", CornerRadius = 10,
             onValueChanged = (text =>
             {
                 AudioEUtil.PlaySound(MenuSound.Click);
@@ -445,10 +445,10 @@ internal class StarlightModMenu : StarlightMenu
     }
     private static void ApplyFloatFeatures(MelonPreferences_Entry entry, UIBlueprint blueprint, MelonPreferences_Category category)
     {
-        blueprint.children.Add(new InputUIBlueprintV01()
+        blueprint.Children.Add(new InputUIBlueprintV01()
         {
-            size = new (480, 45), position = new (410, 0), defaultValue = entry.GetEditedValueAsString(), restoreOriginalTextOnEscape = false,
-            contentType = TMP_InputField.ContentType.DecimalNumber, placeHolderContent = "modmenu.modconfig.enterfloat", cornerRadius = 10,
+            Size = new (480, 45), Position = new (410, 0), defaultValue = entry.GetEditedValueAsString(), restoreOriginalTextOnEscape = false,
+            contentType = TMP_InputField.ContentType.DecimalNumber, placeHolderContent = "modmenu.modconfig.enterfloat", CornerRadius = 10,
             onValueChanged = (text =>
             {
                 AudioEUtil.PlaySound(MenuSound.Click);
@@ -466,10 +466,10 @@ internal class StarlightModMenu : StarlightMenu
     }
     private static void ApplyDoubleFeatures(MelonPreferences_Entry entry, UIBlueprint blueprint, MelonPreferences_Category category)
     {
-        blueprint.children.Add(new InputUIBlueprintV01()
+        blueprint.Children.Add(new InputUIBlueprintV01()
         {
-            size = new (480, 45), position = new (410, 0), defaultValue = entry.GetEditedValueAsString(), restoreOriginalTextOnEscape = false,
-            contentType = TMP_InputField.ContentType.DecimalNumber, placeHolderContent = "modmenu.modconfig.enterdouble", cornerRadius = 10,
+            Size = new (480, 45), Position = new (410, 0), defaultValue = entry.GetEditedValueAsString(), restoreOriginalTextOnEscape = false,
+            contentType = TMP_InputField.ContentType.DecimalNumber, placeHolderContent = "modmenu.modconfig.enterdouble", CornerRadius = 10,
             onValueChanged = (text =>
             {
                 AudioEUtil.PlaySound(MenuSound.Click);
@@ -487,10 +487,10 @@ internal class StarlightModMenu : StarlightMenu
     }
     private static void ApplyLongFeatures(MelonPreferences_Entry entry, UIBlueprint blueprint, MelonPreferences_Category category)
     {
-        blueprint.children.Add(new InputUIBlueprintV01()
+        blueprint.Children.Add(new InputUIBlueprintV01()
         {
-            size = new (480, 45), position = new (410, 0), defaultValue = entry.GetEditedValueAsString(), restoreOriginalTextOnEscape = false,
-            contentType = TMP_InputField.ContentType.IntegerNumber, placeHolderContent = "modmenu.modconfig.enterlong", cornerRadius = 10,
+            Size = new (480, 45), Position = new (410, 0), defaultValue = entry.GetEditedValueAsString(), restoreOriginalTextOnEscape = false,
+            contentType = TMP_InputField.ContentType.IntegerNumber, placeHolderContent = "modmenu.modconfig.enterlong", CornerRadius = 10,
             onValueChanged = (text =>
             {
                 AudioEUtil.PlaySound(MenuSound.Click);
@@ -508,10 +508,10 @@ internal class StarlightModMenu : StarlightMenu
     }
     private static void ApplyStringFeatures(MelonPreferences_Entry entry, UIBlueprint blueprint, MelonPreferences_Category category)
     {
-        blueprint.children.Add(new InputUIBlueprintV01()
+        blueprint.Children.Add(new InputUIBlueprintV01()
         {
-            size = new (480, 45), position = new (410, 0), defaultValue = entry.GetEditedValueAsString(), restoreOriginalTextOnEscape = false,
-            contentType = TMP_InputField.ContentType.Standard, placeHolderContent = "modmenu.modconfig.enterstring", cornerRadius = 10,
+            Size = new (480, 45), Position = new (410, 0), defaultValue = entry.GetEditedValueAsString(), restoreOriginalTextOnEscape = false,
+            contentType = TMP_InputField.ContentType.Standard, placeHolderContent = "modmenu.modconfig.enterstring", CornerRadius = 10,
             onValueChanged = (text =>
             {
                 AudioEUtil.PlaySound(MenuSound.Click);
@@ -525,9 +525,9 @@ internal class StarlightModMenu : StarlightMenu
     }
     private static void ApplyBoolFeatures(MelonPreferences_Entry entry, UIBlueprint blueprint, MelonPreferences_Category category)
     {
-        blueprint.children.Add(new CheckboxUIBlueprintV01()
+        blueprint.Children.Add(new CheckboxUIBlueprintV01()
         {
-            size = new (45, 45), position = new (625, 0), defaultValue = entry.BoxedEditedValue.ToString().ToLower() == "true", cornerRadius = 10,
+            Size = new (45, 45), Position = new (625, 0), defaultValue = entry.BoxedEditedValue.ToString().ToLower() == "true", CornerRadius = 10,
             onValueChanged = (isOn =>
             {
                 AudioEUtil.PlaySound(MenuSound.Click);
@@ -649,9 +649,9 @@ internal class StarlightModMenu : StarlightMenu
     }
     private static void ApplyUnknownFeatures(MelonPreferences_Entry entry, UIBlueprint blueprint, MelonPreferences_Category category)
     {
-        blueprint.children.Add(new TextUIBlueprintV01()
+        blueprint.Children.Add(new TextUIBlueprintV01()
         {
-            size = new (480, 45), position = new (410, 0), textContent = entry.GetEditedValueAsString(),
+            Size = new (480, 45), Position = new (410, 0), textContent = entry.GetEditedValueAsString(),
             alignment = TextAlignmentOptions.Center
         });
     }

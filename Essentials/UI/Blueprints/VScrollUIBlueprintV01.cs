@@ -24,7 +24,7 @@ internal class VScrollUIBlueprintV01 : UIBlueprint
     public Color? customBackgroundColor = null;
     protected override void OnRender(UITheme theme, FontTheme fontTheme, RectTransform obj)
     {
-        ignoreCorners = true;
+        IgnoreCorners = true;
         var image = obj.AddComponent<Image>();
         image.color = customBackgroundColor ?? theme.GetColor(backgroundColor);
         var scrollRect = obj.AddComponent<ScrollRect>();
@@ -54,7 +54,7 @@ internal class VScrollUIBlueprintV01 : UIBlueprint
         contentRect.anchorMin = new Vector2(0, 1);
         contentRect.anchorMax = new Vector2(1, 1);
         contentRect.anchoredPosition = Vector2.zero;
-        customChildHolder = contentRect;
+        CustomChildHolder = contentRect;
         contentRect.SetParent(viewPortObj.transform, false);
         scrollRect.content = contentRect;
 
@@ -67,9 +67,9 @@ internal class VScrollUIBlueprintV01 : UIBlueprint
             scrollRect.verticalScrollbarVisibility = ScrollRect.ScrollbarVisibility.Permanent;
             var scrollBar = new VScrollbarUIBlueprintV01()
             {
-                name="Scrollbar Vertical",
-                size = new (25, size.y),
-                anchors = new Vector4(1,0,1,1),
+                Name="Scrollbar Vertical",
+                Size = new (25, Size.y),
+                Anchors = new Vector4(1,0,1,1),
             }.Render(theme,fontTheme,obj);
             scrollBar.offsetMin = new Vector2(-25*ScaleFactor, 0);
             scrollBar.offsetMax = new Vector2(0, 0);
@@ -105,13 +105,13 @@ internal class VScrollUIBlueprintV01 : UIBlueprint
     protected override void AfterRenderChildren(UITheme theme, FontTheme fontTheme, RectTransform obj)
     {
         obj.GetComponent<ScrollRect>().verticalNormalizedPosition=1f;
-        if(cornerRadius>0)
+        if(CornerRadius>0)
         {
             var viewport = obj.transform.GetChild(0).gameObject;
             var sortGroup = viewport.AddComponent<SortingGroup>();
             sortGroup.enabled = false;
-            sortGroup.sortingOrder = Mathf.FloorToInt(cornerRadius * ScaleFactor);
-            viewport.AddComponent<RoundedUIImage>().CornerRadius = cornerRadius * ScaleFactor;
+            sortGroup.sortingOrder = Mathf.FloorToInt(CornerRadius * ScaleFactor);
+            viewport.AddComponent<RoundedUIImage>().CornerRadius = CornerRadius * ScaleFactor;
         }
     }
     

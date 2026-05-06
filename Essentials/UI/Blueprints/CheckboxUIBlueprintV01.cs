@@ -16,7 +16,7 @@ public class CheckboxUIBlueprintV01 : UIBlueprint
 
     protected override void OnRender(UITheme theme, FontTheme fontTheme, RectTransform obj)
     {
-        ignoreCorners = true;
+        IgnoreCorners = true;
         var toggle = obj.AddComponent<Toggle>();
         toggle.isOn = defaultValue;
 
@@ -29,12 +29,12 @@ public class CheckboxUIBlueprintV01 : UIBlueprint
         backgroundRect.offsetMax = Vector2.zero;
         var backgroundImage = backgroundObj.AddComponent<Image>();
         backgroundImage.color = customBackgroundColor ?? theme.GetColor(backgroundColor);
-        if(cornerRadius>0)
+        if(CornerRadius>0)
         {
             var sortGroup = backgroundObj.AddComponent<SortingGroup>();
             sortGroup.enabled = false;
-            sortGroup.sortingOrder = Mathf.FloorToInt(cornerRadius * ScaleFactor);
-            backgroundObj.AddComponent<RoundedUIImage>().CornerRadius = cornerRadius * ScaleFactor;
+            sortGroup.sortingOrder = Mathf.FloorToInt(CornerRadius * ScaleFactor);
+            backgroundObj.AddComponent<RoundedUIImage>().CornerRadius = CornerRadius * ScaleFactor;
         }
         
         var checkmarkObj = new GameObject("Checkmark");
@@ -48,12 +48,12 @@ public class CheckboxUIBlueprintV01 : UIBlueprint
         var checkmarkImage = checkmarkObj.AddComponent<Image>();
         checkmarkImage.color = customCheckColor ?? theme.GetColor(checkColor);
         checkmarkImage.sprite = customCheckSprite ?? EmbeddedResourceEUtil.LoadSprite("Assets.check.png");
-        if(cornerRadius>0)
+        if(CornerRadius>0)
         {
             var sortGroup = checkmarkObj.AddComponent<SortingGroup>();
             sortGroup.enabled = false;
-            sortGroup.sortingOrder = Mathf.FloorToInt(cornerRadius * ScaleFactor);
-            checkmarkObj.AddComponent<RoundedUIImage>().CornerRadius = cornerRadius * ScaleFactor;
+            sortGroup.sortingOrder = Mathf.FloorToInt(CornerRadius * ScaleFactor);
+            checkmarkObj.AddComponent<RoundedUIImage>().CornerRadius = CornerRadius * ScaleFactor;
         }
         toggle.graphic = checkmarkImage;
         toggle.targetGraphic = backgroundImage;
