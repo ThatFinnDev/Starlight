@@ -636,8 +636,8 @@ public class StarlightEntryPoint : MelonMod
                         foreach (var entry in category.Entries)
                             if (entry.DisplayName == "Disable EventSystem override" && entry.Identifier == "Disable EventSystem override")
                             {
-                                entry.BoxedEditedValue = true;
-                                entry.BoxedValue = true;
+                                entry.BoxedEditedValue = false;
+                                entry.BoxedValue = false;
                                 category.SaveToFile(false);
                                 break;
                             }
@@ -645,7 +645,6 @@ public class StarlightEntryPoint : MelonMod
                     }
             }
             catch (Exception e) { LogError(e); }
-            
                 
         }
 

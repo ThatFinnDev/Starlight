@@ -12,9 +12,21 @@ public static class NativeEUtil
     private static EventSystem _nativeEventSystem;
     private static BaseInputModule _nativeInputModule;
     private static GameObject _starlightEventSystemObj;
+    internal static bool ue = false;
     
     public static void OverrideSR2Input()
-    {
+    { 
+        //Fixes compatibility with UE
+        var method = AccessTools.Method("UniverseLib.Input.EventSystemHelper:EnableEventSystem");
+        if (ue&&method != null)
+        {
+            try
+            {
+                method.Invoke(null,null);
+            }
+            catch (Exception e) { LogError(e); }
+            return;
+        }
         try
         {
             if (_starlightEventSystemObj) return;
@@ -42,6 +54,17 @@ public static class NativeEUtil
 
     public static void DeOverrideSR2Input()
     {
+        //Fixes compatibility with UE
+        var method = AccessTools.Method("UniverseLib.Input.EventSystemHelper:ReleaseEventSystem");
+        if (ue&&method != null)
+        {
+            try
+            {
+                method.Invoke(null,null);
+            }
+            catch (Exception e) { LogError(e); }
+            return;
+        }
         try
         {
             if (_starlightEventSystemObj) Object.Destroy(_starlightEventSystemObj);
