@@ -26,6 +26,7 @@ cheatmenu.cheatbuttons.removeFogoff,"Remove Fog [Off]",Nebelentfernung [Aus]
 cheatmenu.cheatbuttons.betterScreenshoton,"BetterScreenshot [On]",Besserbildschirmfoto [An]
 cheatmenu.cheatbuttons.betterScreenshotoff,"BetterScreenshot [Off]",Besserbildschirmfoto [Aus]
 modmenu.title,Mods,"Modifikationen"
+modmenu.openthememenu,"Open Theme Menu","Designmenü öffnen"
 modmenu.warning.restart,"You've edited a value that may require a restart!\nPlease restart your game when you're finished!","Du hast einen Wert verändert, der eventuell einen Neustart erfordert! Du musst das Spiel neustarten um die Änderungen zu sehen!"
 modmenu.category.modmenu,"Mods","Modifikationen"
 modmenu.category.modconfig,"Mod Config","Einstellungen"

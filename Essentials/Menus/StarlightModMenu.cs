@@ -30,7 +30,7 @@ internal class StarlightModMenu : StarlightMenu
     private static RectTransform _openThing;
     private static int _listeningType;
     private static System.Action<int> _listeningAction = null;
-    
+    private static bool _warningEnabled = false;
     public new static GameObject GetMenuRootObject()
     {
         var obj = new GameObject("StarlightModMenu");
@@ -100,7 +100,22 @@ internal class StarlightModMenu : StarlightMenu
                                 Size = new Vector2(660,520), CornerRadius = 10, Position = new Vector2(332.5f,0), Name="ModMenuInfoTextRec",
                                 textContent = "nada", fontSize = 17, clickableLinks = true,
                                 margins= new Vector4(10,10,10,10),
-                            }
+                            },
+                            new ButtonUIBlueprintV01()
+                            {
+                                OnClick = (() => { Close(); MenuEUtil.GetMenu<StarlightThemeMenu>().OpenC(this); }), Name="ModMenuThemeMenuButtonRec",
+                                Size = new (420, 45), Position = new (453, -237), CornerRadius = 20,
+                                Children =
+                                [
+                                    new TextUIBlueprintV01()
+                                    {
+                                        textContent = "modmenu.openthememenu",
+                                        alignment = TextAlignmentOptions.Center,
+                                        fontSize = 30,
+                                        Anchors = new Vector4(0,0,1,1),
+                                    }
+                                ]
+                            } 
                         ]
                     },
                     new PanelUIBlueprintV01
@@ -121,7 +136,7 @@ internal class StarlightModMenu : StarlightMenu
                         ]
                     }
                 ],
-                /*childrenWithButtons = [
+                childrenWithButtons = [
                     new ButtonUIBlueprintV01()
                     {
                         OnClick = () =>
@@ -137,20 +152,20 @@ internal class StarlightModMenu : StarlightMenu
                                     StarlightTextViewerPopUp.Open(Tr("feature.indevelopment"));
                                 }
                             },
-                        cornerRadius = 40,
-                        children =
+                        CornerRadius = 40,
+                        Children =
                         [
                             new TextUIBlueprintV01()
                             {
                                 textContent = "modmenu.category.repo",
                                 alignment = TextAlignmentOptions.Center,
                                 fontSize = 40,
-                                anchors = new Vector4(0,0,1,1),
+                                Anchors = new Vector4(0,0,1,1),
                                 fontStyle = FontStyles.Bold,
                             }
                         ]
                     }
-                ]*/
+                ]
             },
             new PanelUIBlueprintV01
             {
@@ -300,7 +315,7 @@ internal class StarlightModMenu : StarlightMenu
         button.OnClick = () =>
         {
             AudioEUtil.PlaySound(MenuSound.Click);
-            //_themeButton.gameObject.SetActive(info.Name==BuildInfo.Name);
+            _openThing.GetObjectRecursively<GameObject>("ModMenuThemeMenuButtonRec").SetActive(info is { Name: BuildInfo.Name, Author: BuildInfo.Author });
             var finalText = "";
             if (isRotten)
             {
@@ -377,7 +392,7 @@ internal class StarlightModMenu : StarlightMenu
         {
             _openThing.GetObjectRecursively<ScrollRect>("ModMenuModsScrollRec").content.transform.GetChild(0).gameObject.GetComponent<Button>().Press();
         } catch { }
-        _openThing.GetObjectRecursively<GameObject>("ModMenuModConfigWarningRec").SetActive(false);
+        if(!_warningEnabled) _openThing.GetObjectRecursively<GameObject>("ModMenuModConfigWarningRec").SetActive(false);
     }
 
     protected override void OnClose()
@@ -414,6 +429,7 @@ internal class StarlightModMenu : StarlightMenu
 
     static void ShowWarningText()
     {
+        _warningEnabled = true;
         try
         {
             
@@ -541,111 +557,123 @@ internal class StarlightModMenu : StarlightMenu
     }
     private static void ApplyLKeyFeatures(MelonPreferences_Entry entry, UIBlueprint blueprint, MelonPreferences_Category category)
     {
-        ApplyUnknownFeatures(entry, blueprint, category);
-        /*
-           obj.GetObjectRecursively<GameObject>("Value").SetActive(false);
-           obj.GetObjectRecursively<GameObject>("Button").SetActive(true);
-           var button = obj.GetObjectRecursively<Button>("Button");
-           var textMesh = obj.GetObjectRecursively<Transform>("Button").GetChild(0).GetComponent<TextMeshProUGUI>();
-           textMesh.text = entry.GetEditedValueAsString();
-           button.onClick.AddListener((SystemAction)(() =>
-           {
-               if(isOpen) AudioEUtil.PlaySound(MenuSound.Click);
-               textMesh.text = Tr("modmenu.modconfig.keylistening");
-               _listeningType = 1;
-               _listeningAction = (integer) =>
-               {
-                   var inputKey = (LKey) integer;
-                   var key = inputKey == LKey.Escape ? LKey.None : inputKey;
-                   if (entry.BoxedEditedValue is LKey)
-                   {
-                       textMesh.text = key.ToString();
-                       entry.BoxedEditedValue = key;
-                       if (!EntriesWithActions.TryGetValue(entry, out var action))
-                           _warningText.SetActive(true);
-                       else
-                       {
-                           if (action != null)
-                               action.Invoke();
-                       }
-                   }
+        blueprint.Children.Add(new ButtonUIBlueprintV01()
+        {
+            Size = new (480, 45), Position = new (410, 0), CornerRadius = 10,
+            Children =
+            [
+                new TextUIBlueprintV01()
+                {
+                    textContent = entry.GetEditedValueAsString(),
+                    disableAutoTranslation = true,
+                    alignment = TextAlignmentOptions.Center,
+                    fontSize = 30,
+                    Anchors = new Vector4(0,0,1,1),
+                }
+            ],
+            OnClickButton = (button =>
+            {
+                var textMesh = button.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+                textMesh.text = Tr("modmenu.modconfig.keylistening");
+                _listeningType = 1;
+                _listeningAction = (integer) =>
+                {
+                    var inputKey = (LKey) integer;
+                    var key = inputKey == LKey.Escape ? LKey.None : inputKey;
+                    if (entry.BoxedEditedValue is LKey)
+                    {
+                        textMesh.text = key.ToString();
+                        entry.BoxedEditedValue = key;
+                        category.SaveToFile(false);
+                        if (EntriesWithActions.TryGetValue(entry, out var action))
+                        { if (action != null) try { action.Invoke(); }catch (Exception e) { LogError(e); } }
+                        else ShowWarningText();
+                    }
 
-                   _listeningAction = null;
-               };
-           }));
-         */
+                    _listeningAction = null;
+                };
+            })
+        });
     }
     private static void ApplyKeyCodeFeatures(MelonPreferences_Entry entry, UIBlueprint blueprint, MelonPreferences_Category category)
     {
-        ApplyUnknownFeatures(entry, blueprint, category);
-        /*
-           obj.GetObjectRecursively<GameObject>("Value").SetActive(false);
-           obj.GetObjectRecursively<GameObject>("Button").SetActive(true);
-           var button = obj.GetObjectRecursively<Button>("Button");
-           var textMesh = obj.GetObjectRecursively<Transform>("Button").GetChild(0).GetComponent<TextMeshProUGUI>();
-           textMesh.text = entry.GetEditedValueAsString();
-           button.onClick.AddListener((SystemAction)(() =>
-           {
-               if(isOpen) AudioEUtil.PlaySound(MenuSound.Click);
-               textMesh.text = Tr("modmenu.modconfig.keylistening");
-               _listeningType = 2;
-               _listeningAction = (integer) =>
-               {
-                   var inputKey = (KeyCode) integer;
-                   var key = inputKey == KeyCode.Escape ? KeyCode.None : inputKey;
-                   if (entry.BoxedEditedValue is KeyCode)
-                   {
-                       textMesh.text = key.ToString();
-                       entry.BoxedEditedValue = key;
-                       if (!EntriesWithActions.TryGetValue(entry, out var action))
-                           _warningText.SetActive(true);
-                       else
-                       {
-                           if (action != null)
-                               action.Invoke();
-                       }
-                   }
+        blueprint.Children.Add(new ButtonUIBlueprintV01()
+        {
+            Size = new (480, 45), Position = new (410, 0), CornerRadius = 10,
+            Children =
+            [
+                new TextUIBlueprintV01()
+                {
+                    textContent = entry.GetEditedValueAsString(),
+                    disableAutoTranslation = true,
+                    alignment = TextAlignmentOptions.Center,
+                    fontSize = 30,
+                    Anchors = new Vector4(0,0,1,1),
+                }
+            ],
+            OnClickButton = (button =>
+            {
+                var textMesh = button.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+                textMesh.text = Tr("modmenu.modconfig.keylistening");
+                _listeningType = 2;
+                _listeningAction = (integer) =>
+                {
+                    var inputKey = (KeyCode) integer;
+                    var key = inputKey == KeyCode.Escape ? KeyCode.None : inputKey;
+                    if (entry.BoxedEditedValue is KeyCode)
+                    {
+                        textMesh.text = key.ToString();
+                        entry.BoxedEditedValue = key;
+                        category.SaveToFile(false);
+                        if (EntriesWithActions.TryGetValue(entry, out var action))
+                        { if (action != null) try { action.Invoke(); }catch (Exception e) { LogError(e); } }
+                        else ShowWarningText();
+                    }
 
-                   _listeningAction = null;
-               };
-           }));
-        */
+                    _listeningAction = null;
+                };
+            })
+        });
     }
     private static void ApplyKeyFeatures(MelonPreferences_Entry entry, UIBlueprint blueprint, MelonPreferences_Category category)
     {
-        ApplyUnknownFeatures(entry, blueprint, category);
-        /*
-           obj.GetObjectRecursively<GameObject>("Value").SetActive(false);
-           obj.GetObjectRecursively<GameObject>("Button").SetActive(true);
-           var button = obj.GetObjectRecursively<Button>("Button");
-           var textMesh = obj.GetObjectRecursively<Transform>("Button").GetChild(0).GetComponent<TextMeshProUGUI>();
-           textMesh.text = entry.GetEditedValueAsString();
-           button.onClick.AddListener((SystemAction)(() =>
-           {
-               if(isOpen) AudioEUtil.PlaySound(MenuSound.Click);
-               textMesh.text = Tr("modmenu.modconfig.keylistening");
-               _listeningType = 3;
-               _listeningAction = (integer) =>
-               {
-                   var inputKey = (Key) integer;
-                   var key = inputKey == Key.Escape ? Key.None : inputKey;
-                   if (entry.BoxedEditedValue is Key)
-                   {
-                       textMesh.text = key.ToString();
-                       entry.BoxedEditedValue = key;
-                       if (!EntriesWithActions.TryGetValue(entry, out var action))
-                           _warningText.SetActive(true);
-                       else
-                       {
-                           if (action != null)
-                               action.Invoke();
-                       }
-                   }
+        blueprint.Children.Add(new ButtonUIBlueprintV01()
+        {
+            Size = new (480, 45), Position = new (410, 0), CornerRadius = 10,
+            Children =
+            [
+                new TextUIBlueprintV01()
+                {
+                    textContent = entry.GetEditedValueAsString(),
+                    disableAutoTranslation = true,
+                    alignment = TextAlignmentOptions.Center,
+                    fontSize = 30,
+                    Anchors = new Vector4(0,0,1,1),
+                }
+            ],
+            OnClickButton = (button =>
+            {
+                var textMesh = button.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+                textMesh.text = Tr("modmenu.modconfig.keylistening");
+                _listeningType = 3;
+                _listeningAction = (integer) =>
+                {
+                    var inputKey = (Key) integer;
+                    var key = inputKey == Key.Escape ? Key.None : inputKey;
+                    if (entry.BoxedEditedValue is Key)
+                    {
+                        textMesh.text = key.ToString();
+                        entry.BoxedEditedValue = key;
+                        category.SaveToFile(false);
+                        if (EntriesWithActions.TryGetValue(entry, out var action))
+                        { if (action != null) try { action.Invoke(); }catch (Exception e) { LogError(e); } }
+                        else ShowWarningText();
+                    }
 
-                   _listeningAction = null;
-               };
-           }));
-        */
+                    _listeningAction = null;
+                };
+            })
+        });
     }
     private static void ApplyUnknownFeatures(MelonPreferences_Entry entry, UIBlueprint blueprint, MelonPreferences_Category category)
     {

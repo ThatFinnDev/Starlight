@@ -20,12 +20,10 @@ public abstract class UIBlueprint
     public List<Il2CppSystem.Type> Components;
     public RectTransform Render(UITheme theme, FontTheme fontTheme, Transform parent)
     {
-        var earlyParent = this is not ButtonUIBlueprintV01;
         var obj = new GameObject(Name);
         obj.transform.localRotation=Quaternion.Euler(Rotation.x,Rotation.y,0);
         var rectT = obj.AddComponent<RectTransform>();
-        if(earlyParent)
-            obj.transform.SetParent(parent,true);
+        obj.transform.SetParent(parent,true);
         rectT.pivot = Pivot;
         rectT.sizeDelta = Size*ScaleFactor;
         rectT.anchoredPosition = Position*ScaleFactor;
@@ -49,8 +47,6 @@ public abstract class UIBlueprint
             foreach (var child in Children)
                 try {  child.Render(theme, fontTheme, CustomChildHolder ?? rectT); } catch (Exception e) { LogError(e); } 
         
-        if(!earlyParent)
-            obj.transform.SetParent(parent,true);
         try { AfterRenderChildren(theme, fontTheme, rectT); } catch (Exception e) { LogError(e); }
         return rectT;
     }

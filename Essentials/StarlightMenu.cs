@@ -211,11 +211,9 @@ public abstract class StarlightMenu : MonoBehaviour
             });
         }
     }
-    //StarlightMenu doesnt work for whatever reason
-    public void OpenC(MonoBehaviour menuToOpenOnClose)
+    [HideFromIl2Cpp] public void OpenC(StarlightMenu menuToOpenOnClose)
     {
-        if (!(menuToOpenOnClose is StarlightMenu)) return;
-        _menuToOpenOnClose = menuToOpenOnClose.TryCast<StarlightMenu>();
+        _menuToOpenOnClose = menuToOpenOnClose;
         Open();
     }
 

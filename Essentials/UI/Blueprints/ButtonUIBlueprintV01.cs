@@ -10,6 +10,7 @@ public class ButtonUIBlueprintV01 : UIBlueprint
     public UIColor Color = UIColor.None;
     public UIColorBlock ButtonColors = UIColorBlock.Buttons;
     public SystemAction OnClick = null;
+    public System.Action<Button> OnClickButton = null;
     public bool Interactable = true;
     public bool UseClickSound = true;
     public MenuSound ClickSound = MenuSound.Click;
@@ -26,6 +27,8 @@ public class ButtonUIBlueprintV01 : UIBlueprint
         button.onClick = new Button.ButtonClickedEvent();
         if (OnClick != null)
             button.onClick.AddListener(OnClick);
+        if (OnClickButton != null)
+            button.onClick.AddListener((SystemAction)(() => { OnClickButton.Invoke(button); }));
         if (UseClickSound)
             button.onClick.AddListener((SystemAction)(() => AudioEUtil.PlaySound(ClickSound)));
     }
