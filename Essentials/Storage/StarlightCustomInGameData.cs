@@ -10,4 +10,5 @@ internal class StarlightCustomInGameData : RootSave
     [StoreInSave] public bool InfiniteEnergyActive = false;
     [StoreInSave] public bool InfiniteHealthActive = false;
     [StoreInSave] public bool RemoveFogActive = false;
+    [StoreInSave] public bool KeepInventoryActive = false;
 }

@@ -46,6 +46,7 @@ public class StarlightCheatMenu : StarlightMenu
     private StarlightCheatMenuButton _infEnergyButton;
     private StarlightCheatMenuButton _infHealthButton;
     private StarlightCheatMenuButton _removeFogButton;
+    private StarlightCheatMenuButton _keepInvButton;
     private InputEvent _inputDown;
     private InputEvent _inputUp;
     
@@ -111,8 +112,8 @@ public class StarlightCheatMenu : StarlightMenu
         _refillButton.TextInstance.text = Tr("cheatmenu.cheatbuttons.refillinv");
         if (EnableInfHealth.HasFlag()) _infHealthButton.TextInstance.text = Tr("cheatmenu.cheatbuttons.infhealth" + (StarlightSaveManager.inGameData.InfiniteHealthActive? "on" : "off"));
         if (EnableInfEnergy.HasFlag()) _infEnergyButton.TextInstance.text = Tr("cheatmenu.cheatbuttons.infenergy" + (StarlightSaveManager.inGameData.InfiniteEnergyActive? "on" : "off"));
-        _removeFogButton.TextInstance.text = Tr("cheatmenu.cheatbuttons.removeFog" + (StarlightSaveManager.inGameData.RemoveFogActive? "on" : "off"));
-        //_betterScreenshotButton.textInstance.text = translation("cheatmenu.cheatbuttons.betterScreenshot" + (BetterScreenshot? "on" : "off"));
+        _removeFogButton.TextInstance.text = Tr("cheatmenu.cheatbuttons.removefog" + (StarlightSaveManager.inGameData.RemoveFogActive? "on" : "off"));
+        _keepInvButton.TextInstance.text = Tr("cheatmenu.cheatbuttons.keepinv" + (StarlightSaveManager.inGameData.KeepInventoryActive? "on" : "off"));
 
         
         //Warp Buttons
@@ -244,13 +245,13 @@ public class StarlightCheatMenu : StarlightMenu
                 StarlightSaveManager.inGameData.RemoveFogActive = !StarlightSaveManager.inGameData.RemoveFogActive;
                 _removeFogButton.TextInstance.text = Tr("cheatmenu.cheatbuttons.removeFog" + (StarlightSaveManager.inGameData.RemoveFogActive? "on" : "off"));
             });
-        /*_betterScreenshotButton = new StarlightCheatMenuButton(translation("cheatmenu.cheatbuttons.betterScreenshotoff"),
+        _keepInvButton = new StarlightCheatMenuButton(Tr("cheatmenu.cheatbuttons.keepinvoff"),
             () =>
             {
                 AudioEUtil.PlaySound(MenuSound.Click);
-                BetterScreenshot = !BetterScreenshot;
-                _betterScreenshotButton.textInstance.text = translation("cheatmenu.cheatbuttons.betterScreenshot" + (BetterScreenshot? "on" : "off"));
-            });*/
+                StarlightSaveManager.inGameData.KeepInventoryActive = !StarlightSaveManager.inGameData.KeepInventoryActive;
+                _keepInvButton.TextInstance.text = Tr("cheatmenu.cheatbuttons.keepinv" + (StarlightSaveManager.inGameData.KeepInventoryActive? "on" : "off"));
+            });
         _noclipButton = new StarlightCheatMenuButton(Tr("cheatmenu.cheatbuttons.noclipoff"),
             () =>
             {
