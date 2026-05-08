@@ -32,4 +32,11 @@ public class ButtonUIBlueprintV01 : UIBlueprint
         if (UseClickSound)
             button.onClick.AddListener((SystemAction)(() => AudioEUtil.PlaySound(ClickSound)));
     }
+
+    protected override void AfterRenderChildren(UITheme theme, FontTheme fontTheme, RectTransform obj)
+    {
+        foreach (var child in obj.GetAllChildren())
+            if (child.GetComponent<Graphic>())
+                child.GetComponent<Graphic>().raycastTarget = false;
+    }
 }

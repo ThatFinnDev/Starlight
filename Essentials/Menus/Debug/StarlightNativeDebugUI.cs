@@ -39,15 +39,15 @@ internal class StarlightNativeDebugUI : StarlightMenu
 
     private readonly DebugUIEntry[] _rootEntries =
     [
-        new() { text = "TestButton" },
-        new() { text = "Toggle Noclip", action = () => StarlightCommandManager.ExecuteByString("noclip")},
-        new() { text = "SubMenu", closesMenu = false,action = () => MenuEUtil.GetMenu<StarlightNativeDebugUI>().OpenEntries(
+        new() { Text = "TestButton" },
+        new() { Text = "Toggle Noclip", Action = () => StarlightCommandManager.ExecuteByString("noclip")},
+        new() { Text = "SubMenu", ClosesMenu = false,Action = () => MenuEUtil.GetMenu<StarlightNativeDebugUI>().OpenEntries(
             new DebugUIEntry[]
             {
-                new() { text = "SubButton" },
-                new() { text = "SubMenu", closesMenu = false, action = () => MenuEUtil.GetMenu<StarlightNativeDebugUI>().OpenEntries(new DebugUIEntry[]
+                new() { Text = "SubButton" },
+                new() { Text = "SubMenu", ClosesMenu = false, Action = () => MenuEUtil.GetMenu<StarlightNativeDebugUI>().OpenEntries(new DebugUIEntry[]
                 {
-                    new() { text = "SubSubButton" },
+                    new() { Text = "SubSubButton" },
                 }) },
             }) }
     ];
@@ -113,14 +113,14 @@ internal class StarlightNativeDebugUI : StarlightMenu
     {
         if (entry == null) return;
         var instance = Instantiate(debugUI.buttonPrefab, debugUI.grid.transform);
-        instance.GetObjectRecursively<TextMeshProUGUI>("Name").text = entry.text;
+        instance.GetObjectRecursively<TextMeshProUGUI>("Name").text = entry.Text;
         
-        if (entry.icon == null) instance.GetObjectRecursively<GameObject>("Icon").SetActive(false);
-        else instance.GetObjectRecursively<Image>("Icon").sprite = entry.icon;
+        if (entry.Icon == null) instance.GetObjectRecursively<GameObject>("Icon").SetActive(false);
+        else instance.GetObjectRecursively<Image>("Icon").sprite = entry.Icon;
 
         var b = instance.GetObjectRecursively<Button>("Content");
-        if(entry.action!=null) b.onClick.AddListener(entry.action);
-        if(entry.closesMenu) b.onClick.AddListener((Action)(() => Close()));
+        if(entry.Action!=null) b.onClick.AddListener(entry.Action);
+        if(entry.ClosesMenu) b.onClick.AddListener((Action)(() => Close()));
     }
     
     public override void OnCloseUIPressed()

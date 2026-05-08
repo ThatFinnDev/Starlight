@@ -4,11 +4,11 @@ namespace Starlight.UI.Blueprints;
 
 public class VScrollbarUIBlueprintV01 : UIBlueprint
 {
-    public Sprite backgroundSprite;
-    public Sprite handleSprite;
-    public UIColor color = UIColor.Accent;
-    public Color? customColor = null;
-    public bool invertDirection = false;
+    public Sprite BackgroundSprite;
+    public Sprite HandleSprite;
+    public UIColor Color = UIColor.Accent;
+    public Color? CustomColor = null;
+    public bool InvertDirection = false;
 
     protected override void OnRender(UITheme theme, FontTheme fontTheme, RectTransform obj)
     {
@@ -16,7 +16,7 @@ public class VScrollbarUIBlueprintV01 : UIBlueprint
         //image.sprite = backgroundSprite;
         image.color = theme.GetColor(UIColor.Transparent);
         var scrollbar = obj.AddComponent<Scrollbar>();
-        scrollbar.direction = invertDirection?Scrollbar.Direction.TopToBottom:Scrollbar.Direction.BottomToTop;
+        scrollbar.direction = InvertDirection?Scrollbar.Direction.TopToBottom:Scrollbar.Direction.BottomToTop;
         var backgroundArea = new GameObject("Background");
         var backgroundAreaRect = backgroundArea.AddComponent<RectTransform>();
         backgroundArea.transform.SetParent(obj);
@@ -25,8 +25,8 @@ public class VScrollbarUIBlueprintV01 : UIBlueprint
         backgroundAreaRect.anchorMin = new Vector2(0.5f, 0);
         backgroundAreaRect.anchorMax = new Vector2(0.5f, 1);
         var backgroundImage = backgroundArea.AddComponent<Image>();
-        backgroundImage.sprite = backgroundSprite;
-        backgroundImage.color = customColor ?? theme.GetColor(color);
+        backgroundImage.sprite = BackgroundSprite;
+        backgroundImage.color = CustomColor ?? theme.GetColor(Color);
         
         var slidingArea = new GameObject("Sliding Area");
         var slidingAreaRect = slidingArea.AddComponent<RectTransform>();
@@ -44,7 +44,7 @@ public class VScrollbarUIBlueprintV01 : UIBlueprint
         handleRect.offsetMin = new Vector2(0, 0);
         handleRect.offsetMax = new Vector2(0, 0);
         handleRect.sizeDelta = new Vector2(-4*ScaleFactor, 0);
-        handle.AddComponent<Image>().sprite = handleSprite ?? EmbeddedResourceEUtil.LoadSprite("Assets.scrollV.png");
+        handle.AddComponent<Image>().sprite = HandleSprite ?? EmbeddedResourceEUtil.LoadSprite("Assets.scrollV.png");
         
         scrollbar.handleRect = handleRect;
     }

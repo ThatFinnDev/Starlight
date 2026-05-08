@@ -23,96 +23,96 @@ internal class StarlightTestDevMenu : StarlightMenu
 
     [HideFromIl2Cpp] private PanelUIBlueprintV01 blueprint => new ()
     {
-        color = UIColor.Primary, CornerRadius = 90, Size = new Vector2(1330, 840),
+        Color = UIColor.Primary, CornerRadius = 90, Size = new Vector2(1330, 840),
         Children =
         [
-            new PanelUIBlueprintV01 { color = UIColor.Accent, CornerRadius = 0, Size = new Vector2(1330,10), Position = new Vector2(0,-265f) },
-            new PanelUIBlueprintV01 { color = UIColor.Accent, CornerRadius = 0, Size = new Vector2(1330,10), Position = new Vector2(0,265f) },
+            new PanelUIBlueprintV01 { Color = UIColor.Accent, CornerRadius = 0, Size = new Vector2(1330,10), Position = new Vector2(0,-265f) },
+            new PanelUIBlueprintV01 { Color = UIColor.Accent, CornerRadius = 0, Size = new Vector2(1330,10), Position = new Vector2(0,265f) },
             new NavigationUIBlueprintV01
             {
                 CornerRadius = 90, Size = new Vector2(1330, 840),
-                tabSize = new Vector2(1330,520),
-                tabs = [
+                TabSize = new Vector2(1330,520),
+                Tabs = [
                     new PanelUIBlueprintV01
                     {
-                        Name = "Tab1",
+                        mame = "Tab1",
                         Children = [
                             new VScrollUIBlueprintV01
                             {
                                 Size = new Vector2(500,500), CornerRadius = 10,
                                 Children = [
-                                    new ButtonUIBlueprintV01 { Size = new Vector2(600,70), CornerRadius = 30, Children = [new TextUIBlueprintV01 { textContent = "Button 1", alignment = TextAlignmentOptions.Center, fontSize = 30, color = UIColor.TextButton, Anchors = new Vector4(0,0,1,1), }] },
-                                    new ButtonUIBlueprintV01 { Size = new Vector2(500,70), CornerRadius = 30, Children = [new TextUIBlueprintV01 { textContent = "Button 2", alignment = TextAlignmentOptions.Center, fontSize = 30, color = UIColor.TextButton, Anchors = new Vector4(0,0,1,1), }] },
-                                    new ButtonUIBlueprintV01 { Size = new Vector2(600,70), CornerRadius = 30, Children = [new TextUIBlueprintV01 { textContent = "Button 3", alignment = TextAlignmentOptions.Center, fontSize = 30, color = UIColor.TextButton, Anchors = new Vector4(0,0,1,1), }] },
-                                    new ButtonUIBlueprintV01 { Size = new Vector2(600,70), CornerRadius = 30, Children = [new TextUIBlueprintV01 { textContent = "Button 4", alignment = TextAlignmentOptions.Center, fontSize = 30, color = UIColor.TextButton, Anchors = new Vector4(0,0,1,1), }] },
-                                    new ButtonUIBlueprintV01 { Size = new Vector2(600,70), CornerRadius = 30, Children = [new TextUIBlueprintV01 { textContent = "Button 5", alignment = TextAlignmentOptions.Center, fontSize = 30, color = UIColor.TextButton, Anchors = new Vector4(0,0,1,1), }] },
-                                    new ButtonUIBlueprintV01 { Size = new Vector2(500,70), CornerRadius = 30, Children = [new TextUIBlueprintV01 { textContent = "Button 5", alignment = TextAlignmentOptions.Center, fontSize = 30, color = UIColor.TextButton, Anchors = new Vector4(0,0,1,1), }] },
-                                    new ButtonUIBlueprintV01 { Size = new Vector2(500,70), CornerRadius = 30, Children = [new TextUIBlueprintV01 { textContent = "Button 6", alignment = TextAlignmentOptions.Center, fontSize = 30, color = UIColor.TextButton, Anchors = new Vector4(0,0,1,1), }] },
-                                    new ButtonUIBlueprintV01 { Size = new Vector2(500,70), CornerRadius = 30, Children = [new TextUIBlueprintV01 { textContent = "Button 7", alignment = TextAlignmentOptions.Center, fontSize = 30, color = UIColor.TextButton, Anchors = new Vector4(0,0,1,1), }] },
-                                    new ButtonUIBlueprintV01 { Size = new Vector2(500,70), CornerRadius = 30, Children = [new TextUIBlueprintV01 { textContent = "Button 8", alignment = TextAlignmentOptions.Center, fontSize = 30, color = UIColor.TextButton, Anchors = new Vector4(0,0,1,1), }] },
-                                    new ButtonUIBlueprintV01 { Size = new Vector2(500,70), CornerRadius = 30, Children = [new TextUIBlueprintV01 { textContent = "Button 10", alignment = TextAlignmentOptions.Center, fontSize = 30, color = UIColor.TextButton, Anchors = new Vector4(0,0,1,1), }] },
-                                    new ButtonUIBlueprintV01 { Size = new Vector2(500,70), CornerRadius = 30, Children = [new TextUIBlueprintV01 { textContent = "Button 11", alignment = TextAlignmentOptions.Center, fontSize = 30, color = UIColor.TextButton, Anchors = new Vector4(0,0,1,1), }] },
-                                    new ButtonUIBlueprintV01 { Size = new Vector2(500,70), CornerRadius = 30, Children = [new TextUIBlueprintV01 { textContent = "Button 12", alignment = TextAlignmentOptions.Center, fontSize = 30, color = UIColor.TextButton, Anchors = new Vector4(0,0,1,1), }] },
+                                    new ButtonUIBlueprintV01 { Size = new Vector2(600,70), CornerRadius = 30, Children = [new TextUIBlueprintV01 { TextContent = "Button 1", Alignment = TextAlignmentOptions.Center, FontSize = 30, Color = UIColor.TextButton, Anchors = new Vector4(0,0,1,1), }] },
+                                    new ButtonUIBlueprintV01 { Size = new Vector2(500,70), CornerRadius = 30, Children = [new TextUIBlueprintV01 { TextContent = "Button 2", Alignment = TextAlignmentOptions.Center, FontSize = 30, Color = UIColor.TextButton, Anchors = new Vector4(0,0,1,1), }] },
+                                    new ButtonUIBlueprintV01 { Size = new Vector2(600,70), CornerRadius = 30, Children = [new TextUIBlueprintV01 { TextContent = "Button 3", Alignment = TextAlignmentOptions.Center, FontSize = 30, Color = UIColor.TextButton, Anchors = new Vector4(0,0,1,1), }] },
+                                    new ButtonUIBlueprintV01 { Size = new Vector2(600,70), CornerRadius = 30, Children = [new TextUIBlueprintV01 { TextContent = "Button 4", Alignment = TextAlignmentOptions.Center, FontSize = 30, Color = UIColor.TextButton, Anchors = new Vector4(0,0,1,1), }] },
+                                    new ButtonUIBlueprintV01 { Size = new Vector2(600,70), CornerRadius = 30, Children = [new TextUIBlueprintV01 { TextContent = "Button 5", Alignment = TextAlignmentOptions.Center, FontSize = 30, Color = UIColor.TextButton, Anchors = new Vector4(0,0,1,1), }] },
+                                    new ButtonUIBlueprintV01 { Size = new Vector2(500,70), CornerRadius = 30, Children = [new TextUIBlueprintV01 { TextContent = "Button 5", Alignment = TextAlignmentOptions.Center, FontSize = 30, Color = UIColor.TextButton, Anchors = new Vector4(0,0,1,1), }] },
+                                    new ButtonUIBlueprintV01 { Size = new Vector2(500,70), CornerRadius = 30, Children = [new TextUIBlueprintV01 { TextContent = "Button 6", Alignment = TextAlignmentOptions.Center, FontSize = 30, Color = UIColor.TextButton, Anchors = new Vector4(0,0,1,1), }] },
+                                    new ButtonUIBlueprintV01 { Size = new Vector2(500,70), CornerRadius = 30, Children = [new TextUIBlueprintV01 { TextContent = "Button 7", Alignment = TextAlignmentOptions.Center, FontSize = 30, Color = UIColor.TextButton, Anchors = new Vector4(0,0,1,1), }] },
+                                    new ButtonUIBlueprintV01 { Size = new Vector2(500,70), CornerRadius = 30, Children = [new TextUIBlueprintV01 { TextContent = "Button 8", Alignment = TextAlignmentOptions.Center, FontSize = 30, Color = UIColor.TextButton, Anchors = new Vector4(0,0,1,1), }] },
+                                    new ButtonUIBlueprintV01 { Size = new Vector2(500,70), CornerRadius = 30, Children = [new TextUIBlueprintV01 { TextContent = "Button 10", Alignment = TextAlignmentOptions.Center, FontSize = 30, Color = UIColor.TextButton, Anchors = new Vector4(0,0,1,1), }] },
+                                    new ButtonUIBlueprintV01 { Size = new Vector2(500,70), CornerRadius = 30, Children = [new TextUIBlueprintV01 { TextContent = "Button 11", Alignment = TextAlignmentOptions.Center, FontSize = 30, Color = UIColor.TextButton, Anchors = new Vector4(0,0,1,1), }] },
+                                    new ButtonUIBlueprintV01 { Size = new Vector2(500,70), CornerRadius = 30, Children = [new TextUIBlueprintV01 { TextContent = "Button 12", Alignment = TextAlignmentOptions.Center, FontSize = 30, Color = UIColor.TextButton, Anchors = new Vector4(0,0,1,1), }] },
                                 ]
                             }
                         ]
                     },
                     new PanelUIBlueprintV01
                     {
-                        Name = "Tab2",
+                        mame = "Tab2",
                         Children = [
-                            new PanelUIBlueprintV01 { color = UIColor.Accent, CornerRadius = 0, Size = new Vector2(10,520) },
+                            new PanelUIBlueprintV01 { Color = UIColor.Accent, CornerRadius = 0, Size = new Vector2(10,520) },
                             new VScrollUIBlueprintV01
                             {
                                 Size = new Vector2(660,520), CornerRadius = 10, Position = new Vector2(-332.5f,0),
                                 Children = [
-                                    new ButtonUIBlueprintV01 { Size = new Vector2(600,70), CornerRadius = 30, Children = [new TextUIBlueprintV01 { textContent = "Button 1", alignment = TextAlignmentOptions.Center, fontSize = 30, color = UIColor.TextButton, Anchors = new Vector4(0,0,1,1), }] },
-                                    new ButtonUIBlueprintV01 { Size = new Vector2(500,70), CornerRadius = 30, Children = [new TextUIBlueprintV01 { textContent = "Button 2", alignment = TextAlignmentOptions.Center, fontSize = 30, color = UIColor.TextButton, Anchors = new Vector4(0,0,1,1), }] },
+                                    new ButtonUIBlueprintV01 { Size = new Vector2(600,70), CornerRadius = 30, Children = [new TextUIBlueprintV01 { TextContent = "Button 1", Alignment = TextAlignmentOptions.Center, FontSize = 30, Color = UIColor.TextButton, Anchors = new Vector4(0,0,1,1), }] },
+                                    new ButtonUIBlueprintV01 { Size = new Vector2(500,70), CornerRadius = 30, Children = [new TextUIBlueprintV01 { TextContent = "Button 2", Alignment = TextAlignmentOptions.Center, FontSize = 30, Color = UIColor.TextButton, Anchors = new Vector4(0,0,1,1), }] },
                                 ]
                             },
                             new TextUIBlueprintV01
                             {
                                 Size = new Vector2(660,520), CornerRadius = 10, Position = new Vector2(332.5f,0),
-                                textContent = "Youre on Panel 2", alignment = TextAlignmentOptions.TopLeft,
-                                margins= new Vector4(10,10,10,10),
+                                TextContent = "Youre on Panel 2", Alignment = TextAlignmentOptions.TopLeft,
+                                Margins= new Vector4(10,10,10,10),
                             }
                         ]
                     },
                     new PanelUIBlueprintV01
                     {
-                        Name = "Tab3",
+                        mame = "Tab3",
                         Children = [
                             new SliderUIBlueprintV01()
                             {
                                 Size =  new Vector2(400,40),
-                                defaultValue = 20,
-                                minValue = 0,
-                                maxValue = 100,
+                                DefaultValue = 20,
+                                MinValue = 0,
+                                MaxValue = 100,
                             },
                             
                             new SliderUIBlueprintV01()
                             {
                                 Size =  new Vector2(400,40), Position = new Vector2(0,-200),
-                                defaultValue = 20,
-                                minValue = 0,
-                                maxValue = 100,
-                                outputPow = 3.51f,outputMaxValue = 999999f
+                                DefaultValue = 20,
+                                MinValue = 0,
+                                MaxValue = 100,
+                                OutputPow = 3.51f,OutputMaxValue = 999999f
                             }
                         ]
                     },
                     new PanelUIBlueprintV01
                     {
-                        Name = "Test",
+                        mame = "Test",
                         Children = [
                             new CheckboxUIBlueprintV01()
                             {
                                 Size =  new Vector2(50,50), CornerRadius = 10, Position = new Vector2(0,-200),
-                                defaultValue=true
+                                DefaultValue=true
                             },
                             new InputUIBlueprintV01()
                             {
                                 Size =  new Vector2(200,50), CornerRadius = 10,
-                                defaultValue = "SomeValue", placeHolderContent = "hii"
+                                DefaultValue = "SomeValue", PlaceHolderContent = "hii"
                             },
                             
                         ]
@@ -121,9 +121,9 @@ internal class StarlightTestDevMenu : StarlightMenu
             },
             new PanelUIBlueprintV01
             {
-                color = UIColor.Badge, CornerRadius = 50, Size = new Vector2(530,90), Position = new Vector2(0,-420f),
+                Color = UIColor.Badge, CornerRadius = 50, Size = new Vector2(530,90), Position = new Vector2(0,-420f),
                 Children = [
-                    new TextUIBlueprintV01 { textContent = "Test Menu", Size = new Vector2(530,90), fontSize = 50,  alignment = TextAlignmentOptions.Center, color = UIColor.TextButton }
+                    new TextUIBlueprintV01 { TextContent = "Test Menu", Size = new Vector2(530,90), FontSize = 50,  Alignment = TextAlignmentOptions.Center, Color = UIColor.TextButton }
                 ]
                 
             },

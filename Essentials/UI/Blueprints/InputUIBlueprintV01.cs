@@ -7,23 +7,23 @@ namespace Starlight.UI.Blueprints;
 
 public class InputUIBlueprintV01 : UIBlueprint
 {
-    public UIColor textColor = UIColor.TextGeneral;
-    public Color? customTextColor = null;
-    public UIColor backgroundColor = UIColor.Primary;
-    public Color? customBackgroundColor = null;
-    public Sprite customCheckSprite;
-    public TMP_InputField.ContentType contentType = TMP_InputField.ContentType.Standard;
-    public TMP_InputField.LineType lineType = TMP_InputField.LineType.SingleLine;
-    public string placeHolderContent = "";
-    public bool disablePlaceHolderAutoTranslation = false;
-    public string defaultValue = "";
-    public float fontSize = 20f;
-    public bool restoreOriginalTextOnEscape = true;
-    public TMP_FontAsset customFont;
-    public System.Action<string> onValueChanged = null;
-    public System.Action<string> onEndEdit = null;
-    public System.Action<string> onSelect = null;
-    public System.Action<string> onDeselect = null;
+    public UIColor TextColor = UIColor.TextGeneral;
+    public Color? CustomTextColor = null;
+    public UIColor BackgroundColor = UIColor.Primary;
+    public Color? CustomBackgroundColor = null;
+    public Sprite CustomCheckSprite;
+    public TMP_InputField.ContentType ContentType = TMP_InputField.ContentType.Standard;
+    public TMP_InputField.LineType LineType = TMP_InputField.LineType.SingleLine;
+    public string PlaceHolderContent = "";
+    public bool DisablePlaceHolderAutoTranslation = false;
+    public string DefaultValue = "";
+    public float FontSize = 20f;
+    public bool RestoreOriginalTextOnEscape = true;
+    public TMP_FontAsset CustomFont;
+    public System.Action<string> OnValueChanged = null;
+    public System.Action<string> OnEndEdit = null;
+    public System.Action<string> OnSelect = null;
+    public System.Action<string> OnDeselect = null;
     protected override void OnRender(UITheme theme, FontTheme fontTheme, RectTransform obj)
     {
         IgnoreCorners = true;
@@ -44,29 +44,29 @@ public class InputUIBlueprintV01 : UIBlueprint
         inputRect.anchoredPosition = Vector2.zero;
         
         var inputField = inputObject.GetComponent<TMP_InputField>();
-        inputField.contentType = contentType;
-        inputField.text = defaultValue;
-        inputField.lineType = lineType;
-        inputField.restoreOriginalTextOnEscape = restoreOriginalTextOnEscape;
+        inputField.contentType = ContentType;
+        inputField.text = DefaultValue;
+        inputField.lineType = LineType;
+        inputField.restoreOriginalTextOnEscape = RestoreOriginalTextOnEscape;
         
         var txt = inputField.textComponent;
-        txt.fontSize = fontSize*ScaleFactor;
-        txt.font = customFont ?? fontTheme.DefaultFont;
-        txt.color = customTextColor ?? theme.GetColor(textColor);
+        txt.fontSize = FontSize*ScaleFactor;
+        txt.font = CustomFont ?? fontTheme.DefaultFont;
+        txt.color = CustomTextColor ?? theme.GetColor(TextColor);
         
         var placeholder = inputField.placeholder.GetComponent<TextMeshProUGUI>();
-        placeholder.text = disablePlaceHolderAutoTranslation?placeHolderContent:Tr(placeHolderContent);
-        placeholder.fontSize = fontSize*ScaleFactor;
-        placeholder.font = customFont ?? fontTheme.DefaultFont;
-        placeholder.color = (customTextColor ?? theme.GetColor(textColor))*new Color(0.2f,0.2f,0.2f,.5f);
+        placeholder.text = DisablePlaceHolderAutoTranslation?PlaceHolderContent:Tr(PlaceHolderContent);
+        placeholder.fontSize = FontSize*ScaleFactor;
+        placeholder.font = CustomFont ?? fontTheme.DefaultFont;
+        placeholder.color = (CustomTextColor ?? theme.GetColor(TextColor))*new Color(0.2f,0.2f,0.2f,.5f);
         
         var backgroundImage = inputObject.GetComponent<Image>();
-        backgroundImage.color = customBackgroundColor ?? theme.GetColor(backgroundColor);
-        backgroundImage.sprite = customCheckSprite;
+        backgroundImage.color = CustomBackgroundColor ?? theme.GetColor(BackgroundColor);
+        backgroundImage.sprite = CustomCheckSprite;
         
-        if(onValueChanged!=null) inputField.onValueChanged.AddListener(onValueChanged);
-        if(onEndEdit!=null) inputField.onEndEdit.AddListener(onEndEdit);
-        if(onSelect!=null) inputField.onSelect.AddListener(onSelect);
-        if(onDeselect!=null) inputField.onDeselect.AddListener(onDeselect);
+        if(OnValueChanged!=null) inputField.onValueChanged.AddListener(OnValueChanged);
+        if(OnEndEdit!=null) inputField.onEndEdit.AddListener(OnEndEdit);
+        if(OnSelect!=null) inputField.onSelect.AddListener(OnSelect);
+        if(OnDeselect!=null) inputField.onDeselect.AddListener(OnDeselect);
     }
 }

@@ -9,6 +9,7 @@ namespace Starlight.Utils;
 
 public static class SaveFileEUtil
 {
+    private static List<GameV10> test = new();
     private static readonly Exception NoBoolException = new Exception("The value has to be a bool!");
     //private static readonly Exception NoIntException = new Exception("The value has to be an int!");
     //private static readonly Exception NoFloatException = new Exception("The value has to be a float!");
@@ -212,6 +213,7 @@ public static class SaveFileEUtil
                 gameState.GameName = newGameName;
                 gameState.SaveSlotIndex = slotThatStartWithOne-1;
                 
+                test.Add(gameState);
                 gameState.Write(stream);
                 var gameBytes = stream.ToArray();
                 if (stream != null && stream.CanRead) stream.Close();
@@ -242,6 +244,7 @@ public static class SaveFileEUtil
                     }
                     return MainSaveIDFailed;
                 }
+
             }
         }
         if(loadMenuMenuOnSuccess) ExecuteInTicks(() => {

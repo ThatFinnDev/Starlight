@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -6,6 +7,7 @@ using Newtonsoft.Json;
 
 namespace Starlight.Storage;
 
+[SuppressMessage("ReSharper", "InconsistentNaming")]
 public class StarlightSaveFileV01
 {
     public int saveFileVersion = 1;

@@ -4,8 +4,8 @@ namespace Starlight.Enums;
 
 internal class DebugUIEntry
 {
-    public string text = "<Missing Text>";
-    public Sprite icon = null;
-    public bool closesMenu = true;
-    public Action action;
+    public string Text = "<Missing Text>";
+    public Sprite Icon = null;
+    public bool ClosesMenu = true;
+    public Action Action;
 }

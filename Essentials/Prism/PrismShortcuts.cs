@@ -15,7 +15,7 @@ namespace Starlight.Prism;
 [SuppressMessage("ReSharper", "CollectionNeverQueried.Global")]
 public static class PrismShortcuts
 {
-    internal static readonly Dictionary<IdentifiableType, PrismMarketData> MarketData = new (0);
+    internal static readonly Dictionary<IdentifiableType, PrismMarketData> MarketData = new ();
     internal static readonly Dictionary<PlortEntry, bool> MarketPlortEntries = new ();
     internal static readonly List<IdentifiableType> RemoveMarketPlortEntries = new ();
     internal static readonly List<SystemAction> CreateLargoActions = new ();

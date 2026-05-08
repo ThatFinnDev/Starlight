@@ -368,7 +368,7 @@ public class StarlightEntryPoint : MelonMod
             }
             catch (Exception e)
             {
-                if(inject==null||inject.logOnFail)
+                if(inject==null||inject.LOGOnFail)
                 {
                     LogError(e);
                     LogError($"Failed to inject {type.FullName}: {e.Message}");

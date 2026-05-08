@@ -6,19 +6,19 @@ namespace Starlight.UI.Blueprints;
 
 public class CheckboxUIBlueprintV01 : UIBlueprint
 {
-    public Sprite customCheckSprite;
-    public UIColor backgroundColor = UIColor.Primary;
-    public Color? customBackgroundColor = null;
-    public UIColor checkColor = UIColor.Accent;
-    public Color? customCheckColor = null;
-    public bool defaultValue;
-    public System.Action<bool> onValueChanged = null;
+    public Sprite CustomCheckSprite;
+    public UIColor BackgroundColor = UIColor.Primary;
+    public Color? CustomBackgroundColor = null;
+    public UIColor CheckColor = UIColor.Accent;
+    public Color? CustomCheckColor = null;
+    public bool DefaultValue;
+    public System.Action<bool> OnValueChanged = null;
 
     protected override void OnRender(UITheme theme, FontTheme fontTheme, RectTransform obj)
     {
         IgnoreCorners = true;
         var toggle = obj.AddComponent<Toggle>();
-        toggle.isOn = defaultValue;
+        toggle.isOn = DefaultValue;
 
         var backgroundObj = new GameObject("Background");
         var backgroundRect = backgroundObj.AddComponent<RectTransform>();
@@ -28,7 +28,7 @@ public class CheckboxUIBlueprintV01 : UIBlueprint
         backgroundRect.offsetMin = Vector2.zero;
         backgroundRect.offsetMax = Vector2.zero;
         var backgroundImage = backgroundObj.AddComponent<Image>();
-        backgroundImage.color = customBackgroundColor ?? theme.GetColor(backgroundColor);
+        backgroundImage.color = CustomBackgroundColor ?? theme.GetColor(BackgroundColor);
         if(CornerRadius>0)
         {
             var sortGroup = backgroundObj.AddComponent<SortingGroup>();
@@ -46,8 +46,8 @@ public class CheckboxUIBlueprintV01 : UIBlueprint
         checkmarkRect.offsetMax = Vector2.zero;
         checkmarkRect.anchoredPosition = Vector2.zero;
         var checkmarkImage = checkmarkObj.AddComponent<Image>();
-        checkmarkImage.color = customCheckColor ?? theme.GetColor(checkColor);
-        checkmarkImage.sprite = customCheckSprite ?? EmbeddedResourceEUtil.LoadSprite("Assets.check.png");
+        checkmarkImage.color = CustomCheckColor ?? theme.GetColor(CheckColor);
+        checkmarkImage.sprite = CustomCheckSprite ?? EmbeddedResourceEUtil.LoadSprite("Assets.check.png");
         if(CornerRadius>0)
         {
             var sortGroup = checkmarkObj.AddComponent<SortingGroup>();
@@ -57,7 +57,7 @@ public class CheckboxUIBlueprintV01 : UIBlueprint
         }
         toggle.graphic = checkmarkImage;
         toggle.targetGraphic = backgroundImage;
-        if(onValueChanged!=null)
-            toggle.onValueChanged.AddListener(onValueChanged);
+        if(OnValueChanged!=null)
+            toggle.onValueChanged.AddListener(OnValueChanged);
     }
 }

@@ -6,27 +6,27 @@ namespace Starlight.UI.Blueprints;
 
 internal class VScrollUIBlueprintV01 : UIBlueprint
 {
-    public float spacing = 5f;
-    public bool childControlWidth = true;
-    public bool childControlHeight = false;
-    public bool childExpandWidth = true;
-    public bool childExpandHeight = true;
-    public bool useContentSizeFitter = true;
-    public TextAnchor childAlignment = TextAnchor.UpperLeft;
-    public ContentSizeFitter.FitMode verticalFit = ContentSizeFitter.FitMode.MinSize;
-    public ContentSizeFitter.FitMode horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
-    public bool useScrollBar = true;
-    public ScrollRect.MovementType movementType = ScrollRect.MovementType.Clamped;
-    public bool scrollByMenuKeys = true;
+    public float Spacing = 5f;
+    public bool ChildControlWidth = true;
+    public bool ChildControlHeight = false;
+    public bool ChildExpandWidth = true;
+    public bool ChildExpandHeight = true;
+    public bool UseContentSizeFitter = true;
+    public TextAnchor ChildAlignment = TextAnchor.UpperLeft;
+    public ContentSizeFitter.FitMode VerticalFit = ContentSizeFitter.FitMode.MinSize;
+    public ContentSizeFitter.FitMode HorizontalFit = ContentSizeFitter.FitMode.Unconstrained;
+    public bool UseScrollBar = true;
+    public ScrollRect.MovementType MovementType = ScrollRect.MovementType.Clamped;
+    public bool ScrollByMenuKeys = true;
+    public UIColor BackgroundColor = UIColor.Transparent;
+    public Color? CustomBackgroundColor = null;
     
     
-    public UIColor backgroundColor = UIColor.Transparent;
-    public Color? customBackgroundColor = null;
     protected override void OnRender(UITheme theme, FontTheme fontTheme, RectTransform obj)
     {
         IgnoreCorners = true;
         var image = obj.AddComponent<Image>();
-        image.color = customBackgroundColor ?? theme.GetColor(backgroundColor);
+        image.color = CustomBackgroundColor ?? theme.GetColor(BackgroundColor);
         var scrollRect = obj.AddComponent<ScrollRect>();
         
         var viewPortObj = new GameObject("Viewport");
@@ -37,7 +37,7 @@ internal class VScrollUIBlueprintV01 : UIBlueprint
         viewPortRect.sizeDelta = Vector2.zero;
         viewPortRect.anchoredPosition = Vector2.zero;
         viewPortRect.offsetMin = new Vector2(0, 0);
-        viewPortRect.offsetMax = new Vector2(useScrollBar?-25*ScaleFactor:0, 0);
+        viewPortRect.offsetMax = new Vector2(UseScrollBar?-25*ScaleFactor:0, 0);
         var viewPortImage = viewPortObj.AddComponent<Image>();
         var whiteTexture = new Texture2D(1, 1);
         whiteTexture.SetPixel(0, 0, new Color(0,0,0,1));
@@ -61,13 +61,13 @@ internal class VScrollUIBlueprintV01 : UIBlueprint
         scrollRect.vertical = true;
         scrollRect.horizontal = false;
 
-        scrollRect.movementType = movementType;
-        if (useScrollBar)
+        scrollRect.movementType = MovementType;
+        if (UseScrollBar)
         {
             scrollRect.verticalScrollbarVisibility = ScrollRect.ScrollbarVisibility.Permanent;
             var scrollBar = new VScrollbarUIBlueprintV01()
             {
-                Name="Scrollbar Vertical",
+                mame="Scrollbar Vertical",
                 Size = new (25, Size.y),
                 Anchors = new Vector4(1,0,1,1),
             }.Render(theme,fontTheme,obj);
@@ -77,23 +77,23 @@ internal class VScrollUIBlueprintV01 : UIBlueprint
         }
         var vlg = contentObj.AddComponent<VerticalLayoutGroup>();
         vlg.padding = new RectOffset(5, 5, 5, 5);
-        vlg.spacing = spacing;
-        vlg.childControlHeight = childControlHeight;
-        vlg.childControlWidth = childControlWidth;
-        vlg.childForceExpandHeight = childExpandHeight;
-        vlg.childForceExpandWidth = childExpandWidth;
-        vlg.childAlignment = childAlignment;
-        if (useContentSizeFitter)
+        vlg.spacing = Spacing;
+        vlg.childControlHeight = ChildControlHeight;
+        vlg.childControlWidth = ChildControlWidth;
+        vlg.childForceExpandHeight = ChildExpandHeight;
+        vlg.childForceExpandWidth = ChildExpandWidth;
+        vlg.childAlignment = ChildAlignment;
+        if (UseContentSizeFitter)
         {
             var csf = contentObj.AddComponent<ContentSizeFitter>();
-            csf.verticalFit = verticalFit;
-            csf.horizontalFit = horizontalFit;
+            csf.verticalFit = VerticalFit;
+            csf.horizontalFit = HorizontalFit;
         }
 
         viewPortRect.sizeDelta /= 1.95f;
         contentRect.sizeDelta = Vector2.zero;
         Canvas.ForceUpdateCanvases();
-        if (scrollByMenuKeys)
+        if (ScrollByMenuKeys)
         {
             //var comp = obj.AddComponent<ScrollByMenuKeys>();
             //comp._scrollDownInput = _inputDown;

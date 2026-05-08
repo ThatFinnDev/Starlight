@@ -238,12 +238,12 @@ public class StarlightCheatMenu : StarlightMenu
             StarlightCommandManager.ExecuteByString("infhealth", true,true);
             _infHealthButton.TextInstance.text = Tr("cheatmenu.cheatbuttons.infhealth" + (StarlightSaveManager.inGameData.InfiniteHealthActive? "on" : "off"));
             });
-        _removeFogButton = new StarlightCheatMenuButton(Tr("cheatmenu.cheatbuttons.removeFogoff"),
+        _removeFogButton = new StarlightCheatMenuButton(Tr("cheatmenu.cheatbuttons.removefogoff"),
             () =>
             {
                 AudioEUtil.PlaySound(MenuSound.Click);
                 StarlightSaveManager.inGameData.RemoveFogActive = !StarlightSaveManager.inGameData.RemoveFogActive;
-                _removeFogButton.TextInstance.text = Tr("cheatmenu.cheatbuttons.removeFog" + (StarlightSaveManager.inGameData.RemoveFogActive? "on" : "off"));
+                _removeFogButton.TextInstance.text = Tr("cheatmenu.cheatbuttons.removefog" + (StarlightSaveManager.inGameData.RemoveFogActive? "on" : "off"));
             });
         _keepInvButton = new StarlightCheatMenuButton(Tr("cheatmenu.cheatbuttons.keepinvoff"),
             () =>

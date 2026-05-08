@@ -5,11 +5,11 @@ namespace Starlight.Storage;
 [AttributeUsage(AttributeTargets.Class, Inherited = false)]
 public class InjectIntoIL : Attribute
 {
-    public bool logOnFail = true;
+    public readonly bool LOGOnFail = true;
     public InjectIntoIL() {}
 
     public InjectIntoIL(bool logOnFail)
     {
-        this.logOnFail = logOnFail;
+        this.LOGOnFail = logOnFail;
     }
 }

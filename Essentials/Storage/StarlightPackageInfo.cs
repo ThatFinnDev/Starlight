@@ -3,7 +3,6 @@ using Starlight.Enums;
 
 namespace Starlight.Storage;
 
-[System.Serializable]
 public record struct StarlightPackageInfo
 {
     public string ID = null;

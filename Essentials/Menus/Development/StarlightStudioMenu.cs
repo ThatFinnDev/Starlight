@@ -118,29 +118,29 @@ public class StarlightStudioMenu : StarlightMenu
         _slimeRenderer.RenderAppearance(PrismNativeBaseSlime.Pink.GetPrismBaseSlime().GetSlimeAppearance());
         _openThing = new PanelUIBlueprintV01()
         {
-            color = UIColor.Primary, CornerRadius = 90, Size = new Vector2(1330, 840),
+            Color = UIColor.Primary, CornerRadius = 90, Size = new Vector2(1330, 840),
             Children =
             [
-                new PanelUIBlueprintV01() { color = UIColor.Accent, Size = new Vector2(1330,10), Position = new Vector2(0,-265f) },
-                new PanelUIBlueprintV01() { color = UIColor.Accent, Size = new Vector2(1330,10), Position = new Vector2(0,265f) },
+                new PanelUIBlueprintV01() { Color = UIColor.Accent, Size = new Vector2(1330,10), Position = new Vector2(0,-265f) },
+                new PanelUIBlueprintV01() { Color = UIColor.Accent, Size = new Vector2(1330,10), Position = new Vector2(0,265f) },
                 new NavigationUIBlueprintV01()
                 {
                     CornerRadius = 90, Size = new Vector2(1330, 840),
-                    tabSize = new Vector2(1330,520),
-                    tabs = [
+                    TabSize = new Vector2(1330,520),
+                    Tabs = [
                         new PanelUIBlueprintV01()
                         {
-                            Name = "Pink",
+                            mame = "Pink",
                             Children = [
                                 new PanelUIBlueprintV01()
                                 {
-                                    color = UIColor.Space3DBackground,
+                                    Color = UIColor.Space3DBackground,
                                     Position = new Vector2(530,0),
                                     Size = new Vector2(270,520),
                                 },
                                 new PanelUIBlueprintV01()
                                 {
-                                    color = UIColor.None, sprite = EmbeddedResourceEUtil.LoadSprite("Assets.podest.png"),
+                                    Color = UIColor.None, Sprite = EmbeddedResourceEUtil.LoadSprite("Assets.podest.png"),
                                     Position = new Vector2(530,-180),
                                     Size = new Vector2(250,250),
                                 },
@@ -148,11 +148,11 @@ public class StarlightStudioMenu : StarlightMenu
                                 {
                                     Position = new Vector2(540,0),
                                     Size = new Vector2(505,520),
-                                    texture = _renderTexture
+                                    Texture = _renderTexture
                                 },
                                 new PanelUIBlueprintV01()
                                 {
-                                    color = UIColor.None, sprite = EmbeddedResourceEUtil.LoadSprite("Assets.light.png"),
+                                    Color = UIColor.None, Sprite = EmbeddedResourceEUtil.LoadSprite("Assets.light.png"),
                                     Position = new Vector2(530,0),
                                     Size = new Vector2(250,520),
                                 },

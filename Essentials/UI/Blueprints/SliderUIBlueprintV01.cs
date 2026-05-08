@@ -8,22 +8,22 @@ namespace Starlight.UI.Blueprints;
 
 public class SliderUIBlueprintV01 : UIBlueprint
 {
-    public UIColor backgroundColor = UIColor.Accent;
-    public Color? customBackgroundColor = null;
-    public UIColor handleColor = UIColor.Badge;
-    public Color? customHandleColor = null;
-    public TMP_FontAsset customHandleFont;
+    public UIColor BackgroundColor = UIColor.Accent;
+    public Color? CustomBackgroundColor = null;
+    public UIColor HandleColor = UIColor.Badge;
+    public Color? CustomHandleColor = null;
+    public TMP_FontAsset CustomHandleFont;
     
-    public UIColor handleTextColor = UIColor.TextGeneral;
-    public Color? customHandleTextColor = null;
-    public float minValue = 0;
-    public float maxValue = 100;
-    public float defaultValue = 0;
-    public bool wholeNumbers = true;
-    public bool allowDisplayingDecimalNumbers = true;
-    public float handleWidth = 60f;
-    public float outputPow = 1f;
-    public float outputMaxValue = float.MaxValue;
+    public UIColor HandleTextColor = UIColor.TextGeneral;
+    public Color? CustomHandleTextColor = null;
+    public float MinValue = 0;
+    public float MaxValue = 100;
+    public float DefaultValue = 0;
+    public bool WholeNumbers = true;
+    public bool AllowDisplayingDecimalNumbers = true;
+    public float HandleWidth = 60f;
+    public float OutputPow = 1f;
+    public float OutputMaxValue = float.MaxValue;
     private float _oldValue = 0f;
     public System.Action<float> onValueChanged = null;
 
@@ -31,13 +31,13 @@ public class SliderUIBlueprintV01 : UIBlueprint
     {
         var slider = obj.AddComponent<Slider>();
 
-        slider.minValue = minValue;
-        slider.maxValue = maxValue;
-        slider.value = Mathf.Clamp(defaultValue,minValue,maxValue);
+        slider.minValue = MinValue;
+        slider.maxValue = MaxValue;
+        slider.value = Mathf.Clamp(DefaultValue,MinValue,MaxValue);
         _oldValue = slider.value;
-        slider.wholeNumbers = wholeNumbers;
+        slider.wholeNumbers = WholeNumbers;
         
-        var bColor = customBackgroundColor ?? theme.GetColor(backgroundColor);
+        var bColor = CustomBackgroundColor ?? theme.GetColor(BackgroundColor);
         var background = new GameObject("Background");
         var backgroundRect = background.AddComponent<RectTransform>();
         background.transform.SetParent(obj, false);
@@ -76,14 +76,14 @@ public class SliderUIBlueprintV01 : UIBlueprint
         handleSlideAreaRect.offsetMin = new Vector2(0, 0);
         handleSlideAreaRect.offsetMax = new Vector2(0, 0);
         handleSlideArea.transform.SetParent(obj);
-        handleSlideAreaRect.anchoredPosition = new Vector2(-(handleWidth / 4f)*ScaleFactor,0);
-        handleSlideAreaRect.sizeDelta = new Vector2((-handleWidth - (handleWidth / 2f))*ScaleFactor, 0);
+        handleSlideAreaRect.anchoredPosition = new Vector2(-(HandleWidth / 4f)*ScaleFactor,0);
+        handleSlideAreaRect.sizeDelta = new Vector2((-HandleWidth - (HandleWidth / 2f))*ScaleFactor, 0);
         
         var handle = new GameObject("Handle");
         var handleRect = handle.AddComponent<RectTransform>();
         handle.transform.SetParent(handleSlideArea.transform);
-        handleRect.offsetMin = new Vector2(-(handleWidth/2f), -10)*ScaleFactor;
-        handleRect.offsetMax = new Vector2(handleWidth, 10)*ScaleFactor;
+        handleRect.offsetMin = new Vector2(-(HandleWidth/2f), -10)*ScaleFactor;
+        handleRect.offsetMax = new Vector2(HandleWidth, 10)*ScaleFactor;
         var handleGroup = handle.AddComponent<SortingGroup>();
         handleGroup.enabled = false;
         handleGroup.sortingOrder = Mathf.FloorToInt(5 * ScaleFactor);
@@ -91,7 +91,7 @@ public class SliderUIBlueprintV01 : UIBlueprint
         
         
         var handleImage = handle.AddComponent<Image>();
-        handleImage.color = customHandleColor ?? theme.GetColor(handleColor);
+        handleImage.color = CustomHandleColor ?? theme.GetColor(HandleColor);
         slider.targetGraphic = handleImage;
         slider.handleRect = handleRect;
         
@@ -107,19 +107,19 @@ public class SliderUIBlueprintV01 : UIBlueprint
         
         var txt = text.AddComponent<TextMeshProUGUI>();
         txt.margin = new Vector4(3, 6, 3, 6) * ScaleFactor;
-        txt.font = customHandleFont ?? fontTheme.DefaultFont;
+        txt.font = CustomHandleFont ?? fontTheme.DefaultFont;
         txt.enableAutoSizing = true;
         txt.fontSizeMax = 999f;
         txt.fontSizeMin = 1f;
         txt.alignment = TextAlignmentOptions.Center;
-        txt.color = customHandleTextColor ?? theme.GetColor(handleTextColor);
+        txt.color = CustomHandleTextColor ?? theme.GetColor(HandleTextColor);
         txt.SetText(slider.value.ToString());
         var call = (System.Action<float>)((output) =>
         {
-            var newValue = Mathf.Clamp((float)Math.Pow(output, outputPow), minValue, outputMaxValue);
-            if (wholeNumbers) newValue = Mathf.FloorToInt(newValue);
+            var newValue = Mathf.Clamp((float)Math.Pow(output, OutputPow), MinValue, OutputMaxValue);
+            if (WholeNumbers) newValue = Mathf.FloorToInt(newValue);
             var newText = newValue.ToString();
-            if (newText.EndsWith(".0")||!allowDisplayingDecimalNumbers) newText = Mathf.FloorToInt(newValue).ToString();
+            if (newText.EndsWith(".0")||!AllowDisplayingDecimalNumbers) newText = Mathf.FloorToInt(newValue).ToString();
             txt.SetText(newText);
             // ReSharper disable once CompareOfFloatsByEqualityOperator
             if(onValueChanged!=null&&_oldValue!=newValue)

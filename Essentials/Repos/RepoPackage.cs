@@ -23,10 +23,10 @@ public class RepoPackage
     public string website;
     public string header_url;
     public string icon_url;
-    public byte colorR;
-    public byte colorG;
-    public byte colorB;
-    public byte colorA;
+    public byte color_r;
+    public byte color_g;
+    public byte color_b;
+    public byte color_a;
     public PackageType type = PackageType.MelonMod;
     public bool universal;
     public List<RepoPackageVersion> versions = new List<RepoPackageVersion>();

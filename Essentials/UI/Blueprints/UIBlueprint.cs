@@ -7,7 +7,7 @@ namespace Starlight.UI.Blueprints;
 public abstract class UIBlueprint
 {
     public static float ScaleFactor => Screen.height / 1080f;
-    public string Name = "<MissingName>"; 
+    public string mame = "<MissingName>"; 
     public Vector2 Size = new(100,100);
     public Vector2 Position = Vector2.zero;
     public Vector2 Rotation = new ();
@@ -20,10 +20,10 @@ public abstract class UIBlueprint
     public List<Il2CppSystem.Type> Components;
     public RectTransform Render(UITheme theme, FontTheme fontTheme, Transform parent)
     {
-        var obj = new GameObject(Name);
+        var obj = new GameObject(mame);
         obj.transform.localRotation=Quaternion.Euler(Rotation.x,Rotation.y,0);
         var rectT = obj.AddComponent<RectTransform>();
-        obj.transform.SetParent(parent,true);
+        obj.transform.SetParent(parent);
         rectT.pivot = Pivot;
         rectT.sizeDelta = Size*ScaleFactor;
         rectT.anchoredPosition = Position*ScaleFactor;
