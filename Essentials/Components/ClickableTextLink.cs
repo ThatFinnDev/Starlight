@@ -20,18 +20,18 @@ namespace Starlight.Components;
 [InjectIntoIL]
 public class ClickableTextLink : MonoBehaviour
 {
-    private TextMeshProUGUI text;
-    private Canvas canvas;
+    private TextMeshProUGUI _text;
+    private Canvas _canvas;
     /// <summary>
     /// The Dictionary to specify all custom actions
     /// </summary>
-    public Dictionary<string, SystemAction> actions = new Dictionary<string, Action>();
+    public readonly Dictionary<string, SystemAction> Actions = new ();
     void Start()
     {
-        text = GetComponent<TextMeshProUGUI>();
-        if(text==null) Destroy(this);
-        canvas = Find<Canvas>(transform);
-        if(canvas==null) Destroy(this);
+        _text = GetComponent<TextMeshProUGUI>();
+        if(_text==null) Destroy(this);
+        _canvas = Find<Canvas>(transform);
+        if(_canvas==null) Destroy(this);
     }
     T Find<T>(Transform obj) where T : Component
     {
@@ -56,22 +56,19 @@ public class ClickableTextLink : MonoBehaviour
     void Click(Vector2 pos)
     {
         if (IsPointerOverUI(pos)) return;
-        var cam = (canvas && canvas.renderMode != RenderMode.ScreenSpaceOverlay) ? canvas.worldCamera : null;
-        int linkIndex = TMP_TextUtilities.FindIntersectingLink(text, pos, cam);
+        var cam = (_canvas && _canvas.renderMode != RenderMode.ScreenSpaceOverlay) ? _canvas.worldCamera : null;
+        int linkIndex = TMP_TextUtilities.FindIntersectingLink(_text, pos, cam);
         if (linkIndex == -1) return;
-        string id = text.textInfo.linkInfo[linkIndex].GetLinkID();
+        string id = _text.textInfo.linkInfo[linkIndex].GetLinkID();
 
         AudioEUtil.PlaySound(MenuSound.Click);
         if (id.StartsWith("http://")||id.StartsWith("https://")) Application.OpenURL(id);
         if (id.StartsWith("action:"))
         {
             string key = id.Substring(7);
-            if (actions.ContainsKey(key))
+            if (Actions.ContainsKey(key))
             {
-                try
-                {
-                    actions[key].Invoke();
-                }
+                try { Actions[key].Invoke(); }
                 catch (Exception e) { LogError(e); }
             }
         }

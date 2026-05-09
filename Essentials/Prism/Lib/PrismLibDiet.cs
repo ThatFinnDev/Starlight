@@ -206,6 +206,7 @@ public static class PrismLibDiet
     /// <param name="identifiableTypeGroup">The food group to add</param>
     public static void AddFoodGroup(this PrismSlime prismSlime, IdentifiableTypeGroup identifiableTypeGroup)
     {
+        identifiableTypeGroup._isFood = true;
         prismSlime.GetSlimeDiet().MajorFoodIdentifiableTypeGroups = prismSlime.GetSlimeDiet().MajorFoodIdentifiableTypeGroups.AddToNew(identifiableTypeGroup);
     }
     /// <summary>

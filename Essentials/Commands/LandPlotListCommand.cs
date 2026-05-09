@@ -2,7 +2,7 @@ using Starlight.Managers;
 
 namespace Starlight.Commands;
 
-public class LandPlotListCommand : StarlightCommand
+internal class LandPlotListCommand : StarlightCommand
 {
     public override string ID => "landplotlist";
     public override string Usage => "landplotlist";

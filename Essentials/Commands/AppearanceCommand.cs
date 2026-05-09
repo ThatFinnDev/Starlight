@@ -3,7 +3,7 @@ using Il2CppMonomiPark.SlimeRancher.UI;
 
 namespace Starlight.Commands;
 
-public class AppearanceCommand: StarlightCommand
+internal class AppearanceCommand: StarlightCommand
 {
     public override string ID => "appearance";
     public override string Usage => "appearance";

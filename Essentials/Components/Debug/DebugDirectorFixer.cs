@@ -7,11 +7,11 @@ namespace Starlight.Components.Debug;
 public class DebugDirectorFixer : MonoBehaviour
 {
     internal static DebugDirectorFixer Instance;
-    internal DebugDirector director;
+    internal DebugDirector Director;
     void Start()
     {
         Instance = this;
-        director = GetComponent<DebugDirector>();
+        Director = GetComponent<DebugDirector>();
     }
 
 }

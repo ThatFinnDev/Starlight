@@ -50,11 +50,11 @@ public class StarlightSlimeRenderer : MonoBehaviour
     }
     void SetLayerRecursive(GameObject obj, int newLayer)
     {
-        if (null == obj) return;
+        if (!obj) return;
         obj.layer = newLayer;
         foreach (var child in obj.transform.GetChildren())
         {
-            if (null == child) continue;
+            if (!child) continue;
             SetLayerRecursive(child.gameObject, newLayer);
         }
     }

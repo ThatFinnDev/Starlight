@@ -2,7 +2,7 @@ using Starlight.Managers;
 
 namespace Starlight.Commands;
 
-public class CurrencyCommand : StarlightCommand
+internal class CurrencyCommand : StarlightCommand
 {
     internal string refID = "";
     internal string name = "";

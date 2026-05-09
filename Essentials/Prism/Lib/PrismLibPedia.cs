@@ -1,6 +1,8 @@
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using Il2CppMonomiPark.SlimeRancher.Pedia;
 using Starlight.Prism.Data;
+using Starlight.Prism.Wrappers;
+using UnityEngine.Localization;
 
 namespace Starlight.Prism.Lib;
 
@@ -107,5 +109,16 @@ public static class PrismLibPedia
         FixedPediaEntryPrefab = Get<FixedPediaEntry>("PrismaPlorts");
         if (FixedPediaEntryPrefab == null) FixedPediaEntryPrefab = GetAny<FixedPediaEntry>();
         if (FixedPediaEntryPrefab != null) FixedPediaEntryPrefab.hideFlags = HideFlags.DontUnloadUnusedAsset;
+    }
+    
+    public static void PediaSlimeDietAddOverride(this PrismSlime slime, Sprite icon, LocalizedString localized)
+    {
+        foreach (var highlight in GetAll<DietGroupHighlight>())
+        {
+            highlight._slimeDietOverrideEntries.Add(new DietGroupHighlight.SlimeDietOverrideEntry
+            {
+                _icon=icon,_label=localized,_slime=slime
+            });
+        }
     }
 }

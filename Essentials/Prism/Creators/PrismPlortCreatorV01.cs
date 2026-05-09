@@ -18,7 +18,7 @@ public class PrismPlortCreatorV01
     public GameObject CustomBasePrefab = null;
 
 
-    public PrismMarketData? ModdedMarketData = null;
+    public PrismMarketData? MarketData = null;
     
     
     public PrismPlortCreatorV01(string name, Sprite icon, LocalizedString localized)
@@ -50,16 +50,15 @@ public class PrismPlortCreatorV01
         plort.hideFlags = HideFlags.DontUnloadUnusedAsset;
         plort.name = Name + "Plort";
         plort.color = VacColor;
-        plort.icon = Icon;
-        plort.icon ??= PrismShortcuts.UnavailableIcon;
+        plort.icon = Icon ?? PrismShortcuts.UnavailableIcon;
         plort.IsPlort = true;
         
         
         plort.localizedName = Localized;
         plort._pediaPersistenceSuffix = "modded"+Name.ToLower()+"_plort";
         
-        if(ModdedMarketData.HasValue)
-            PrismLibMarket.MakeSellable(plort, ModdedMarketData.Value);
+        if(MarketData.HasValue)
+            PrismLibMarket.MakeSellable(plort, MarketData.Value);
         plort.Prism_AddToGroup("PlortGroup");
         plort.Prism_AddToGroup("EdiblePlortFoodGroup");
         plort.Prism_AddToGroup("PlortGroupDroneExplorer");
@@ -69,7 +68,11 @@ public class PrismPlortCreatorV01
         if (basePrefab == null) basePrefab = PrismNativePlort.Pink.GetPrismPlort().GetPrefab();
         plort.prefab = CreatePrefab("plort"+Name, basePrefab);
         plort.prefab.GetComponent<IdentifiableActor>().identType = plort;
-        
+        try
+        {
+            plort.prefab.GetComponent<MeshRenderer>().material =
+                Object.Instantiate(plort.prefab.GetComponent<MeshRenderer>().material);
+        } catch { }
         PrismLibSaving.SetupForSaving(plort,referenceID);
         
         var prismPlort = new PrismPlort(plort, false);

@@ -20,7 +20,7 @@ public class StarlightConsole : StarlightMenu
 
     internal static readonly LKey OpenKey = LKey.F11;
     internal static readonly LMultiKey OpenKey2 = new (LKey.Tab, LKey.LeftControl);
-    internal Transform consoleContent;
+    internal Transform ConsoleContent;
     private TMP_InputField _commandInput;
     private GameObject _autoCompleteEntryPrefab;
     private Transform _autoCompleteContent;
@@ -60,7 +60,7 @@ public class StarlightConsole : StarlightMenu
                 foreach (string singularLine in message.Split('\n')) SendMessage(singularLine);
                 return;
             }
-            GameObject instance = Instantiate(_messagePrefab, consoleContent);
+            GameObject instance = Instantiate(_messagePrefab, ConsoleContent);
             instance.gameObject.SetActive(true);
             instance.transform.GetChild(0).gameObject.SetActive(true);
             instance.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = message;
@@ -191,7 +191,7 @@ public class StarlightConsole : StarlightMenu
     {
         _commandHistory = new List<string>();
 
-        consoleContent = transform.GetObjectRecursively<Transform>("ConsoleMenuConsoleContentRec");
+        ConsoleContent = transform.GetObjectRecursively<Transform>("ConsoleMenuConsoleContentRec");
         _messagePrefab = transform.GetObjectRecursively<GameObject>("ConsoleMenuTemplateMessageRec");
         _commandInput = transform.GetObjectRecursively<TMP_InputField>("ConsoleMenuCommandInputRec");
         _scrollbar = transform.GetObjectRecursively<Scrollbar>("ConsoleMenuConsoleScrollbarRec");
@@ -218,8 +218,8 @@ public class StarlightConsole : StarlightMenu
 
     protected override void OnUpdate()
     {
-        try { if (consoleContent.childCount >= MAX_CONSOLELINES.Get())
-            Destroy(consoleContent.GetChild(0).gameObject);
+        try { if (ConsoleContent.childCount >= MAX_CONSOLELINES.Get())
+            Destroy(ConsoleContent.GetChild(0).gameObject);
         } catch { }
 
         _commandInput.ActivateInputField();

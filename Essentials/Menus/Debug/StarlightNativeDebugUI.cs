@@ -33,7 +33,7 @@ internal class StarlightNativeDebugUI : StarlightMenu
         closeActions = new List<MenuActions> { MenuActions.UnPauseGameFalse, MenuActions.EnableInput }.ToArray();
     }
 
-    private GameObject debugUIPrefab => ddf.director._uiDefaultPrefab;
+    private GameObject debugUIPrefab => ddf.Director._uiDefaultPrefab;
     private List<DebugUI> _debugUIs = new ();
     private DebugUI _rootDebugUI;
 

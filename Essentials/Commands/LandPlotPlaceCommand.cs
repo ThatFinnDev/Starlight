@@ -3,7 +3,7 @@ using Starlight.Storage;
 
 namespace Starlight.Commands;
 
-public class LandPlotPlaceCommand : StarlightCommand
+internal class LandPlotPlaceCommand : StarlightCommand
 {
     public override string ID => "landplotplace";
     public override string Usage => "landplotplace <id>";

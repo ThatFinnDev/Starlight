@@ -204,7 +204,7 @@ internal class StarlightModMenu : StarlightMenu
                 Children = [
                     new TextUIBlueprintV01()
                     {
-                        TextContent = displayName, Margins = new Vector4(1,1,1,1), 
+                        TextContent = displayName, Margins = new Vector4(5,1,5,1), 
                         Color = UIColor.TextCategory, FontSize = 40, FontAutoSizeMax = 40, EnableAutoSizing = true,
                         Size = new Vector2(0,0), Anchors = new Vector4(0,0,1,1), Alignment = TextAlignmentOptions.Left,
                     }
@@ -234,7 +234,7 @@ internal class StarlightModMenu : StarlightMenu
                         new TextUIBlueprintV01()
                         {
                             mame = "NameAndDescription",
-                            TextContent = final, Margins = new Vector4(1, 1, 500, 1), FontSize = 24, Size = new Vector2(0, 0),
+                            TextContent = final, Margins = new Vector4(5, 1, 500, 1), FontSize = 24, Size = new Vector2(0, 0),
                             Anchors = new Vector4(0, 0, 1, 1), Alignment = TextAlignmentOptions.Left
                         }
                     ]

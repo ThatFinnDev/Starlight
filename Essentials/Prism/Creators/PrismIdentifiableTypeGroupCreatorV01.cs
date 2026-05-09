@@ -13,6 +13,7 @@ public class PrismIdentifiableTypeGroupCreatorV01
     public List<IdentifiableType> MemberTypes;
     public List<IdentifiableTypeGroup> MemberGroupes;
     public bool IsFood = false;
+    public Sprite Icon;
     public PrismIdentifiableTypeGroupCreatorV01(string name, LocalizedString localized)
     {
         this.Name = name;
@@ -53,6 +54,7 @@ public class PrismIdentifiableTypeGroupCreatorV01
         else group._localizedName = PrismShortcuts.EmptyTranslation;
         group.name = Name;
 
+        group._icon = Icon ?? PrismShortcuts.UnavailableIcon;
         group.AllowedCategories = new Il2CppSystem.Collections.Generic.List<IdentifiableCategory>();
 
         group._runtimeObject = new IdentifiableTypeGroupRuntimeObject(group);

@@ -12,7 +12,7 @@ internal class ClearCommand : StarlightCommand
     {
         if (!args.IsBetween(0,0)) return SendNoArguments();
 
-        for (int i = 0; i < MenuEUtil.GetMenu<StarlightConsole>().consoleContent.childCount; i++) Object.Destroy(MenuEUtil.GetMenu<StarlightConsole>().consoleContent.GetChild(i).gameObject);
+        for (int i = 0; i < MenuEUtil.GetMenu<StarlightConsole>().ConsoleContent.childCount; i++) Object.Destroy(MenuEUtil.GetMenu<StarlightConsole>().ConsoleContent.GetChild(i).gameObject);
 
         return true;
     }

@@ -207,7 +207,7 @@ public static class StarlightVolumeProfileManager
     [Serializable]
     public class VolumeProfileData
     {
-        public List<ComponentData> components = new List<ComponentData>();
+        public List<ComponentData> components = new ();
 
         [Serializable]
         public class ComponentData

@@ -2,7 +2,7 @@
 
 // This is an optional file V1. You can add into your expansion
 // This will show an error message to the user, if Starlight isn't installed!
-// This also allows you to provide a requires game or Starlight version
+// This also allows you to provide a required game or Starlight version
 
 [assembly: MelonInfo(typeof(OptionFileEntrypoint),  
     //Those infos are only shown by MelonLoader in the console when starting up
@@ -107,7 +107,7 @@ class OptionFileEntrypoint : MelonMod
         Sprite pill = null;
         try
         {
-            Texture2D pillTex = null;
+            /*Texture2D pillTex = null;
             foreach (var bundle in Il2CppAssetBundleManager.GetAllLoadedAssetBundles())
                 try
                 {
@@ -116,7 +116,7 @@ class OptionFileEntrypoint : MelonMod
                     pillTex = tex;
                 } catch { }
             pill = Sprite.Create(pillTex, new Rect(0f, 0f, pillTex.width, pillTex.height),
-                new Vector2(0.5f, 0.5f), 1f);
+                new Vector2(0.5f, 0.5f), 1f);*/
         }
         catch { }
         

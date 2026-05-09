@@ -36,6 +36,11 @@ public static class NamingEUtil
     public static string GetCompactUpperName(this ZoneDefinition definition) => _GCUN(definition, definition._localizedName);
     
     
+    //IdentifiableTypeGroup
+    public static string GetName(this IdentifiableTypeGroup definition, bool addQuotesIfSpaces = true) => _GN(definition, definition._localizedName,addQuotesIfSpaces);
+    public static string GetCompactName(this IdentifiableTypeGroup definition) => _GCN(definition, definition._localizedName);
+    public static string GetCompactUpperName(this IdentifiableTypeGroup definition) => _GCUN(definition, definition._localizedName);
+    
     //CurrencyDefinition
     public static string GetName(this CurrencyDefinition definition, bool addQuotesIfSpaces = true) => _GN(definition, definition.DisplayName,addQuotesIfSpaces);
     public static string GetCompactName(this CurrencyDefinition definition) => _GCN(definition, definition.DisplayName);

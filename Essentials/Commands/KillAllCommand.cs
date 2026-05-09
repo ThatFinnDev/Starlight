@@ -16,12 +16,11 @@ internal class KillAllCommand : StarlightCommand
     }
     public override bool Execute(string[] args)
     {
-        if (!args.IsBetween(0,1)) return SendUsage();
+        if (!args.IsBetween(1,1)) return SendUsage();
         if (!inGame) return SendLoadASaveFirst();
 
         bool killall = false;
-        if(args==null) killall = true;
-        else if(args.Length==1&&args[0]=="*") killall = true;
+        if(args[0]=="*") killall = true;
         if (killall)
         {
             foreach (var ident in Resources.FindObjectsOfTypeAll<IdentifiableActor>())
@@ -37,25 +36,20 @@ internal class KillAllCommand : StarlightCommand
             SendMessage(Tr("cmd.killall.success"));
             return true;
         }
-        if (args.Length == 1)
-        {
-            
-            string identifierTypeName = args[0];
-            IdentifiableType type = LookupEUtil.GetIdentifiableTypeByName(identifierTypeName);
-            if (type == null) return SendNotValidIdentType(identifierTypeName);
-            if (type.IsGadget()) return SendIsGadgetNotItem(type.GetName());
+        string identifierTypeName = args[0];
+        var type = LookupEUtil.GetIdentifiableTypeByName(identifierTypeName);
+        if (!type) return SendNotValidIdentType(identifierTypeName);
+        if (type.IsGadget()) return SendIsGadgetNotItem(type.GetName());
                 
-            foreach (var ident in Resources.FindObjectsOfTypeAll<IdentifiableActor>())
-                if (ident.hasStarted)
-                    if (ident.identType == type)
-                    {
-                        var id = ident._model.actorId;
-                        Object.Destroy(ident.gameObject);
-                        sceneContext.GameModel.identifiables.Remove(id);
-                    }
-            SendMessage(Tr("cmd.killall.successspecific",type.GetName()));
-            return true;
-        }
-        return false;
+        foreach (var ident in Resources.FindObjectsOfTypeAll<IdentifiableActor>())
+            if (ident.hasStarted)
+                if (ident.identType == type)
+                {
+                    var id = ident._model.actorId;
+                    Object.Destroy(ident.gameObject);
+                    sceneContext.GameModel.identifiables.Remove(id);
+                }
+        SendMessage(Tr("cmd.killall.successspecific",type.GetName()));
+        return true;
     }
 }

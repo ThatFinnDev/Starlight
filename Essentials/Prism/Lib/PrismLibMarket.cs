@@ -54,7 +54,7 @@ public static class PrismLibMarket
                 {
                     FullSaturation = entry.Value.Saturation,
                     Type = entry.Key,
-                    InitialValue = entry.Value.Value
+                    InitialValue = entry.Value.Value,
                 };
 
                 entries.Add(defaultValues);

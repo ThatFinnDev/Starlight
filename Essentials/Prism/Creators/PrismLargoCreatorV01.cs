@@ -236,6 +236,7 @@ public class PrismLargoCreatorV01
         appearance.name = FirstSlime.GetSlimeAppearance().name + SecondSlime.GetSlimeAppearance().name;
         largoDef.AppearancesDefault = largoDef.AppearancesDefault.AddToNew(appearance);
         Duplicate(appearance,largoDef,FirstSlime.GetSlimeAppearance(),SecondSlime.GetSlimeAppearance());
+        appearance._appearType = SlimeAppearance.AppearanceType.DEFAULT;
 
         
         var appearance2 = Object.Instantiate(baseLargo.AppearancesDefault[1]);
@@ -243,12 +244,14 @@ public class PrismLargoCreatorV01
         appearance2.name = FirstSlime.GetSlimeAppearance().name + SecondSlime.TryGetSlimeAppearanceRadiant().name;
         largoDef.AppearancesDefault = largoDef.AppearancesDefault.AddToNew(appearance2);
         Duplicate(appearance2,largoDef,FirstSlime.GetSlimeAppearance(),SecondSlime.TryGetSlimeAppearanceRadiant());
+        appearance2._appearType = SlimeAppearance.AppearanceType.RADIANT_LARGO_0;
         
         var appearance3 = Object.Instantiate(baseLargo.AppearancesDefault[2]);
         appearance3.hideFlags = HideFlags.DontUnloadUnusedAsset;
         appearance3.name = FirstSlime.TryGetSlimeAppearanceRadiant().name + SecondSlime.GetSlimeAppearance().name;
         largoDef.AppearancesDefault = largoDef.AppearancesDefault.AddToNew(appearance3);
         Duplicate(appearance3,largoDef,FirstSlime.TryGetSlimeAppearanceRadiant(),SecondSlime.GetSlimeAppearance());
+        appearance3._appearType = SlimeAppearance.AppearanceType.RADIANT_LARGO_1;
 
         largoDef.RadiantLargo0 = appearance2;
         largoDef.RadiantLargo1 = appearance3;

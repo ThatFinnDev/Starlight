@@ -20,6 +20,7 @@ public class PrismBaseSlimeCreatorV01
     public PrismPlort Plort = null;
     public GameObject CustomBasePrefab = null;
     public SlimeAppearance CustomBaseAppearance = null;
+    public SlimeAppearance CustomRadiantAppearance = null;
     public bool DisableSinkInShallowWater = false;
     public bool DisableEdibleByTarrs = false;
     public bool DisableVaccable = false;
@@ -29,7 +30,7 @@ public class PrismBaseSlimeCreatorV01
     public bool CreateAllLargos = false;
     public bool DisableAutoModdedLargos = false;
     public Color32 VacColor = new Color32(0,0,0,255);
-
+    public bool SupportRadiant = true;
     
     
     public PrismBaseSlimeCreatorV01(string name, Sprite icon, LocalizedString localized)
@@ -130,6 +131,8 @@ public class PrismBaseSlimeCreatorV01
         slimeDef.Name = Name;
         slimeDef.name = Name;
         slimeDef.AppearancesDefault = new Il2CppReferenceArray<SlimeAppearance>(0);
+        slimeDef._fullArt = null;
+        slimeDef._requiresFullArt = false;
 
         var baseAppearance = CustomBaseAppearance;
         if (baseAppearance == null) baseAppearance = PrismNativeBaseSlime.Pink.GetPrismBaseSlime().GetSlimeAppearance();
@@ -142,21 +145,31 @@ public class PrismBaseSlimeCreatorV01
             slimeDef.AppearancesDefault[0] = appearance;
 
         Duplicate(appearance, baseAppearance);
+        appearance._appearType = SlimeAppearance.AppearanceType.DEFAULT;
+        appearance._fullArt = null;
         
-        var baseRadiantAppearance = CustomBaseAppearance;
-        if (baseRadiantAppearance == null) baseRadiantAppearance = PrismNativeBaseSlime.Pink.GetPrismBaseSlime().TryGetSlimeAppearanceRadiant();
-        var radiantAppearance = Object.Instantiate(baseRadiantAppearance);
-        baseRadiantAppearance.hideFlags = HideFlags.DontUnloadUnusedAsset;
-        baseRadiantAppearance.name = Name+"Default";
-        baseRadiantAppearance._icon = RadiantIcon ?? Icon;
-        baseRadiantAppearance._icon ??= PrismShortcuts.UnavailableIcon;
-        slimeDef.AppearancesDefault = slimeDef.AppearancesDefault.AddToNew(baseRadiantAppearance);
-        if (slimeDef.AppearancesDefault[1] == null)
-            slimeDef.AppearancesDefault[1] = appearance;
+        SlimeAppearance radiantAppearance = null;
+        if (SupportRadiant)
+        {
+            var baseRadiantAppearance = CustomRadiantAppearance;
+            if (baseRadiantAppearance == null) baseRadiantAppearance = PrismNativeBaseSlime.Pink.GetPrismBaseSlime().TryGetSlimeAppearanceRadiant();
+            radiantAppearance = Object.Instantiate(baseRadiantAppearance);
+            baseRadiantAppearance.hideFlags = HideFlags.DontUnloadUnusedAsset;
+            baseRadiantAppearance.name = Name+"Radiant";
+            baseRadiantAppearance._icon = RadiantIcon ?? Icon;
+            baseRadiantAppearance._icon ??= PrismShortcuts.UnavailableIcon;
+            slimeDef.AppearancesDefault = slimeDef.AppearancesDefault.AddToNew(baseRadiantAppearance);
+            if (slimeDef.AppearancesDefault[1] == null)
+                slimeDef.AppearancesDefault[1] = appearance;
         
-        Duplicate(radiantAppearance, baseRadiantAppearance);
-        slimeDef.RadiantBase = baseRadiantAppearance;
-        
+            Duplicate(radiantAppearance, baseRadiantAppearance);
+            slimeDef.RadiantBase = baseRadiantAppearance;
+            baseRadiantAppearance._appearType = SlimeAppearance.AppearanceType.RADIANT_BASE;
+            baseRadiantAppearance._fullArt = null;
+            
+            PrismShortcuts.mainAppearanceDirector.RegisterDependentAppearances(slimeDef, baseRadiantAppearance);
+            PrismShortcuts.mainAppearanceDirector.UpdateChosenSlimeAppearance(slimeDef, baseRadiantAppearance);
+        }
         
         var basePrefab = CustomBasePrefab;
         if (basePrefab == null) basePrefab = PrismNativeBaseSlime.Pink.GetPrismBaseSlime().GetPrefab();
@@ -165,15 +178,14 @@ public class PrismBaseSlimeCreatorV01
             slimeDef.prefab.GetComponent<SlimeEat>().SlimeDefinition = slimeDef; 
         slimeDef.prefab.GetComponent<SlimeAppearanceApplicator>().SlimeDefinition = slimeDef;
         slimeDef.prefab.GetComponent<IdentifiableActor>().identType = slimeDef;
-        
         var slimeDiet = PrismLibDiet.CreateNewDiet();
         slimeDef.Diet = slimeDiet;
         VacColor.a = 255;
         slimeDef.color = VacColor;
         slimeDef.icon = Icon;
 
-        PrismShortcuts.mainAppearanceDirector.RegisterDependentAppearances(slimeDef, slimeDef.AppearancesDefault[0]);
-        PrismShortcuts.mainAppearanceDirector.UpdateChosenSlimeAppearance(slimeDef, slimeDef.AppearancesDefault[0]);
+        PrismShortcuts.mainAppearanceDirector.RegisterDependentAppearances(slimeDef, appearance);
+        PrismShortcuts.mainAppearanceDirector.UpdateChosenSlimeAppearance(slimeDef, appearance);
         PrismLibSaving.SetupForSaving(slimeDef,referenceID);
 
         if(!DisableVaccable) 
@@ -185,9 +197,14 @@ public class PrismBaseSlimeCreatorV01
         if(!DisableSinkInShallowWater) slimeDef.Prism_AddToGroup("SlimesSinkInShallowWaterGroup");
         
         
-        slimeDef.AppearancesDefault[0]._colorPalette = new SlimeAppearance.Palette
-            { Ammo = VacColor, Bottom = VacColor, Middle = VacColor, Top = VacColor };
-        slimeDef.AppearancesDefault[0]._splatColor = VacColor;
+        appearance._colorPalette = new SlimeAppearance.Palette { Ammo = VacColor, Bottom = VacColor, Middle = VacColor, Top = VacColor };
+        appearance._splatColor = VacColor;
+
+        if (radiantAppearance != null)
+        {
+            radiantAppearance._colorPalette = new SlimeAppearance.Palette { Ammo = VacColor, Bottom = VacColor, Middle = VacColor, Top = VacColor };
+            radiantAppearance._splatColor = VacColor;
+        }
         
         slimeDef.CanLargofy = CanLargofy;
         

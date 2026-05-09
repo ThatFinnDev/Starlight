@@ -107,12 +107,13 @@ internal static class StarlightSaveManager
     
     static string configPath => Path.Combine(StarlightEntryPoint.dataPath, "starlight.data");
     
+    [System.Serializable]
     public class StarlightSaveData
     {
-        public Dictionary<string, Warp> warps = new Dictionary<string, Warp>();
-        public Dictionary<LKey, string> keyBinds = new Dictionary<LKey, string>();
-        public Dictionary<string, StarlightMenuTheme> themes = new Dictionary<string, StarlightMenuTheme>();
-        public Dictionary<string, StarlightMenuFont> fonts = new Dictionary<string, StarlightMenuFont>();
-        public List<RepoSave> repos = new List<RepoSave>();
+        public Dictionary<string, Warp> warps = new ();
+        public Dictionary<LKey, string> keyBinds = new ();
+        public Dictionary<string, StarlightMenuTheme> themes = new ();
+        public Dictionary<string, StarlightMenuFont> fonts = new ();
+        public List<RepoSave> repos = new ();
     }
 }
