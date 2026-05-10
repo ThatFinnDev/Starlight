@@ -2,12 +2,12 @@ namespace Starlight.Prism.Data;
 
 public class PrismLargoMergeSettings
 {
-    public readonly bool MergeComponents = true;
-    public readonly PrismBfMergeStrategy Body;
-    public readonly PrismBfMergeStrategy Face;
-    public readonly PrismColorMergeStrategy BaseColors;
-    public readonly PrismColorMergeStrategy TwinColors;
-    public readonly PrismColorMergeStrategy SloomberColors;
+    public bool MergeComponents = true;
+    public PrismBfMergeStrategy Body;
+    public PrismBfMergeStrategy Face;
+    public PrismColorMergeStrategy BaseColors;
+    public PrismColorMergeStrategy TwinColors;
+    public PrismColorMergeStrategy SloomberColors;
 
     public PrismLargoMergeSettings()
     {

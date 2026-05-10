@@ -61,17 +61,23 @@ public static class StarlightPackageManager
                 case StarlightModInfoAttributes.CoAuthors: info.CoAuthors = meta.Value.Split(", "); break;
                 case StarlightModInfoAttributes.Contributors: info.Contributors = meta.Value.Split(", "); break;
                 case StarlightModInfoAttributes.IconB64:
-                    try { info.icon = ConvertEUtil.Base64ToTexture2D(meta.Value).Texture2DToSprite(); } catch { /* ignored */ }
+                    try { 
+                        info.icon = ConvertEUtil.Base64ToTexture2D(meta.Value).Texture2DToSprite();
+                    } catch { }
                     break;
             }
         }
 
         if (!info.icon)
         {
-            try { info.icon = EmbeddedResourceEUtil.LoadSprite("icon.png", assembly).CopyWithoutMipmaps(); } catch { /* ignored */ }
+            try { 
+                info.icon = EmbeddedResourceEUtil.LoadSprite("icon.png", assembly).CopyWithoutMipmaps();
+            } catch { }
             if (!info.icon)
             {
-                try { info.icon = EmbeddedResourceEUtil.LoadSprite("Assets.icon.png", assembly).CopyWithoutMipmaps(); } catch { /* ignored */ }
+                try { 
+                    info.icon = EmbeddedResourceEUtil.LoadSprite("Assets.icon.png", assembly).CopyWithoutMipmaps(); 
+                } catch { }
             }
         }
         MelonInfos.Add(melonBase, info);
@@ -398,7 +404,11 @@ public static class StarlightPackageManager
                     {
                         var instance = pending.instance;
                         var info = pending.info;
-                        try { info.icon = EmbeddedResourceEUtil.LoadSprite(info.IconPath, pending.assembly).CopyWithoutMipmaps(); } catch { /* ignored */ }
+                        try
+                        {
+                            info.icon = EmbeddedResourceEUtil.LoadSprite(info.IconPath, pending.assembly).CopyWithoutMipmaps();
+                        } catch { }
+                        
                         if (AllowPrism.HasFlag() && info.UsePrism) StarlightEntryPoint.ShouldEnablePrism = true;
                         if (instance is StarlightExpansionV01 v01) StarlightEntryPoint.ExpansionV01S.Add(v01);
                         baseType.GetField("_assembly", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(instance, pending.assembly);

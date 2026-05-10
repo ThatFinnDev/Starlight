@@ -286,7 +286,9 @@ public class PrismLargoCreatorV01
         
         PrismLibSaving.SetupForSaving(largoDef,largoDef.referenceId);
         
-        //gameContext.SlimeDefinitions.RefreshIndexes();
+        gameContext.SlimeDefinitions._largoDefinitionByBaseDefinitions.Add(new SlimeDefinitions.SlimeDefinitionPair(FirstSlime,SecondSlime),largoDef);
+        
+        gameContext.SlimeDefinitions.RefreshIndexes();
         gameContext.SlimeDefinitions.RefreshDefinitions();
         
         IdentifiableType firstPlort = null;

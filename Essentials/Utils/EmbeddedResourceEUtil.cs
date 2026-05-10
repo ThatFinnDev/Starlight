@@ -39,7 +39,7 @@ public static class EmbeddedResourceEUtil
             var texture2D = new Texture2D(1, 1);
             try { Il2CppImageConversionManager.LoadImage(texture2D, array); }
             catch (Exception e) { LogError(e); return null; }
-        
+            texture2D.hideFlags = HideFlags.DontUnloadUnusedAsset;
             texture2D.filterMode = FilterMode.Bilinear;
         
             return texture2D;

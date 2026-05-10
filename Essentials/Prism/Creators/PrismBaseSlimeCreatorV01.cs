@@ -154,18 +154,18 @@ public class PrismBaseSlimeCreatorV01
             var baseRadiantAppearance = CustomRadiantAppearance;
             if (baseRadiantAppearance == null) baseRadiantAppearance = PrismNativeBaseSlime.Pink.GetPrismBaseSlime().TryGetSlimeAppearanceRadiant();
             radiantAppearance = Object.Instantiate(baseRadiantAppearance);
-            baseRadiantAppearance.hideFlags = HideFlags.DontUnloadUnusedAsset;
-            baseRadiantAppearance.name = Name+"Radiant";
-            baseRadiantAppearance._icon = RadiantIcon ?? Icon;
-            baseRadiantAppearance._icon ??= PrismShortcuts.UnavailableIcon;
-            slimeDef.AppearancesDefault = slimeDef.AppearancesDefault.AddToNew(baseRadiantAppearance);
+            radiantAppearance.hideFlags = HideFlags.DontUnloadUnusedAsset;
+            radiantAppearance.name = Name+"Radiant";
+            radiantAppearance._icon = RadiantIcon ?? Icon;
+            radiantAppearance._icon ??= PrismShortcuts.UnavailableIcon;
+            slimeDef.AppearancesDefault = slimeDef.AppearancesDefault.AddToNew(radiantAppearance);
             if (slimeDef.AppearancesDefault[1] == null)
                 slimeDef.AppearancesDefault[1] = appearance;
         
             Duplicate(radiantAppearance, baseRadiantAppearance);
-            slimeDef.RadiantBase = baseRadiantAppearance;
-            baseRadiantAppearance._appearType = SlimeAppearance.AppearanceType.RADIANT_BASE;
-            baseRadiantAppearance._fullArt = null;
+            slimeDef.RadiantBase = radiantAppearance;
+            radiantAppearance._appearType = SlimeAppearance.AppearanceType.RADIANT_BASE;
+            radiantAppearance._fullArt = null;
             
             PrismShortcuts.mainAppearanceDirector.RegisterDependentAppearances(slimeDef, baseRadiantAppearance);
             PrismShortcuts.mainAppearanceDirector.UpdateChosenSlimeAppearance(slimeDef, baseRadiantAppearance);

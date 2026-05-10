@@ -12,13 +12,16 @@ public static class ConvertEUtil
     public static Sprite Texture2DToSprite(this Texture2D texture)
     {
         if (!texture) return null;
-        return Sprite.Create(texture, new Rect(0f, 0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 1f);
+        var sprite = Sprite.Create(texture, new Rect(0f, 0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 1f);
+        sprite.hideFlags = HideFlags.DontUnloadUnusedAsset;
+        return sprite;
     }
     public static Texture2D Base64ToTexture2D(string base64)
     {
         if (string.IsNullOrEmpty(base64)) return null;
         byte[] bytes = System.Convert.FromBase64String(base64);
         Texture2D texture = new Texture2D(2, 2);
+        texture.hideFlags = HideFlags.DontUnloadUnusedAsset;
         try { if (Il2CppImageConversionManager.LoadImage(texture, bytes,false)) return texture; }
         catch (Exception e) { LogError(e); }
         return null;
