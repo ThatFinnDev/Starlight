@@ -115,7 +115,7 @@ public class StarlightStudioMenu : StarlightMenu
             //    visualEnv.skyType.value = 0; 
             //_volume.profile.Remove<GradientSky>();
         } catch { }
-        _slimeRenderer.RenderAppearance(PrismNativeBaseSlime.Pink.GetPrismBaseSlime().GetSlimeAppearance());
+        _slimeRenderer.RenderAppearance(PrismNativeBaseSlime.Angler.GetPrismBaseSlime(),1);
         _openThing = new PanelUIBlueprintV01()
         {
             Color = UIColor.Primary, CornerRadius = 90, Size = new Vector2(1330, 840),

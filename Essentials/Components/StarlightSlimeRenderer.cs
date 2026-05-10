@@ -1,5 +1,7 @@
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using Starlight.Patches.Context;
+using Starlight.Prism;
+using Starlight.Prism.Wrappers;
 using Starlight.Storage;
 
 namespace Starlight.Components;
@@ -8,7 +10,6 @@ namespace Starlight.Components;
 public class StarlightSlimeRenderer : MonoBehaviour
 {
     private GameObject _renderedObj;
-
     private bool _oldUnscaledTime;
     public bool unscaledTime
     {
@@ -34,11 +35,21 @@ public class StarlightSlimeRenderer : MonoBehaviour
     {
         if(_renderedObj) Destroy(_renderedObj);
     }
-    public void RenderAppearance(SlimeAppearance appearance,float scale = 1.0f)
+
+    public GameObject RenderAppearance(SlimeDefinition slime, float scale = 1.0f) => RenderAppearance(slime.GetPrismSlime().GetSlimeAppearance(), scale, slime);
+    public GameObject RenderAppearance(SlimeAppearance appearance,float scale = 1.0f,SlimeDefinition customBones = null)
     {
         if(_renderedObj) Destroy(_renderedObj);
-        _renderedObj = Instantiate(GameContextPatch.SlimeRendererPrefab,transform);
+        if(!customBones)
+            _renderedObj = Instantiate(GameContextPatch.SlimeRendererPrefab,transform);
+        else
+        {
+            var prefab = GenerateFittingPrefab(customBones);
+            _renderedObj = Instantiate(prefab,transform);
+            Destroy(prefab);
+        }
         var app = _renderedObj.transform.GetChild(0).gameObject.GetComponent<SlimeAppearanceApplicator>();
+        app.ClearAppearance();
         app.Appearance = appearance;
         app.AppearanceObjectProvider = GameContextPatch.RendererPool;
         _renderedObj.SetActive(true);
@@ -47,6 +58,24 @@ public class StarlightSlimeRenderer : MonoBehaviour
         app.transform.localRotation = Quaternion.Euler(0, 180f, 0);
         SetLayerRecursive(_renderedObj, gameObject.layer);
         unscaledTime = _oldUnscaledTime;
+        return _renderedObj;
+    }
+
+    private GameObject GenerateFittingPrefab(SlimeDefinition definition)
+    {
+        var prefab = new GameObject("SlimeRenderer"+definition.name);
+        prefab.SetActive(false);
+        var instance = GameObject.Instantiate(definition.prefab,prefab.transform);
+        foreach (var obj in instance.GetChildren()) if(obj.name!="Appearance") Object.DestroyImmediate(obj);
+        foreach (var comp in instance.GetComponents<Component>())
+        {
+            if (comp is Transform || comp.TryCast<SlimeAppearanceApplicator>()) continue;
+            Object.DestroyImmediate(comp);
+        }
+        var app = instance.GetComponent<SlimeAppearanceApplicator>();
+        app.SlimeDefinition = definition;
+        app.Appearance = definition.GetDefaultAppearance();
+        return prefab;
     }
     void SetLayerRecursive(GameObject obj, int newLayer)
     {

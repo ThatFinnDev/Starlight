@@ -215,7 +215,7 @@ public static class PrismLibLookup
             { PrismNativeBaseSlime.Tarr, "SlimeDefinition.Tarr" },
         };
 
-    private static readonly Dictionary<PrismNativePlort, string> RefIDTranslationPrismNativePlort =
+    internal static readonly Dictionary<PrismNativePlort, string> RefIDTranslationPrismNativePlort =
         new Dictionary<PrismNativePlort, string>()
         {
             { PrismNativePlort.Pink, "IdentifiableType.PinkPlort" },

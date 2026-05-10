@@ -316,7 +316,13 @@ public static class MiscEUtil
     
     public static bool IsInsideRange(this int number, int rangeMin, int rangeMax) => number >= rangeMin && number <= rangeMax;
 
-    public static bool ContainsAny(this string str, params string[] check) => check.Any(str.Contains);
+    public static bool ContainsAny(this string str, params string[] check)
+    {
+        if (check == null || check.Length == 0) return false;
+        if (str == null) return false;
+        foreach (var c in check) if (str.Contains(c)) return true;
+        return false;
+    }
 
     public static bool StartsWithAny(this string str, params string[] check)
     {

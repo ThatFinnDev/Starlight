@@ -1,6 +1,8 @@
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
+using Starlight.Components;
 using Starlight.Prism.Data;
 using Starlight.Prism.Lib;
+using Starlight.Prism.Patches;
 using Starlight.Prism.Wrappers;
 using UnityEngine.Localization;
 
@@ -15,6 +17,8 @@ public class PrismGordoCreatorV01
     public PrismBaseSlime BaseSlime = null;
     public string referenceID => "IdentifiableType.Modded" + BaseSlime.SlimeDefinition.name +"Gordo";
 
+    public bool DisableAutomaticStructureGeneration = true;
+    
     public int CustomMaxEatCount = 0;
     public Material CustomEyesBlink;
     public Material CustomEyesNormal;
@@ -87,6 +91,11 @@ public class PrismGordoCreatorV01
             Object.Instantiate(faceComp.BlinkEyes),
             Object.Instantiate(faceComp.HappyMouth) }.ToArray();
 
+        if (!DisableAutomaticStructureGeneration)
+        {
+            GordoEatAwakePatch.Gordos.Add(gordoType,BaseSlime);
+        }
+        
         gordoType.prefab = gordo;
 
         gameContext.LookupDirector._gordoDict.Add(gordoType, gordo);
