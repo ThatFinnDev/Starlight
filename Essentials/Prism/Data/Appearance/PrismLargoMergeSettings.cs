@@ -1,4 +1,4 @@
-namespace Starlight.Prism.Data;
+namespace Starlight.Prism.Data.Appearance;
 
 public class PrismLargoMergeSettings
 {

@@ -1,9 +1,9 @@
-namespace Starlight.Prism.Data;
+namespace Starlight.Prism.Data.Pedia;
 
 public enum PrismPediaCategoryType
 {
-    RadiantSlimes = 0,
-    Slimes = 10,
+    Slimes = 0,
+    RadiantSlimes = 10,
     Resources = 20,
     Blueprints = 30,
     World = 40,

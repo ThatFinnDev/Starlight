@@ -1,4 +1,4 @@
-namespace Starlight.Prism.Data.Enums;
+namespace Starlight.Prism.Data.Native;
 
 public enum PrismNativeLiquid
 {

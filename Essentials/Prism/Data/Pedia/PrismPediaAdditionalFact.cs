@@ -1,6 +1,6 @@
 using UnityEngine.Localization;
 
-namespace Starlight.Prism.Data;
+namespace Starlight.Prism.Data.Pedia;
 
 public record struct PrismPediaAdditionalFact
 {

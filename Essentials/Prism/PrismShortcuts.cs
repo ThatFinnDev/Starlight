@@ -4,7 +4,8 @@ using System.Linq;
 using Il2CppMonomiPark.SlimeRancher.Pedia;
 using Il2CppMonomiPark.SlimeRancher.UI;
 using Starlight.Prism.Data;
-using Starlight.Prism.Data.Enums;
+using Starlight.Prism.Data.Market;
+using Starlight.Prism.Data.Native;
 using Starlight.Prism.Lib;
 using Starlight.Prism.Wrappers;
 using UnityEngine.Localization;
@@ -182,6 +183,7 @@ public static class PrismShortcuts
     public static PrismVeggieFood GetPrismVeggieFood(this IdentifiableType customOrNativeVeggieFood)
     {
         if (!customOrNativeVeggieFood) return null;
+        if (customOrNativeVeggieFood.IsAnimal) return null;
         if (PrismVeggieFoods.TryGetValue(customOrNativeVeggieFood.ReferenceId, out var veggieFood)) return veggieFood;
         if(!LookupEUtil.veggieFoodTypes.Contains(customOrNativeVeggieFood)) return null;
         var newVeggieFood = new PrismVeggieFood(customOrNativeVeggieFood, !customOrNativeVeggieFood.ReferenceId.Contains("Modded"));
@@ -191,6 +193,7 @@ public static class PrismShortcuts
     public static PrismFruitFood GetPrismFruitFood(this IdentifiableType customOrNativeFruitFood)
     {
         if (!customOrNativeFruitFood) return null;
+        if (customOrNativeFruitFood.IsAnimal) return null;
         if (PrismFruitFoods.TryGetValue(customOrNativeFruitFood.ReferenceId, out var fruitFood)) return fruitFood;
         if(!LookupEUtil.fruitFoodTypes.Contains(customOrNativeFruitFood)) return null;
         var newFruitFood = new PrismFruitFood(customOrNativeFruitFood, !customOrNativeFruitFood.ReferenceId.Contains("Modded"));
@@ -200,6 +203,7 @@ public static class PrismShortcuts
     public static PrismNectarFood GetPrismNectarFood(this IdentifiableType customOrNativeNectarFood)
     {
         if (!customOrNativeNectarFood) return null;
+        if (customOrNativeNectarFood.IsAnimal) return null;
         if (PrismNectarFoods.TryGetValue(customOrNativeNectarFood.ReferenceId, out var nectarFood)) return nectarFood;
         if(!LookupEUtil.nectarFoodTypes.Contains(customOrNativeNectarFood)) return null;
         var newNectarFood = new PrismNectarFood(customOrNativeNectarFood, !customOrNativeNectarFood.ReferenceId.Contains("Modded"));
@@ -209,6 +213,7 @@ public static class PrismShortcuts
     public static PrismChickenFood GetPrismChickenFood(this IdentifiableType customOrNativeChickenFood)
     {
         if (!customOrNativeChickenFood) return null;
+        if (!customOrNativeChickenFood.IsAnimal) return null;
         if (PrismChickenFoods.TryGetValue(customOrNativeChickenFood.ReferenceId, out var chickenFood)) return chickenFood;
         if(!LookupEUtil.meatFoodTypes.Contains(customOrNativeChickenFood)) return null;
         var newChickenFood = new PrismChickenFood(customOrNativeChickenFood, !customOrNativeChickenFood.ReferenceId.Contains("Modded"));
@@ -218,6 +223,7 @@ public static class PrismShortcuts
     public static PrismBabyChickenFood GetPrismBabyChickenFood(this IdentifiableType customOrNativeBabyChickenFood)
     {
         if (!customOrNativeBabyChickenFood) return null;
+        if (!customOrNativeBabyChickenFood.IsAnimal) return null;
         if (PrismBabyChickenFoods.TryGetValue(customOrNativeBabyChickenFood.ReferenceId, out var babyChickenFood)) return babyChickenFood;
         if(!LookupEUtil.chickFoodTypes.Contains(customOrNativeBabyChickenFood)) return null;
         var newBabyChickenFood = new PrismBabyChickenFood(customOrNativeBabyChickenFood, !customOrNativeBabyChickenFood.ReferenceId.Contains("Modded"));
@@ -229,35 +235,35 @@ public static class PrismShortcuts
     public static PrismFood GetPrismFood(this IdentifiableType customOrNativeFood)
     {
         if (!customOrNativeFood) return null;
-        if (LookupEUtil.veggieFoodTypes.Contains(customOrNativeFood))
+        if (LookupEUtil.veggieFoodTypes.Contains(customOrNativeFood) && !customOrNativeFood.IsAnimal)
         {
             if (PrismVeggieFoods.TryGetValue(customOrNativeFood.ReferenceId, out var veggieFood)) return veggieFood;
             var newVeggieFood = new PrismVeggieFood(customOrNativeFood, !customOrNativeFood.ReferenceId.Contains("Modded"));
             PrismVeggieFoods.Add(customOrNativeFood.ReferenceId, newVeggieFood);
             return newVeggieFood;
         }
-        if (LookupEUtil.fruitFoodTypes.Contains(customOrNativeFood))
+        if (LookupEUtil.fruitFoodTypes.Contains(customOrNativeFood) && !customOrNativeFood.IsAnimal)
         {
             if (PrismFruitFoods.TryGetValue(customOrNativeFood.ReferenceId, out var fruitFood)) return fruitFood;
             var newFruitFood = new PrismFruitFood(customOrNativeFood, !customOrNativeFood.ReferenceId.Contains("Modded"));
             PrismFruitFoods.Add(customOrNativeFood.ReferenceId, newFruitFood);
             return newFruitFood;
         }
-        if (LookupEUtil.nectarFoodTypes.Contains(customOrNativeFood))
+        if (LookupEUtil.nectarFoodTypes.Contains(customOrNativeFood) && !customOrNativeFood.IsAnimal)
         {
             if (PrismNectarFoods.TryGetValue(customOrNativeFood.ReferenceId, out var nectarFood)) return nectarFood;
             var newNectarFood = new PrismNectarFood(customOrNativeFood, !customOrNativeFood.ReferenceId.Contains("Modded"));
             PrismNectarFoods.Add(customOrNativeFood.ReferenceId, newNectarFood);
             return newNectarFood;
         }
-        if (LookupEUtil.meatFoodTypes.Contains(customOrNativeFood))
+        if (LookupEUtil.meatFoodTypes.Contains(customOrNativeFood) && customOrNativeFood.IsAnimal)
         {
             if (PrismChickenFoods.TryGetValue(customOrNativeFood.ReferenceId, out var chickenFood)) return chickenFood;
             var newChickenFood = new PrismChickenFood(customOrNativeFood, !customOrNativeFood.ReferenceId.Contains("Modded"));
             PrismChickenFoods.Add(customOrNativeFood.ReferenceId, newChickenFood);
             return newChickenFood;
         }
-        if (LookupEUtil.chickFoodTypes.Contains(customOrNativeFood))
+        if (LookupEUtil.chickFoodTypes.Contains(customOrNativeFood) && customOrNativeFood.IsAnimal)
         {
             if (PrismBabyChickenFoods.TryGetValue(customOrNativeFood.ReferenceId, out var babyChickenFood)) return babyChickenFood;
             var newBabyChickenFood = new PrismBabyChickenFood(customOrNativeFood, !customOrNativeFood.ReferenceId.Contains("Modded"));

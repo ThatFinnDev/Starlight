@@ -1,6 +1,7 @@
 using Il2CppMonomiPark.SlimeRancher.Economy;
 using Il2CppMonomiPark.SlimeRancher.UI;
 using Starlight.Prism.Data;
+using Starlight.Prism.Data.Market;
 
 namespace Starlight.Prism.Lib;
 /// <summary>

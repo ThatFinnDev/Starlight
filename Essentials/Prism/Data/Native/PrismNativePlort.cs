@@ -1,6 +1,6 @@
-namespace Starlight.Prism.Data;
+namespace Starlight.Prism.Data.Native;
 
-public enum PrismNativeBaseSlime
+public enum PrismNativePlort
 {
     Pink = 0,
     Cotton = 10,
@@ -24,10 +24,10 @@ public enum PrismNativeBaseSlime
     Twin = 190,
     Sloomber = 200, 
     Shadow = 210,
-    //Prisma = 220,
+    Prisma = 220,
     Hyper = 230,
     Gold = 240,
-    Lucky = 250, 
-    Tarr = 260,
-    //Unstable = 270
+    //Lucky = 250, 
+    //Tarr = 260,
+    Unstable = 270
 }

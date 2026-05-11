@@ -1,4 +1,5 @@
 using Starlight.Prism.Data;
+using Starlight.Prism.Data.Native;
 using UnityEngine.Localization;
 
 namespace Starlight.Prism.Wrappers;

@@ -1,6 +1,6 @@
 using Il2CppMonomiPark.SlimeRancher;
 using Starlight.Prism.Data;
-using Starlight.Prism.Data.Enums;
+using Starlight.Prism.Data.Native;
 using Starlight.Prism.Lib;
 using Starlight.Prism.Wrappers;
 using UnityEngine.Localization;

@@ -1,4 +1,4 @@
-namespace Starlight.Prism.Data;
+namespace Starlight.Prism.Data.Market;
 
 public struct PrismMarketData
 {

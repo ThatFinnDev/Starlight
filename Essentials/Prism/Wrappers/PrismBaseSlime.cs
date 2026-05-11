@@ -1,4 +1,5 @@
 using Starlight.Prism.Data;
+using Starlight.Prism.Data.Native;
 
 namespace Starlight.Prism.Wrappers;
 
