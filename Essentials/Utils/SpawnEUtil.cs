@@ -52,7 +52,7 @@ public static class SpawnEUtil
                 LandPlotLocations = new();
                 _rootObjects = new();
             }
-            if(inGame)
+            if(inGame&&!StarlightCounterGateManager.srleActive)
                 foreach (var plot in StarlightSaveManager.inGameData.CustomPlots)
                     if (plot.Value.SceneName == sceneName)
                     {

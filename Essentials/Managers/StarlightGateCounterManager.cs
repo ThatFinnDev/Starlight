@@ -9,9 +9,12 @@ public static class StarlightCounterGateManager
     private static readonly List<object> UseOcclusionCullingList = new ();
     private static readonly List<object> DisableCheatsList = new ();
     private static readonly List<object> LockPackages = new ();
+    // ReSharper disable once InconsistentNaming
+    private static readonly List<object> SRLEActive = new ();
     public static bool playerCameraUseOcclusionCulling => UseOcclusionCullingList.Count == 0;
     public static bool disableCheats => DisableCheatsList.Count != 0;
     public static bool packagesLocked => LockPackages.Count != 0;
+    public static bool srleActive => SRLEActive.Count != 0;
 
     internal static void OnSceneWasLoaded(int buildIndex, string sceneName)
     {
@@ -99,5 +102,23 @@ public static class StarlightCounterGateManager
     public static void DeregisterFor_LockPackages(this MelonBase melon)
     {
         if (!LockPackages.Contains(melon)) LockPackages.Remove(melon);
+    }
+    
+    
+    public static void RegisterFor_SRLEActive(this StarlightExpansionVXX expansion)
+    {
+        if (!SRLEActive.Contains(expansion)) SRLEActive.Add(expansion);
+    }
+    public static void DeregisterFor_SRLEActive(this StarlightExpansionVXX expansion)
+    {
+        if (!SRLEActive.Contains(expansion)) SRLEActive.Remove(expansion);
+    }
+    public static void RegisterFor_SRLEActive(this MelonBase melon)
+    {
+        if (!SRLEActive.Contains(melon)) SRLEActive.Add(melon);
+    }
+    public static void DeregisterFor_SRLEActive(this MelonBase melon)
+    {
+        if (!SRLEActive.Contains(melon)) SRLEActive.Remove(melon);
     }
 }

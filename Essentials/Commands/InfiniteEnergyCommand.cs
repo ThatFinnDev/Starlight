@@ -28,38 +28,38 @@ internal class InfiniteEnergyCommand : StarlightCommand
         if (StarlightSaveManager.inGameData.InfiniteEnergyActive)
         {
             StarlightSaveManager.inGameData.InfiniteEnergyActive = false;
-            if (!energyMeter) energyMeter = GetInScene<EnergyMeter>("Energy Meter");
-            energyMeter.transform.GetChild(0).gameObject.SetActive(true);
+            if (!_energyMeter) _energyMeter = GetInScene<EnergyMeter>("Energy Meter");
+            _energyMeter.transform.GetChild(0).gameObject.SetActive(true);
 
-            if (jetpackAbilityData == null) jetpackAbilityData = Get<JetpackAbilityData>("Jetpack");
-            jetpackAbilityData._hoverHeight = normalHoverHeight;
-            jetpackAbilityData._maxUpwardThrustForce = normalMaxUpwardThrustForce;
-            jetpackAbilityData._upwardThrustForceIncrement = normalUpwardThrustForceIncrement;
+            if (_jetpackAbilityData == null) _jetpackAbilityData = Get<JetpackAbilityData>("Jetpack");
+            _jetpackAbilityData._hoverHeight = _normalHoverHeight;
+            _jetpackAbilityData._maxUpwardThrustForce = _normalMaxUpwardThrustForce;
+            _jetpackAbilityData._upwardThrustForceIncrement = _normalUpwardThrustForceIncrement;
 
-            energyMeter.maxEnergy = new NullableFloatProperty(normalEnergy);
+            _energyMeter.maxEnergy = new NullableFloatProperty(_normalEnergy);
             sceneContext.PlayerState.SetEnergy(0);
             SendMessage(Tr("cmd.infenergy.successnolonger"));
         }
         else
         {
             StarlightSaveManager.inGameData.InfiniteEnergyActive = true;
-            if (!energyMeter) energyMeter = GetInScene<EnergyMeter>("Energy Meter");
-            energyMeter.transform.GetChild(0).gameObject.SetActive(false);
+            if (!_energyMeter) _energyMeter = GetInScene<EnergyMeter>("Energy Meter");
+            _energyMeter.transform.GetChild(0).gameObject.SetActive(false);
 
-            if (jetpackAbilityData == null) jetpackAbilityData = Get<JetpackAbilityData>("Jetpack");
-            normalHoverHeight = jetpackAbilityData._hoverHeight;
-            normalMaxUpwardThrustForce = jetpackAbilityData._maxUpwardThrustForce;
-            normalUpwardThrustForceIncrement = jetpackAbilityData._upwardThrustForceIncrement;
+            if (_jetpackAbilityData == null) _jetpackAbilityData = Get<JetpackAbilityData>("Jetpack");
+            _normalHoverHeight = _jetpackAbilityData._hoverHeight;
+            _normalMaxUpwardThrustForce = _jetpackAbilityData._maxUpwardThrustForce;
+            _normalUpwardThrustForceIncrement = _jetpackAbilityData._upwardThrustForceIncrement;
             if (shouldDisableThrusterHeight)
             {
-                jetpackAbilityData._hoverHeight = float.MaxValue;
-                jetpackAbilityData._maxUpwardThrustForce = 5f;
-                jetpackAbilityData._upwardThrustForceIncrement = 5f;
+                _jetpackAbilityData._hoverHeight = float.MaxValue;
+                _jetpackAbilityData._maxUpwardThrustForce = 5f;
+                _jetpackAbilityData._upwardThrustForceIncrement = 5f;
             }
 
             try { sceneContext.PlayerState.SetEnergy(int.MaxValue); }catch { }
-            normalEnergy = energyMeter.maxEnergy;
-            energyMeter.maxEnergy = new NullableFloatProperty(2.14748365E+09f);
+            _normalEnergy = _energyMeter.maxEnergy;
+            _energyMeter.maxEnergy = new NullableFloatProperty(2.14748365E+09f);
             SendMessage(Tr("cmd.infenergy.success"));
         }
         return true;
@@ -69,28 +69,29 @@ internal class InfiniteEnergyCommand : StarlightCommand
     {
         try
         {
-            if (inGame && StarlightSaveManager.inGameData.InfiniteEnergyActive) 
+            if (inGame && !StarlightCounterGateManager.srleActive && StarlightSaveManager.inGameData.InfiniteEnergyActive) 
                 sceneContext.PlayerState.SetEnergy(int.MaxValue);
         }
         catch { }
     }
 
-    public override void OnPlayerCoreLoad() => jetpackAbilityData = Get<JetpackAbilityData>("Jetpack");
+    public override void OnPlayerCoreLoad() => _jetpackAbilityData = Get<JetpackAbilityData>("Jetpack");
     public override void OnUICoreLoad()
     {
+        if (StarlightCounterGateManager.srleActive) return;
         ExecuteInTicks(() =>
         {
-            energyMeter = GetInScene<EnergyMeter>("Energy Meter");
-            if(StarlightSaveManager.inGameData.InfiniteEnergyActive)
-                energyMeter.gameObject.active = false;
+            _energyMeter = GetInScene<EnergyMeter>("Energy Meter");
+            if(inGame && !StarlightCounterGateManager.srleActive && StarlightSaveManager.inGameData.InfiniteEnergyActive)
+                _energyMeter.gameObject.active = false;
         },1);
     }
     
 
-    static float normalEnergy = 100;
-    static float normalHoverHeight = 0;
-    static float normalMaxUpwardThrustForce = 0;
-    static float normalUpwardThrustForceIncrement = 0;
-    static EnergyMeter energyMeter;
-    static JetpackAbilityData jetpackAbilityData;
+    private static float _normalEnergy = 100;
+    private static float _normalHoverHeight = 0;
+    private static float _normalMaxUpwardThrustForce = 0;
+    static float _normalUpwardThrustForceIncrement = 0;
+    private static EnergyMeter _energyMeter;
+    private static JetpackAbilityData _jetpackAbilityData;
 }

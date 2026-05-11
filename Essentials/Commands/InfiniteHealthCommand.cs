@@ -38,7 +38,7 @@ internal class InfiniteHealthCommand : StarlightCommand
         ExecuteInTicks(() =>
         {
             _healthMeter = GetInScene<HealthMeter>("Health Meter");
-            if (StarlightSaveManager.inGameData.InfiniteHealthActive)
+            if (inGame && !StarlightCounterGateManager.srleActive && StarlightSaveManager.inGameData.InfiniteHealthActive)
                 _healthMeter.gameObject.active = false;
         },1);;
     }

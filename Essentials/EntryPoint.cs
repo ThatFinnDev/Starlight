@@ -550,22 +550,22 @@ public class StarlightEntryPoint : MelonMod
                 break;
             case "UICore":
                 foreach (var expansion in ExpansionV01S)
-                    try { expansion.OnUICoreInitialize(); }
+                    try { expansion.OnUICoreLoad(); }
                     catch (Exception e) { LogError(e); }
                 break;
             case "MainMenuUI":
                 foreach (var expansion in ExpansionV01S)
-                    try { expansion.OnMainMenuUIInitialize(); }
+                    try { expansion.OnMainMenuUILoad(); }
                     catch (Exception e) { LogError(e); }
                 break;
             case "LoadScene":
                 foreach (var expansion in ExpansionV01S)
-                    try { expansion.OnLoadSceneInitialize(); }
+                    try { expansion.OnLoadSceneLoad(); }
                     catch (Exception e) { LogError(e); }
                 break;
             case "ZoneCore":
                 foreach (var expansion in ExpansionV01S)
-                    try { expansion.OnZoneCoreInitialized(); }
+                    try { expansion.OnZoneCoreLoad(); }
                     catch (Exception e) { LogError(e); }
                 break;
         }
@@ -677,7 +677,7 @@ public class StarlightEntryPoint : MelonMod
                 break;
             case "ZoneCore":
                 foreach (var expansion in ExpansionV01S)
-                    try { expansion.OnZoneCoreInitialized(); }
+                    try { expansion.OnZoneCoreInitialize(); }
                     catch (Exception e) { LogError(e); }
                 break;
         }

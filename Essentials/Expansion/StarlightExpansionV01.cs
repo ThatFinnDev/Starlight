@@ -148,11 +148,11 @@ public abstract class StarlightExpansionV01 : StarlightExpansionVXX
     /// <summary>
     /// Gets executed every time the scene "ZoneCore" gets loaded.
     /// </summary>
-    public virtual void OnZoneCoreLoaded() { }
+    public virtual void OnZoneCoreLoad() { }
     /// <summary>
     ///   Gets executed every time the scene "ZoneCore" gets initialized.
     /// </summary>
-    public virtual void OnZoneCoreInitialized() { }
+    public virtual void OnZoneCoreInitialize() { }
     /// <summary>
     /// Gets executed every time the scene "ZoneCore" gets unloaded.
     /// </summary>
