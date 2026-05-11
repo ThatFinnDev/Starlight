@@ -13,7 +13,7 @@ public class PrismRadiantSlimePediaEntry : PrismPediaEntry
         return radiantSlimePediaEntry.GetPrismRadiantSlimePediaEntry();
     }
     public RadiantSlimePediaEntry GetRadiantSlimePediaEntry() => PediaEntry.TryCast<RadiantSlimePediaEntry>();
-    public IdentifiableType GetIdentifiableType() => GetRadiantSlimePediaEntry().SlimeDefinition;
+    public PrismBaseSlime GetPrismBaseSlime() => GetRadiantSlimePediaEntry().SlimeDefinition.GetPrismBaseSlime();
     internal PrismRadiantSlimePediaEntry(PediaEntry pediaEntry, bool isNative): base(pediaEntry, isNative)
     {
         this.PediaEntry = pediaEntry;

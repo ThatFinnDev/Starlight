@@ -1,19 +1,17 @@
-/*using System;
+using System;
 
 namespace Starlight.Prism.Colliders;
 
-public class MeshColliderData : IColliderData
+public class MeshColliderData : ColliderData
 {
-    public int Type => 3;
-
-    public Mesh mesh;
-
-    public float GetRadius() => throw new NotImplementedException();
-
-    public Mesh GetMesh() => mesh;
-
-    public float GetWidth() => throw new NotImplementedException();
-
-    public float GetHeight() => throw new NotImplementedException();
-    public float GetDepth() => throw new NotImplementedException();
-}*/
+    public Mesh Mesh;
+    public Mesh GetMesh() => Mesh;
+    
+    public override Collider AddToGameObject(GameObject obj)
+    {
+        var col = obj.AddComponent<MeshCollider>();
+        col.convex = true;
+        col.sharedMesh = GetMesh();
+        return col;
+    }
+}

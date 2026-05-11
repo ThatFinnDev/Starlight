@@ -22,7 +22,7 @@ public class PrismSlime
     public string GetReferenceID() => SlimeDefinition.ReferenceId;
     public string GetName() => SlimeDefinition.name;
     public LocalizedString GetLocalized() => SlimeDefinition.LocalizedName;
-    public Color32 GetVacColor() => SlimeDefinition.color;
+    public Color32 GetColor() => SlimeDefinition.color;
     public GameObject GetPrefab() => SlimeDefinition.prefab;
     public SlimeAppearance GetSlimeAppearance() => SlimeDefinition.GetDefaultAppearance();
     
@@ -41,29 +41,5 @@ public class PrismSlime
     }
     public SlimeDiet GetSlimeDiet() => SlimeDefinition.Diet;
     public bool GetIsNative() => IsNative;
-    
-    public void SetIcon(Sprite newIcon)
-    {
-        SlimeDefinition.icon = newIcon;
-        foreach (var appearance in SlimeDefinition.Appearances.ToList())
-            appearance._icon=newIcon;
-    }
-    public void SetVacColor(Color32 newColor)
-    {
-        SlimeDefinition.color = newColor;
-        foreach (var appearance in SlimeDefinition.Appearances.ToList())
-        {
-            appearance._splatColor=newColor;
-            appearance._colorPalette = new SlimeAppearance.Palette
-            {
-                Ammo = newColor, Bottom = appearance._colorPalette.Bottom, Middle = appearance._colorPalette.Middle,
-                Top = appearance._colorPalette.Top
-            };
-            
-        }
-    }
-    
-    
-    
     
 }

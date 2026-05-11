@@ -42,6 +42,7 @@ public static class LookupEUtil
     public static IdentifiableType[] vaccableTypes => _FromGroupList("VaccableNonLiquids");
     public static GadgetDefinition[] gadgetTypes => _FromGGroupList("GadgetGroup");
     public static ToyDefinition[] toyTypes => _FromTGroupList("ToyGroup");
+    public static LiquidDefinition[] liquidTypes => _FromLGroupList("LiquidGroup");
     
     public static SlimeDefinition[] baseSlimeTypes => _FromSGroupList("BaseSlimeGroup");
     public static SlimeDefinition[] slimeTypes => _FromSGroupList("SlimesGroup");
@@ -61,6 +62,20 @@ public static class LookupEUtil
         if (IdentifiableTypeGroupList == null) return Array.Empty<IdentifiableType>();
         if(!allIdentifiableTypeGroups.ContainsKey(name)) return  Array.Empty<IdentifiableType>();
         return allIdentifiableTypeGroups[name].GetAllMembers().ToArray().Where(type => !string.IsNullOrEmpty(type.ReferenceId)).ToArray();
+    }
+    
+    static LiquidDefinition[] _FromLGroupList(string name)
+    {
+        if (IdentifiableTypeGroupList == null) return Array.Empty<LiquidDefinition>();
+        if(!allIdentifiableTypeGroups.ContainsKey(name)) return  Array.Empty<LiquidDefinition>();
+        var list = new List<LiquidDefinition>();
+        foreach (IdentifiableType type in allIdentifiableTypeGroups[name].GetAllMembersList())
+        {
+            if (string.IsNullOrEmpty(type.ReferenceId)) continue;
+            var def = type.TryCast<LiquidDefinition>();
+            if(def!=null) list.Add(def);
+        }
+        return list.ToArray();
     }
     static ToyDefinition[] _FromTGroupList(string name)
     {
@@ -125,6 +140,14 @@ public static class LookupEUtil
         foreach (SlimeDefinition type in idents) if (type.ReferenceId.ToUpper() == referenceID) return type;
         return null;
     }    
+    public static LiquidDefinition GetEntryByRefID(this LiquidDefinition[]? idents, string referenceID)
+    {
+        if (string.IsNullOrWhiteSpace(referenceID)) return null;
+        if (idents == null||idents.Length==0) return null;
+        referenceID = referenceID.ToUpper();
+        foreach (LiquidDefinition type in idents) if (type.ReferenceId.ToUpper() == referenceID) return type;
+        return null;
+    } 
     public static IdentifiableType GetEntryByRefID(this IdentifiableType[]? idents, string referenceID)
     {
         if (string.IsNullOrWhiteSpace(referenceID)) return null;

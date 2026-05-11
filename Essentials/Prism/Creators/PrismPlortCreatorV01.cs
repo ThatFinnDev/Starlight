@@ -14,7 +14,7 @@ public class PrismPlortCreatorV01
     public LocalizedString Localized;
     private string referenceID => "IdentifiableType.Modded" + Name + "Plort";
 
-    public Color32 VacColor = new Color32(0,0,0,255);
+    public Color VacColor = new Color32(0,0,0,255);
     public GameObject CustomBasePrefab = null;
 
 
@@ -52,6 +52,8 @@ public class PrismPlortCreatorV01
         plort.color = VacColor;
         plort.icon = Icon ?? PrismShortcuts.UnavailableIcon;
         plort.IsPlort = true;
+        plort._requiresFullArt = false;
+        plort._fullArt = null;
         
         
         plort.localizedName = Localized;

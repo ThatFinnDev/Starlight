@@ -1,4 +1,5 @@
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
+using Il2CppMonomiPark.SlimeRancher.Slime;
 using Starlight.Prism.Data;
 using Starlight.Prism.Lib;
 using Starlight.Prism.Wrappers;
@@ -17,6 +18,7 @@ public class PrismBaseSlimeCreatorV01
     public LocalizedString Localized;
     public string referenceID => "SlimeDefinition.Modded" + Name;
 
+    public List<PrismToy> FavouriteToys = new();
     public PrismPlort Plort = null;
     public GameObject CustomBasePrefab = null;
     public SlimeAppearance CustomBaseAppearance = null;
@@ -29,8 +31,9 @@ public class PrismBaseSlimeCreatorV01
     public bool CanLargofy = false;
     public bool CreateAllLargos = false;
     public bool DisableAutoModdedLargos = false;
-    public Color32 VacColor = new Color32(0,0,0,255);
+    public Color VacColor = new Color32(0,0,0,255);
     public bool SupportRadiant = true;
+    public int RadiantBagSize = 1500;
     
     
     public PrismBaseSlimeCreatorV01(string name, Sprite icon, LocalizedString localized)
@@ -152,24 +155,27 @@ public class PrismBaseSlimeCreatorV01
         if (SupportRadiant)
         {
             var baseRadiantAppearance = CustomRadiantAppearance;
-            if (baseRadiantAppearance == null) baseRadiantAppearance = PrismNativeBaseSlime.Pink.GetPrismBaseSlime().TryGetSlimeAppearanceRadiant();
+            if (baseRadiantAppearance == null)
+                baseRadiantAppearance = PrismNativeBaseSlime.Pink.GetPrismBaseSlime().TryGetSlimeAppearanceRadiant();
             radiantAppearance = Object.Instantiate(baseRadiantAppearance);
             radiantAppearance.hideFlags = HideFlags.DontUnloadUnusedAsset;
-            radiantAppearance.name = Name+"Radiant";
+            radiantAppearance.name = Name + "Radiant";
             radiantAppearance._icon = RadiantIcon ?? Icon;
             radiantAppearance._icon ??= PrismShortcuts.UnavailableIcon;
             slimeDef.AppearancesDefault = slimeDef.AppearancesDefault.AddToNew(radiantAppearance);
             if (slimeDef.AppearancesDefault[1] == null)
                 slimeDef.AppearancesDefault[1] = appearance;
-        
+
             Duplicate(radiantAppearance, baseRadiantAppearance);
             slimeDef.RadiantBase = radiantAppearance;
             radiantAppearance._appearType = SlimeAppearance.AppearanceType.RADIANT_BASE;
             radiantAppearance._fullArt = null;
-            
+
             PrismShortcuts.mainAppearanceDirector.RegisterDependentAppearances(slimeDef, baseRadiantAppearance);
             PrismShortcuts.mainAppearanceDirector.UpdateChosenSlimeAppearance(slimeDef, baseRadiantAppearance);
+
         }
+        else slimeDef.RadiantBase = null;
         
         var basePrefab = CustomBasePrefab;
         if (basePrefab == null) basePrefab = PrismNativeBaseSlime.Pink.GetPrismBaseSlime().GetPrefab();
@@ -188,6 +194,12 @@ public class PrismBaseSlimeCreatorV01
         PrismShortcuts.mainAppearanceDirector.UpdateChosenSlimeAppearance(slimeDef, appearance);
         PrismLibSaving.SetupForSaving(slimeDef,referenceID);
 
+        slimeDef.FavoriteToyIdents = new Il2CppReferenceArray<ToyDefinition>(FavouriteToys.Count);
+        for (int i = 0; i < FavouriteToys.Count; i++)
+            slimeDef.FavoriteToyIdents[i] = FavouriteToys[i].ToyDef;
+        
+        
+        
         if(!DisableVaccable) 
             slimeDef.Prism_AddToGroup("VaccableBaseSlimeGroup");
         slimeDef.Prism_AddToGroup("SmallSlimeGroup");
@@ -213,8 +225,10 @@ public class PrismBaseSlimeCreatorV01
 
         if (!DisableEdibleByTarrs)
             PrismNativeBaseSlime.Tarr.GetPrismBaseSlime().RefreshEatMap();
-        var prismSlime = new PrismBaseSlime(slimeDef, false,CanLargofy,DisableAutoModdedLargos);
-        
+        var prismSlime = new PrismBaseSlime(slimeDef, false);
+        prismSlime.AllowLargos = CanLargofy;;
+        prismSlime.DisableAutoModdedLargos = DisableAutoModdedLargos;
+        prismSlime.NonNativeBagSize = RadiantBagSize;
         if (CanLargofy&&CreateAllLargos)
         {
             PrismShortcuts.CreateLargoActions.Add(() =>

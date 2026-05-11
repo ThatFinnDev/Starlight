@@ -1,19 +1,15 @@
-/*using System;
+using System;
 
 namespace Starlight.Prism.Colliders;
 
-public class SphereColliderData : IColliderData
+public class SphereColliderData : ColliderData
 {
-    public int Type => 1;
-
-    public float radius;
-
-    public float GetRadius() => radius;
-
-    public Mesh GetMesh() => throw new NotImplementedException();
-
-    public float GetWidth() => radius;
-
-    public float GetHeight() => radius;
-    public float GetDepth() => radius;
-}*/
+    public float Radius;
+    public float GetRadius() => Radius;
+    public override Collider AddToGameObject(GameObject obj)
+    {
+        var col = obj.AddComponent<SphereCollider>();
+        col.radius = GetRadius();
+        return col;
+    }
+}

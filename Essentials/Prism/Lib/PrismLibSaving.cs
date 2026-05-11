@@ -11,6 +11,7 @@ public class PrismLibSaving
     
     /// <summary>
     /// Setups an identifiable type for saving
+    /// USE IT ONLY WHEN YOU DONT USE THE CREATOR CLASSES
     /// </summary>
     /// <param name="ident">The identifiable type to setup</param>
     /// <param name="refID">The reference ID to use for saving</param>

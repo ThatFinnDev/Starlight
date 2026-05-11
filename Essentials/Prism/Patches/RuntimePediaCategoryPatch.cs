@@ -30,6 +30,8 @@ internal class RuntimePediaCategoryPatch
             PrismLibPedia.PediaCategories.Add(category,__instance);
             foreach (var pedia in PrismLibPedia.PediaEntryLookup[category])
             {
+                if (!__instance._items.Contains(pedia))
+                    __instance._items = __instance._items.AddToNew(pedia);
                 if (!__result._items.Contains(pedia))
                      __result._items.Add(pedia);
             }

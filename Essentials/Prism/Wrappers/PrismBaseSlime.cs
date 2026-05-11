@@ -6,14 +6,15 @@ public class PrismBaseSlime : PrismSlime
 {
     public Sprite GetIcon() => GetSlimeAppearance()._icon;
     public Sprite GetRadiantIcon() => GetSlimeAppearanceRadiant()._icon;
-    internal readonly bool AllowLargos;
+    internal bool AllowLargos;
     internal bool DisableAutoModdedLargos;
+    internal int NonNativeBagSize = 1500;
     public static implicit operator PrismBaseSlime(PrismNativeBaseSlime nativeBaseSlime)
     {
         return nativeBaseSlime.GetPrismBaseSlime();
     }
 
-    public Material GetBaseMaterial()
+    internal Material GetBaseMaterial()
     {
         try
         {
@@ -35,12 +36,5 @@ public class PrismBaseSlime : PrismSlime
             AllowLargos = true;
         if (!isNative)
             DisableAutoModdedLargos = true;
-    }
-    internal PrismBaseSlime(SlimeDefinition slimeDefinition, bool isNative, bool allowLargos, bool disableAutoModdedLargos): base(slimeDefinition, isNative)
-    {
-        this.SlimeDefinition = slimeDefinition;
-        this.IsNative = isNative;
-        this.AllowLargos = allowLargos;
-        this.DisableAutoModdedLargos = disableAutoModdedLargos;
     }
 }

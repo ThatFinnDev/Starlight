@@ -1,4 +1,5 @@
 using Starlight.Prism.Data;
+using Starlight.Prism.Data.Enums;
 using Starlight.Prism.Wrappers;
 
 namespace Starlight.Prism.Lib;
@@ -25,6 +26,10 @@ public static class PrismLibLookup
     /// The group of all gadget types
     /// </summary>
     public static IdentifiableTypeGroup gadgetGroup => LookupEUtil.allIdentifiableTypeGroups["GadgetGroup"]; 
+    /// <summary>
+    /// The group of all liquid types
+    /// </summary>
+    public static IdentifiableTypeGroup liquidGroup => LookupEUtil.allIdentifiableTypeGroups["LiquidGroup"]; 
     /// <summary>
     /// The group of all slime types
     /// </summary>
@@ -184,6 +189,15 @@ public static class PrismLibLookup
     {
         return RefIDTranslationPrismNativePlort.GetValueOrDefault(nativePlort);
     }
+    /// <summary>
+    /// Gets the reference ID of a native liquid
+    /// </summary>
+    /// <param name="nativeLiquid">The native liquid to get the reference ID of</param>
+    /// <returns>The reference ID of the native liquid</returns>
+    public static string GetReferenceID(this PrismNativeLiquid nativeLiquid)
+    {
+        return RefIDTranslationPrismNativeLiquid.GetValueOrDefault(nativeLiquid);
+    }
     internal static readonly Dictionary<PrismNativeBaseSlime, string> RefIDTranslationPrismNativeBaseSlime =
         new Dictionary<PrismNativeBaseSlime, string>()
         {
@@ -246,4 +260,9 @@ public static class PrismLibLookup
             { PrismNativePlort.Unstable, "IdentifiableType.UnstablePlort" }
         };
     
+    internal static readonly Dictionary<PrismNativeLiquid, string> RefIDTranslationPrismNativeLiquid =
+        new Dictionary<PrismNativeLiquid, string>()
+        {
+            { PrismNativeLiquid.Water, "LiquidDefinition.Water" }
+        };
 }

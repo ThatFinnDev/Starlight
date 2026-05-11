@@ -26,12 +26,13 @@ public class PrismRadiantSlimePediaEntryCreatorV01
     public bool IsValid()
     {
         if (slimeDefinition==null) return false;
+        if (slimeDefinition.IsLargo) return false;
         if (DescriptionLocalized==null) return false;
         return true;
     }
 
     
-    public PrismRadiantSlimePediaEntry CreateIdentifiablePediaEntry()
+    public PrismRadiantSlimePediaEntry CreateRadiantSlimePediaEntry()
     {
         if (!IsValid()) return null;
         if (_createdPediaEntry != null) return _createdPediaEntry;
@@ -42,8 +43,9 @@ public class PrismRadiantSlimePediaEntryCreatorV01
         entry._title = slimeDefinition.localizedName;
         entry._slimeDefinition = slimeDefinition;
         entry._description = DescriptionLocalized;
-        entry.name = slimeDefinition.name;
+        entry.name = "Radiant"+slimeDefinition.name;
         entry._highlightSet = FactSet.GetPediaHighlightSet();
+        
         var details = new List<PediaEntryDetail>();
         if(Details!=null)
             foreach (var detail in Details)

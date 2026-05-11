@@ -362,4 +362,58 @@ public static class PrismLibAppearances
     }
 
     #endregion
+    
+    #region Liquids
+    
+    public static void SetColors(this PrismLiquid liquid, Color center, Color baseColor, Color edge, Color emission)
+    {
+        var sphere = liquid.GetPrefab().GetObjectRecursively<MeshRenderer>("Sphere");
+        if(sphere==null)
+            LogError("You need to have a child called 'Sphere' with a MeshRenderer for this o work");
+        var material = sphere.sharedMaterial;
+        material.SetColor("_ColorBase", baseColor);
+        material.SetColor("_ColorCenter", center);
+        material.SetColor("_ColorEdge", edge);
+        material.SetColor("_RimTint", edge);
+        material.SetColor("_EmissionColor", emission);
+    }
+    
+    public static void SetBaseColor(this PrismLiquid liquid, Color baseColor)
+    {
+        var sphere = liquid.GetPrefab().GetObjectRecursively<MeshRenderer>("Sphere");
+        if(sphere==null)
+            LogError("You need to have a child called 'Sphere' with a MeshRenderer for this o work");
+        var material = sphere.sharedMaterial;
+        material.SetColor("_ColorBase", baseColor);
+    }
+    public static void SetCenterColor(this PrismLiquid liquid, Color center)
+    {
+        var sphere = liquid.GetPrefab().GetObjectRecursively<MeshRenderer>("Sphere");
+        if(sphere==null)
+            LogError("You need to have a child called 'Sphere' with a MeshRenderer for this o work");
+        var material = sphere.sharedMaterial;
+        material.SetColor("_ColorCenter", center);
+    }
+    
+    
+    public static void SetEdgeColor(this PrismLiquid liquid, Color edge)
+    {
+        var sphere = liquid.GetPrefab().GetObjectRecursively<MeshRenderer>("Sphere");
+        if(sphere==null)
+            LogError("You need to have a child called 'Sphere' with a MeshRenderer for this o work");
+        var material = sphere.sharedMaterial;
+        material.SetColor("_ColorEdge", edge);
+        material.SetColor("_RimTint", edge);
+    }
+    
+    public static void SetEmissionColor(this PrismLiquid liquid, Color emission)
+    {
+        var sphere = liquid.GetPrefab().GetObjectRecursively<MeshRenderer>("Sphere");
+        if(sphere==null)
+            LogError("You need to have a child called 'Sphere' with a MeshRenderer for this o work");
+        var material = sphere.sharedMaterial;
+        material.SetColor("_EmissionColor", emission);
+    }
+    
+    #endregion
 }
