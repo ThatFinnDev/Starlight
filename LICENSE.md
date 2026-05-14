@@ -1,37 +1,59 @@
-# SR2E Source-Available License (SR2E-SAL)
+# Starlight Source-Available License (Starlight-SAL)
+**© 2026 Finn Göbl (ThatFinn)**
 
-© 2026 ThatFinn
+## 1. Source Access & Strict Usage Limits
+Permission is granted to any person to view and inspect the source code of **Starlight** for educational purposes, debugging, or to understand the Software's API and its interaction with *Slime Rancher 2*.
+* **No Copying:** You may not copy, paste, redistribute, or "port" any portion of the source code into other projects **without explicit permission**.
+* **No AI Training:** The Software and its source code may **not** be used as a dataset for training, fine-tuning, or prompting Artificial Intelligence (AI) or Machine Learning (ML) models **without explicit permission**.
+* **Anti-Reconstruction Clause:** While you may study the code to learn how to interface with it, you are strictly prohibited from using the source code to "reconstruct," "clone," or "re-implement" the Software's internal logic, algorithms, or unique structures in a separate project for the purpose of bypassing the need for Starlight as a dependency **without explicit permission**.
 
-## 1. Permission to View and Modify
-You are granted permission to view the source code of **SR2E**. Any modification or use of the source code is prohibited, except as explicitly permitted in other sections of this license.
+## 2. Binary Distribution & Hosting Restrictions
+The compiled version of the Software (the **.dll file**) is subject to strict distribution controls to ensure users receive official, untampered versions and to protect the integrity of the project.
+* **No Third-Party Hosting:** You are strictly prohibited from hosting, mirroring, or uploading the `.dll` file to any website, server, cloud storage platform, or public repository other than those officially designated by the author **without explicit permission**.
+* **No Direct Sharing of Files:** You may not send, transmit, or redistribute the `.dll` file directly to other individuals or groups via any medium (e.g., Discord, email, file-sharing services, or physical media) **without explicit permission**.
+* **Encouraged Sharing via Link:** Users are encouraged to share the Software with others by providing the **official direct download link** or the official project page URL as provided by **Finn Göbl**. This ensures all users receive the most recent and secure version of the Software.
 
-## 2. Copyleft on Derivatives
-If you redistribute or release a modified version of this project, your derivative work must:
-- Remain under this same license,
-- Credit the original project and its official creator,
-- Not present itself as the official version of this project or replace it.
+## 3. Third-Party Assets & Exclusions
+This license applies strictly to the original work created by **Finn Göbl**.
+* **Excluded Assets:** Certain assets included within the Software (e.g., specific image files, sounds, or third-party libraries) are not owned by the author and are **not** subject to the terms of the Starlight-SAL.
+* **Identification:** All such files are identified in the accompanying `THIRD_PARTY_NOTICES.txt` file found in the project root.
+* **License Terms:** Usage, modification, or redistribution of these excluded assets is governed by their respective original licenses. The Starlight-SAL does not grant you any additional rights to these third-party materials **without explicit permission** from their original creators.
 
-## 3. Contributions / Pull Requests
-- Any code submitted via pull request, patch, or contribution to this project automatically becomes part of the project’s codebase and is licensed under this same license.
-- Contributors retain ownership of their original work, but agree that it is licensed under these terms for inclusion in the project.
-- Redistributing a modified version of the project **does not require permission from individual contributors**; the project license governs all code in the repository.
+## 4. The "Dependency" Exception
+Other software projects (e.g., mods, expansions) are encouraged to use **Starlight** as a required dependency.
+* Use of Starlight as a library or via its API is permitted and does not trigger copyleft requirements.
+* You may write original code that interacts with Starlight, provided that Starlight remains a separate, unmodified requirement for your project to function.
+* **Bundling Prohibition:** You may **not** bundle or include the Starlight `.dll` file within your own project's distribution or installer. You must instead provide a link to the official source so your users may acquire the dependency directly **without explicit permission**.
 
-## 4. Dependency Use
-Other mods or projects may use this project as a dependency for personal, non-commercial, or compatible modding purposes. This use does not trigger copyleft obligations, as long as the project remains required and unmodified.
+## 5. Modification and Redistribution
+Public redistribution of modified versions ("Forks") of the Software is strictly prohibited **without explicit permission** from the author, **Finn Göbl**. If permission is granted:
+* The work must remain under this exact license (Starlight-SAL).
+* You must credit the original project and its author.
+* You may not present the work as an official version or a replacement for the original Software.
 
-## 5. No Replacement / Commercial Exploitation
-You may not redistribute this project, or a derivative work, in a way that:
-- Replaces or competes with the official project,
-- Uses the project’s name, logo, or branding without express permission from the author.
+## 6. Author’s Absolute Rights
+The author, **Finn Göbl**, retains full control over the Software. The author reserves the right to:
+* Modify, update, or discontinue the Software at any time.
+* Change the licensing terms for future versions.
+* Revoke specific permissions previously granted to individuals if the terms of this license are violated.
 
-## 6. Permission Exemption
-If you wish to use any part of this project in a way that would normally be restricted under this license, you may request explicit permission from the author. **Any granted permission applies only to the requester and the specified use.** Permission must be documented and granted by the author directly; no implied permission exists.
+## 7. Contributions & Pull Requests
+By submitting code via pull request or patch, you agree that:
+* Your contribution is licensed under the Starlight-SAL.
+* You grant the author a perpetual, irrevocable right to use, modify, and redistribute your code as part of the project.
+* The author may redistribute the project (including your contributions) without requiring individual consent from you.
 
-## 7. Special Exception – Monomi Park
-Monomi Park, the developer of **Slime Rancher 2**, is granted permission to use any and all parts of **SR2E**—including code, assets, and contributions—**without restriction**, and may modify, redistribute, or integrate it in any way they choose.
+## 8. Non-Competition & Branding
+You may not use the Software’s name, logo, or branding to compete with the official project or imply an official partnership where none exists **without explicit permission**.
 
-## 8. Attribution
-All uses of the code outside the project must give clear credit to the original project and its official author, except as allowed under the Monomi Park exception or granted permission.
+## 9. Special Exception: Monomi Park
+**Monomi Park**, the developer of *Slime Rancher 2*, is granted a perpetual, royalty-free, and unrestricted license to use, modify, and integrate any part of this Software—including all community contributions—into their own products or services.
 
-## 9. Disclaimer
-This project is provided “as-is” without any warranty. The author is not liable for damages arising from its use.
+## 10. Permission Exemption
+Any use-case not explicitly permitted by this license requires direct, documented consent from **Finn Göbl**. No permission is implied; if it is not written here, it is restricted **without explicit permission**.
+
+## 11. Disclaimer
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND. THE AUTHOR IS NOT LIABLE FOR ANY DAMAGES ARISING FROM THE USE OR MISUSE OF THIS SOFTWARE.
+
+---
+**Author/Licensor:** Finn Göbl (ThatFinn)

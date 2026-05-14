@@ -1,0 +1,24 @@
+using Il2CppMonomiPark.SlimeRancher.Options;
+using Il2CppMonomiPark.SlimeRancher.Persist;
+
+namespace Starlight.Patches.Options.Fixer;
+
+[HarmonyPatch(typeof(OptionsDirector), nameof(OptionsDirector.PushSettings))]
+internal static class OptionsDirectoryPushSettingsPatch
+{
+    internal static void Postfix(OptionsV02 optionsData) => Prefix(optionsData);
+    internal static void Prefix(OptionsV02 optionsData)
+    {
+        try
+        {
+            foreach (var entry in optionsData.OptionItems.ToNetList())
+            {
+                if(entry!=null)
+                    if (entry.PersistenceKey.StartsWithAny("setting.sr2eexclude","setting.starlightexclude"))
+                        if(optionsData.OptionItems.Contains(entry))
+                            optionsData.OptionItems.Remove(entry);
+            }
+        }
+        catch (Exception e) { LogError(e); }
+    }
+}
