@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
+﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
-using Starlight;
 
 class Program
 {
     //Install tool via:
     //dotnet tool install -g XMLDoc2Markdown
-    private static string docGen = "xmldoc2md \"bin/Debug/net6.0/Starlight.dll\" --output ../XMLToMD/ --member-accessibility-level public"; 
+    private static string docGen = "dotnet tool run xmldoc2md \"bin/Debug/net6.0/Starlight.dll\" --output ../XMLToMD/ --member-accessibility-level public"; 
     static void Main(string[] args)
     {
         Console.WriteLine("Hello World! The converting has begun!");
@@ -20,7 +15,7 @@ class Program
         DirectoryInfo api;
         DirectoryInfo xmlToMD;
         string gitDir = "";
-        string apiDir = "api-"+BuildInfo.DisplayVersion;
+        string apiDir = "api-"+Starlight.BuildInfo.DisplayVersion;
         try
         {
             var rootDir = new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.Parent.Parent.Parent.FullName;
@@ -51,6 +46,7 @@ class Program
 
         string sourceDir = xmlToMD.FullName;
         string workingDir = api.FullName;
+        if(!ExecuteCommand("dotnet tool restore", gitDir+"/Essentials")) return;
         if(!ExecuteCommand(docGen, gitDir+"/Essentials")) return;
         
         

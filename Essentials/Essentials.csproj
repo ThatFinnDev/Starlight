@@ -26,7 +26,6 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="../Libs/*.dll">
-      <Private>false</Private>
     </Reference>
   </ItemGroup>
 </Project>
