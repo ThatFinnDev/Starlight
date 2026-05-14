@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -24,7 +23,6 @@ using Starlight.Menus.Development;
 using Starlight.Patches.General;
 using Starlight.Patches.InGame;
 using Starlight.Prism;
-using Starlight.Prism.Lib;
 using Starlight.Storage;
 using Starlight.UI;
 using Starlight.UI.Blueprints;

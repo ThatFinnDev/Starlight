@@ -52,7 +52,7 @@ internal class GadgetCommand : StarlightCommand
         if (args[1] == "*")
         {
             bool isSilent = silent;
-            foreach (var def in sceneContext.GadgetDirector._gadgetsGroup.GetAllMembersList())
+            foreach (var def in sceneContext.GadgetDirector._gadgetsGroup.GetAllMembersHashSet())
             {
                 silent=isSilent?true:args[0]!="get";
                 if(args.Length==3) Execute(new []{args[0], def.name, args[2]});

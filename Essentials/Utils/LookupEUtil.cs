@@ -37,7 +37,7 @@ public static class LookupEUtil
 
 
     
-    public static IdentifiableType[] identifiableTypes => autoSaveDirector._configuration.IdentifiableTypes.GetAllMembers().ToArray().Where(type => !string.IsNullOrEmpty(type.ReferenceId)).ToArray();
+    public static IdentifiableType[] identifiableTypes => autoSaveDirector._configuration.IdentifiableTypes.GetAllMembersHashSet().Where(type => !string.IsNullOrEmpty(type.ReferenceId)).ToArray();
 
     public static IdentifiableType[] vaccableTypes => _FromGroupList("VaccableNonLiquids");
     public static GadgetDefinition[] gadgetTypes => _FromGGroupList("GadgetGroup");
@@ -61,7 +61,7 @@ public static class LookupEUtil
     {
         if (IdentifiableTypeGroupList == null) return Array.Empty<IdentifiableType>();
         if(!allIdentifiableTypeGroups.ContainsKey(name)) return  Array.Empty<IdentifiableType>();
-        return allIdentifiableTypeGroups[name].GetAllMembers().ToArray().Where(type => !string.IsNullOrEmpty(type.ReferenceId)).ToArray();
+        return allIdentifiableTypeGroups[name].GetAllMembersHashSet().Where(type => !string.IsNullOrEmpty(type.ReferenceId)).ToArray();
     }
     
     static LiquidDefinition[] _FromLGroupList(string name)
@@ -69,7 +69,7 @@ public static class LookupEUtil
         if (IdentifiableTypeGroupList == null) return Array.Empty<LiquidDefinition>();
         if(!allIdentifiableTypeGroups.ContainsKey(name)) return  Array.Empty<LiquidDefinition>();
         var list = new List<LiquidDefinition>();
-        foreach (IdentifiableType type in allIdentifiableTypeGroups[name].GetAllMembersList())
+        foreach (var type in allIdentifiableTypeGroups[name].GetAllMembersHashSet())
         {
             if (string.IsNullOrEmpty(type.ReferenceId)) continue;
             var def = type.TryCast<LiquidDefinition>();
@@ -82,7 +82,7 @@ public static class LookupEUtil
         if (IdentifiableTypeGroupList == null) return Array.Empty<ToyDefinition>();
         if(!allIdentifiableTypeGroups.ContainsKey(name)) return  Array.Empty<ToyDefinition>();
         var list = new List<ToyDefinition>();
-        foreach (IdentifiableType type in allIdentifiableTypeGroups[name].GetAllMembersList())
+        foreach (var type in allIdentifiableTypeGroups[name].GetAllMembersHashSet())
         {
             if (string.IsNullOrEmpty(type.ReferenceId)) continue;
             var def = type.TryCast<ToyDefinition>();
@@ -95,7 +95,7 @@ public static class LookupEUtil
         if (IdentifiableTypeGroupList == null) return Array.Empty<GadgetDefinition>();
         if(!allIdentifiableTypeGroups.ContainsKey(name)) return  Array.Empty<GadgetDefinition>();
         var list = new List<GadgetDefinition>();
-        foreach (IdentifiableType type in allIdentifiableTypeGroups[name].GetAllMembersList())
+        foreach (var type in allIdentifiableTypeGroups[name].GetAllMembersHashSet())
         {
             if (string.IsNullOrEmpty(type.ReferenceId)) continue;
             var def = type.TryCast<GadgetDefinition>();
@@ -108,7 +108,7 @@ public static class LookupEUtil
         if (IdentifiableTypeGroupList == null) return Array.Empty<SlimeDefinition>();
         if(!allIdentifiableTypeGroups.ContainsKey(name)) return Array.Empty<SlimeDefinition>();
         var list = new List<SlimeDefinition>();
-        foreach (IdentifiableType type in allIdentifiableTypeGroups[name].GetAllMembersList())
+        foreach (var type in allIdentifiableTypeGroups[name].GetAllMembersHashSet())
         {
             if (string.IsNullOrEmpty(type.ReferenceId)) continue;
             var def = type.TryCast<SlimeDefinition>();
@@ -171,7 +171,7 @@ public static class LookupEUtil
         if (string.IsNullOrWhiteSpace(referenceID)) return null;
         if (group == null) return null;
         referenceID = referenceID.ToUpper();
-        foreach (IdentifiableType type in group.GetAllMembersArray()) if (type.ReferenceId == referenceID) return type;
+        foreach (var type in group.GetAllMembersHashSet()) if (type.ReferenceId == referenceID) return type;
         return null;
     }    
     public static IdentifiableType GetEntryByName(this IdentifiableTypeGroup group, string name)
@@ -179,9 +179,9 @@ public static class LookupEUtil
         if (string.IsNullOrWhiteSpace(name)) return null;
         if (group == null) return null;
         name = name.ToUpper();
-        foreach (IdentifiableType type in group.GetAllMembersArray()) if (type.name.ToUpper() == name) return type;
+        foreach (var type in group.GetAllMembersHashSet()) if (type.name.ToUpper() == name) return type;
         name=name.Replace("_", "").Replace(" ","");
-        foreach (IdentifiableType type in group.GetAllMembersArray()) if (type.GetCompactUpperName() == name) return type;
+        foreach (var type in group.GetAllMembersHashSet()) if (type.GetCompactUpperName() == name) return type;
         return null;
     }
     
@@ -409,7 +409,7 @@ public static class LookupEUtil
     /// <returns>List<string></returns>
     public static List<string> GetGadgetDefinitionStringListByPartialName(string partial, bool useContain, int maxEntries)
     {
-        var types = sceneContext.GadgetDirector._gadgetsGroup.GetAllMembers().ToList();
+        var types = sceneContext.GadgetDirector._gadgetsGroup.GetAllMembersHashSet();
         maxEntries -= 1;
         //If partial string is empty, no need to match the name
         var list = new List<string>();

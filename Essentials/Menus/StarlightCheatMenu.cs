@@ -67,7 +67,7 @@ public class StarlightCheatMenu : StarlightMenu
             return;
         }
         //Refinery
-        List<IdentifiableType> refineryItems = sceneContext.GadgetDirector._refineryTypeGroup.GetAllMembers().ToArray().ToList();
+        var refineryItems = sceneContext.GadgetDirector._refineryTypeGroup.GetAllMembersList();
         refineryItems.Sort((x, y) => string.Compare(x.GetName(), y.GetName(), StringComparison.OrdinalIgnoreCase));
         foreach (IdentifiableType refineryItem in refineryItems)
         {
@@ -80,7 +80,7 @@ public class StarlightCheatMenu : StarlightMenu
         }
         //Gadgets
 
-        List<IdentifiableType> gadgetItems = sceneContext.GadgetDirector._gadgetsGroup.GetAllMembers().ToArray().ToList();
+        var gadgetItems = sceneContext.GadgetDirector._gadgetsGroup.GetAllMembersList();
         gadgetItems.Sort((x, y) => string.Compare(x.GetName(), y.GetName(), StringComparison.OrdinalIgnoreCase));
         foreach (IdentifiableType gadgetItem in gadgetItems)
         {

@@ -56,10 +56,10 @@ internal class CheatMenuSlot : MonoBehaviour
         AudioEUtil.PlaySound(MenuSound.Click);
         var dict = new Dictionary<string, (string, Sprite)>();
         var remove = slot.Definition.SlotBlockList;
-        foreach (var identType in slot.Definition.SlotTypeGroup.GetAllMembersList())
+        foreach (var identType in slot.Definition.SlotTypeGroup.GetAllMembersHashSet())
         {
             if(!remove.Contains(identType))
-                dict.Add(identType.GetName().Replace("'","").Replace(" ",""), (identType.GetName(), identType.icon));
+                dict[identType.GetName().Replace("'","").Replace(" ","")] = (identType.GetName(), identType.icon);
         }
         StarlightGridMenuListPopUp.Open(dict, (value) =>
         {

@@ -101,8 +101,18 @@ public static class MiscEUtil
     public static Il2CppSystem.Type IL2CPPTypeof(this Type type) => Il2CppType.From(type);
     
     
-    public static Il2CppArrayBase GetAllMembersArray(this IdentifiableTypeGroup group) => group.GetAllMembers().ToArray();
-    public static List<IdentifiableType> GetAllMembersList(this IdentifiableTypeGroup group) => group.GetAllMembers().ToArray().ToList();
+    public static HashSet<IdentifiableType> GetAllMembersHashSet(this IdentifiableTypeGroup group) => group.GetAllMembers().ToNetHashSet();
+    
+    public static List<IdentifiableType> GetAllMembersList(this IdentifiableTypeGroup group) => group.GetAllMembers().ToNetHashSet().ToList();
+    
+    /// <summary>
+    /// Same as the other one, but it doesn't filter out duplicates
+    /// </summary>
+    public static Il2CppArrayBase GetAllMembersArrayDuplicate(this IdentifiableTypeGroup group) => group.GetAllMembers().ToArray();
+    /// <summary>
+    /// Same as the other one, but it doesn't filter out duplicates
+    /// </summary>
+    public static List<IdentifiableType> GetAllMembersListDuplicate(this IdentifiableTypeGroup group) => group.GetAllMembers().ToArray().ToList();
 
 
     
@@ -271,13 +281,13 @@ public static class MiscEUtil
     
     
     // To System HashSet
-    public static HashSet<T> ToNetHashSet<T>(this List<T> list) { if (list == null) return null; var hashSet = new HashSet<T>(); foreach (var item in list) hashSet.Add(item); return hashSet; }
-    public static HashSet<T> ToNetHashSet<T>(this Il2CppSystem.Collections.Generic.List<T> list) { if (list == null) return null; var hashSet = new HashSet<T>(); foreach (var item in list) hashSet.Add(item); return hashSet; }
-    public static HashSet<T> ToNetHashSet<T>(this Il2CppSystem.Collections.Generic.HashSet<T> hashSet) { if (hashSet == null) return null; var ihashSet = new HashSet<T>(); foreach (var item in hashSet) ihashSet.Add(item); return ihashSet; }
-    public static HashSet<T> ToNetHashSet<T>(this T[] array) { if (array == null) return null; var ihashSet = new HashSet<T>(); foreach (var item in array) ihashSet.Add(item); return ihashSet; }
-    public static HashSet<T> ToNetHashSet<T>(this Il2CppReferenceArray<T> array) where T : Il2CppObjectBase { if (array == null) return null; var ihashSet = new HashSet<T>(); foreach (var item in array) ihashSet.Add(item); return ihashSet; }
-    public static HashSet<T> ToNetHashSet<T>(this IEnumerable<T> collection) { if (collection == null) return null; var ihashSet = new HashSet<T>(); foreach (var item in collection) ihashSet.Add(item); return ihashSet; }
-    public static HashSet<T> ToNetHashSet<T>(this Il2CppSystem.Collections.Generic.IEnumerable<T> collection) { if (collection == null) return null; var ihashSet = new HashSet<T>(); foreach (var item in collection.ToArray()) ihashSet.Add(item); return ihashSet; }
+    public static HashSet<T> ToNetHashSet<T>(this List<T> list) { if (list == null) return null; var hashSet = new HashSet<T>(); foreach (var item in list) if(hashSet.Contains(item)) hashSet.Add(item); return hashSet; }
+    public static HashSet<T> ToNetHashSet<T>(this Il2CppSystem.Collections.Generic.List<T> list) { if (list == null) return null; var hashSet = new HashSet<T>(); foreach (var item in list) if(!hashSet.Contains(item)) hashSet.Add(item); return hashSet; }
+    public static HashSet<T> ToNetHashSet<T>(this Il2CppSystem.Collections.Generic.HashSet<T> hashSet) { if (hashSet == null) return null; var ihashSet = new HashSet<T>(); foreach (var item in hashSet) if(!ihashSet.Contains(item)) ihashSet.Add(item); return ihashSet; }
+    public static HashSet<T> ToNetHashSet<T>(this T[] array) { if (array == null) return null; var ihashSet = new HashSet<T>(); foreach (var item in array) if(!ihashSet.Contains(item)) ihashSet.Add(item); return ihashSet; }
+    public static HashSet<T> ToNetHashSet<T>(this Il2CppReferenceArray<T> array) where T : Il2CppObjectBase { if (array == null) return null; var ihashSet = new HashSet<T>(); foreach (var item in array) if(!ihashSet.Contains(item)) ihashSet.Add(item); return ihashSet; }
+    public static HashSet<T> ToNetHashSet<T>(this IEnumerable<T> collection) { if (collection == null) return null; var ihashSet = new HashSet<T>(); foreach (var item in collection) if(!ihashSet.Contains(item)) ihashSet.Add(item); return ihashSet; }
+    public static HashSet<T> ToNetHashSet<T>(this Il2CppSystem.Collections.Generic.IEnumerable<T> collection) { if (collection == null) return null; var ihashSet = new HashSet<T>(); foreach (var item in collection.ToArray()) if(!ihashSet.Contains(item)) ihashSet.Add(item); return ihashSet; }
     
     
     // To Il2CppSystem HashSet
