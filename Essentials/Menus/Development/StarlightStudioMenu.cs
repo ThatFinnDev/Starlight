@@ -12,7 +12,7 @@ using UnityEngine.Rendering.HighDefinition;
 
 namespace Starlight.Menus.Development;
 
-public class StarlightStudioMenu : StarlightMenu
+internal class StarlightStudioMenu : StarlightMenu
 {
     public new static MenuIdentifier GetMenuIdentifier() => new ("starlightstudiomenu",StarlightMenuFont.Native,StarlightMenuTheme.Starlight, "StarlightStudioMenu",true,true);
 

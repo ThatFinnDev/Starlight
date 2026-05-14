@@ -4,7 +4,7 @@ namespace Starlight.Repos;
 
 [System.Serializable]
 [SuppressMessage("ReSharper", "InconsistentNaming")]
-public class RepoPackageVersion
+internal class RepoPackageVersion
 {
     public List<string> ml_ver;
     public List<string> sr2_ver;

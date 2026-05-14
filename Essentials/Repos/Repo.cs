@@ -4,7 +4,7 @@ namespace Starlight.Repos;
 
 [System.Serializable]
 [SuppressMessage("ReSharper", "InconsistentNaming")]
-public class Repo
+internal class Repo
 {
     public string header_url;
     public string icon_url;

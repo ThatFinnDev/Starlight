@@ -6,7 +6,7 @@ namespace Starlight.Repos;
 
 [System.Serializable]
 [SuppressMessage("ReSharper", "InconsistentNaming")]
-public class RepoPackage
+internal class RepoPackage
 {
     public string name;
     public string author;

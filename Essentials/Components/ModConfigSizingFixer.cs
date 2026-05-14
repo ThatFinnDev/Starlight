@@ -5,7 +5,7 @@ using Starlight.Storage;
 namespace Starlight.Components;
 
 [InjectIntoIL]
-public class ModConfigSizingFixer : MonoBehaviour
+internal class ModConfigSizingFixer : MonoBehaviour
 {
     private void Start()
     {

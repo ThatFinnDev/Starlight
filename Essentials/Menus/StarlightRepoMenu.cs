@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 namespace Starlight.Menus;
 
-public class StarlightRepoMenu : StarlightMenu
+internal class StarlightRepoMenu : StarlightMenu
 {
     //Check valid themes for all menus EVERYWHERE
     public new static MenuIdentifier GetMenuIdentifier() => new ("repomenu",StarlightMenuFont.Native,StarlightMenuTheme.Starlight,"RepoMenu");

@@ -4,7 +4,7 @@ namespace Starlight.Patches.General;
 
 
 [HarmonyPatch(typeof(MetaGameDirector), nameof(MetaGameDirector.ChangeGameActivity))]
-public static class MetaGameDirectorChangeGameActivityPatch
+internal static class MetaGameDirectorChangeGameActivityPatch
 {
     public static bool Prefix()
     {
@@ -14,7 +14,7 @@ public static class MetaGameDirectorChangeGameActivityPatch
 }
 [HarmonyPatch(typeof(MetaGameDirector), nameof(MetaGameDirector.SetAchievementProgress), typeof(MetaGameDirector.AchievementData), typeof(int))]
 [HarmonyPatch(typeof(MetaGameDirector), nameof(MetaGameDirector.SetAchievementProgress), typeof(MetaGameDirector.Achievement), typeof(int))]
-public static class MetaGameDirectorSetAchievementProgressPatch
+internal static class MetaGameDirectorSetAchievementProgressPatch
 {
     public static bool Prefix()
     {

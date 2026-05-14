@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace Starlight.Patches.InGame;
 
-public static class WorldPopulatorErrorPatch
+internal static class WorldPopulatorErrorPatch
 {
     // IEnumerators get turned into classes and have weird suffixes like _d_5_
     // In the interest of not fixing this every version and in between Store versions, I made this

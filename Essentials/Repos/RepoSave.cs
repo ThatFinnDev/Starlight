@@ -1,7 +1,7 @@
 namespace Starlight.Repos;
 
 [System.Serializable]
-public class RepoSave
+internal class RepoSave
 {
     public string identifier;
     public string url;

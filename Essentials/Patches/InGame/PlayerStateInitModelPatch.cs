@@ -1,7 +1,7 @@
 namespace Starlight.Patches.InGame;
 
 [HarmonyPatch(typeof(PlayerState), nameof(PlayerState.InitModel))]
-public class PlayerStateInitModelPatch
+internal class PlayerStateInitModelPatch
 {
     internal static void Postfix(PlayerState __instance)
     {
