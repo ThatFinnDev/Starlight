@@ -40,7 +40,7 @@ public static class BuildInfo
     public const string Author = "ThatFinn";
     public const string CoAuthors = "YLohkuhl";
     public const string Contributors = "PinkTarr, shizophrenicgopher, Atmudia";
-    public const string CodeVersion = "4.0.0";
+    public const string CodeVersion = "4.0.1";
     public const string DownloadLink = "https://starlight.sr2.dev/";
     public const string SourceCode = "https://github.com/ThatFinnDev/Starlight";
     public const string Nexus = "https://www.nexusmods.com/slimerancher2/mods/60";
