@@ -67,7 +67,7 @@ on:
 
 env:
   DEP_ZIP_NAME: dependencies.zip
-  API_BASE_URL: https://api.sr2e.sr2.dev
+  API_BASE_URL: https://api.starlight.sr2.dev
   DEFAULT_SR2_VER_MANIFESTID: '1.2.3 [20260509030000-110642] (8733226813009597637)'
   DEFAULT_SR2_VER_MLVER: '0.7.3'
   DEFAULT_VERSION: 'auto'
