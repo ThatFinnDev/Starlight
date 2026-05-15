@@ -97,6 +97,7 @@ public class StarlightEntryPoint : MelonMod
     internal static string customVolumeProfilesPath => Path.Combine(dataPath, "customVolumeProfiles");
 
     internal static bool EarlyRegistered = false;
+    internal static bool IlInjectionReady = false;
 
     public static bool isPrismInUse { get; private set; }
     internal static bool ShouldEnablePrism;
@@ -182,8 +183,11 @@ public class StarlightEntryPoint : MelonMod
         if (File.Exists(path)) File.Delete(path);
         RefreshPrefs();
 
+        IlInjectionReady = true;
         InjectIl2CppComponents(MelonAssembly.Assembly);
-        
+        foreach (var expansion in ExpansionV01S)
+            try { InjectIl2CppComponents(expansion.Assembly); }
+            catch (Exception e) { LogError(e); }
         
         if (!ShouldEnablePrism)
             try { ShouldEnablePrism = _prefs.GetEntry<bool>("forceUsePrism").Value; } catch { }
@@ -351,7 +355,7 @@ public class StarlightEntryPoint : MelonMod
 
     internal void InjectIl2CppComponents(Assembly assembly)
     {
-        
+        if (!IlInjectionReady) return;
         var types = AccessTools.GetTypesFromAssembly(assembly);
         foreach (var type in types)
         {
@@ -362,7 +366,11 @@ public class StarlightEntryPoint : MelonMod
                 inject = type.GetCustomAttribute<InjectIntoIL>();
                 if (inject == null) continue;
                 if (!ClassInjector.IsTypeRegisteredInIl2Cpp(type))
-                    ClassInjector.RegisterTypeInIl2Cpp(type, new RegisterTypeOptions() { LogSuccess = false });
+                {
+                    var options = new RegisterTypeOptions() { LogSuccess = false, };
+                    if (inject.Interfaces != null) options = new RegisterTypeOptions() { LogSuccess = false, Interfaces = inject.Interfaces};
+                    ClassInjector.RegisterTypeInIl2Cpp(type, options);
+                }
             }
             catch (Exception e)
             {
