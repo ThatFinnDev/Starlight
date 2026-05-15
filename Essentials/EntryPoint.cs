@@ -52,7 +52,7 @@ public static class BuildInfo
     /// For dev versions, use "-dev". Do not add a build number!<br />
     /// Add "+metadata" only in dev builds!
     /// </summary>
-    public const string DisplayVersion = "4.0.0";
+    public const string DisplayVersion = "4.0.1-dev";
 
     // Allow Metadata, Check Update Link
     internal static readonly Dictionary<string, (bool, string)> PreInfo = new()
