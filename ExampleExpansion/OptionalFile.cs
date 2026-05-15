@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis; using System.IO; using System.Reflection; using Il2CppTMPro; using UnityEngine.SceneManagement; using UnityEngine.UI; [assembly: HarmonyDontPatchAll()] [assembly: AssemblyMetadata(Starlight.Expansion.StarlightModInfoAttributes.MinimumStarlightVersion, OptionFileInfo.MinimumStarlightVersion)]
+[assembly: MelonGame("MonomiPark", "SlimeRancher2")]
 
 // This is an optional file V1. You can add into your expansion
 // This will show an error message to the user, if Starlight isn't installed!
@@ -107,7 +108,7 @@ class OptionFileEntrypoint : MelonMod
         Sprite pill = null;
         try
         {
-            /*Texture2D pillTex = null;
+            Texture2D pillTex = null;
             foreach (var bundle in Il2CppAssetBundleManager.GetAllLoadedAssetBundles())
                 try
                 {
@@ -116,7 +117,7 @@ class OptionFileEntrypoint : MelonMod
                     pillTex = tex;
                 } catch { }
             pill = Sprite.Create(pillTex, new Rect(0f, 0f, pillTex.width, pillTex.height),
-                new Vector2(0.5f, 0.5f), 1f);*/
+                new Vector2(0.5f, 0.5f), 1f);
         }
         catch { }
         
